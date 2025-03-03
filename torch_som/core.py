@@ -273,7 +273,7 @@ class TorchSOM(nn.Module):
     def identify_bmus(
         self,
         data: torch.Tensor,
-    ) -> Union[Tuple[int, int], torch.Tensor]:
+    ) -> torch.Tensor:  # Union[Tuple[int, int], torch.Tensor]:
         """Find BMUs for input data.  Handles both single samples and batches.
 
         Args:
@@ -290,9 +290,15 @@ class TorchSOM(nn.Module):
             index = torch.argmin(
                 distances.view(-1)
             )  # From 2D tensor [m,n] to 1D tensor [m*n] then retrieve the index of the bmu with the smallest distance
-            return tuple(
-                torch.unravel_index(index, (self.x, self.y))
+            # return tuple(
+            #     torch.unravel_index(index, (self.x, self.y))
+            # )  # Convert the index to 2D coordinates
+            row, col = torch.unravel_index(
+                index,
+                (self.x, self.y),
             )  # Convert the index to 2D coordinates
+            coords = torch.stack([row, col], dim=0).to(data.device)
+            return coords
 
         # Batch samples [batch_size, row_neurons, col_neurons]
         else:
@@ -366,7 +372,7 @@ class TorchSOM(nn.Module):
         else:
             return self._topographic_error_rectangular(indices)
 
-    def init_weights(
+    def initialize_weights(
         self,
         data: torch.Tensor,
         mode: str = "random",
@@ -475,14 +481,14 @@ class TorchSOM(nn.Module):
                 warnings.warn(
                     f"PCA initialization failed: {str(e)}. Falling back to random initialization"
                 )
-                self.init_weights(data, mode="random")
+                self.initialize_weights(data, mode="random")
 
         else:
             raise ValueError(
                 "The only method to initialize the weights are 'random' or 'pca'."
             )
 
-    def train_som(
+    def fit(
         self,
         data: torch.Tensor,
     ) -> Tuple[List[float], List[float]]:
@@ -563,7 +569,7 @@ class TorchSOM(nn.Module):
 
         return hit_map
 
-    def build_bmus_map(
+    def build_bmus_data_map(
         self,
         data: torch.Tensor,
         return_indices: bool = False,
@@ -587,7 +593,7 @@ class TorchSOM(nn.Module):
         bmus = self.identify_bmus(data)
 
         # Build the map
-        bmus_map = defaultdict(list)
+        bmus_data_map = defaultdict(list)
         for idx, (row, col) in enumerate(bmus):
 
             # Convert BMU coordinates to integer tuple for dictionary key
@@ -595,16 +601,16 @@ class TorchSOM(nn.Module):
 
             # Add the corresponding element to the dict
             if return_indices:
-                bmus_map[bmu_pos].append(idx)
+                bmus_data_map[bmu_pos].append(idx)
             else:
-                bmus_map[bmu_pos].append(data[idx])
+                bmus_data_map[bmu_pos].append(data[idx])
 
         # If you return data samples, then for each bmu you need to stack them to have a tensor of all data samples instead of multiple tensors
         if not return_indices:
-            for bmu in bmus_map:
-                bmus_map[bmu] = torch.stack(bmus_map[bmu])
+            for bmu in bmus_data_map:
+                bmus_data_map[bmu] = torch.stack(bmus_data_map[bmu])
 
-        return bmus_map
+        return bmus_data_map
 
     def build_rank_map(
         self,
@@ -625,7 +631,7 @@ class TorchSOM(nn.Module):
         data = data.to(self.device)
         target = target.to(self.device)
 
-        bmus_map = self.build_bmus_map(data, return_indices=True)
+        bmus_map = self.build_bmus_data_map(data, return_indices=True)
         neuron_stds = torch.full((self.x, self.y), float("nan"), device=self.device)
 
         # Calculate standard deviation for each neuron
@@ -686,7 +692,7 @@ class TorchSOM(nn.Module):
         target = target.to(self.device)
         epsilon = 1e-8
 
-        bmus_map = self.build_bmus_map(data, return_indices=True)
+        bmus_map = self.build_bmus_data_map(data, return_indices=True)
         metric_map = torch.full((self.x, self.y), float("nan"), device=self.device)
 
         # For each activated neurons, calculate the corresponding target metric
@@ -727,7 +733,7 @@ class TorchSOM(nn.Module):
         target = target.to(self.device)
         epsilon = 1e-8
 
-        bmus_map = self.build_bmus_map(data, return_indices=True)
+        bmus_map = self.build_bmus_data_map(data, return_indices=True)
         score_map = torch.full((self.x, self.y), float("nan"), device=self.device)
 
         # For each activated neurons, calculate the corresponding target metric
