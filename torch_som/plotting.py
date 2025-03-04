@@ -647,3 +647,69 @@ class SOMVisualizer:
                 gridsize=gridsize,
             )
             plt.close()
+
+    def plot_all(
+        self,
+        quantization_errors: List[float],
+        topographic_errors: List[float],
+        data: torch.Tensor,
+        target: Optional[torch.Tensor] = None,
+        component_names: Optional[List[str]] = None,
+        save_path: Optional[Union[str, Path]] = None,
+        training_errors: bool = True,
+        distance_map: bool = True,
+        hit_map: bool = True,
+        score_map: bool = True,
+        rank_map: bool = True,
+        metric_map: bool = True,
+        component_planes: bool = True,
+    ) -> None:
+        """Plot all visualizations: hit map, score map, rank map, metric map, component planes.
+
+        Args:
+            quantization_errors (List[float]): List of quantization errors [epochs]
+            topographic_errors (List[float]): List of topographic errors [epochs]
+            data (torch.Tensor): Input data tensor [batch_size, n_features]
+            target (Optional[torch.Tensor], optional): Optional labels tensor for data points [batch_size]. Defaults to None.
+            component_names (Optional[List[str]], optional): Names for each component/feature. If None, uses "Component {i+1}". Defaults to None.
+            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
+            training_errors (bool, optional): Boolean to decide if the visualizer plots training learning curves. Defaults to True.
+            distance_map (bool, optional): Boolean to decide if the visualizer plots distance map. Defaults to True.
+            hit_map (bool, optional): Boolean to decide if the visualizer plots hit map. Defaults to True.
+            score_map (bool, optional): Boolean to decide if the visualizer plots score map. Defaults to True.
+            rank_map (bool, optional): Boolean to decide if the visualizer plots rank map. Defaults to True.
+            metric_map (bool, optional): Boolean to decide if the visualizer plots metric map. Defaults to True.
+            component_planes (bool, optional): Boolean to decide if the visualizer plots component planes. Defaults to True.
+        """
+
+        if training_errors:
+            self.plot_training_errors(
+                quantization_errors=quantization_errors,
+                topographic_errors=topographic_errors,
+                save_path=save_path,
+            )
+        if distance_map:
+            self.plot_distance_map(save_path=save_path)
+        if hit_map:
+            self.plot_hit_map(data, save_path=save_path)
+        if metric_map:
+            self.plot_metric_map(
+                data,
+                target,
+                reduction_parameter="mean",
+                save_path=save_path,
+            )
+            self.plot_metric_map(
+                data,
+                target,
+                reduction_parameter="std",
+                save_path=save_path,
+            )
+        if score_map:
+            self.plot_score_map(data, target, save_path=save_path)
+        if rank_map:
+            self.plot_rank_map(data, target, save_path=save_path)
+        if component_planes:
+            self.plot_component_planes(
+                component_names=component_names, save_path=save_path
+            )
