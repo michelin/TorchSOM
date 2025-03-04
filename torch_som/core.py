@@ -39,6 +39,7 @@ class TorchSOM(nn.Module):
         sigma_decay_function: str = "asymptotic_decay",
         neighborhood_function: str = "gaussian",
         distance_function: str = "euclidean",
+        initialization_mode: str = "random",
         device: str = "cuda" if torch.cuda.is_available() else "cpu",
         random_seed: int = 42,
     ):
@@ -57,6 +58,7 @@ class TorchSOM(nn.Module):
             sigma_decay_function (str, optional): Function to adjust (decrease) the sigma at each epoch (training). Defaults to "asymptotic_decay".
             neighborhood_function (str, optional): Function to update the weights at each epoch (training). Defaults to "gaussian".
             distance_function (str, optional): Function to compute the distance between grid weights and input data. Defaults to "euclidean".
+            initialization_mode (str, optional): Method to initialize SOM weights. Defaults to "random".
             device (str, optional): Allocate tensors on CPU or GPU. Defaults to "cuda" if available, else "cpu".
             random_seed (int, optional): Ensure reproducibility. Defaults to 42.
 
@@ -85,6 +87,7 @@ class TorchSOM(nn.Module):
         self.topology = topology
         self.random_seed = random_seed
         self.distance_fn_name = distance_function
+        self.initialization_mode = initialization_mode
         self.distance_fn = DISTANCE_FUNCTIONS[distance_function]
         self.lr_decay_fn = DECAY_FUNCTIONS[lr_decay_function]
         self.sigma_decay_fn = DECAY_FUNCTIONS[sigma_decay_function]
@@ -375,7 +378,7 @@ class TorchSOM(nn.Module):
     def initialize_weights(
         self,
         data: torch.Tensor,
-        mode: str = "random",
+        mode: str = None,
     ) -> None:
         """Data should be normalized before initialization. Initialize weights using
 
@@ -384,7 +387,7 @@ class TorchSOM(nn.Module):
 
         Args:
             data (torch.Tensor): input data tensor [batch_size, num_features]
-            mode (str, optional): selection of the method to init the weights. Defaults to "random".
+            mode (str, optional): selection of the method to init the weights. Defaults to None.
 
         Raises:
             ValueError: Ensure neurons' weights and input data have the same number of features
@@ -398,6 +401,9 @@ class TorchSOM(nn.Module):
             raise ValueError(
                 f"Input data dimension ({data.shape[1]}) and weights dimension ({self.num_features}) don't match"
             )
+
+        if mode == None:
+            mode = self.initialization_mode
 
         if mode == "random":
             try:
@@ -481,7 +487,9 @@ class TorchSOM(nn.Module):
                 warnings.warn(
                     f"PCA initialization failed: {str(e)}. Falling back to random initialization"
                 )
-                self.initialize_weights(data, mode="random")
+                self.initialization_mode = "random"
+                self.initialize_weights(data, mode=self.initialization_mode)
+                # self.initialize_weights(data)
 
         else:
             raise ValueError(
