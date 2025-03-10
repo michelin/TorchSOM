@@ -34,6 +34,7 @@ class TorchSOM(nn.Module):
         batch_size: int = 5,
         sigma: float = 1.0,
         learning_rate: float = 0.5,
+        neighborhood_order: int = 1,
         topology: str = "rectangular",
         lr_decay_function: str = "asymptotic_decay",
         sigma_decay_function: str = "asymptotic_decay",
@@ -53,6 +54,7 @@ class TorchSOM(nn.Module):
             batch_size (int, optional): Number of samples to be considered at each epoch (training). Defaults to 5.
             sigma (float, optional): width of the neighborhood, so standard deviation. It controls the spread of the update influence. Defaults to 1.0.
             learning_rate (float, optional): strength of the weights updates. Defaults to 0.5.
+            neighborhood_order (int, optional): Number of neighbors to consider for the distance calculation. Defaults to 1.
             topology (str, optional): Grid configuration. Defaults to "rectangular".
             lr_decay_function (str, optional): Function to adjust (decrease) the learning rate at each epoch (training). Defaults to "asymptotic_decay".
             sigma_decay_function (str, optional): Function to adjust (decrease) the sigma at each epoch (training). Defaults to "asymptotic_decay".
@@ -86,6 +88,7 @@ class TorchSOM(nn.Module):
         self.device = device
         self.topology = topology
         self.random_seed = random_seed
+        self.neighborhood_order = neighborhood_order
         self.distance_fn_name = distance_function
         self.initialization_mode = initialization_mode
         self.distance_fn = DISTANCE_FUNCTIONS[distance_function]
@@ -268,6 +271,127 @@ class TorchSOM(nn.Module):
 
         # Units are not neighbors if distance > threshold
         return (distances > threshold).float().mean().item()
+
+    def _get_hexagonal_offsets(
+        self, neighborhood_order: int = 1
+    ) -> Dict[str, List[Tuple[int]]]:
+        """
+        Neighboring ring of order 1 has 6 hexagonal elements,
+        Neighboring ring of order 2 has 12 hexagonal elements,
+        Neighboring ring of order 3 has 18 hexagonal elements
+        """
+        if neighborhood_order == 1:
+            return {
+                "even": [(0, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0)],
+                "odd": [(0, 1), (1, 1), (1, 0), (0, -1), (-1, 0), (-1, 1)],
+            }
+        elif neighborhood_order == 2:
+            return {
+                "even": [
+                    (0, 2),
+                    (1, 1),
+                    (2, 0),
+                    (2, -1),
+                    (2, -2),
+                    (1, -2),
+                    (0, -2),
+                    (-1, -2),
+                    (-2, -1),
+                    (-2, 0),
+                    (-1, 1),
+                    (-1, 2),
+                ],
+                "odd": [
+                    (0, 2),
+                    (1, 2),
+                    (2, 1),
+                    (2, 0),
+                    (1, -1),
+                    (0, -2),
+                    (-1, -1),
+                    (-2, -1),
+                    (-2, 0),
+                    (-2, 1),
+                    (-1, 2),
+                    (-1, 3),
+                ],
+            }
+        elif neighborhood_order == 3:
+            return {
+                "even": [
+                    (0, 3),
+                    (1, 2),
+                    (2, 1),
+                    (3, 0),
+                    (3, -1),
+                    (3, -2),
+                    (3, -3),
+                    (2, -3),
+                    (1, -3),
+                    (0, -3),
+                    (-1, -3),
+                    (-2, -2),
+                    (-3, -1),
+                    (-3, 0),
+                    (-2, 1),
+                    (-1, 2),
+                    (-1, 3),
+                    (-2, 3),
+                ],
+                "odd": [
+                    (0, 3),
+                    (1, 3),
+                    (2, 2),
+                    (3, 1),
+                    (3, 0),
+                    (3, -1),
+                    (2, -2),
+                    (1, -2),
+                    (0, -3),
+                    (-1, -2),
+                    (-2, -2),
+                    (-3, -1),
+                    (-3, 0),
+                    (-3, 1),
+                    (-3, 2),
+                    (-2, 2),
+                    (-1, 3),
+                    (-1, 4),
+                ],
+            }
+
+    def _get_rectangular_offsets(
+        self,
+        neighborhood_order: int = 1,
+    ) -> List[Tuple[int]]:
+        """
+        Neighboring ring of order 1 has 4 elements: Von Neumann neighborhood (orthogonal only),
+        Neighboring ring of order 2 has 4 elements: Diagonal neighbors,
+        Neighboring ring of order 3 has 16 elements: outer edge of 5x5 grid (without inner squares)
+        """
+        if neighborhood_order == 1:
+            return [(0, 1), (1, 0), (0, -1), (-1, 0)]
+        elif neighborhood_order == 2:
+            return [(1, 1), (1, -1), (-1, -1), (-1, 1)]
+        elif neighborhood_order == 3:
+            return [
+                (-2, -1),
+                (-2, 0),
+                (-2, 1),
+                (2, -1),
+                (2, 0),
+                (2, 1),
+                (-1, -2),
+                (0, -2),
+                (1, -2),
+                (-1, 2),
+                (0, 2),
+                (1, 2),
+                (-2, -2),
+                (-2, 2),
+                (2, -2),
+                (2, 2),
+            ]
 
     """
     Public methods
@@ -776,6 +900,7 @@ class TorchSOM(nn.Module):
         self,
         scaling: str = "sum",
         distance_metric: str = None,
+        neighborhood_order: int = 1,
     ) -> torch.Tensor:
         """Computes the distance map of each neuron with its neighbors.
 
@@ -786,7 +911,8 @@ class TorchSOM(nn.Module):
             scaling (str, optional): Defaults to "sum".
                 If 'mean', each cell is normalized by the average neighbor distance.
                 If 'sum', normalization is done by the sum of distances.
-            distance_metric (str, optional): _description_. Defaults to None.
+            distance_metric (str, optional): Name of the method to calculate the distance. Defaults to None.
+            neighborhood_order (int, optional): Indicate the neighbors to consider for the distance calculation. Defaults to 1.
 
         Raises:
             ValueError: If an invalid scaling option is provided.
@@ -809,63 +935,74 @@ class TorchSOM(nn.Module):
                 raise ValueError(f"Unsupported distance metric: {distance_metric}")
             distance_fn = DISTANCE_FUNCTIONS[distance_metric]
 
+        # Retrieve the number of neurons to calculate the distance for each neuros
+        all_offsets = []
+        max_neighbors = 0
+        if self.topology == "hexagonal":
+            for order in range(1, neighborhood_order + 1):
+                neighbor_offsets = self._get_hexagonal_offsets(order)
+                max_neighbors += len(neighbor_offsets["even"])
+                all_offsets.append(neighbor_offsets)
+        else:
+            for order in range(1, neighborhood_order + 1):
+                neighbor_offsets = self._get_rectangular_offsets(order)
+                max_neighbors += len(neighbor_offsets)
+                all_offsets.append(neighbor_offsets)
+
         # Initialize distance map based on topology
-        num_neighbors = 6 if self.topology == "hexagonal" else 4
         distance_matrix = torch.full(
-            (self.weights.shape[0], self.weights.shape[1], num_neighbors),
+            (self.weights.shape[0], self.weights.shape[1], max_neighbors),
             float("nan"),
             device=self.device,
         )
-
-        # Define neighbor patterns based on topology
-        if self.topology == "hexagonal":
-            # 6-connected neighbors for hexagonal topology while ensuring the offset patterns depending on row parity.
-            even_row_offsets = [(0, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0)]
-            odd_row_offsets = [(0, 1), (1, 1), (1, 0), (0, -1), (-1, 0), (-1, 1)]
-        else:
-            # 4-connected neighbors for rectangular topology (von Neumann neighborhood)
-            neighbor_offsets = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 
         # Compute distances for each neuron
         for row in range(self.weights.shape[0]):
             for col in range(self.weights.shape[1]):
                 current_neuron = self.weights[row, col]
+                neighbor_idx = 0
 
-                # Select appropriate neighbor pattern
-                if self.topology == "hexagonal":
-                    offsets = even_row_offsets if row % 2 == 0 else odd_row_offsets
-                else:
-                    offsets = neighbor_offsets
+                # Process each neighbor order based on topology
+                for order_idx in range(len(all_offsets)):
+                    if self.topology == "hexagonal":
+                        offsets = all_offsets[order_idx][
+                            "even" if row % 2 == 0 else "odd"
+                        ]
+                    else:
+                        offsets = all_offsets[order_idx]
 
-                # Compute distances between curren neuron and its neighbors
-                for neighbor_idx, (row_offset, col_offset) in enumerate(offsets):
-                    neighbor_row = row + row_offset
-                    neighbor_col = col + col_offset
+                    # Compute distances between curren neuron and its neighbors
+                    for offset in offsets:
+                        row_offset, col_offset = offset
+                        neighbor_row = row + row_offset
+                        neighbor_col = col + col_offset
 
-                    # Ensure neighbor is within bounds to compute the distance
-                    if (
-                        0 <= neighbor_row < self.weights.shape[0]
-                        and 0 <= neighbor_col < self.weights.shape[1]
-                    ):
-                        neighbor_neuron = self.weights[neighbor_row, neighbor_col]
+                        # Ensure neighbor is within bounds to compute the distance
+                        if (
+                            0 <= neighbor_row < self.weights.shape[0]
+                            and 0 <= neighbor_col < self.weights.shape[1]
+                        ):
+                            neighbor_neuron = self.weights[neighbor_row, neighbor_col]
 
-                        """
-                        Reshape weights to ensure batch compatibility with distance function => shape [a,b] becomes [1,a,b] after unsqueeze(0)
-                        Each neuron has a shape of [num_features] so they become [1,num_features] and then [1,1,num_features]
-                        Finally, distance function need to be squeezed because it returns [batch_size, 1] but there is only one sample, so let's just retrieve the scalar
-                        """
-                        solo_batch_current_neuron = current_neuron.unsqueeze(
-                            0
-                        ).unsqueeze(0)
-                        solo_batch_neighbor_neuron = neighbor_neuron.unsqueeze(
-                            0
-                        ).unsqueeze(0)
+                            """
+                            Reshape weights to ensure batch compatibility with distance function => shape [a,b] becomes [1,a,b] after unsqueeze(0)
+                            Each neuron has a shape of [num_features] so they become [1,num_features] and then [1,1,num_features]
+                            Finally, distance function need to be squeezed because it returns [batch_size, 1] but there is only one sample, so let's just retrieve the scalar
+                            """
+                            solo_batch_current_neuron = current_neuron.unsqueeze(
+                                0
+                            ).unsqueeze(0)
+                            solo_batch_neighbor_neuron = neighbor_neuron.unsqueeze(
+                                0
+                            ).unsqueeze(0)
 
-                        # Calculate and store the distance between both neurons
-                        distance_matrix[row, col, neighbor_idx] = distance_fn(
-                            solo_batch_current_neuron,
-                            solo_batch_neighbor_neuron,
-                        ).squeeze()
+                            # Calculate and store the distance between both neurons
+                            distance_matrix[row, col, neighbor_idx] = distance_fn(
+                                solo_batch_current_neuron,
+                                solo_batch_neighbor_neuron,
+                            ).squeeze()
+
+                        neighbor_idx += 1
 
         """
         Aggregate distances (either sum or mean). Each neuron has approximately k distances based on the topology (and bounds).

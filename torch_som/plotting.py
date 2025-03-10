@@ -468,15 +468,17 @@ class SOMVisualizer:
         """Plot the D-Matrix (distance map) of a trained SOM.
 
         Args:
-            fig_name (Optional[str], optional): The name of the file to save.. Defaults to "distance_map".
+            fig_name (Optional[str], optional): The name of the file to save. Defaults to "distance_map".
             save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
             gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
         """
 
-        distance_map = self.som.build_distance_map()
+        distance_map = self.som.build_distance_map(
+            neighborhood_order=self.som.neighborhood_order
+        )
         self.plot_grid(
             map=distance_map,
-            title="D-Matrix (Distance Map)",
+            title=f"D-Matrix (Distance Map) - Order {self.som.neighborhood_order}",
             colorbar_label=f"{self.som.distance_fn_name} distance",
             save_path=save_path,
             filename=f"{fig_name}",
