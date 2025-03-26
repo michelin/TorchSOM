@@ -1,3 +1,4 @@
+import random
 import warnings
 from collections import Counter, defaultdict
 from typing import Any, Dict, List, Tuple, Union
@@ -1020,23 +1021,111 @@ class TorchSOM(nn.Module):
         )  # Replace NaNs with -inf to be ignored by max()
         return distance_matrix / max_distance if max_distance > 0 else distance_matrix
 
-    # TODO Re-implement properly this method: can be useful for classification tasks. Labels could be str or int.
-    def build_labels_dict(
+    def build_classification_map(
         self,
         data: torch.Tensor,
-        labels: torch.Tensor,
-    ) -> Dict[Tuple[int, int], Any]:
-        """Create a mapping of winning neurons to their corresponding label counts."""
-        if len(data) != len(labels):
-            raise ValueError("data and labels must have the same length.")
+        target: torch.Tensor,
+        neighborhood_order: int = 1,
+    ) -> torch.Tensor:
+        """
+        Build a classification map where each neuron is assigned the most frequent label.
+        In case of a tie, consider labels from neighboring neurons.
+        If there are no neighboring neurons or a second tie, then randomly select one of the top label.
 
-        winmap = defaultdict(list)
-        for x, l in zip(data, labels):
-            winmap[self.identify_single_bmu(x)].append(l.item())
+        Args:
+            data (torch.Tensor): Input data tensor [batch_size, num_features]
+            target (torch.Tensor): Labels tensor for data points [batch_size]
+            neighborhood_order (int, optional): Neighborhood order to consider for tie-breaking. Defaults to 1.
 
-        for position in winmap:
-            winmap[position] = Counter(winmap[position])
-        return winmap
+        Returns:
+            torch.Tensor: Classification map with the most frequent label for each neuron
+        """
+
+        # Ensure device compatibility
+        data = data.to(self.device)
+        target = target.to(self.device)
+
+        bmus_map = self.build_bmus_data_map(data, return_indices=True)
+        classification_map = torch.full(
+            (self.x, self.y), float("nan"), dtype=torch.float32, device=self.device
+        )
+
+        # Retrieve neighborhood offsets based on topology for tie-breaking
+        neighborhood_offsets = []
+        if self.topology == "hexagonal":
+            for order in range(1, neighborhood_order + 1):
+                offsets = self._get_hexagonal_offsets(order)
+                neighborhood_offsets.extend(
+                    offsets["even"] if (row % 2 == 0) else offsets["odd"]
+                    for row in range(self.x)
+                )
+        else:
+            for order in range(1, neighborhood_order + 1):
+                neighborhood_offsets.extend(self._get_rectangular_offsets(order))
+
+        # Iterate through each activated neuron
+        for bmu_pos, sample_indices in bmus_map.items():
+            if len(sample_indices) > 0:
+
+                """
+                Retrieve the labels of all samples attached to current neuron
+                Find the most common one
+                Check if there is a tie with another label
+                """
+                neuron_labels = target[sample_indices]
+                label_counts = Counter(neuron_labels.cpu().numpy())
+                max_count = max(label_counts.values())
+                top_labels = [
+                    label for label, count in label_counts.items() if count == max_count
+                ]
+
+                """
+                If there is not tie, assign the most common label to the neuron.
+                In case of a tie, consider labels from neighboring neurons to break it.
+                """
+                if len(top_labels) == 1:
+                    classification_map[bmu_pos] = top_labels[0]
+                else:
+                    neighbor_labels = []
+                    row, col = bmu_pos
+                    for offset in neighborhood_offsets:
+                        neighbor_row = row + offset[0]
+                        neighbor_col = col + offset[1]
+                        if (
+                            0 <= neighbor_row < self.x
+                            and 0 <= neighbor_col < self.y
+                            and (neighbor_row, neighbor_col) in bmus_map
+                        ):
+                            neighbor_samples_indices = bmus_map[
+                                (neighbor_row, neighbor_col)
+                            ]
+                            neighbor_labels.extend(
+                                target[neighbor_samples_indices].cpu().numpy()
+                            )
+
+                    # After collecting all neighbor labels, recompute label counts with neighborhood labels.
+                    if neighbor_labels:
+                        expanded_label_counts = Counter(neighbor_labels)
+                        max_neighbor_count = max(expanded_label_counts.values())
+                        top_neighbor_labels = [
+                            label
+                            for label, count in expanded_label_counts.items()
+                            if count == max_neighbor_count
+                        ]
+                        # If there is a tie with neighbor labels, choose randomly between top labels (including neighbors).
+                        if len(top_neighbor_labels) == 1:
+                            classification_map[bmu_pos] = top_neighbor_labels[0]
+                        else:
+                            classification_map[bmu_pos] = torch.tensor(
+                                random.choice(top_neighbor_labels), device=self.device
+                            )
+                    # If there are no neighbor labels, choose randomly between previous top labels.
+                    else:
+                        classification_map[bmu_pos] = torch.tensor(
+                            random.choice(top_labels), device=self.device
+                        )
+
+        return classification_map
 
 
 # def _update_weights(

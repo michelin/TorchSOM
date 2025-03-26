@@ -485,6 +485,28 @@ class SOMVisualizer:
             gridsize=gridsize,
         )
 
+    # def plot_classification_map(
+    #     self,
+    #     data: torch.Tensor,
+    #     target: torch.Tensor,
+    #     fig_name: Optional[str] = None,
+    #     save_path: Optional[Union[str, Path]] = None,
+    #     gridsize: Optional[Tuple[int, int]] = None,
+    # ) -> None:
+    #     """Plot classification map showing the most frequent label for each neuron.
+
+    #     Args:
+    #         data (torch.Tensor): Input data tensor [batch_size, n_features]
+    #         target (torch.Tensor): Labels tensor for data points [batch_size]
+    #         fig_name (Optional[str], optional): The name of the file to save. Defaults to None.
+    #         save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
+    #         gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
+    #     """
+
+    #     classification_map = self.som.build_classification_map(
+    #         data, target, neighborhood_order=self.som.neighborhood_order
+    #     )
+
     def plot_hit_map(
         self,
         data: torch.Tensor,
