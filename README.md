@@ -38,7 +38,11 @@ It provides an efficient and scalable implementation of **Self-Organizing Maps (
 **TorchSOM** is a PyTorch-based library for training Self-Organizing Maps (SOMs), a type of unsupervised learning algorithm used for clustering and dimensionality reduction. Designed for scalability and ease of use, this implementation is optimized for large-scale data.
 
 Also, this **repository is highly documented and commented**, which makes it easy to use, understand, deploy, and which offers endless possibilities for improvements.  
-To help you explore and experiment with **TorchSOM**, we provide Jupyter notebooks in the [notebooks/](https://github.com/LouisTier/TorchSOM/tree/main/notebooks) directory.
+To help you explore and experiment with **TorchSOM**, we provide Jupyter notebooks in the [```notebooks/```](https://github.com/LouisTier/TorchSOM/tree/main/notebooks) directory. First, execute [```get_data.ipynb```](https://github.com/LouisTier/TorchSOM/tree/main/notebooks/get_data.ipynb) to retrieve the datasets in a ```data``` folder. Then you'll be able to run different TorchSOM examples:
+- [```iris.ipynb```](https://github.com/LouisTier/TorchSOM/tree/main/notebooks/iris.ipynb): A multiclass classification example.
+- [```wine.ipynb```](https://github.com/LouisTier/TorchSOM/tree/main/notebooks/wine.ipynb): Another multiclass classification example.
+- [```boston_housing.ipynb```](https://github.com/LouisTier/TorchSOM/tree/main/notebooks/boston_housing.ipynb): A regression example.
+- [```energy_efficiency.ipynb```](https://github.com/LouisTier/TorchSOM/tree/main/notebooks/energy_efficiency.ipynb): A multi-regression example.
 
 If you find this project interesting, we would be grateful for your support by starring ⭐ this [GitHub repository](https://github.com/LouisTier/TorchSOM).
 

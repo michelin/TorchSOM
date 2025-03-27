@@ -834,7 +834,6 @@ class TorchSOM(nn.Module):
                 if reduction_parameter == "mean":
                     metric_map[bmu_pos] = torch.mean(target[samples_indices])
                 elif reduction_parameter == "std":
-                    # metric_map[bmu_pos] = torch.std(target[samples_indices])
                     if len(samples_indices) > 1:
                         metric_map[bmu_pos] = torch.std(
                             target[samples_indices], unbiased=True
@@ -1034,7 +1033,7 @@ class TorchSOM(nn.Module):
 
         Args:
             data (torch.Tensor): Input data tensor [batch_size, num_features]
-            target (torch.Tensor): Labels tensor for data points [batch_size]
+            target (torch.Tensor): Labels tensor for data points [batch_size]. They are assumed to be encoded with value > 1 for decent visualization.
             neighborhood_order (int, optional): Neighborhood order to consider for tie-breaking. Defaults to 1.
 
         Returns:
@@ -1047,7 +1046,7 @@ class TorchSOM(nn.Module):
 
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
         classification_map = torch.full(
-            (self.x, self.y), float("nan"), dtype=torch.float32, device=self.device
+            (self.x, self.y), float("nan"), device=self.device
         )
 
         # Retrieve neighborhood offsets based on topology for tie-breaking
