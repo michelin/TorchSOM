@@ -56,7 +56,7 @@ You can install the package using pip following this command:
 pip install torchsom
 ```
 
-If you encounter, if you want to use the latest version, or if you prefer the command line interface, you can use it locally by cloning or forking this repository to your local machine.
+If you want to use the latest version, or if you prefer the command line interface, you can use it locally by cloning or forking this repository to your local machine.
 
 ```bash
 git clone https://github.com/LouisTier/TorchSOM.git
