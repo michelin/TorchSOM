@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
 
 <p align="center">
-    <img src="logos/logo4.jpg" alt="TorchSOM_logo" width="350"/>
+    <img src="logos/logo6.jpg" alt="TorchSOM_logo" width="350"/>
 </p>
 
 **TorchSOM** is the official code for
