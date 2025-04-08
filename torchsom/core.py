@@ -1,3 +1,4 @@
+import heapq
 import random
 import warnings
 from collections import Counter, defaultdict
@@ -674,6 +675,133 @@ class TorchSOM(nn.Module):
 
         return q_errors, t_errors
 
+    def collect_samples(
+        self,
+        query_sample: torch.Tensor,
+        historical_samples: torch.Tensor,
+        historical_outputs: torch.Tensor,
+        min_buffer_threshold: int = 50,
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        """Collect historical samples similar to the query sample using SOM projection.
+
+        Args:
+            query_sample (torch.Tensor): The query data point [num_features]
+            historical_samples (torch.Tensor): Historical input data [num_samples, num_features]
+            historical_outputs (torch.Tensor): Historical output values [num_samples]
+            min_buffer_threshold (int, optional): Minimum number of samples to collect. Defaults to 50.
+
+        Returns:
+            Tuple[torch.Tensor, torch.Tensor]: (historical_data_buffer, historical_output_buffer)
+        """
+
+        # Ensure device compatibility
+        query_sample = query_sample.to(self.device)
+        historical_samples = historical_samples.to(self.device)
+        historical_outputs = historical_outputs.to(self.device)
+
+        # Create a mapping of BMUs to historical sample indices if not already created
+        historical_bmus_idx_map = self.build_bmus_data_map(
+            historical_samples, return_indices=True
+        )
+
+        # Initialize collection lists and tracking set
+        historical_data_list = []
+        historical_output_list = []
+        visited_neurons = set()
+
+        # Find BMU for the query sample
+        bmu_pos = self.identify_bmus(query_sample)
+        bmu_tuple = (int(bmu_pos[0].item()), int(bmu_pos[1].item()))
+
+        # Collect samples (features and outputs) from the query's BMU if any exist
+        if (
+            bmu_tuple in historical_bmus_idx_map
+            and len(historical_bmus_idx_map[bmu_tuple]) > 0
+        ):
+            for sample_idx in historical_bmus_idx_map[bmu_tuple]:
+                historical_data_list.append(historical_samples[sample_idx])
+                historical_output_list.append(historical_outputs[sample_idx])
+
+        # Get neighbor offsets based on topology and neighborhood order
+        neighbor_order = self.neighborhood_order
+        neighbor_offsets = []
+        for order in range(1, neighbor_order + 1):
+            if self.topology == "hexagonal":
+                if bmu_pos[0] % 2 == 0:
+                    nei_order_offsets = self._get_hexagonal_offsets(order)["even"]
+                else:
+                    nei_order_offsets = self._get_hexagonal_offsets(order)["odd"]
+            else:
+                nei_order_offsets = self._get_rectangular_offsets(order)
+            neighbor_offsets.extend(nei_order_offsets)
+
+        """
+        First, explore all neighbors of the current BMU and retrieve historical samples if they exist
+        Only explore closed neighbors in terms of distance in the grid, not in terms of distance of the weights.
+        """
+        for dx, dy in neighbor_offsets:
+            neighbor_pos = (int(bmu_pos[0].item() + dx), int(bmu_pos[1].item() + dy))
+            if neighbor_pos in visited_neurons:
+                continue
+            visited_neurons.add(neighbor_pos)
+            # Check if the neighbor is 1) within SOM bounds, 2) activated, and 3) has samples
+            if (
+                0 <= neighbor_pos[0] < self.x
+                and 0 <= neighbor_pos[1] < self.y
+                and neighbor_pos in historical_bmus_idx_map
+                and len(historical_bmus_idx_map[neighbor_pos]) > 0
+            ):
+                for sample_idx in historical_bmus_idx_map[neighbor_pos]:
+                    historical_data_list.append(historical_samples[sample_idx])
+                    historical_output_list.append(historical_outputs[sample_idx])
+
+        """
+        Secondly, ensure we have enough training samples.
+        This time, explore neighbors that are close in terms of distance in the weights space.
+        """
+        historical_samples_count = len(historical_output_list)
+        if historical_samples_count <= min_buffer_threshold:
+            # Calculate distances from current BMU weights to all other neurons
+            neurons_distance_map = self._calculate_distances_to_neurons(
+                data=self.weights.data[bmu_pos[0], bmu_pos[1]]
+            )
+
+            # Build min heap of (distance, neuron_position) for neurons with samples
+            distance_min_heap = []
+            for row in range(self.x):
+                for col in range(self.y):
+                    neuron_pos = (row, col)
+                    if neuron_pos in visited_neurons:
+                        continue
+                    if (
+                        neuron_pos in historical_bmus_idx_map
+                        and len(historical_bmus_idx_map[neuron_pos]) > 0
+                    ):
+                        distance = neurons_distance_map[row, col].item()
+                        heapq.heappush(distance_min_heap, (distance, neuron_pos))
+
+            # Pop from min heap and collect samples until we reach the threshold
+            while (
+                distance_min_heap and historical_samples_count <= min_buffer_threshold
+            ):
+                _, closest_neuron = heapq.heappop(distance_min_heap)
+                visited_neurons.add(closest_neuron)
+                if (
+                    closest_neuron in historical_bmus_idx_map
+                    and len(historical_bmus_idx_map[closest_neuron]) > 0
+                ):
+                    for sample_idx in historical_bmus_idx_map[closest_neuron]:
+                        historical_data_list.append(historical_samples[sample_idx])
+                        historical_output_list.append(historical_outputs[sample_idx])
+                        historical_samples_count += 1
+
+        # Concatenate collected historical samples (features and outputs)
+        historical_data_buffer = torch.stack(historical_data_list, dim=0)
+        historical_output_buffer = torch.tensor(
+            historical_output_list, device=self.device
+        ).view(-1, 1)
+        return historical_data_buffer, historical_output_buffer
+
     def build_hit_map(
         self,
         data: torch.Tensor,
@@ -1125,37 +1253,3 @@ class TorchSOM(nn.Module):
                         )
 
         return classification_map
-
-
-# def _update_weights(
-#     self,
-#     input_data: torch.Tensor,
-#     bmu: Tuple[int, int],
-#     t: int,
-#     max_iteration: int,
-# ) -> None:
-#     """Update weights of the neurons.
-
-#     Args:
-#         input_data (torch.Tensor): input data tensor [batch_size, num_features]
-#         bmu (Tuple[int, int]): coordinates of the winning neuron [row, col]
-#         t (int): current epoch
-#         max_iteration (int): total number of epochs
-#     """
-
-#     # Update learning rate and sigma at each epoch
-#     learning_rate = self.lr_decay_fn(self.learning_rate, t, max_iteration)
-#     sigma = self.sigma_decay_fn(self.sigma, t, max_iteration)
-
-#     # Calculate neighborhood update (row_neurons, col_neurons)
-#     neighborhood_update = self.neighborhood_fn(bmu, sigma) * learning_rate
-
-#     # Reshape x to (1, 1, features)
-#     input_data = input_data.view(1, 1, -1)
-
-#     # Formula: w_ijk = w_ijk + h_ij * (x_ijk - w_ijk)
-#     self.weights.data += torch.einsum(
-#         "ij,ijk->ijk",  # 'ij' is 'neighborhood_update' (h_ij), 'ijk' is 'input_data - self.weights' (x_ijk - w_ijk)
-#         neighborhood_update,  # (row_neurons, col_neurons)
-#         input_data - self.weights,  # (row_neurons, col_neurons, feats)
-#     )  # Update SOM weights (row_neurons, col_neurons)
