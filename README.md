@@ -116,7 +116,7 @@ The [Centre de Mathématiques Appliquées](https://cmap.ip-paris.fr/) - CMAP - a
 
 [Giuseppe Vettigli](https://github.com/JustGlowing) for his GitHub repository [MiniSom](https://github.com/JustGlowing/minisom), which provided a first well-maintained and open-source implementation of Self-Organizing Maps.
 
-Logo created by me using DALL-E.
+Logo created using DALL-E.
 
 
 
