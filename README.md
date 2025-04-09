@@ -105,9 +105,8 @@ If you use TorchSOM in your research or work, please consider citing it using th
 2. **Software**  
     ```bibtex
     @software{Berthier2025TorchSOM_software,
-        author       = {Louis Berthier},
-        title        = {TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},
-        version      = {1.0.0},
+        author       = {Berthier, Louis},
+        title        = {{TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps}},
         year         = {2025},
         url          = {https://github.com/LouisTier/TorchSOM},
         license      = {Apache-2.0},
