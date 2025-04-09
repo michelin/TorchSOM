@@ -14,10 +14,12 @@ keywords:
   - "Data Visualization"
 
 repository: "https://github.com/LouisTier/TorchSOM" 
-license:
-  type: "Apache-2.0"
-  url: "https://opensource.org/licenses/Apache-2.0"
-  file: LICENSE
+license: "Apache-2.0"
+year: 2025
+# license:
+#   type: "Apache-2.0"
+#   url: "https://opensource.org/licenses/Apache-2.0"
+#   file: LICENSE
 
 authors:
   - family-names: "Berthier"
