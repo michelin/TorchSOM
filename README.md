@@ -172,6 +172,3 @@ TorchSOM is licensed under the [Apache License, Version 2.0](https://opensource.
 [![Lint](https://github.com/AdrienC21/CCSD/actions/workflows/lint.yml/badge.svg)](https://github.com/AdrienC21/CCSD/actions/workflows/lint.yml)
 [![Codecov](https://codecov.io/gh/AdrienC21/CCSD/branch/main/graph/badge.svg)](https://app.codecov.io/gh/AdrienC21/CCSD) 
 -->
-
-
-
