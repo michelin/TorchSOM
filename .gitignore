@@ -1,3 +1,6 @@
-torch_som/__pycache__
 # data/
 # notebooks/results/
+
+.venv/
+*.egg-info/
+torchsom/__pycache__/

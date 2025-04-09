@@ -22,7 +22,7 @@ It provides an efficient and scalable implementation of **Self-Organizing Maps (
     - [Installation](#installation)
         <!-- - [Using pip](#using-pip)
         - [Manually](#manually) -->
-    - [Dependencies](#dependencies)
+    <!-- - [Dependencies](#dependencies) -->
     <!-- - [Documentation](#documentation) -->
     - [Citation](#citation)
     - [Acknowledgement](#acknowledgement)
@@ -38,11 +38,11 @@ It provides an efficient and scalable implementation of **Self-Organizing Maps (
 
 Also, this **repository is highly documented and commented**, which makes it easy to use, understand, deploy, and which offers endless possibilities for improvements.  
 To help you explore and experiment with **TorchSOM**, we provide Jupyter notebooks in the [`notebooks/`](notebooks) directory. There are multiples datasets and the corresponding results respectively in the [`data/`](data) and [`notebooks/results/`](notebooks/results) directories.
-<!-- First, execute [`get_data.ipynb`](notebooks/get_data.ipynb) to retrieve the datasets in a `data/` folder. Then you'll be able to run different TorchSOM examples: -->
 - [`iris.ipynb`](notebooks/iris.ipynb): A multiclass classification example.
 - [`wine.ipynb`](notebooks/wine.ipynb): Another multiclass classification example.
 - [`boston_housing.ipynb`](notebooks/boston_housing.ipynb): A regression example.
 - [`energy_efficiency.ipynb`](notebooks/energy_efficiency.ipynb): A multi-regression example.
+- [`get_data.ipynb`](notebooks/get_data.ipynb): The notebook used to generated the datasets provided in the [`data/`](data) directory. 
 
 If you find this project interesting, we would be grateful for your support by starring ⭐ this [`GitHub repository`](https://github.com/LouisTier/TorchSOM).
 
@@ -50,28 +50,36 @@ If you find this project interesting, we would be grateful for your support by s
 
 ## Installation
 
-You can install the package using pip following this command:
+You can install the package using pip following this command (not available yet):
 
 ```bash
-pip install torchsom
+pip install torchsom # Requires the dependencies from the requirements.txt file
 ```
 
-If you want to use the latest version, or if you prefer the command line interface, you can use it locally by cloning or forking this repository to your local machine.
+If you want to use the latest version, or if you prefer the command line interface, you can use it locally by cloning or forking this repository to your local machine. TorchSOM requires a recent version of Python, preferably **3.11 or higher**.  
 
 ```bash
-git clone https://github.com/LouisTier/TorchSOM.git
+git clone https://github.com/LouisTier/TorchSOM.git # Retrieve the GitHub repository
 ```
 
-
-
-## Dependencies
-
-TorchSOM requires a recent version of Python, preferably **3.10 or higher**. Also, make sure you have the required dependencies installed before using it.  
-You can these dependencies by running the command:
+If you want to develop the package and run the notebooks after cloning the repository, make sure you have the required dependencies installed before using it:
 
 ```bash
-pip install -r requirements.txt
+python3.11 -m venv .torchsom_env # Create a virtual environment 
+source .torchsom_env/bin/activate # Activate the environment 
+pip install -r dev-requirements.txt # Install the required dependencies 
+pip install -e . # Install the torchsom package
 ```
+
+You can also run:
+
+```bash
+pip install . # Install the required dependencies from setup.py
+pip install .[dev] # Install the required dependencies from setup.py and "extras_require"
+```
+
+[`requirements.txt`](requirements.txt) stands for the dependencies that are required when importing `torchsom`.  
+[`dev-requirements.txt`](dev-requirements.txt) stands for the dependencies that are required when cloning the GitHub repository and developing the `torchsom` package or running `notebooks`.
 
 
 
@@ -88,21 +96,21 @@ If you use TorchSOM in your research or work, please consider citing it using th
 1. **Paper**  
     ```bibtex
     @inproceedings{Berthier2025TorchSOM_paper,
-    title        = {TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},
-    author       = {Berthier, Louis},
-    year         = {2025},
+        title        = {TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},
+        author       = {Berthier, Louis},
+        year         = {2025},
     }
     ```
 
 2. **Software**  
     ```bibtex
     @software{Berthier2025TorchSOM_software,
-    author       = {Louis Berthier},
-    title        = {TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},
-    version      = {1.0.0},
-    year         = {2025},
-    url          = {https://github.com/LouisTier/TorchSOM},
-    license      = {Apache-2.0},
+        author       = {Louis Berthier},
+        title        = {TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},
+        version      = {1.0.0},
+        year         = {2025},
+        url          = {https://github.com/LouisTier/TorchSOM},
+        license      = {Apache-2.0},
     }
     ```
 
@@ -130,7 +138,7 @@ Please take a moment to read our [`Code of Conduct`](CODE_OF_CONDUCT.md) if you'
 
 ## License
 
-TorchSOM is licensed under the [Apache License, Version 2.0](https://opensource.org/license/apache-2-0). Feel free to use and modify the code as per the terms of the [`LICENSE`](LICENSE) file.
+TorchSOM is licensed under the [Apache License, Version 2.0](https://opensource.org/license/apache-2-0). Feel free to use and modify the code as per the terms of the [`LICENSE`](LICENSE).
 
 
 

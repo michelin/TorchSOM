@@ -13,8 +13,7 @@ keywords:
   - "Clustering"
   - "Data Visualization"
 
-repository: "https://github.com/LouisTier/TorchSOM" # More general than the one below, can include both
-# repository-code: "https://github.com/LouisTier/TorchSOM" # Better suited for source code 
+repository: "https://github.com/LouisTier/TorchSOM" 
 license:
   type: "Apache-2.0"
   url: "https://opensource.org/licenses/Apache-2.0"
@@ -38,17 +37,16 @@ references:
         given-names: "Louis"
     version: "1.0.0"
     date-released: "2025-05-20"
-    # url: "https://github.com/LouisTier/TorchSOM"
-    # repository-code: "https://github.com/LouisTier/TorchSOM"
-    # license: "Apache-2.0"
+    url: "https://github.com/LouisTier/TorchSOM"
+    license: "Apache-2.0"
     
-preferred-citation:
-  type: inproceedings
-  title: "TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps"
-  authors:
-    - family-names: "Berthier"
-      given-names: "Louis"
-  # booktitle: "Proceedings of the XXth CONFERENCE NAME"
-  # year: "2025"
-  # url: "https://arxiv.org/abs/XXXXX" # If available
-  # doi: "10.XXXX/XXXXX" # If available
+# preferred-citation:
+#   type: inproceedings
+#   title: "TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps"
+#   authors:
+#     - family-names: "Berthier"
+#       given-names: "Louis"
+#   booktitle: "Proceedings of the XXth CONFERENCE NAME"
+#   year: "2025"
+#   url: "https://arxiv.org/abs/XXXXX" # If available
+#   doi: "10.XXXX/XXXXX" # If available
