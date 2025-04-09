@@ -13,9 +13,10 @@ keywords:
   - "Clustering"
   - "Data Visualization"
 
-repository: "https://github.com/LouisTier/TorchSOM" 
-license: "Apache-2.0"
-year: 2025
+# repository: "https://github.com/LouisTier/TorchSOM" 
+# license: "Apache-2.0"
+# year: 2025
+
 # license:
 #   type: "Apache-2.0"
 #   url: "https://opensource.org/licenses/Apache-2.0"
@@ -37,10 +38,11 @@ references:
     authors:
       - family-names: "Berthier"
         given-names: "Louis"
-    version: "1.0.0"
-    date-released: "2025-05-20"
+    # version: "1.0.0"
+    # date-released: "2025-05-20"
     url: "https://github.com/LouisTier/TorchSOM"
     license: "Apache-2.0"
+    year: 2025
     
 # preferred-citation:
 #   type: inproceedings
