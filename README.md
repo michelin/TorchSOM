@@ -96,7 +96,7 @@ If you use TorchSOM in your research or work, please consider citing it using th
 1. **Paper**  
     ```bibtex
     @inproceedings{Berthier2025TorchSOM_paper,
-        title        = {TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},
+        title        = {{TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps}},
         author       = {Berthier, Louis},
         year         = {2025},
     }
