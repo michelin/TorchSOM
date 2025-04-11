@@ -681,6 +681,7 @@ class TorchSOM(nn.Module):
         historical_samples: torch.Tensor,
         historical_outputs: torch.Tensor,
         min_buffer_threshold: int = 50,
+        bmus_idx_map: Dict[Tuple[int, int], List[int]] = None,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Collect historical samples similar to the query sample using SOM projection.
 
@@ -699,11 +700,6 @@ class TorchSOM(nn.Module):
         historical_samples = historical_samples.to(self.device)
         historical_outputs = historical_outputs.to(self.device)
 
-        # Create a mapping of BMUs to historical sample indices if not already created
-        historical_bmus_idx_map = self.build_bmus_data_map(
-            historical_samples, return_indices=True
-        )
-
         # Initialize collection lists and tracking set
         historical_data_list = []
         historical_output_list = []
@@ -714,11 +710,8 @@ class TorchSOM(nn.Module):
         bmu_tuple = (int(bmu_pos[0].item()), int(bmu_pos[1].item()))
 
         # Collect samples (features and outputs) from the query's BMU if any exist
-        if (
-            bmu_tuple in historical_bmus_idx_map
-            and len(historical_bmus_idx_map[bmu_tuple]) > 0
-        ):
-            for sample_idx in historical_bmus_idx_map[bmu_tuple]:
+        if bmu_tuple in bmus_idx_map and len(bmus_idx_map[bmu_tuple]) > 0:
+            for sample_idx in bmus_idx_map[bmu_tuple]:
                 historical_data_list.append(historical_samples[sample_idx])
                 historical_output_list.append(historical_outputs[sample_idx])
 
@@ -748,10 +741,10 @@ class TorchSOM(nn.Module):
             if (
                 0 <= neighbor_pos[0] < self.x
                 and 0 <= neighbor_pos[1] < self.y
-                and neighbor_pos in historical_bmus_idx_map
-                and len(historical_bmus_idx_map[neighbor_pos]) > 0
+                and neighbor_pos in bmus_idx_map
+                and len(bmus_idx_map[neighbor_pos]) > 0
             ):
-                for sample_idx in historical_bmus_idx_map[neighbor_pos]:
+                for sample_idx in bmus_idx_map[neighbor_pos]:
                     historical_data_list.append(historical_samples[sample_idx])
                     historical_output_list.append(historical_outputs[sample_idx])
 
@@ -773,10 +766,7 @@ class TorchSOM(nn.Module):
                     neuron_pos = (row, col)
                     if neuron_pos in visited_neurons:
                         continue
-                    if (
-                        neuron_pos in historical_bmus_idx_map
-                        and len(historical_bmus_idx_map[neuron_pos]) > 0
-                    ):
+                    if neuron_pos in bmus_idx_map and len(bmus_idx_map[neuron_pos]) > 0:
                         distance = neurons_distance_map[row, col].item()
                         heapq.heappush(distance_min_heap, (distance, neuron_pos))
 
@@ -787,10 +777,10 @@ class TorchSOM(nn.Module):
                 _, closest_neuron = heapq.heappop(distance_min_heap)
                 visited_neurons.add(closest_neuron)
                 if (
-                    closest_neuron in historical_bmus_idx_map
-                    and len(historical_bmus_idx_map[closest_neuron]) > 0
+                    closest_neuron in bmus_idx_map
+                    and len(bmus_idx_map[closest_neuron]) > 0
                 ):
-                    for sample_idx in historical_bmus_idx_map[closest_neuron]:
+                    for sample_idx in bmus_idx_map[closest_neuron]:
                         historical_data_list.append(historical_samples[sample_idx])
                         historical_output_list.append(historical_outputs[sample_idx])
                         historical_samples_count += 1
