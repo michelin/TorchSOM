@@ -20,9 +20,6 @@ It provides an efficient and scalable implementation of **Self-Organizing Maps (
     - [Table of Contents](#table-of-contents)
     - [Introduction](#introduction)
     - [Installation](#installation)
-        <!-- - [Using pip](#using-pip)
-        - [Manually](#manually) -->
-    <!-- - [Dependencies](#dependencies) -->
     <!-- - [Documentation](#documentation) -->
     - [Citation](#citation)
     - [Acknowledgement](#acknowledgement)
