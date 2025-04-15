@@ -57,7 +57,7 @@ include = ["torchsom*"]                # Include packages matching this pattern 
 dev = [
     "pandas",
     "scikit-learn",
-    "warnings",
+    "openpyxl",
     "black",     
     "isort",
     "rich",                       

@@ -2,6 +2,7 @@
 # notebooks/results/
 
 .venv/
+.torchsom_env/
 *.egg-info/
 __pycache__/
 setup.py

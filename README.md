@@ -37,7 +37,7 @@ It provides an efficient and scalable implementation of **Self-Organizing Maps (
 **TorchSOM** is a PyTorch-based library for training Self-Organizing Maps (SOMs), a type of unsupervised learning algorithm used for clustering and dimensionality reduction. Designed for scalability and ease of use, this implementation is optimized for large-scale data.
 
 Also, this **repository is highly documented and commented**, which makes it easy to use, understand, deploy, and which offers endless possibilities for improvements.  
-To help you explore and experiment with **TorchSOM**, we provide Jupyter notebooks in the [`notebooks/`](notebooks) directory. There are multiples datasets and the corresponding results respectively in the [`data/`](data) and [`notebooks/results/`](notebooks/results) directories.
+To help you explore and experiment with **TorchSOM**, we provide Jupyter notebooks in the [`notebooks/`](notebooks) directory. There are multiples datasets and the corresponding results respectively in the [`data/`](data) and [`results/`](notebooks/results) directories.
 - [`iris.ipynb`](notebooks/iris.ipynb): A multiclass classification example.
 - [`wine.ipynb`](notebooks/wine.ipynb): Another multiclass classification example.
 - [`boston_housing.ipynb`](notebooks/boston_housing.ipynb): A regression example.
@@ -50,36 +50,25 @@ If you find this project interesting, we would be grateful for your support by s
 
 ## Installation
 
-You can install the package using pip following this command (not available yet):
+You can install the package using PyPI (not available yet):
 
 ```bash
-pip install torchsom # Requires the dependencies from the requirements.txt file
+pip install torchsom
 ```
 
-If you want to use the latest version, or if you prefer the command line interface, you can use it locally by cloning or forking this repository to your local machine. TorchSOM requires a recent version of Python, preferably **3.11 or higher**.  
+If you want to use the latest version, or if you prefer the command line interface, you can use it locally by cloning or forking this repository to your local machine. TorchSOM requires a recent version of Python, preferably **3.9 or higher**.  
 
 ```bash
-git clone https://github.com/LouisTier/TorchSOM.git # Retrieve the GitHub repository
+git clone https://github.com/LouisTier/TorchSOM.git 
 ```
 
 If you want to develop the package and run the notebooks after cloning the repository, make sure you have the required dependencies installed before using it:
 
 ```bash
-python3.11 -m venv .torchsom_env # Create a virtual environment 
+python3.9 -m venv .torchsom_env # Create a virtual environment 
 source .torchsom_env/bin/activate # Activate the environment 
-pip install -r dev-requirements.txt # Install the required dependencies 
-pip install -e . # Install the torchsom package
+pip install -e '.[dev]' # Install the required dependencies 
 ```
-
-You can also run:
-
-```bash
-pip install . # Install the required dependencies from setup.py
-pip install .[dev] # Install the required dependencies from setup.py and "extras_require"
-```
-
-[`requirements.txt`](requirements.txt) stands for the dependencies that are required when importing `torchsom`.  
-[`dev-requirements.txt`](dev-requirements.txt) stands for the dependencies that are required when cloning the GitHub repository and developing the `torchsom` package or running `notebooks`.
 
 
 
