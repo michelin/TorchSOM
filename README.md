@@ -5,7 +5,7 @@
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-red.svg)](https://opensource.org/license/apache-2-0)
 
 <p align="center">
-    <img src="logos/logo6.jpg" alt="TorchSOM_logo" width="350"/>
+    <img src="logo.jpg" alt="TorchSOM_logo" width="350"/>
 </p>
 
 **TorchSOM** is the official code for

@@ -1,0 +1,70 @@
+# This section defines how the package should be built when running `python -m build`
+[build-system]
+build-backend = "setuptools.build_meta"  # Use setuptools as the backend
+requires = [
+    "setuptools",                        # The core packaging tool
+    "setuptools-git-versioning",         # Automatically derive the version from Git tags
+]
+
+# Main project/package metadata
+[project]
+name = "torchsom"                
+authors = [
+    {name = "Louis Berthier", email = "louis-desire-romeo.berthier@michelin.com"},  
+]
+dynamic = [
+    "version",                          # Version will be determined dynamically (via git)
+    "readme",                           # README will be dynamically loaded
+]
+description = "A Scalable PyTorch-Compatible Library for Self-Organizing Maps"
+requires-python = ">=3.9"               # Minimum Python version required
+classifiers = [
+    "Development Status :: 3 - Alpha",  
+    "Natural Language :: English",      
+    "Operating System :: OS Independent",  
+    "Programming Language :: Python",   
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+dependencies = [
+    # "torch",
+    "torch @ https://download.pytorch.org/whl/cu118/torch-2.6.0-cp39-cp39-linux_x86_64.whl", # Specify torch 2.6.0 with GPU
+    # "torch @ https://download.pytorch.org/whl/cu118/torch-*.whl", # Specify torch with GPU and last version
+    "numpy",
+    "matplotlib",
+    "tqdm",
+]
+
+# Configuration for setuptools-git-versioning plugin
+[tool.setuptools-git-versioning]
+enabled = true                                  # Enables git-based versioning
+# dev_template and dirty_template define version strings for development and dirty states
+dev_template = "{tag}.dev{ccount}"              # Format when there are commits after a tag
+dirty_template = "{tag}.post{ccount}+dirty"     # Format when the working tree is dirty
+
+# Dynamically load the README from file
+[tool.setuptools.dynamic]
+readme = {file = "README.md"}          # Long description for PyPI and docs
+
+# Package discovery configuration
+[tool.setuptools.packages.find]
+where = ["."]                          # Search in current directory
+include = ["torchsom*"]                # Include packages matching this pattern (e.g., torchsom, torchsom.utils)
+
+# Optional dependencies that can be installed with [dev] extra: `pip install .[dev]`
+[project.optional-dependencies]
+dev = [
+    "pandas",
+    "scikit-learn",
+    "warnings",
+    "black",     
+    "isort",
+    "rich",                       
+    "pytest",                           
+    "pytest-cov",                       
+    "pytest-html", 
+    "certifi", 
+    "typing_extensions",    
+    "notebook",       
+]

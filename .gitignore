@@ -3,4 +3,6 @@
 
 .venv/
 *.egg-info/
-torchsom/__pycache__/
+__pycache__/
+setup.py
+logos/
