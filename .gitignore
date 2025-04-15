@@ -6,3 +6,4 @@
 __pycache__/
 setup.py
 logos/
+build/

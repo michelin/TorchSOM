@@ -28,8 +28,8 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
 ]
 dependencies = [
-    # "torch",
-    "torch @ https://download.pytorch.org/whl/cu118/torch-2.6.0-cp39-cp39-linux_x86_64.whl", # Specify torch 2.6.0 with GPU
+    "torch",
+    # "torch @ https://download.pytorch.org/whl/cu118/torch-2.6.0-cp39-cp39-linux_x86_64.whl", # Specify torch 2.6.0 with GPU
     # "torch @ https://download.pytorch.org/whl/cu118/torch-*.whl", # Specify torch with GPU and last version
     "numpy",
     "matplotlib",
