@@ -522,7 +522,7 @@ class TorchSOM(nn.Module):
             ValueError: Requires more than one sample to perform PCA
             ValueError: Ensure an appropriate method for initialization
         """
-
+        data = data.to(self.device)
         if data.shape[1] != self.num_features:
             raise ValueError(
                 f"Input data dimension ({data.shape[1]}) and weights dimension ({self.num_features}) don't match"
