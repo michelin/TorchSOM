@@ -326,7 +326,7 @@ class SOMVisualizer:
         if isinstance(masked_map, torch.Tensor):
             mask = masked_map == 0
             masked_map[mask] = float("nan")
-            masked_map = masked_map.numpy()
+            masked_map = masked_map.cpu().numpy()
 
         # Adjust the color map by setting NaN values to white
         cmap_copy = plt.cm.get_cmap(cmap or self.config.cmap).copy()
@@ -409,6 +409,12 @@ class SOMVisualizer:
             fig_name (Optional[str], optional): The name of the file to save.. Defaults to "training_errors".
             save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization figure. Defaults to None.
         """
+
+        # Ensure tensors are moved to CPU before plotting
+        if isinstance(quantization_errors, torch.Tensor):
+            quantization_errors = quantization_errors.cpu().numpy()
+        if isinstance(topographic_errors, torch.Tensor):
+            topographic_errors = topographic_errors.cpu().numpy()
 
         fig, (ax1, ax2) = plt.subplots(
             2, 1, figsize=self.config.figsize, gridspec_kw={"hspace": 0.3}
