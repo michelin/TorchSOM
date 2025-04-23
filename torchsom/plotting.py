@@ -393,6 +393,7 @@ class SOMVisualizer:
             self._save_plot(save_path, name=f"{filename}")
         else:
             plt.show()
+        torch.cuda.empty_cache() if torch.cuda.is_available() else None
 
     def plot_training_errors(
         self,
@@ -464,6 +465,7 @@ class SOMVisualizer:
             self._save_plot(save_path=save_path, name=f"{fig_name}")
         else:
             plt.show()
+        torch.cuda.empty_cache() if torch.cuda.is_available() else None
 
     def plot_distance_map(
         self,
@@ -685,6 +687,7 @@ class SOMVisualizer:
                 gridsize=gridsize,
             )
             plt.close()
+        torch.cuda.empty_cache() if torch.cuda.is_available() else None
 
     def plot_all(
         self,
