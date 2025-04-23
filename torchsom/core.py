@@ -404,6 +404,7 @@ class TorchSOM(nn.Module):
         data: torch.Tensor,
     ) -> torch.Tensor:  # Union[Tuple[int, int], torch.Tensor]:
         """Find BMUs for input data.  Handles both single samples and batches.
+        It requires a data on the GPU if available for calculations with SOM's weights on GPU's too.
 
         Args:
             data (torch.Tensor): Input tensor of shape [num_features] or [batch_size, num_features]
@@ -635,10 +636,10 @@ class TorchSOM(nn.Module):
             Tuple[List[float], List[float]]: Quantization and topographic errors [epoch]
         """
 
-        data = data.to(self.device)
+        # data = data.to(self.device)
         dataset = TensorDataset(data)
         dataloader = DataLoader(
-            dataset, batch_size=self.batch_size, shuffle=True, pin_memory=True
+            dataset, batch_size=self.batch_size, shuffle=True, pin_memory=False
         )
 
         q_errors = []
@@ -659,7 +660,7 @@ class TorchSOM(nn.Module):
             epoch_t_errors = []
 
             for batch in dataloader:
-                batch_data = batch[0]
+                batch_data = batch[0].to(self.device)
 
                 # Get BMUs for all data points at once [batch_size, 2]
                 with torch.no_grad():
@@ -711,6 +712,7 @@ class TorchSOM(nn.Module):
         bmu_tuple = (int(bmu_pos[0].item()), int(bmu_pos[1].item()))
 
         # Collect samples indices from the query's BMU if any exist
+        # ! DUE TO CHANGES IN TORCHSOM, bmus_idx_map is on cpu now even with gpus
         sample_indices = []
         if bmu_tuple in bmus_idx_map and len(bmus_idx_map[bmu_tuple]) > 0:
             sample_indices.extend(bmus_idx_map[bmu_tuple])
@@ -781,78 +783,212 @@ class TorchSOM(nn.Module):
                     sample_indices.extend(bmus_idx_map[closest_neuron])
 
         # Retrieve historical features and outputs from indices, while ensuring device compatibility.
-        historical_data_buffer = historical_samples[sample_indices].to(self.device)
-        historical_output_buffer = (
-            historical_outputs[sample_indices].view(-1, 1).to(self.device)
-        )
+        # historical_data_buffer = historical_samples[sample_indices].to(self.device)
+        # historical_output_buffer = (
+        #     historical_outputs[sample_indices].view(-1, 1).to(self.device)
+        # )
+        historical_data_buffer = historical_samples[sample_indices]
+        historical_output_buffer = historical_outputs[sample_indices].view(-1, 1)
 
         return historical_data_buffer, historical_output_buffer
+
+    # def build_hit_map(
+    #     self,
+    #     data: torch.Tensor,
+    # ) -> torch.Tensor:
+    #     """Returns a matrix where element i,j is the number of times that neuron i,j has been the winner.
+
+    #     Args:
+    #     data (torch.Tensor): input data tensor [batch_size, num_features]
+
+    #     Returns:
+    #     torch.Tensor: Matrix indicating the number of times each neuron has been identified as bmu. [row_neurons, col_neurons]
+    #     """
+
+    #     # Ensure device and batch compatibility
+    #     data = data.to(self.device)
+    #     if data.dim() == 1:
+    #         data = data.unsqueeze(0)
+
+    #     # Get BMUs for all data points at once [batch_size, 2]
+    #     bmus = self.identify_bmus(data)
+
+    #     # Build the map by counting the occurence of each bmu
+    #     hit_map = torch.zeros((self.x, self.y), device=self.device)
+    #     for row, col in bmus:
+    #         hit_map[row, col] += 1
+
+    #     return hit_map
 
     def build_hit_map(
         self,
         data: torch.Tensor,
+        batch_size: int = 1024,
     ) -> torch.Tensor:
         """Returns a matrix where element i,j is the number of times that neuron i,j has been the winner.
+        It processes the data in batches to save memory.
+        The hit map is built on CPU, but the calculations are done on GPU if available.
 
         Args:
         data (torch.Tensor): input data tensor [batch_size, num_features]
+        batch_size (int, optional): Size of batches to process. Defaults to 128.
 
         Returns:
-        torch.Tensor: Matrix indicating the number of times each neuron has been identified as bmu. [row_neurons, col_neurons]
+        torch.Tensor: Matrix indicating the number of times each neuron has been identified as bmu.
         """
-
-        # Ensure device and batch compatibility
-        data = data.to(self.device)
+        # Ensure batch compatibility
         if data.dim() == 1:
             data = data.unsqueeze(0)
 
-        # Get BMUs for all data points at once [batch_size, 2]
-        bmus = self.identify_bmus(data)
+        # Initialize hit map - here, on CPU -
+        hit_map = torch.zeros((self.x, self.y))
 
-        # Build the map by counting the occurence of each bmu
-        hit_map = torch.zeros((self.x, self.y), device=self.device)
-        for row, col in bmus:
-            hit_map[row, col] += 1
+        # Process data in batches to save GPU memory
+        num_samples = data.shape[0]
+        num_batches = (num_samples + batch_size - 1) // batch_size
+        for batch_idx in range(num_batches):
+
+            # Retrieve corresponding batches and move them to device
+            start_idx = batch_idx * batch_size
+            end_idx = min((batch_idx + 1) * batch_size, num_samples)
+            current_batch_size = end_idx - start_idx
+            batch_data = data[start_idx:end_idx].to(self.device)
+
+            # Get BMUs for this batch
+            batch_bmus = self.identify_bmus(batch_data)
+
+            # Handle special case when batch has only one sample
+            if current_batch_size == 1:
+                # If only one sample, ensure batch_bmus is properly shaped as [1, 2]
+                if batch_bmus.dim() == 1:
+                    batch_bmus = batch_bmus.unsqueeze(0)
+                row, col = batch_bmus[0]
+                hit_map[row.item(), col.item()] += 1
+            # Otherwise, process multiple samples normally
+            else:
+                # Update and store hit map on CPU
+                for row, col in batch_bmus:
+                    hit_map[row.item(), col.item()] += 1
+
+            # Clean up GPU memory
+            del batch_data, batch_bmus
+            torch.cuda.empty_cache() if torch.cuda.is_available() else None
 
         return hit_map
+
+    # def build_bmus_data_map(
+    #     self,
+    #     data: torch.Tensor,
+    #     return_indices: bool = False,
+    # ) -> Dict[Tuple[int, int], Any]:
+    #     """Create a mapping of winning neurons to their corresponding data points.
+
+    #     Args:
+    #         data (torch.Tensor): input data tensor [batch_size, num_features] or [num_features]
+    #         return_indices (bool, optional): If True, return indices instead of data points. Defaults to False.
+
+    #     Returns:
+    #         Dict[Tuple[int, int], Any]: Dictionary mapping bmus to data samples or indices
+    #     """
+
+    #     # Ensure device and batch compatibility
+    #     data = data.to(self.device)
+    #     if data.dim() == 1:
+    #         data = data.unsqueeze(0)
+
+    #     # Get BMUs for all data points at once [batch_size, 2]
+    #     bmus = self.identify_bmus(data)
+
+    #     # Build the map
+    #     bmus_data_map = defaultdict(list)
+    #     for idx, (row, col) in enumerate(bmus):
+
+    #         # Convert BMU coordinates to integer tuple for dictionary key
+    #         bmu_pos = (int(row.item()), int(col.item()))
+
+    #         # Add the corresponding element to the dict
+    #         if return_indices:
+    #             bmus_data_map[bmu_pos].append(idx)
+    #         else:
+    #             bmus_data_map[bmu_pos].append(data[idx])
+
+    #     # If you return data samples, then for each bmu you need to stack them to have a tensor of all data samples instead of multiple tensors
+    #     if not return_indices:
+    #         for bmu in bmus_data_map:
+    #             bmus_data_map[bmu] = torch.stack(bmus_data_map[bmu])
+
+    #     return bmus_data_map
 
     def build_bmus_data_map(
         self,
         data: torch.Tensor,
         return_indices: bool = False,
+        batch_size: int = 1024,
     ) -> Dict[Tuple[int, int], Any]:
         """Create a mapping of winning neurons to their corresponding data points.
+        It processes the data in batches to save memory.
+         The hit map is built on CPU, but the calculations are done on GPU if available.
 
-        Args:
-            data (torch.Tensor): input data tensor [batch_size, num_features] or [num_features]
-            return_indices (bool, optional): If True, return indices instead of data points. Defaults to False.
+         Args:
+             data (torch.Tensor): input data tensor [num_samples, num_features] or [num_features]
+             return_indices (bool, optional): If True, return indices instead of data points. Defaults to False.
+             batch_size (int, optional): Size of batches to process. Defaults to 128.
 
-        Returns:
-            Dict[Tuple[int, int], Any]: Dictionary mapping bmus to data samples or indices
+         Returns:
+             Dict[Tuple[int, int], Any]: Dictionary mapping bmus to data samples or indices
         """
-
-        # Ensure device and batch compatibility
-        data = data.to(self.device)
+        # Ensure batch compatibility
         if data.dim() == 1:
             data = data.unsqueeze(0)
 
-        # Get BMUs for all data points at once [batch_size, 2]
-        bmus = self.identify_bmus(data)
-
-        # Build the map
+        # Initialize the map - here, on CPU -
         bmus_data_map = defaultdict(list)
-        for idx, (row, col) in enumerate(bmus):
 
-            # Convert BMU coordinates to integer tuple for dictionary key
-            bmu_pos = (int(row.item()), int(col.item()))
+        # Process data in batches to save GPU memory
+        num_samples = data.shape[0]
+        num_batches = (num_samples + batch_size - 1) // batch_size
+        for batch_idx in range(num_batches):
 
-            # Add the corresponding element to the dict
-            if return_indices:
-                bmus_data_map[bmu_pos].append(idx)
+            # Retrieve corresponding batches and move them to device
+            start_idx = batch_idx * batch_size
+            end_idx = min((batch_idx + 1) * batch_size, num_samples)
+            current_batch_size = end_idx - start_idx
+            batch_data = data[start_idx:end_idx].to(self.device)
+
+            # Get BMUs for the corrsponding batch data points at once [batch_size, 2]
+            batch_bmus = self.identify_bmus(batch_data)
+
+            # Handle special case when batch has only one sample
+            if current_batch_size == 1:
+                # If only one sample, ensure batch_bmus is properly shaped as [1, 2]
+                if batch_bmus.dim() == 1:
+                    batch_bmus = batch_bmus.unsqueeze(0)
+                row, col = batch_bmus[0]
+                bmu_pos = (int(row.item()), int(col.item()))
+                if return_indices:
+                    bmus_data_map[bmu_pos].append(start_idx)
+                else:
+                    bmus_data_map[bmu_pos].append(batch_data[0].cpu())
+            # Otherwise, process multiple samples normally
             else:
-                bmus_data_map[bmu_pos].append(data[idx])
+                # Add the BMUs to the map
+                for i, (row, col) in enumerate(batch_bmus):
+                    # Convert BMU coordinates to integer tuple for dictionary key
+                    bmu_pos = (int(row.item()), int(col.item()))
+                    # Global index for this data point
+                    global_idx = start_idx + i
+                    # Add to map based on return_indices flag
+                    if return_indices:
+                        bmus_data_map[bmu_pos].append(global_idx)
+                    else:
+                        # Store the data on CPU to save GPU memory
+                        bmus_data_map[bmu_pos].append(batch_data[i].cpu())
 
-        # If you return data samples, then for each bmu you need to stack them to have a tensor of all data samples instead of multiple tensors
+            # Clean up GPU memory
+            del batch_data, batch_bmus
+            torch.cuda.empty_cache() if torch.cuda.is_available() else None
+
+        # Convert lists to tensors if returning data points
         if not return_indices:
             for bmu in bmus_data_map:
                 bmus_data_map[bmu] = torch.stack(bmus_data_map[bmu])
@@ -874,12 +1010,14 @@ class TorchSOM(nn.Module):
             torch.Tensor: Rank map where each neuron's value is its rank (1 = lowest std = best)
         """
 
-        # Ensure device compatibility
-        data = data.to(self.device)
-        target = target.to(self.device)
+        # # Ensure device compatibility
+        # data = data.to(self.device)
+        # target = target.to(self.device)
 
+        # ! Now bmus_map is by default on the CPU
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
-        neuron_stds = torch.full((self.x, self.y), float("nan"), device=self.device)
+        # neuron_stds = torch.full((self.x, self.y), float("nan"), device=self.device)
+        neuron_stds = torch.full((self.x, self.y), float("nan"))
 
         # Calculate standard deviation for each neuron
         active_neurons = 0
@@ -897,7 +1035,8 @@ class TorchSOM(nn.Module):
                 else:
                     neuron_stds[bmu_pos] = 0.0
 
-        rank_map = torch.full((self.x, self.y), float("nan"), device=self.device)
+        # rank_map = torch.full((self.x, self.y), float("nan"), device=self.device)
+        rank_map = torch.full((self.x, self.y), float("nan"))
 
         # Get mask to retrieve indices of non-NaN values
         valid_mask = ~torch.isnan(neuron_stds)
@@ -934,13 +1073,14 @@ class TorchSOM(nn.Module):
             torch.Tensor: Metric map based on the reduction parameter.
         """
 
-        # Ensure device compatibility
-        data = data.to(self.device)
-        target = target.to(self.device)
+        # # Ensure device compatibility
+        # data = data.to(self.device)
+        # target = target.to(self.device)
         epsilon = 1e-8
 
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
-        metric_map = torch.full((self.x, self.y), float("nan"), device=self.device)
+        # metric_map = torch.full((self.x, self.y), float("nan"), device=self.device)
+        metric_map = torch.full((self.x, self.y), float("nan"))
 
         # For each activated neurons, calculate the corresponding target metric
         for bmu_pos, samples_indices in bmus_map.items():
@@ -974,13 +1114,14 @@ class TorchSOM(nn.Module):
             The score combines the standard error with a term penalizing uneven sample distribution across neurons. Lower scores indicate better neuron representativeness.
         """
 
-        # Ensure device compatibility
-        data = data.to(self.device)
-        target = target.to(self.device)
+        # # Ensure device compatibility
+        # data = data.to(self.device)
+        # target = target.to(self.device)
         epsilon = 1e-8
 
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
-        score_map = torch.full((self.x, self.y), float("nan"), device=self.device)
+        # score_map = torch.full((self.x, self.y), float("nan"), device=self.device)
+        score_map = torch.full((self.x, self.y), float("nan"))
 
         # For each activated neurons, calculate the corresponding target metric
         for bmu_pos, samples_indices in bmus_map.items():
@@ -989,21 +1130,16 @@ class TorchSOM(nn.Module):
                 # Consider neuron with multiple elements
                 if len(samples_indices) > 1:
                     std = torch.std(target[samples_indices], unbiased=True)
-                    n_samples = torch.tensor(
-                        len(samples_indices), dtype=torch.float32, device=self.device
-                    )
-                    total_samples = torch.tensor(
-                        len(data), dtype=torch.float32, device=self.device
-                    )
+                    n_samples = torch.tensor(len(samples_indices), dtype=torch.float32)
+                    total_samples = torch.tensor(len(data), dtype=torch.float32)
                     neuron_score = (std / torch.sqrt(n_samples)) * torch.log(
                         total_samples / n_samples
                     )
 
                 # Consider neuron with a unique element
                 else:
-                    neuron_score = torch.tensor(
-                        epsilon, dtype=torch.float32, device=self.device
-                    )  # tensor to initialize tensor from scalars and ensure visualization with a non-zero value
+                    # Tensor to initialize tensor from scalars and ensure visualization with a non-zero value
+                    neuron_score = torch.tensor(epsilon, dtype=torch.float32)
 
                 score_map[bmu_pos] = (
                     round(neuron_score.item(), 2) if neuron_score > epsilon else epsilon
@@ -1069,6 +1205,10 @@ class TorchSOM(nn.Module):
             float("nan"),
             device=self.device,
         )
+        # distance_matrix = torch.full(
+        #     (self.weights.shape[0], self.weights.shape[1], max_neighbors),
+        #     float("nan"),
+        # )
 
         # Compute distances for each neuron
         for row in range(self.weights.shape[0]):
@@ -1154,14 +1294,15 @@ class TorchSOM(nn.Module):
             torch.Tensor: Classification map with the most frequent label for each neuron
         """
 
-        # Ensure device compatibility
-        data = data.to(self.device)
-        target = target.to(self.device)
+        # # Ensure device compatibility
+        # data = data.to(self.device)
+        # target = target.to(self.device)
 
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
-        classification_map = torch.full(
-            (self.x, self.y), float("nan"), device=self.device
-        )
+        # classification_map = torch.full(
+        #     (self.x, self.y), float("nan"), device=self.device
+        # )
+        classification_map = torch.full((self.x, self.y), float("nan"))
 
         # Retrieve neighborhood offsets based on topology for tie-breaking
         neighborhood_offsets = []
@@ -1229,13 +1370,19 @@ class TorchSOM(nn.Module):
                         if len(top_neighbor_labels) == 1:
                             classification_map[bmu_pos] = top_neighbor_labels[0]
                         else:
+                            # classification_map[bmu_pos] = torch.tensor(
+                            #     random.choice(top_neighbor_labels), device=self.device
+                            # )
                             classification_map[bmu_pos] = torch.tensor(
-                                random.choice(top_neighbor_labels), device=self.device
+                                random.choice(top_neighbor_labels)
                             )
                     # If there are no neighbor labels, choose randomly between previous top labels.
                     else:
+                        # classification_map[bmu_pos] = torch.tensor(
+                        #     random.choice(top_labels), device=self.device
+                        # )
                         classification_map[bmu_pos] = torch.tensor(
-                            random.choice(top_labels), device=self.device
+                            random.choice(top_labels)
                         )
 
         return classification_map
