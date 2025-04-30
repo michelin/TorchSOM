@@ -782,43 +782,9 @@ class TorchSOM(nn.Module):
                 if closest_neuron in bmus_idx_map:
                     sample_indices.extend(bmus_idx_map[closest_neuron])
 
-        # Retrieve historical features and outputs from indices, while ensuring device compatibility.
-        # historical_data_buffer = historical_samples[sample_indices].to(self.device)
-        # historical_output_buffer = (
-        #     historical_outputs[sample_indices].view(-1, 1).to(self.device)
-        # )
         historical_data_buffer = historical_samples[sample_indices]
         historical_output_buffer = historical_outputs[sample_indices].view(-1, 1)
-
         return historical_data_buffer, historical_output_buffer
-
-    # def build_hit_map(
-    #     self,
-    #     data: torch.Tensor,
-    # ) -> torch.Tensor:
-    #     """Returns a matrix where element i,j is the number of times that neuron i,j has been the winner.
-
-    #     Args:
-    #     data (torch.Tensor): input data tensor [batch_size, num_features]
-
-    #     Returns:
-    #     torch.Tensor: Matrix indicating the number of times each neuron has been identified as bmu. [row_neurons, col_neurons]
-    #     """
-
-    #     # Ensure device and batch compatibility
-    #     data = data.to(self.device)
-    #     if data.dim() == 1:
-    #         data = data.unsqueeze(0)
-
-    #     # Get BMUs for all data points at once [batch_size, 2]
-    #     bmus = self.identify_bmus(data)
-
-    #     # Build the map by counting the occurence of each bmu
-    #     hit_map = torch.zeros((self.x, self.y), device=self.device)
-    #     for row, col in bmus:
-    #         hit_map[row, col] += 1
-
-    #     return hit_map
 
     def build_hit_map(
         self,
@@ -875,49 +841,6 @@ class TorchSOM(nn.Module):
             torch.cuda.empty_cache() if torch.cuda.is_available() else None
 
         return hit_map
-
-    # def build_bmus_data_map(
-    #     self,
-    #     data: torch.Tensor,
-    #     return_indices: bool = False,
-    # ) -> Dict[Tuple[int, int], Any]:
-    #     """Create a mapping of winning neurons to their corresponding data points.
-
-    #     Args:
-    #         data (torch.Tensor): input data tensor [batch_size, num_features] or [num_features]
-    #         return_indices (bool, optional): If True, return indices instead of data points. Defaults to False.
-
-    #     Returns:
-    #         Dict[Tuple[int, int], Any]: Dictionary mapping bmus to data samples or indices
-    #     """
-
-    #     # Ensure device and batch compatibility
-    #     data = data.to(self.device)
-    #     if data.dim() == 1:
-    #         data = data.unsqueeze(0)
-
-    #     # Get BMUs for all data points at once [batch_size, 2]
-    #     bmus = self.identify_bmus(data)
-
-    #     # Build the map
-    #     bmus_data_map = defaultdict(list)
-    #     for idx, (row, col) in enumerate(bmus):
-
-    #         # Convert BMU coordinates to integer tuple for dictionary key
-    #         bmu_pos = (int(row.item()), int(col.item()))
-
-    #         # Add the corresponding element to the dict
-    #         if return_indices:
-    #             bmus_data_map[bmu_pos].append(idx)
-    #         else:
-    #             bmus_data_map[bmu_pos].append(data[idx])
-
-    #     # If you return data samples, then for each bmu you need to stack them to have a tensor of all data samples instead of multiple tensors
-    #     if not return_indices:
-    #         for bmu in bmus_data_map:
-    #             bmus_data_map[bmu] = torch.stack(bmus_data_map[bmu])
-
-    #     return bmus_data_map
 
     def build_bmus_data_map(
         self,
@@ -1009,10 +932,6 @@ class TorchSOM(nn.Module):
         Returns:
             torch.Tensor: Rank map where each neuron's value is its rank (1 = lowest std = best)
         """
-
-        # # Ensure device compatibility
-        # data = data.to(self.device)
-        # target = target.to(self.device)
 
         # ! Now bmus_map is by default on the CPU
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
@@ -1294,25 +1213,23 @@ class TorchSOM(nn.Module):
             torch.Tensor: Classification map with the most frequent label for each neuron
         """
 
-        # # Ensure device compatibility
-        # data = data.to(self.device)
-        # target = target.to(self.device)
-
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
-        # classification_map = torch.full(
-        #     (self.x, self.y), float("nan"), device=self.device
-        # )
         classification_map = torch.full((self.x, self.y), float("nan"))
 
         # Retrieve neighborhood offsets based on topology for tie-breaking
         neighborhood_offsets = []
         if self.topology == "hexagonal":
             for order in range(1, neighborhood_order + 1):
-                offsets = self._get_hexagonal_offsets(order)
-                neighborhood_offsets.extend(
-                    offsets["even"] if (row % 2 == 0) else offsets["odd"]
-                    for row in range(self.x)
-                )
+                # offsets = self._get_hexagonal_offsets(order)
+                # neighborhood_offsets.extend(
+                #     offsets["even"] if (row % 2 == 0) else offsets["odd"]
+                #     for row in range(self.x)
+                # )
+                for row in range(self.x):
+                    offsets = self._get_hexagonal_offsets(order)
+                    neighborhood_offsets.extend(
+                        offsets["even"] if (row % 2 == 0) else offsets["odd"]
+                    )
         else:
             for order in range(1, neighborhood_order + 1):
                 neighborhood_offsets.extend(self._get_rectangular_offsets(order))
@@ -1326,8 +1243,8 @@ class TorchSOM(nn.Module):
                 Find the most common one
                 Check if there is a tie with another label
                 """
-                neuron_labels = target[sample_indices]
-                label_counts = Counter(neuron_labels.cpu().numpy())
+                neuron_labels = target[sample_indices].cpu().numpy()
+                label_counts = Counter(neuron_labels)
                 max_count = max(label_counts.values())
                 top_labels = [
                     label for label, count in label_counts.items() if count == max_count
@@ -1338,7 +1255,10 @@ class TorchSOM(nn.Module):
                 In case of a tie, consider labels from neighboring neurons to break it.
                 """
                 if len(top_labels) == 1:
-                    classification_map[bmu_pos] = top_labels[0]
+                    # classification_map[bmu_pos] = top_labels[0]
+                    classification_map[bmu_pos] = torch.tensor(
+                        top_labels[0], dtype=classification_map.dtype
+                    )  # Convert NumPy value to tensor scalar
                 else:
                     neighbor_labels = []
                     row, col = bmu_pos
@@ -1368,139 +1288,28 @@ class TorchSOM(nn.Module):
                         ]
                         # If there is a tie with neighbor labels, choose randomly between top labels (including neighbors).
                         if len(top_neighbor_labels) == 1:
-                            classification_map[bmu_pos] = top_neighbor_labels[0]
+                            # classification_map[bmu_pos] = top_neighbor_labels[0]
+                            classification_map[bmu_pos] = torch.tensor(
+                                top_neighbor_labels[0], dtype=classification_map.dtype
+                            )
                         else:
                             # classification_map[bmu_pos] = torch.tensor(
-                            #     random.choice(top_neighbor_labels), device=self.device
+                            #     random.choice(top_neighbor_labels)
                             # )
+                            # Choose randomly and convert to tensor
+                            chosen_label = random.choice(top_neighbor_labels)
                             classification_map[bmu_pos] = torch.tensor(
-                                random.choice(top_neighbor_labels)
+                                chosen_label, dtype=classification_map.dtype
                             )
                     # If there are no neighbor labels, choose randomly between previous top labels.
                     else:
                         # classification_map[bmu_pos] = torch.tensor(
-                        #     random.choice(top_labels), device=self.device
+                        #     random.choice(top_labels)
                         # )
+                        # Choose randomly and convert to tensor
+                        chosen_label = random.choice(top_labels)
                         classification_map[bmu_pos] = torch.tensor(
-                            random.choice(top_labels)
+                            chosen_label, dtype=classification_map.dtype
                         )
 
         return classification_map
-
-
-# def collect_samples(
-#     self,
-#     query_sample: torch.Tensor,
-#     historical_samples: torch.Tensor,
-#     historical_outputs: torch.Tensor,
-#     min_buffer_threshold: int = 50,
-#     bmus_idx_map: Dict[Tuple[int, int], List[int]] = None,
-# ) -> Tuple[torch.Tensor, torch.Tensor]:
-#     """Collect historical samples similar to the query sample using SOM projection.
-
-#     Args:
-#         query_sample (torch.Tensor): The query data point [num_features]
-#         historical_samples (torch.Tensor): Historical input data [num_samples, num_features]
-#         historical_outputs (torch.Tensor): Historical output values [num_samples]
-#         min_buffer_threshold (int, optional): Minimum number of samples to collect. Defaults to 50.
-
-#     Returns:
-#         Tuple[torch.Tensor, torch.Tensor]: (historical_data_buffer, historical_output_buffer)
-#     """
-
-#     # Ensure device compatibility
-#     query_sample = query_sample.to(self.device)
-#     historical_samples = historical_samples.to(self.device)
-#     historical_outputs = historical_outputs.to(self.device)
-
-#     # Initialize collection lists and tracking set
-#     historical_data_list = []
-#     historical_output_list = []
-#     visited_neurons = set()
-
-#     # Find BMU for the query sample
-#     bmu_pos = self.identify_bmus(query_sample)
-#     bmu_tuple = (int(bmu_pos[0].item()), int(bmu_pos[1].item()))
-
-#     # Collect samples (features and outputs) from the query's BMU if any exist
-#     if bmu_tuple in bmus_idx_map and len(bmus_idx_map[bmu_tuple]) > 0:
-#         for sample_idx in bmus_idx_map[bmu_tuple]:
-#             historical_data_list.append(historical_samples[sample_idx])
-#             historical_output_list.append(historical_outputs[sample_idx])
-
-#     # Get neighbor offsets based on topology and neighborhood order
-#     neighbor_order = self.neighborhood_order
-#     neighbor_offsets = []
-#     for order in range(1, neighbor_order + 1):
-#         if self.topology == "hexagonal":
-#             if bmu_pos[0] % 2 == 0:
-#                 nei_order_offsets = self._get_hexagonal_offsets(order)["even"]
-#             else:
-#                 nei_order_offsets = self._get_hexagonal_offsets(order)["odd"]
-#         else:
-#             nei_order_offsets = self._get_rectangular_offsets(order)
-#         neighbor_offsets.extend(nei_order_offsets)
-
-#     """
-#     First, explore all neighbors of the current BMU and retrieve historical samples if they exist
-#     Only explore closed neighbors in terms of distance in the grid, not in terms of distance of the weights.
-#     """
-#     for dx, dy in neighbor_offsets:
-#         neighbor_pos = (int(bmu_pos[0].item() + dx), int(bmu_pos[1].item() + dy))
-#         if neighbor_pos in visited_neurons:
-#             continue
-#         visited_neurons.add(neighbor_pos)
-#         # Check if the neighbor is 1) within SOM bounds, 2) activated, and 3) has samples
-#         if (
-#             0 <= neighbor_pos[0] < self.x
-#             and 0 <= neighbor_pos[1] < self.y
-#             and neighbor_pos in bmus_idx_map
-#             and len(bmus_idx_map[neighbor_pos]) > 0
-#         ):
-#             for sample_idx in bmus_idx_map[neighbor_pos]:
-#                 historical_data_list.append(historical_samples[sample_idx])
-#                 historical_output_list.append(historical_outputs[sample_idx])
-
-#     """
-#     Secondly, ensure we have enough training samples.
-#     This time, explore neighbors that are close in terms of distance in the weights space.
-#     """
-#     historical_samples_count = len(historical_output_list)
-#     if historical_samples_count <= min_buffer_threshold:
-#         # Calculate distances from current BMU weights to all other neurons
-#         neurons_distance_map = self._calculate_distances_to_neurons(
-#             data=self.weights.data[bmu_pos[0], bmu_pos[1]]
-#         )
-
-#         # Build min heap of (distance, neuron_position) for neurons with samples
-#         distance_min_heap = []
-#         for row in range(self.x):
-#             for col in range(self.y):
-#                 neuron_pos = (row, col)
-#                 if neuron_pos in visited_neurons:
-#                     continue
-#                 if neuron_pos in bmus_idx_map and len(bmus_idx_map[neuron_pos]) > 0:
-#                     distance = neurons_distance_map[row, col].item()
-#                     heapq.heappush(distance_min_heap, (distance, neuron_pos))
-
-#         # Pop from min heap and collect samples until we reach the threshold
-#         while (
-#             distance_min_heap and historical_samples_count <= min_buffer_threshold
-#         ):
-#             _, closest_neuron = heapq.heappop(distance_min_heap)
-#             visited_neurons.add(closest_neuron)
-#             if (
-#                 closest_neuron in bmus_idx_map
-#                 and len(bmus_idx_map[closest_neuron]) > 0
-#             ):
-#                 for sample_idx in bmus_idx_map[closest_neuron]:
-#                     historical_data_list.append(historical_samples[sample_idx])
-#                     historical_output_list.append(historical_outputs[sample_idx])
-#                     historical_samples_count += 1
-
-#     # Concatenate collected historical samples (features and outputs)
-#     historical_data_buffer = torch.stack(historical_data_list, dim=0)
-#     historical_output_buffer = torch.tensor(
-#         historical_output_list, device=self.device
-#     ).view(-1, 1)
-#     return historical_data_buffer, historical_output_buffer
