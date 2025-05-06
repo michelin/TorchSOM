@@ -66,5 +66,8 @@ dev = [
     "pytest-html", 
     "certifi", 
     "typing_extensions",    
-    "notebook",       
+    "notebook",      
+    "sphinx",
+    "sphinx-rtd-theme",
+    "sphinx-autodoc-typehints",
 ]

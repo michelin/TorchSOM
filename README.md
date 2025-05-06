@@ -20,7 +20,7 @@ It provides an efficient and scalable implementation of **Self-Organizing Maps (
     - [Table of Contents](#table-of-contents)
     - [Introduction](#introduction)
     - [Installation](#installation)
-    <!-- - [Documentation](#documentation) -->
+    - [Documentation](#documentation)
     - [Citation](#citation)
     - [Acknowledgement](#acknowledgement)
     - [Contributions](#contributions)
@@ -71,9 +71,29 @@ pip install -e '.[dev]' # Install the required dependencies
 
 
 
-<!-- ## Documentation
+## Documentation
 
-Here is the link to the documentation of this library: [https://ccsd.readthedocs.io/en/latest/](https://ccsd.readthedocs.io/en/latest/). It contains more information regarding all the classes and functions of this package. -->
+For more details on classes and functions, please refer to the `TorchSOM` [documentation](https://louistier.github.io/TorchSOM/index.html).
+
+<!-- 
+
+Generate the `.rst` files with
+
+```bash
+sphinx-apidoc -o docs/source torchsom
+```
+
+Then, to rebuild everything in [`docs/build/html`](docs/build/html):
+
+```bash
+cd docs/
+make clean
+make html
+```
+
+Open [`index.html`](docs/build/html/index.html) to preview locally the generated HTML. 
+
+-->
 
 
 
