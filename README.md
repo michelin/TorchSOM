@@ -8,7 +8,7 @@
     <img src="logo.jpg" alt="TorchSOM_logo" width="350"/>
 </p>
 
-**TorchSOM** is the official code for
+**`TorchSOM`** is the official code for
 paper [PAPER ARTICLE AND LINK TO UPDATE](), @CONFERENCE @DATE.  
 It provides an efficient and scalable implementation of **Self-Organizing Maps (SOMs)** using PyTorch, making it easy to integrate with deep learning workflows while benefiting from GPU acceleration.
 
@@ -31,10 +31,10 @@ It provides an efficient and scalable implementation of **Self-Organizing Maps (
 
 ## Introduction
 
-**TorchSOM** is a PyTorch-based library for training Self-Organizing Maps (SOMs), a type of unsupervised learning algorithm used for clustering and dimensionality reduction. Designed for scalability and ease of use, this implementation is optimized for large-scale data.
+**`TorchSOM`** is a PyTorch-based library for training Self-Organizing Maps (SOMs), a type of unsupervised learning algorithm used for clustering and dimensionality reduction. Designed for scalability and ease of use, this implementation is optimized for large-scale data.
 
 Also, this **repository is highly documented and commented**, which makes it easy to use, understand, deploy, and which offers endless possibilities for improvements.  
-To help you explore and experiment with **TorchSOM**, we provide Jupyter notebooks in the [`notebooks/`](notebooks) directory. There are multiples datasets and the corresponding results respectively in the [`data/`](data) and [`results/`](notebooks/results) directories.
+To help you explore and experiment with **`TorchSOM`**, we provide Jupyter notebooks in the [`notebooks/`](notebooks) directory. There are multiples datasets and the corresponding results respectively in the [`data/`](data) and [`results/`](notebooks/results) directories.
 - [`iris.ipynb`](notebooks/iris.ipynb): A multiclass classification example.
 - [`wine.ipynb`](notebooks/wine.ipynb): Another multiclass classification example.
 - [`boston_housing.ipynb`](notebooks/boston_housing.ipynb): A regression example.
@@ -42,6 +42,8 @@ To help you explore and experiment with **TorchSOM**, we provide Jupyter noteboo
 - [`get_data.ipynb`](notebooks/get_data.ipynb): The notebook used to generated the datasets provided in the [`data/`](data) directory. 
 
 If you find this project interesting, we would be grateful for your support by starring ⭐ this [`GitHub repository`](https://github.com/LouisTier/TorchSOM).
+
+Here are some examples of visualizations you can obtain through the use of **`TorchSOM`**.
 
 
 
@@ -53,7 +55,7 @@ You can install the package using PyPI (not available yet):
 pip install torchsom
 ```
 
-If you want to use the latest version, or if you prefer the command line interface, you can use it locally by cloning or forking this repository to your local machine. TorchSOM requires a recent version of Python, preferably **3.9 or higher**.  
+If you want to use the latest version, or if you prefer the command line interface, you can use it locally by cloning or forking this repository to your local machine. `TorchSOM` requires a recent version of Python, preferably **3.9 or higher**.  
 
 ```bash
 git clone https://github.com/LouisTier/TorchSOM.git 
@@ -77,7 +79,7 @@ Here is the link to the documentation of this library: [https://ccsd.readthedocs
 
 ## Citation
 
-If you use TorchSOM in your research or work, please consider citing it using the following entries:
+If you use `TorchSOM` in your research or work, please consider citing it using the following entries:
 
 1. **Paper**  
     ```bibtex
