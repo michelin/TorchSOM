@@ -70,4 +70,5 @@ dev = [
     "sphinx",
     "sphinx-rtd-theme",
     "sphinx-autodoc-typehints",
+    "sphinx-copybutton",
 ]
