@@ -796,11 +796,11 @@ class TorchSOM(nn.Module):
         The hit map is built on CPU, but the calculations are done on GPU if available.
 
         Args:
-        data (torch.Tensor): input data tensor [batch_size, num_features]
-        batch_size (int, optional): Size of batches to process. Defaults to 128.
+            data (torch.Tensor): input data tensor [batch_size, num_features]
+            batch_size (int, optional): Size of batches to process. Defaults to 128.
 
         Returns:
-        torch.Tensor: Matrix indicating the number of times each neuron has been identified as bmu.
+            torch.Tensor: Matrix indicating the number of times each neuron has been identified as bmu.
         """
         # Ensure batch compatibility
         if data.dim() == 1:
@@ -852,13 +852,13 @@ class TorchSOM(nn.Module):
         It processes the data in batches to save memory.
          The hit map is built on CPU, but the calculations are done on GPU if available.
 
-         Args:
-             data (torch.Tensor): input data tensor [num_samples, num_features] or [num_features]
-             return_indices (bool, optional): If True, return indices instead of data points. Defaults to False.
-             batch_size (int, optional): Size of batches to process. Defaults to 128.
+        Args:
+            data (torch.Tensor): input data tensor [num_samples, num_features] or [num_features]
+            return_indices (bool, optional): If True, return indices instead of data points. Defaults to False.
+            batch_size (int, optional): Size of batches to process. Defaults to 128.
 
-         Returns:
-             Dict[Tuple[int, int], Any]: Dictionary mapping bmus to data samples or indices
+        Returns:
+            Dict[Tuple[int, int], Any]: Dictionary mapping bmus to data samples or indices
         """
         # Ensure batch compatibility
         if data.dim() == 1:
