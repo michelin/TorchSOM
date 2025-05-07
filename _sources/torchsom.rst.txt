@@ -1,8 +1,8 @@
-torchsom package
-================
+.. torchsom package
+.. ================
 
-Submodules
-----------
+.. Submodules
+.. ----------
 
 torchsom.core module
 --------------------
