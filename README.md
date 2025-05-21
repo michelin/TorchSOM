@@ -12,7 +12,7 @@
 paper [PAPER ARTICLE AND LINK TO UPDATE](), @CONFERENCE @DATE.  
 It provides an efficient and scalable implementation of **Self-Organizing Maps (SOMs)** using PyTorch, making it easy to integrate with deep learning workflows while benefiting from GPU acceleration.
 
-This is a test line after modifying repo location.
+
 
 ## Table of Contents
 
@@ -127,7 +127,7 @@ For more details, please refer to the [`CITATION.cff`](CITATION.cff) file.
 
 ## Acknowledgement
 
-The [Centre de Mathématiques Appliquées](https://cmap.ip-paris.fr/) - CMAP - at the Ecole Polytechnique - X -, and [Manufacture Française des Pneumatiques Michelin](https://www.michelin.fr/) for the joint collaboration and supervision during my PhD thesis.
+The [Centre de Mathématiques Appliquées](https://cmap.ip-paris.fr/) - CMAP - at the Ecole Polytechnique - X -, and [Manufacture Française des Pneumatiques Michelin](https://www.michelin.com/) for the joint collaboration and supervision during my PhD thesis.
 
 [Giuseppe Vettigli](https://github.com/JustGlowing) for his GitHub repository [MiniSom](https://github.com/JustGlowing/minisom), which provided a first well-maintained and open-source implementation of Self-Organizing Maps.
 
@@ -139,7 +139,7 @@ Logo created using DALL-E.
 
 We invite contributors of all backgrounds and experience levels to get involved and contribute to this library. Whether you have innovative ideas to propose or are eager to submit pull requests, we encourage your contributions!
 
-Please take a moment to read our [`Code of Conduct`](CODE_OF_CONDUCT.md) if you're interested in contributing.
+Please take a moment to read our [`Code of Conduct`](CODE_OF_CONDUCT.md) and the [`Contributing guide`](CONTRIBUTING.md) if you're interested in contributing.
 
 
 
