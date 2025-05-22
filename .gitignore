@@ -10,3 +10,8 @@ logos/
 build/
 dist/
 .cursor/
+
+torchsom/datasets/
+torchsom/logger.py
+torchsom/examples/
+torchsom/archive/
