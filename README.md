@@ -41,7 +41,7 @@ To help you explore and experiment with **`TorchSOM`**, we provide Jupyter noteb
 - [`energy_efficiency.ipynb`](notebooks/energy_efficiency.ipynb): A multi-regression example.
 - [`get_data.ipynb`](notebooks/get_data.ipynb): The notebook used to generated the datasets provided in the [`data/`](data) directory. 
 
-If you find this project interesting, we would be grateful for your support by starring ⭐ this [`GitHub repository`](https://github.com/LouisTier/TorchSOM).
+If you find this project interesting, we would be grateful for your support by starring ⭐ this [`GitHub repository`](https://github.com/michelin/TorchSOM).
 
 Here are some examples of visualizations you can obtain through the use of **`TorchSOM`**.
 
@@ -58,7 +58,7 @@ pip install torchsom
 If you want to use the latest version, or if you prefer the command line interface, you can use it locally by cloning or forking this repository to your local machine. `TorchSOM` requires a recent version of Python, preferably **3.9 or higher**.  
 
 ```bash
-git clone https://github.com/LouisTier/TorchSOM.git 
+git clone https://github.com/michelin/TorchSOM.git 
 ```
 
 If you want to develop the package and run the notebooks after cloning the repository, make sure you have the required dependencies installed before using it:
@@ -73,7 +73,7 @@ pip install -e '.[dev]' # Install the required dependencies
 
 ## Documentation
 
-For more details on classes and functions, please refer to the `TorchSOM` [documentation](https://louistier.github.io/TorchSOM/index.html).
+For more details on classes and functions, please refer to the `TorchSOM` [documentation](https://michelin.github.io/TorchSOM/index.html).
 
 <!-- 
 
@@ -99,12 +99,12 @@ Open [`index.html`](docs/build/html/index.html) to preview locally the generated
 
 ## Citation
 
-If you use `TorchSOM` in your research or work, please consider citing it using the following entries:
+If you use `TorchSOM` in your research or work, please cite both the article and the software itself using the following entries:
 
 1. **Paper**  
     ```bibtex
     @inproceedings{Berthier2025TorchSOM_paper,
-        title        = {{TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps}},
+        title        = {TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},
         author       = {Berthier, Louis},
         year         = {2025},
     }
@@ -114,9 +114,9 @@ If you use `TorchSOM` in your research or work, please consider citing it using 
     ```bibtex
     @software{Berthier2025TorchSOM_software,
         author       = {Berthier, Louis},
-        title        = {{TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps}},
+        title        = {TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},
         year         = {2025},
-        url          = {https://github.com/LouisTier/TorchSOM},
+        url          = {https://github.com/michelin/TorchSOM},
         license      = {Apache-2.0},
     }
     ```
