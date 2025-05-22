@@ -5,7 +5,7 @@ cff-version: 1.2.0
 title: >-
   TorchSOM: A Scalable PyTorch-Compatible Library for
   Self-Organizing Maps
-message: 'If you use this software, please cite both the article from preferred-citation and the software itself.'
+message: 'If you use this software, please cite both the article and the software itself.'
 type: software
 authors:
   - given-names: Louis
@@ -34,9 +34,3 @@ keywords:
 license: Apache-2.0
 version: 1.0.0
 date-released: '2025-05-20'
-preferred-citation:
-  authors:
-    - family-names: Berthier
-      given-names: Louis
-  title: TorchSOM paper (need to include it)
-  type: article
