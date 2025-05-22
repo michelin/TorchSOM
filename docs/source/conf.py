@@ -58,9 +58,9 @@ html_context = {
     "display_github": True,  # Enable GitHub link in the header
     "github_user": "LouisTier",
     "github_repo": "TorchSOM",
-    "github_version": "dev",
+    "github_version": "dev_org",
     "conf_py_path": "/docs/source/",
 }
 html_static_path = ["_static"]
-html_logo = "logo.jpg"
+html_logo = "../../logo.jpg"
 # html_favicon = "../../favicon.ico" # Icon shown in the browser tab
