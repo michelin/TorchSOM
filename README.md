@@ -103,7 +103,7 @@ If you use `TorchSOM` in your research or work, please cite both the article and
 
 1. **Paper**  
     ```bibtex
-    @inproceedings{Berthier2025TorchSOM_paper,
+    @inproceedings{Berthier_TorchSOM_A_Scalable_2025_article,
         title        = {TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},
         author       = {Berthier, Louis},
         year         = {2025},
@@ -112,12 +112,14 @@ If you use `TorchSOM` in your research or work, please cite both the article and
 
 2. **Software**  
     ```bibtex
-    @software{Berthier2025TorchSOM_software,
-        author       = {Berthier, Louis},
-        title        = {TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},
-        year         = {2025},
-        url          = {https://github.com/michelin/TorchSOM},
-        license      = {Apache-2.0},
+    @software{Berthier_TorchSOM_A_Scalable_2025,
+        author = {Berthier, Louis},
+        license = {Apache-2.0},
+        month = may,
+        title = {{TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps}},
+        url = {https://github.com/michelin/TorchSOM},
+        version = {1.0.0},
+        year = {2025}
     }
     ```
 
