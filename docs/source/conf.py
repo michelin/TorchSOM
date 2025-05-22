@@ -61,6 +61,6 @@ html_context = {
     "github_version": "dev",
     "conf_py_path": "/docs/source/",
 }
-html_static_path = ["_static"]  # Folder for custom static files (CSS, JS)
-html_logo = "../../logo.jpg"  # Project logo shown in the header
+html_static_path = ["_static"]
+html_logo = "logo.jpg"
 # html_favicon = "../../favicon.ico" # Icon shown in the browser tab

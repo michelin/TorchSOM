@@ -11,7 +11,7 @@ TorchSOM documentation
 It is a PyTorch-based library for training and visualizing **Self-Organizing Maps (SOMs)**, a type of unsupervised learning algorithm used for clustering and dimensionality reduction. 
 ``PyTorch`` makes it easy to integrate this package with other deep learning workflows while benefiting from GPU acceleration.
 
-If you find this project interesting, we would be grateful for your support by starring ⭐ this `GitHub repository <https://github.com/LouisTier/TorchSOM>`_.
+If you find this project interesting, we would be grateful for your support by starring ⭐ this `GitHub repository <https://github.com/michelin/TorchSOM>`_.
 
 .. toctree::
    :maxdepth: 5
