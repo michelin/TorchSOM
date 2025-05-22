@@ -1,9 +1,3 @@
-.. torchsom package
-.. ================
-
-.. Submodules
-.. ----------
-
 torchsom.core module
 --------------------
 
