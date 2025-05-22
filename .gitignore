@@ -9,3 +9,4 @@ setup.py
 logos/
 build/
 dist/
+.cursor/
