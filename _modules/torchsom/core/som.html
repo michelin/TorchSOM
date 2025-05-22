@@ -1,0 +1,1239 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>torchsom.core.som &mdash; TorchSOM 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #B22222" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            TorchSOM
+              <img src="../../../_static/logo.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">torchsom</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../torchsom.html">torchsom.core module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.core.BaseSOM"><code class="docutils literal notranslate"><span class="pre">BaseSOM</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.BaseSOM.build_distance_map"><code class="docutils literal notranslate"><span class="pre">BaseSOM.build_distance_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.BaseSOM.build_hit_map"><code class="docutils literal notranslate"><span class="pre">BaseSOM.build_hit_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.BaseSOM.fit"><code class="docutils literal notranslate"><span class="pre">BaseSOM.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.BaseSOM.identify_bmus"><code class="docutils literal notranslate"><span class="pre">BaseSOM.identify_bmus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.BaseSOM.initialize_weights"><code class="docutils literal notranslate"><span class="pre">BaseSOM.initialize_weights()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.BaseSOM.quantization_error"><code class="docutils literal notranslate"><span class="pre">BaseSOM.quantization_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.BaseSOM.topographic_error"><code class="docutils literal notranslate"><span class="pre">BaseSOM.topographic_error()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.core.SOM"><code class="docutils literal notranslate"><span class="pre">SOM</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.SOM.build_bmus_data_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_bmus_data_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.SOM.build_classification_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_classification_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.SOM.build_distance_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_distance_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.SOM.build_hit_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_hit_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.SOM.build_metric_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_metric_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.SOM.build_rank_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_rank_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.SOM.build_score_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_score_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.SOM.collect_samples"><code class="docutils literal notranslate"><span class="pre">SOM.collect_samples()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.SOM.fit"><code class="docutils literal notranslate"><span class="pre">SOM.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.SOM.identify_bmus"><code class="docutils literal notranslate"><span class="pre">SOM.identify_bmus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.SOM.initialize_weights"><code class="docutils literal notranslate"><span class="pre">SOM.initialize_weights()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.SOM.quantization_error"><code class="docutils literal notranslate"><span class="pre">SOM.quantization_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.core.SOM.topographic_error"><code class="docutils literal notranslate"><span class="pre">SOM.topographic_error()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../torchsom.html#torchsom-decay-module">torchsom.decay module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../torchsom.html#torchsom-distances-module">torchsom.distances module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../torchsom.html#torchsom-neighborhood-module">torchsom.neighborhood module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../torchsom.html#torchsom-plotting-module">torchsom.plotting module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../torchsom.html#module-torchsom.utils">torchsom.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.adjust_meshgrid_topology"><code class="docutils literal notranslate"><span class="pre">adjust_meshgrid_topology()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.axial_distance"><code class="docutils literal notranslate"><span class="pre">axial_distance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.calculate_quantization_error"><code class="docutils literal notranslate"><span class="pre">calculate_quantization_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.calculate_topographic_error"><code class="docutils literal notranslate"><span class="pre">calculate_topographic_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.convert_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">convert_to_axial_coords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.create_mesh_grid"><code class="docutils literal notranslate"><span class="pre">create_mesh_grid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.get_hexagonal_offsets"><code class="docutils literal notranslate"><span class="pre">get_hexagonal_offsets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.get_rectangular_offsets"><code class="docutils literal notranslate"><span class="pre">get_rectangular_offsets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.initialize_weights"><code class="docutils literal notranslate"><span class="pre">initialize_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.pca_init"><code class="docutils literal notranslate"><span class="pre">pca_init()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.random_init"><code class="docutils literal notranslate"><span class="pre">random_init()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../torchsom.html#module-torchsom">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.BaseSOM"><code class="docutils literal notranslate"><span class="pre">BaseSOM</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.BaseSOM.build_distance_map"><code class="docutils literal notranslate"><span class="pre">BaseSOM.build_distance_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.BaseSOM.build_hit_map"><code class="docutils literal notranslate"><span class="pre">BaseSOM.build_hit_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.BaseSOM.fit"><code class="docutils literal notranslate"><span class="pre">BaseSOM.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.BaseSOM.identify_bmus"><code class="docutils literal notranslate"><span class="pre">BaseSOM.identify_bmus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.BaseSOM.initialize_weights"><code class="docutils literal notranslate"><span class="pre">BaseSOM.initialize_weights()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.BaseSOM.quantization_error"><code class="docutils literal notranslate"><span class="pre">BaseSOM.quantization_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.BaseSOM.topographic_error"><code class="docutils literal notranslate"><span class="pre">BaseSOM.topographic_error()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.SOM"><code class="docutils literal notranslate"><span class="pre">SOM</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOM.build_bmus_data_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_bmus_data_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOM.build_classification_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_classification_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOM.build_distance_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_distance_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOM.build_hit_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_hit_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOM.build_metric_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_metric_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOM.build_rank_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_rank_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOM.build_score_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_score_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOM.collect_samples"><code class="docutils literal notranslate"><span class="pre">SOM.collect_samples()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOM.fit"><code class="docutils literal notranslate"><span class="pre">SOM.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOM.identify_bmus"><code class="docutils literal notranslate"><span class="pre">SOM.identify_bmus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOM.initialize_weights"><code class="docutils literal notranslate"><span class="pre">SOM.initialize_weights()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOM.quantization_error"><code class="docutils literal notranslate"><span class="pre">SOM.quantization_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOM.topographic_error"><code class="docutils literal notranslate"><span class="pre">SOM.topographic_error()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_training_errors"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_training_errors()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.VisualizationConfig"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.VisualizationConfig.cmap"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.cmap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.VisualizationConfig.colorbar_pad"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.colorbar_pad</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.VisualizationConfig.dpi"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.dpi</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.VisualizationConfig.figsize"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.figsize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.VisualizationConfig.fontsize"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontsize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.VisualizationConfig.fontweight"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontweight</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.VisualizationConfig.grid_alpha"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.grid_alpha</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.VisualizationConfig.hexgrid_size"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hexgrid_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.VisualizationConfig.save_format"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.save_format</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #B22222" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">TorchSOM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">torchsom.core.som</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for torchsom.core.som</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">heapq</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">TensorDataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.decay</span><span class="w"> </span><span class="kn">import</span> <span class="n">DECAY_FUNCTIONS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.distances</span><span class="w"> </span><span class="kn">import</span> <span class="n">DISTANCE_FUNCTIONS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.grid</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">adjust_meshgrid_topology</span><span class="p">,</span>
+    <span class="n">axial_distance</span><span class="p">,</span>
+    <span class="n">convert_to_axial_coords</span><span class="p">,</span>
+    <span class="n">create_mesh_grid</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.initialization</span><span class="w"> </span><span class="kn">import</span> <span class="n">initialize_weights</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_quantization_error</span><span class="p">,</span> <span class="n">calculate_topographic_error</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.neighborhood</span><span class="w"> </span><span class="kn">import</span> <span class="n">NEIGHBORHOOD_FUNCTIONS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.topology</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_hexagonal_offsets</span><span class="p">,</span> <span class="n">get_rectangular_offsets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base_som</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseSOM</span>
+
+
+<div class="viewcode-block" id="SOM">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.core.SOM">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SOM</span><span class="p">(</span><span class="n">BaseSOM</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;PyTorch implementation of Self Organizing Maps using batch learning.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        BaseSOM: Abstract base class for SOM variants</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">neighborhood_order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">topology</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;rectangular&quot;</span><span class="p">,</span>
+        <span class="n">lr_decay_function</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;asymptotic_decay&quot;</span><span class="p">,</span>
+        <span class="n">sigma_decay_function</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;asymptotic_decay&quot;</span><span class="p">,</span>
+        <span class="n">neighborhood_function</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
+        <span class="n">distance_function</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;euclidean&quot;</span><span class="p">,</span>
+        <span class="n">initialization_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;random&quot;</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+        <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the SOM.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (int): Number of rows</span>
+<span class="sd">            y (int): Number of cols</span>
+<span class="sd">            num_features (int): Number of input features</span>
+<span class="sd">            epochs (int, optional): Number of epochs to train. Defaults to 10.</span>
+<span class="sd">            batch_size (int, optional): Number of samples to be considered at each epoch (training). Defaults to 5.</span>
+<span class="sd">            sigma (float, optional): Width of the neighborhood, so standard deviation. It controls the spread of the update influence. Defaults to 1.0.</span>
+<span class="sd">            learning_rate (float, optional): Strength of the weights updates. Defaults to 0.5.</span>
+<span class="sd">            neighborhood_order (int, optional): Number of neighbors to consider for the distance calculation. Defaults to 1.</span>
+<span class="sd">            topology (str, optional): Grid configuration. Defaults to &quot;rectangular&quot;.</span>
+<span class="sd">            lr_decay_function (str, optional): Function to adjust (decrease) the learning rate at each epoch (training). Defaults to &quot;asymptotic_decay&quot;.</span>
+<span class="sd">            sigma_decay_function (str, optional): Function to adjust (decrease) the sigma at each epoch (training). Defaults to &quot;asymptotic_decay&quot;.</span>
+<span class="sd">            neighborhood_function (str, optional): Function to update the weights at each epoch (training). Defaults to &quot;gaussian&quot;.</span>
+<span class="sd">            distance_function (str, optional): Function to compute the distance between grid weights and input data. Defaults to &quot;euclidean&quot;.</span>
+<span class="sd">            initialization_mode (str, optional): Method to initialize SOM weights. Defaults to &quot;random&quot;.</span>
+<span class="sd">            device (str, optional): Allocate tensors on CPU or GPU. Defaults to &quot;cuda&quot; if available, else &quot;cpu&quot;.</span>
+<span class="sd">            random_seed (int, optional): Ensure reproducibility. Defaults to 42.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Ensure valid topology</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SOM</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># Validate parameters</span>
+        <span class="k">if</span> <span class="n">sigma</span> <span class="o">&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">y</span><span class="p">))):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Warning: sigma might be too high for the dimension of the map.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">topology</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;hexagonal&quot;</span><span class="p">,</span> <span class="s2">&quot;rectangular&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only hexagonal and rectangular topologies are supported&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Input parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="n">num_features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="n">learning_rate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epochs</span> <span class="o">=</span> <span class="n">epochs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">topology</span> <span class="o">=</span> <span class="n">topology</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_seed</span> <span class="o">=</span> <span class="n">random_seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neighborhood_order</span> <span class="o">=</span> <span class="n">neighborhood_order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_fn_name</span> <span class="o">=</span> <span class="n">distance_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialization_mode</span> <span class="o">=</span> <span class="n">initialization_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_fn</span> <span class="o">=</span> <span class="n">DISTANCE_FUNCTIONS</span><span class="p">[</span><span class="n">distance_function</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr_decay_fn</span> <span class="o">=</span> <span class="n">DECAY_FUNCTIONS</span><span class="p">[</span><span class="n">lr_decay_function</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigma_decay_fn</span> <span class="o">=</span> <span class="n">DECAY_FUNCTIONS</span><span class="p">[</span><span class="n">sigma_decay_function</span><span class="p">]</span>
+
+        <span class="c1"># Set up x and y mesh grids, adjust them based on the topology</span>
+        <span class="n">x_meshgrid</span><span class="p">,</span> <span class="n">y_meshgrid</span> <span class="o">=</span> <span class="n">create_mesh_grid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yy</span> <span class="o">=</span> <span class="n">adjust_meshgrid_topology</span><span class="p">(</span><span class="n">x_meshgrid</span><span class="p">,</span> <span class="n">y_meshgrid</span><span class="p">,</span> <span class="n">topology</span><span class="p">)</span>
+
+        <span class="c1"># Set up neighborhood function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neighborhood_fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">win_neuron</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="n">NEIGHBORHOOD_FUNCTIONS</span><span class="p">[</span>
+            <span class="n">neighborhood_function</span>
+        <span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">xx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">yy</span><span class="p">,</span> <span class="n">win_neuron</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+
+        <span class="c1"># Ensure reproducibility</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
+
+        <span class="c1"># Initialize &amp; normalize weights</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">normalized_weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">normalized_weights</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_weights</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">bmus</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+        <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update weights using neighborhood function. Handles both single samples and batches.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): Input tensor of shape [num_features] or [batch_size, num_features]</span>
+<span class="sd">            bmus (Union[Tuple[int, int], torch.Tensor]): BMU coordinates as tuple (single) or tensor (batch)</span>
+<span class="sd">            learning_rate (float): Current learning rate</span>
+<span class="sd">            sigma (float): Current sigma value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Single sample</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bmus</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="c1"># Calculate neighborhood contributions for the BMU and reshape for broadcasting</span>
+            <span class="n">neighborhood</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neighborhood_fn</span><span class="p">(</span><span class="n">bmus</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+            <span class="n">neighborhood</span> <span class="o">=</span> <span class="n">neighborhood</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Calculate the update for the single sample</span>
+            <span class="n">update</span> <span class="o">=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">neighborhood</span> <span class="o">*</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>
+
+            <span class="c1"># Update the weights</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">data</span> <span class="o">+=</span> <span class="n">update</span>
+
+        <span class="c1"># Batch samples</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Calculate neighborhood contributions for each BMU in batch</span>
+            <span class="n">batch_size</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">neighborhoods</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">neighborhood_fn</span><span class="p">((</span><span class="n">row</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">col</span><span class="o">.</span><span class="n">item</span><span class="p">()),</span> <span class="n">sigma</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">bmus</span>
+                <span class="p">]</span>
+            <span class="p">)</span>  <span class="c1"># [batch_size, row_neurons, col_neurons]</span>
+
+            <span class="c1"># Reshape for broadcasting</span>
+            <span class="n">neighborhoods</span> <span class="o">=</span> <span class="n">neighborhoods</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">data_expanded</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">)</span>
+
+            <span class="c1"># Calculate the updates for all samples</span>
+            <span class="n">updates</span> <span class="o">=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">neighborhoods</span> <span class="o">*</span> <span class="p">(</span><span class="n">data_expanded</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>
+
+            <span class="c1"># Average updates across batch and apply to weights</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">data</span> <span class="o">+=</span> <span class="n">updates</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_distances_to_neurons</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate distances between input data and all neurons&#39; weights. Handles both single samples and batches.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: Input tensor of shape [num_features] if single or [batch_size, num_features] if batch</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Distances tensor of shape [row_neurons, col_neurons] or [batch_size, row_neurons, col_neurons]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Ensure device and batch compatibility</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">data_batch_size</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Reshape both data and weights for broadcasting when calculating the distance</span>
+        <span class="n">data_expanded</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
+            <span class="n">data_batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span>
+        <span class="p">)</span>  <span class="c1"># From [batch_size, num_features] to [batch_size, 1, 1, num_features]</span>
+        <span class="n">weights_expanded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span>
+            <span class="mi">0</span>
+        <span class="p">)</span>  <span class="c1"># [1, row_neurons, col_neurons, num_features]</span>
+
+        <span class="c1"># Compute distances for the whole batch [batch_size, row_neurons, col_neurons]</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_fn</span><span class="p">(</span><span class="n">data_expanded</span><span class="p">,</span> <span class="n">weights_expanded</span><span class="p">)</span>
+
+        <span class="c1"># Single sample case - remove batch dimension</span>
+        <span class="k">if</span> <span class="n">data_batch_size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">distances</span> <span class="o">=</span> <span class="n">distances</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">distances</span>
+
+<div class="viewcode-block" id="SOM.identify_bmus">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.core.SOM.identify_bmus">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">identify_bmus</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find BMUs for input data.  Handles both single samples and batches.</span>
+<span class="sd">        It requires a data on the GPU if available for calculations with SOM&#39;s weights on GPU&#39;s too.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): Input tensor of shape [num_features] or [batch_size, num_features]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: For single sample: Tensor of shape [2] with [row, col].</span>
+<span class="sd">                        For batch: Tensor of shape [batch_size, 2] with [row, col] pairs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_distances_to_neurons</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># Unique sample [row_neurons, col_neurons]</span>
+        <span class="k">if</span> <span class="n">distances</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span>
+                <span class="n">distances</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span>  <span class="c1"># From 2D tensor [m,n] to 1D tensor [m*n] then retrieve the index of the bmu with the smallest distance</span>
+            <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span>
+                <span class="n">index</span><span class="p">,</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span>
+            <span class="p">)</span>  <span class="c1"># Convert the index to 2D coordinates</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">coords</span>
+
+        <span class="c1"># Batch samples [batch_size, row_neurons, col_neurons]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span>
+                <span class="n">distances</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">distances</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>  <span class="c1"># From 3D tensor [batch_size, m, n] to 2D tensor [batch_size, m*n] then retrieve the index of the bmu with the smallest distance for all samples</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">rounding_mode</span><span class="o">=</span><span class="s2">&quot;floor&quot;</span><span class="p">),</span> <span class="n">indices</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">],</span>
+                <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SOM.quantization_error">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.core.SOM.quantization_error">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">quantization_error</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate quantization error.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): input data tensor [batch_size, num_features] or [num_features]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Average quantization error value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Ensure device and batch compatibility</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Use the utility function for calculation</span>
+        <span class="k">return</span> <span class="n">calculate_quantization_error</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_fn</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SOM.topographic_error">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.core.SOM.topographic_error">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">topographic_error</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate topographic error with batch support</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): input data tensor [batch_size, num_features] or [num_features]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Topographic error ratio</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Ensure device and batch compatibility</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">calculate_topographic_error</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_fn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">topology</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SOM.initialize_weights">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.core.SOM.initialize_weights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize_weights</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Data should be normalized before initialization. Initialize weights using</span>
+
+<span class="sd">            1. Random samples from input data.</span>
+<span class="sd">            2. PCA components to make the training process converge faster.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): input data tensor [batch_size, num_features]</span>
+<span class="sd">            mode (str, optional): selection of the method to init the weights. Defaults to None.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Ensure neurons&#39; weights and input data have the same number of features</span>
+<span class="sd">            RuntimeError: If random initialization takes too long</span>
+<span class="sd">            ValueError: Requires at least 2 features for PCA</span>
+<span class="sd">            ValueError: Requires more than one sample to perform PCA</span>
+<span class="sd">            ValueError: Ensure an appropriate method for initialization</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Input data dimension (</span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">) and weights dimension (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="si">}</span><span class="s2">) don&#39;t match&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initialization_mode</span>
+
+        <span class="c1"># Use utility function for initialization</span>
+        <span class="n">new_weights</span> <span class="o">=</span> <span class="n">initialize_weights</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">topology</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">new_weights</span></div>
+
+
+<div class="viewcode-block" id="SOM.fit">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.core.SOM.fit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Train the SOM using batches and track errors.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): input data tensor [batch_size, num_features]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[List[float], List[float]]: Quantization and topographic errors [epoch]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+            <span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+        <span class="n">q_errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">t_errors</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
+            <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epochs</span><span class="p">),</span>
+            <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Training SOM&quot;</span><span class="p">,</span>
+            <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;epoch&quot;</span><span class="p">,</span>
+            <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="c1"># Update learning parameters through decay function (schedulers)</span>
+            <span class="n">lr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr_decay_fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">epoch</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epochs</span><span class="p">)</span>
+            <span class="n">sigma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma_decay_fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sigma</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">epoch</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epochs</span><span class="p">)</span>
+
+            <span class="n">epoch_q_errors</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">epoch_t_errors</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+                <span class="n">batch_data</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+                <span class="c1"># Get BMUs for all data points at once [batch_size, 2]</span>
+                <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                    <span class="n">bmus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">identify_bmus</span><span class="p">(</span><span class="n">batch_data</span><span class="p">)</span>
+
+                <span class="c1"># Update the weights of each neuron</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_weights</span><span class="p">(</span><span class="n">batch_data</span><span class="p">,</span> <span class="n">bmus</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span>
+
+                <span class="c1"># Calculate both errors at each batch and store them</span>
+                <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                    <span class="n">epoch_q_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quantization_error</span><span class="p">(</span><span class="n">batch_data</span><span class="p">))</span>
+                    <span class="n">epoch_t_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">topographic_error</span><span class="p">(</span><span class="n">batch_data</span><span class="p">))</span>
+
+                <span class="c1"># Clean GPU memory</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+
+            <span class="c1"># Compute both average errors at each epoch and store them</span>
+            <span class="n">q_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">epoch_q_errors</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+            <span class="n">t_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">epoch_t_errors</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">q_errors</span><span class="p">,</span> <span class="n">t_errors</span></div>
+
+
+<div class="viewcode-block" id="SOM.collect_samples">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.core.SOM.collect_samples">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">collect_samples</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">query_sample</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">historical_samples</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">historical_outputs</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">min_buffer_threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="n">bmus_idx_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Collect historical samples similar to the query sample using SOM projection.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            query_sample (torch.Tensor): The query data point [num_features]</span>
+<span class="sd">            historical_samples (torch.Tensor): Historical input data [num_samples, num_features]</span>
+<span class="sd">            historical_outputs (torch.Tensor): Historical output values [num_samples]</span>
+<span class="sd">            min_buffer_threshold (int, optional): Minimum number of samples to collect. Defaults to 50.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[torch.Tensor, torch.Tensor]: (historical_data_buffer, historical_output_buffer)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Ensure device compatibility</span>
+        <span class="n">query_sample</span> <span class="o">=</span> <span class="n">query_sample</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="c1"># Find BMU for the query sample</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">bmu_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">identify_bmus</span><span class="p">(</span><span class="n">query_sample</span><span class="p">)</span>
+        <span class="n">bmu_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">bmu_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()),</span> <span class="nb">int</span><span class="p">(</span><span class="n">bmu_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()))</span>
+
+        <span class="c1"># Collect samples indices from the query&#39;s BMU if any exist</span>
+        <span class="c1"># ! DUE TO CHANGES IN TORCHSOM, bmus_idx_map is on cpu now even with gpus</span>
+        <span class="n">sample_indices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">bmu_tuple</span> <span class="ow">in</span> <span class="n">bmus_idx_map</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">bmus_idx_map</span><span class="p">[</span><span class="n">bmu_tuple</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">sample_indices</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">bmus_idx_map</span><span class="p">[</span><span class="n">bmu_tuple</span><span class="p">])</span>
+
+        <span class="c1"># Keep track of the neurons used to build the historical buffers</span>
+        <span class="n">visited_neurons</span> <span class="o">=</span> <span class="p">{</span><span class="n">bmu_tuple</span><span class="p">}</span>
+
+        <span class="c1"># Get neighbor offsets based on topology and neighborhood order</span>
+        <span class="n">neighbor_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neighborhood_order</span>
+        <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">neighbor_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Get neighbor offsets based on topology</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">topology</span> <span class="o">==</span> <span class="s2">&quot;hexagonal&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">bmu_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">nei_order_offsets</span> <span class="o">=</span> <span class="n">get_hexagonal_offsets</span><span class="p">(</span><span class="n">order</span><span class="p">)[</span><span class="s2">&quot;even&quot;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">nei_order_offsets</span> <span class="o">=</span> <span class="n">get_hexagonal_offsets</span><span class="p">(</span><span class="n">order</span><span class="p">)[</span><span class="s2">&quot;odd&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">nei_order_offsets</span> <span class="o">=</span> <span class="n">get_rectangular_offsets</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                First, explore all neighbors of the current BMU and retrieve historical samples if they exist</span>
+<span class="sd">                Only explore closed neighbors in terms of distance in the grid, not in terms of distance of the weights.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="ow">in</span> <span class="n">nei_order_offsets</span><span class="p">:</span>
+                <span class="n">neighbor_pos</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="n">bmu_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">+</span> <span class="n">dx</span><span class="p">),</span>
+                    <span class="nb">int</span><span class="p">(</span><span class="n">bmu_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">+</span> <span class="n">dy</span><span class="p">),</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">neighbor_pos</span> <span class="ow">in</span> <span class="n">visited_neurons</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">visited_neurons</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">neighbor_pos</span><span class="p">)</span>
+                <span class="c1"># Check if the neighbor is 1) within SOM bounds, and 2) activated</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">neighbor_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+                    <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">neighbor_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+                    <span class="ow">and</span> <span class="n">neighbor_pos</span> <span class="ow">in</span> <span class="n">bmus_idx_map</span>
+                <span class="p">):</span>
+                    <span class="n">sample_indices</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">bmus_idx_map</span><span class="p">[</span><span class="n">neighbor_pos</span><span class="p">])</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Secondly, ensure we have enough training samples.</span>
+<span class="sd">            This time, explore neighbors that are close in terms of distance in the weights space.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_indices</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">min_buffer_threshold</span><span class="p">:</span>
+            <span class="c1"># Calculate distances from BMU weights to all neurons</span>
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="n">neurons_distance_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_distances_to_neurons</span><span class="p">(</span>
+                    <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bmu_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Build min heap of (distance, position) for unvisited neurons with samples</span>
+            <span class="n">distance_min_heap</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">):</span>
+                    <span class="n">neuron_pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">neuron_pos</span> <span class="ow">in</span> <span class="n">visited_neurons</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="n">neuron_pos</span> <span class="ow">in</span> <span class="n">bmus_idx_map</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">bmus_idx_map</span><span class="p">[</span><span class="n">neuron_pos</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">distance</span> <span class="o">=</span> <span class="n">neurons_distance_map</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                        <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">distance_min_heap</span><span class="p">,</span> <span class="p">(</span><span class="n">distance</span><span class="p">,</span> <span class="n">neuron_pos</span><span class="p">))</span>
+
+            <span class="c1"># Add samples until threshold is reached</span>
+            <span class="k">while</span> <span class="n">distance_min_heap</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_indices</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">min_buffer_threshold</span><span class="p">:</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">closest_neuron</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">distance_min_heap</span><span class="p">)</span>
+                <span class="n">visited_neurons</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">closest_neuron</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">closest_neuron</span> <span class="ow">in</span> <span class="n">bmus_idx_map</span><span class="p">:</span>
+                    <span class="n">sample_indices</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">bmus_idx_map</span><span class="p">[</span><span class="n">closest_neuron</span><span class="p">])</span>
+
+        <span class="n">historical_data_buffer</span> <span class="o">=</span> <span class="n">historical_samples</span><span class="p">[</span><span class="n">sample_indices</span><span class="p">]</span>
+        <span class="n">historical_output_buffer</span> <span class="o">=</span> <span class="n">historical_outputs</span><span class="p">[</span><span class="n">sample_indices</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">historical_data_buffer</span><span class="p">,</span> <span class="n">historical_output_buffer</span></div>
+
+
+<div class="viewcode-block" id="SOM.build_hit_map">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.core.SOM.build_hit_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_hit_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a matrix where element i,j is the number of times that neuron i,j has been the winner.</span>
+<span class="sd">        It processes the data in batches to save memory.</span>
+<span class="sd">        The hit map is built on CPU, but the calculations are done on GPU if available.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): input data tensor [batch_size, num_features]</span>
+<span class="sd">            batch_size (int, optional): Size of batches to process. Defaults to 1024.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Matrix indicating the number of times each neuron has been identified as bmu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Ensure batch compatibility</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Initialize hit map on CPU</span>
+        <span class="n">hit_map</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+
+        <span class="c1"># Process data in batches to save GPU memory</span>
+        <span class="n">num_samples</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">num_batches</span> <span class="o">=</span> <span class="p">(</span><span class="n">num_samples</span> <span class="o">+</span> <span class="n">batch_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">batch_size</span>
+        <span class="k">for</span> <span class="n">batch_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_batches</span><span class="p">):</span>
+            <span class="c1"># Retrieve corresponding batches and move them to device</span>
+            <span class="n">start_idx</span> <span class="o">=</span> <span class="n">batch_idx</span> <span class="o">*</span> <span class="n">batch_size</span>
+            <span class="n">end_idx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="n">batch_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">)</span>
+            <span class="n">current_batch_size</span> <span class="o">=</span> <span class="n">end_idx</span> <span class="o">-</span> <span class="n">start_idx</span>
+            <span class="n">batch_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+            <span class="c1"># Get BMUs for this batch</span>
+            <span class="n">batch_bmus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">identify_bmus</span><span class="p">(</span><span class="n">batch_data</span><span class="p">)</span>
+
+            <span class="c1"># Handle special case when batch has only one sample</span>
+            <span class="k">if</span> <span class="n">current_batch_size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># If only one sample, ensure batch_bmus is properly shaped</span>
+                <span class="k">if</span> <span class="n">batch_bmus</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">batch_bmus</span> <span class="o">=</span> <span class="n">batch_bmus</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">batch_bmus</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">hit_map</span><span class="p">[</span><span class="n">row</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">col</span><span class="o">.</span><span class="n">item</span><span class="p">()]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># Otherwise, process multiple samples normally</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Update and store hit map on CPU</span>
+                <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">batch_bmus</span><span class="p">:</span>
+                    <span class="n">hit_map</span><span class="p">[</span><span class="n">row</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">col</span><span class="o">.</span><span class="n">item</span><span class="p">()]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Clean up GPU memory</span>
+            <span class="k">del</span> <span class="n">batch_data</span><span class="p">,</span> <span class="n">batch_bmus</span>
+            <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">hit_map</span></div>
+
+
+<div class="viewcode-block" id="SOM.build_distance_map">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.core.SOM.build_distance_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_distance_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">scaling</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sum&quot;</span><span class="p">,</span>
+        <span class="n">distance_metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">neighborhood_order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the distance map of each neuron with its neighbors.</span>
+
+<span class="sd">        The distance map represents the normalized sum or mean of distances</span>
+<span class="sd">        between a neuron&#39;s weight vector and its neighboring neurons.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            scaling (str, optional): Defaults to &quot;sum&quot;.</span>
+<span class="sd">                If &#39;mean&#39;, each cell is normalized by the average neighbor distance.</span>
+<span class="sd">                If &#39;sum&#39;, normalization is done by the sum of distances.</span>
+<span class="sd">            distance_metric (str, optional): Name of the method to calculate the distance. Defaults to None.</span>
+<span class="sd">            neighborhood_order (int, optional): Indicate the neighbors to consider for the distance calculation. Defaults to None.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If an invalid scaling option is provided.</span>
+<span class="sd">            ValueError: If an invalid distance metric is provided.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Normalized distance map [row_neurons, col_neurons]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">scaling</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;scaling should be either &quot;sum&quot; or &quot;mean&quot; (</span><span class="si">{</span><span class="n">scaling</span><span class="si">}</span><span class="s1"> is not valid)&#39;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Use instance neighborhood_order if not specified</span>
+        <span class="k">if</span> <span class="n">neighborhood_order</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">neighborhood_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neighborhood_order</span>
+
+        <span class="c1"># Indicate the distance function to use</span>
+        <span class="k">if</span> <span class="n">distance_metric</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">distance_fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_fn</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">distance_metric</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">DISTANCE_FUNCTIONS</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported distance metric: </span><span class="si">{</span><span class="n">distance_metric</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">distance_fn</span> <span class="o">=</span> <span class="n">DISTANCE_FUNCTIONS</span><span class="p">[</span><span class="n">distance_metric</span><span class="p">]</span>
+
+        <span class="c1"># Retrieve neighbor offsets based on topology</span>
+        <span class="n">all_offsets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">max_neighbors</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">topology</span> <span class="o">==</span> <span class="s2">&quot;hexagonal&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">neighborhood_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">neighbor_offsets</span> <span class="o">=</span> <span class="n">get_hexagonal_offsets</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+                <span class="n">max_neighbors</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbor_offsets</span><span class="p">[</span><span class="s2">&quot;even&quot;</span><span class="p">])</span>
+                <span class="n">all_offsets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neighbor_offsets</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">neighborhood_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">neighbor_offsets</span> <span class="o">=</span> <span class="n">get_rectangular_offsets</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+                <span class="n">max_neighbors</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbor_offsets</span><span class="p">)</span>
+                <span class="n">all_offsets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neighbor_offsets</span><span class="p">)</span>
+
+        <span class="c1"># Initialize distance map</span>
+        <span class="n">distance_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">max_neighbors</span><span class="p">),</span>
+            <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">),</span>
+            <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Compute distances for each neuron</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">current_neuron</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+                <span class="n">neighbor_idx</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="c1"># Process each neighbor order based on topology</span>
+                <span class="k">for</span> <span class="n">order_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">all_offsets</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">topology</span> <span class="o">==</span> <span class="s2">&quot;hexagonal&quot;</span><span class="p">:</span>
+                        <span class="n">offsets</span> <span class="o">=</span> <span class="n">all_offsets</span><span class="p">[</span><span class="n">order_idx</span><span class="p">][</span>
+                            <span class="s2">&quot;even&quot;</span> <span class="k">if</span> <span class="n">row</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;odd&quot;</span>
+                        <span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">offsets</span> <span class="o">=</span> <span class="n">all_offsets</span><span class="p">[</span><span class="n">order_idx</span><span class="p">]</span>
+
+                    <span class="c1"># Compute distances between current neuron and its neighbors</span>
+                    <span class="k">for</span> <span class="n">offset</span> <span class="ow">in</span> <span class="n">offsets</span><span class="p">:</span>
+                        <span class="n">row_offset</span><span class="p">,</span> <span class="n">col_offset</span> <span class="o">=</span> <span class="n">offset</span>
+                        <span class="n">neighbor_row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="n">row_offset</span>
+                        <span class="n">neighbor_col</span> <span class="o">=</span> <span class="n">col</span> <span class="o">+</span> <span class="n">col_offset</span>
+
+                        <span class="c1"># Ensure neighbor is within bounds to compute the distance</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">neighbor_row</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">neighbor_col</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="p">):</span>
+                            <span class="n">neighbor_neuron</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">neighbor_row</span><span class="p">,</span> <span class="n">neighbor_col</span><span class="p">]</span>
+
+<span class="w">                            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                            Reshape weights to ensure batch compatibility with distance function =&gt; shape [a,b] becomes [1,a,b] after unsqueeze(0)</span>
+<span class="sd">                            Each neuron has a shape of [num_features] so they become [1,num_features] and then [1,1,num_features]</span>
+<span class="sd">                            Finally, distance function need to be squeezed because it returns [batch_size, 1] but there is only one sample, so let&#39;s just retrieve the scalar</span>
+<span class="sd">                            &quot;&quot;&quot;</span>
+                            <span class="n">solo_batch_current_neuron</span> <span class="o">=</span> <span class="n">current_neuron</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span>
+                                <span class="mi">0</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                            <span class="n">solo_batch_neighbor_neuron</span> <span class="o">=</span> <span class="n">neighbor_neuron</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span>
+                                <span class="mi">0</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+                            <span class="c1"># Calculate and store the distance</span>
+                            <span class="n">distance_matrix</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">neighbor_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">distance_fn</span><span class="p">(</span>
+                                <span class="n">solo_batch_current_neuron</span><span class="p">,</span>
+                                <span class="n">solo_batch_neighbor_neuron</span><span class="p">,</span>
+                            <span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+
+                        <span class="n">neighbor_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Aggregate distances (either sum or mean). Each neuron has approximately k distances based on the topology (and bounds).</span>
+<span class="sd">        Compute the aggregation on the last dimension where all the ,neighbor distances are computed.</span>
+<span class="sd">        Both torch methods ignore NaNs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">scaling</span> <span class="o">==</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span>
+            <span class="n">distance_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">distance_matrix</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">distance_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">distance_matrix</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Normalize the distance map</span>
+        <span class="n">max_distance</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span>
+            <span class="n">distance_matrix</span><span class="o">.</span><span class="n">masked_fill</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">distance_matrix</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">distance_matrix</span> <span class="o">/</span> <span class="n">max_distance</span> <span class="k">if</span> <span class="n">max_distance</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">distance_matrix</span></div>
+
+
+<div class="viewcode-block" id="SOM.build_bmus_data_map">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.core.SOM.build_bmus_data_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_bmus_data_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">return_indices</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a mapping of winning neurons to their corresponding data points.</span>
+<span class="sd">        It processes the data in batches to save memory.</span>
+<span class="sd">        The hit map is built on CPU, but the calculations are done on GPU if available.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): input data tensor [num_samples, num_features] or [num_features]</span>
+<span class="sd">            return_indices (bool, optional): If True, return indices instead of data points. Defaults to False.</span>
+<span class="sd">            batch_size (int, optional): Size of batches to process. Defaults to 1024.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[Tuple[int, int], Any]: Dictionary mapping bmus to data samples or indices</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Ensure batch compatibility</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Initialize the map on CPU</span>
+        <span class="n">bmus_data_map</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+        <span class="c1"># Process data in batches to save GPU memory</span>
+        <span class="n">num_samples</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">num_batches</span> <span class="o">=</span> <span class="p">(</span><span class="n">num_samples</span> <span class="o">+</span> <span class="n">batch_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">batch_size</span>
+        <span class="k">for</span> <span class="n">batch_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_batches</span><span class="p">):</span>
+            <span class="c1"># Retrieve corresponding batches and move them to device</span>
+            <span class="n">start_idx</span> <span class="o">=</span> <span class="n">batch_idx</span> <span class="o">*</span> <span class="n">batch_size</span>
+            <span class="n">end_idx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">((</span><span class="n">batch_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">)</span>
+            <span class="n">current_batch_size</span> <span class="o">=</span> <span class="n">end_idx</span> <span class="o">-</span> <span class="n">start_idx</span>
+            <span class="n">batch_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+            <span class="c1"># Get BMUs for this batch</span>
+            <span class="n">batch_bmus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">identify_bmus</span><span class="p">(</span><span class="n">batch_data</span><span class="p">)</span>
+
+            <span class="c1"># Handle special case when batch has only one sample</span>
+            <span class="k">if</span> <span class="n">current_batch_size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># If only one sample, ensure batch_bmus is properly shaped</span>
+                <span class="k">if</span> <span class="n">batch_bmus</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">batch_bmus</span> <span class="o">=</span> <span class="n">batch_bmus</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">batch_bmus</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">bmu_pos</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">item</span><span class="p">()),</span> <span class="nb">int</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">item</span><span class="p">()))</span>
+                <span class="k">if</span> <span class="n">return_indices</span><span class="p">:</span>
+                    <span class="n">bmus_data_map</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">start_idx</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">bmus_data_map</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">batch_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span>
+            <span class="c1"># Otherwise, process multiple samples normally</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Add the BMUs to the map</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">batch_bmus</span><span class="p">):</span>
+                    <span class="c1"># Convert BMU coordinates to integer tuple for dictionary key</span>
+                    <span class="n">bmu_pos</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">item</span><span class="p">()),</span> <span class="nb">int</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">item</span><span class="p">()))</span>
+                    <span class="c1"># Global index for this data point</span>
+                    <span class="n">global_idx</span> <span class="o">=</span> <span class="n">start_idx</span> <span class="o">+</span> <span class="n">i</span>
+                    <span class="c1"># Add to map based on return_indices flag</span>
+                    <span class="k">if</span> <span class="n">return_indices</span><span class="p">:</span>
+                        <span class="n">bmus_data_map</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">global_idx</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Store the data on CPU to save GPU memory</span>
+                        <span class="n">bmus_data_map</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">batch_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span>
+
+            <span class="c1"># Clean up GPU memory</span>
+            <span class="k">del</span> <span class="n">batch_data</span><span class="p">,</span> <span class="n">batch_bmus</span>
+            <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+
+        <span class="c1"># Convert lists to tensors if returning data points</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">return_indices</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">bmu</span> <span class="ow">in</span> <span class="n">bmus_data_map</span><span class="p">:</span>
+                <span class="n">bmus_data_map</span><span class="p">[</span><span class="n">bmu</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">bmus_data_map</span><span class="p">[</span><span class="n">bmu</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">bmus_data_map</span></div>
+
+
+<div class="viewcode-block" id="SOM.build_metric_map">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.core.SOM.build_metric_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_metric_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">reduction_parameter</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate neurons&#39; metrics based on target values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, num_features]</span>
+<span class="sd">            target (torch.Tensor): Labels tensor for data points [batch_size]</span>
+<span class="sd">            reduction_parameter (str): Decide the calculation to apply to each neuron, &#39;mean&#39; or &#39;std&#39;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Metric map based on the reduction parameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># # Ensure data is on the correct device</span>
+        <span class="c1"># data = data.to(self.device)</span>
+        <span class="c1"># target = target.to(self.device)</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-8</span>
+
+        <span class="n">bmus_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_bmus_data_map</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">return_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">metric_map</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+
+        <span class="c1"># For each activated neuron, calculate the corresponding target metric</span>
+        <span class="k">for</span> <span class="n">bmu_pos</span><span class="p">,</span> <span class="n">samples_indices</span> <span class="ow">in</span> <span class="n">bmus_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples_indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">reduction_parameter</span> <span class="o">==</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span>
+                    <span class="n">metric_map</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="n">samples_indices</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">reduction_parameter</span> <span class="o">==</span> <span class="s2">&quot;std&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples_indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">metric_map</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">std</span><span class="p">(</span>
+                            <span class="n">target</span><span class="p">[</span><span class="n">samples_indices</span><span class="p">],</span> <span class="n">unbiased</span><span class="o">=</span><span class="kc">True</span>
+                        <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">metric_map</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">epsilon</span>  <span class="c1"># Ensure visualization with a non-zero value</span>
+                        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">metric_map</span></div>
+
+
+<div class="viewcode-block" id="SOM.build_score_map">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.core.SOM.build_score_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_score_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate neurons&#39; score based on target values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, num_features]</span>
+<span class="sd">            target (torch.Tensor): Labels tensor for data points [batch_size]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Score map based on a chosen score function: std_neuron / sqrt(n_neuron) * log(N_data/n_neuron).</span>
+<span class="sd">            The score combines the standard error with a term penalizing uneven sample distribution across neurons. Lower scores indicate better neuron representativeness.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># # Ensure device compatibility</span>
+        <span class="c1"># data = data.to(self.device)</span>
+        <span class="c1"># target = target.to(self.device)</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-8</span>
+
+        <span class="n">bmus_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_bmus_data_map</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">return_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># score_map = torch.full((self.x, self.y), float(&quot;nan&quot;), device=self.device)</span>
+        <span class="n">score_map</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+
+        <span class="c1"># For each activated neurons, calculate the corresponding target metric</span>
+        <span class="k">for</span> <span class="n">bmu_pos</span><span class="p">,</span> <span class="n">samples_indices</span> <span class="ow">in</span> <span class="n">bmus_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples_indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+                <span class="c1"># Consider neuron with multiple elements</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples_indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">std</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="n">samples_indices</span><span class="p">],</span> <span class="n">unbiased</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples_indices</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                    <span class="n">total_samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                    <span class="n">neuron_score</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_samples</span><span class="p">))</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
+                        <span class="n">total_samples</span> <span class="o">/</span> <span class="n">n_samples</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Consider neuron with a unique element</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Tensor to initialize tensor from scalars and ensure visualization with a non-zero value</span>
+                    <span class="n">neuron_score</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">epsilon</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+                <span class="n">score_map</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">round</span><span class="p">(</span><span class="n">neuron_score</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">neuron_score</span> <span class="o">&gt;</span> <span class="n">epsilon</span> <span class="k">else</span> <span class="n">epsilon</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">score_map</span></div>
+
+
+<div class="viewcode-block" id="SOM.build_rank_map">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.core.SOM.build_rank_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_rank_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build a map of neuron ranks based on their target value standard deviations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, num_features]</span>
+<span class="sd">            target (torch.Tensor): Labels tensor for data points [batch_size]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Rank map where each neuron&#39;s value is its rank (1 = lowest std = best)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># ! Now bmus_map is by default on the CPU</span>
+        <span class="n">bmus_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_bmus_data_map</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">return_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># neuron_stds = torch.full((self.x, self.y), float(&quot;nan&quot;), device=self.device)</span>
+        <span class="n">neuron_stds</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Calculate standard deviation for each neuron</span>
+        <span class="n">active_neurons</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">bmu_pos</span><span class="p">,</span> <span class="n">sample_indices</span> <span class="ow">in</span> <span class="n">bmus_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">active_neurons</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c1"># Consider neuron with multiple elements</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">neuron_stds</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">std</span><span class="p">(</span>
+                        <span class="n">target</span><span class="p">[</span><span class="n">sample_indices</span><span class="p">],</span> <span class="n">unbiased</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>  <span class="c1"># Use unbiased estimator for better small sample handling</span>
+
+                <span class="c1"># Consider neuron with a unique element</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">neuron_stds</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="c1"># rank_map = torch.full((self.x, self.y), float(&quot;nan&quot;), device=self.device)</span>
+        <span class="n">rank_map</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Get mask to retrieve indices of non-NaN values</span>
+        <span class="n">valid_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">neuron_stds</span><span class="p">)</span>
+        <span class="n">valid_stds</span> <span class="o">=</span> <span class="n">neuron_stds</span><span class="p">[</span><span class="n">valid_mask</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_stds</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Sort stds in descending order and get ranks (+ 1 to make ranks 1-based)</span>
+            <span class="n">ranks</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">valid_stds</span><span class="p">,</span> <span class="n">descending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="c1"># Ensure there are as many ranks as activated neurons</span>
+            <span class="k">assert</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">ranks</span><span class="p">)</span> <span class="o">==</span> <span class="n">active_neurons</span>
+            <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Rank count (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ranks</span><span class="p">)</span><span class="si">}</span><span class="s2">) doesn&#39;t match active neurons (</span><span class="si">{</span><span class="n">active_neurons</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+            <span class="c1"># Place ranks back in the map</span>
+            <span class="n">rank_map</span><span class="p">[</span><span class="n">valid_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">ranks</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">rank_map</span></div>
+
+
+<div class="viewcode-block" id="SOM.build_classification_map">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.core.SOM.build_classification_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_classification_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">neighborhood_order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build a classification map where each neuron is assigned the most frequent label.</span>
+<span class="sd">        In case of a tie, consider labels from neighboring neurons.</span>
+<span class="sd">        If there are no neighboring neurons or a second tie, then randomly select one of the top label.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, num_features]</span>
+<span class="sd">            target (torch.Tensor): Labels tensor for data points [batch_size]. They are assumed to be encoded with value &gt; 1 for decent visualization.</span>
+<span class="sd">            neighborhood_order (int, optional): Neighborhood order to consider for tie-breaking. Defaults to 1.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Classification map with the most frequent label for each neuron</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">bmus_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_bmus_data_map</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">return_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">classification_map</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Retrieve neighborhood offsets based on topology for tie-breaking</span>
+        <span class="n">neighborhood_offsets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">topology</span> <span class="o">==</span> <span class="s2">&quot;hexagonal&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">neighborhood_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">):</span>
+                    <span class="n">offsets</span> <span class="o">=</span> <span class="n">get_hexagonal_offsets</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+                    <span class="n">neighborhood_offsets</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                        <span class="n">offsets</span><span class="p">[</span><span class="s2">&quot;even&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">row</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="n">offsets</span><span class="p">[</span><span class="s2">&quot;odd&quot;</span><span class="p">]</span>
+                    <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">neighborhood_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">neighborhood_offsets</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_rectangular_offsets</span><span class="p">(</span><span class="n">order</span><span class="p">))</span>
+
+        <span class="c1"># Iterate through each activated neuron</span>
+        <span class="k">for</span> <span class="n">bmu_pos</span><span class="p">,</span> <span class="n">sample_indices</span> <span class="ow">in</span> <span class="n">bmus_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_indices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Retrieve the labels of all samples attached to current neuron</span>
+<span class="sd">                Find the most common one</span>
+<span class="sd">                Check if there is a tie with another label</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">neuron_labels</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="n">sample_indices</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                <span class="n">label_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">neuron_labels</span><span class="p">)</span>
+                <span class="n">max_count</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">label_counts</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                <span class="n">top_labels</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">label</span> <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">label_counts</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="n">max_count</span>
+                <span class="p">]</span>
+
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                If there is not tie, assign the most common label to the neuron.</span>
+<span class="sd">                In case of a tie, consider labels from neighboring neurons to break it.</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">top_labels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">classification_map</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+                        <span class="n">top_labels</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">classification_map</span><span class="o">.</span><span class="n">dtype</span>
+                    <span class="p">)</span>  <span class="c1"># Convert NumPy value to tensor scalar</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">neighbor_labels</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">bmu_pos</span>
+                    <span class="k">for</span> <span class="n">offset</span> <span class="ow">in</span> <span class="n">neighborhood_offsets</span><span class="p">:</span>
+                        <span class="n">neighbor_row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="n">offset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">neighbor_col</span> <span class="o">=</span> <span class="n">col</span> <span class="o">+</span> <span class="n">offset</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">neighbor_row</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+                            <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">neighbor_col</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+                            <span class="ow">and</span> <span class="p">(</span><span class="n">neighbor_row</span><span class="p">,</span> <span class="n">neighbor_col</span><span class="p">)</span> <span class="ow">in</span> <span class="n">bmus_map</span>
+                        <span class="p">):</span>
+                            <span class="n">neighbor_samples_indices</span> <span class="o">=</span> <span class="n">bmus_map</span><span class="p">[</span>
+                                <span class="p">(</span><span class="n">neighbor_row</span><span class="p">,</span> <span class="n">neighbor_col</span><span class="p">)</span>
+                            <span class="p">]</span>
+                            <span class="n">neighbor_labels</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                                <span class="n">target</span><span class="p">[</span><span class="n">neighbor_samples_indices</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                            <span class="p">)</span>
+
+                    <span class="c1"># After collecting all neighbor labels, recompute label counts with neighborhood labels.</span>
+                    <span class="k">if</span> <span class="n">neighbor_labels</span><span class="p">:</span>
+                        <span class="n">expanded_label_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">neighbor_labels</span><span class="p">)</span>
+                        <span class="n">max_neighbor_count</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">expanded_label_counts</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                        <span class="n">top_neighbor_labels</span> <span class="o">=</span> <span class="p">[</span>
+                            <span class="n">label</span>
+                            <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">expanded_label_counts</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                            <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="n">max_neighbor_count</span>
+                        <span class="p">]</span>
+                        <span class="c1"># If there is a tie with neighbor labels, choose randomly between top labels (including neighbors).</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">top_neighbor_labels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">classification_map</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+                                <span class="n">top_neighbor_labels</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">classification_map</span><span class="o">.</span><span class="n">dtype</span>
+                            <span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="c1"># Choose randomly and convert to tensor</span>
+                            <span class="n">chosen_label</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">top_neighbor_labels</span><span class="p">)</span>
+                            <span class="n">classification_map</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+                                <span class="n">chosen_label</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">classification_map</span><span class="o">.</span><span class="n">dtype</span>
+                            <span class="p">)</span>
+                    <span class="c1"># If there are no neighbor labels, choose randomly between previous top labels.</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Choose randomly and convert to tensor</span>
+                        <span class="n">chosen_label</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">top_labels</span><span class="p">)</span>
+                        <span class="n">classification_map</span><span class="p">[</span><span class="n">bmu_pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+                            <span class="n">chosen_label</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">classification_map</span><span class="o">.</span><span class="n">dtype</span>
+                        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">classification_map</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Manufacture Française des Pneumatiques Michelin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
