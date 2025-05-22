@@ -1,57 +1,36 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
 cff-version: 1.2.0
-
-message: "If you use this software, please cite it as below."
-
-title: "TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps"
-abstract: "TorchSOM is a PyTorch-based library for training Self-Organizing Maps (SOMs), a type of unsupervised learning algorithm used for clustering and dimensionality reduction. Designed for scalability and ease of use, this implementation is optimized for large-scale data."
-keywords:
-  - "Self-Organizing Map (SOM)"
-  - "PyTorch"
-  - "Machine Learning"
-  - "Unsupervised Learning"
-  - "Dimensionality Reduction"
-  - "Clustering"
-  - "Data Visualization"
-
-repository: "https://github.com/LouisTier/TorchSOM" 
-license: "Apache-2.0"
-year: 2025
-
+title: >-
+  TorchSOM: A Scalable PyTorch-Compatible Library for
+  Self-Organizing Maps
+message: 'If you use this software, please cite both the article and the software itself.'
+type: software
 authors:
-  - family-names: "Berthier"
-    given-names: "Louis"
-    orcid: "https://orcid.org/0009-0009-9654-2448"
-    affiliation: 
-      - "Michelin, France"
-      - "Centre de Mathématiques Appliquées, Ecole Polytechnique, France"
-    email: "louis_tier@outlook.com"
-    website: "https://louistier.github.io/"
-
-references:
-  - type: software
-    title: "TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps"
-    authors:
-      - family-names: "Berthier"
-        given-names: "Louis"
-    version: "1.0.0"
-    date-released: "2025-05-20"
-    url: "https://github.com/LouisTier/TorchSOM"
-    license: "Apache-2.0"
-    year: 2025
-
-# license:
-#   type: "Apache-2.0"
-#   url: "https://opensource.org/licenses/Apache-2.0"
-#   file: LICENSE
-    
-# preferred-citation:
-#   type: inproceedings
-#   title: "TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps"
-#   authors:
-#     - family-names: "Berthier"
-#       given-names: "Louis"
-#   booktitle: "Proceedings of the XXth CONFERENCE NAME"
-#   year: "2025"
-#   url: "https://arxiv.org/abs/XXXXX" # If available
-#   doi: "10.XXXX/XXXXX" # If available
-
+  - given-names: Louis
+    family-names: Berthier
+    email: louis-desire-romeo.berthier@michelin.com
+    affiliation: 'Manufacture Française des Pneumatiques Michelin; Centre de Mathématiques Appliquées (CMAP), Ecole Polytechnique'
+    orcid: 'https://orcid.org/0009-0009-9654-2448'
+    website: 'https://louistier.github.io/'
+repository-code: 'https://github.com/michelin/TorchSOM'
+url: 'https://opensource.michelin.io/TorchSOM'
+abstract: >-
+  TorchSOM is a PyTorch-based library for training
+  Self-Organizing Maps (SOMs), a type of unsupervised
+  learning algorithm used for dimensionality reduction,
+  visualization, and just-in-time learning (JITL). Designed
+  for scalability and ease of use, this implementation is
+  optimized for large-scale data.
+keywords:
+  - Self-Organizing Map (SOM)
+  - PyTorch
+  - Machine Learning
+  - Unsupervised Learning
+  - Dimensionality Reduction
+  - Just-in-Time Learning (JITL)
+  - Data Visualization
+license: Apache-2.0
+version: 1.0.0
+date-released: '2025-05-20'

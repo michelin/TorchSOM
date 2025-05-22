@@ -8,7 +8,7 @@
     <img src="logo.jpg" alt="TorchSOM_logo" width="350"/>
 </p>
 
-**TorchSOM** is the official code for
+**`TorchSOM`** is the official code for
 paper [PAPER ARTICLE AND LINK TO UPDATE](), @CONFERENCE @DATE.  
 It provides an efficient and scalable implementation of **Self-Organizing Maps (SOMs)** using PyTorch, making it easy to integrate with deep learning workflows while benefiting from GPU acceleration.
 
@@ -20,7 +20,7 @@ It provides an efficient and scalable implementation of **Self-Organizing Maps (
     - [Table of Contents](#table-of-contents)
     - [Introduction](#introduction)
     - [Installation](#installation)
-    <!-- - [Documentation](#documentation) -->
+    - [Documentation](#documentation)
     - [Citation](#citation)
     - [Acknowledgement](#acknowledgement)
     - [Contributions](#contributions)
@@ -31,17 +31,19 @@ It provides an efficient and scalable implementation of **Self-Organizing Maps (
 
 ## Introduction
 
-**TorchSOM** is a PyTorch-based library for training Self-Organizing Maps (SOMs), a type of unsupervised learning algorithm used for clustering and dimensionality reduction. Designed for scalability and ease of use, this implementation is optimized for large-scale data.
+**`TorchSOM`** is a PyTorch-based library for training Self-Organizing Maps (SOMs), a type of unsupervised learning algorithm used for clustering and dimensionality reduction. Designed for scalability and ease of use, this implementation is optimized for large-scale data.
 
 Also, this **repository is highly documented and commented**, which makes it easy to use, understand, deploy, and which offers endless possibilities for improvements.  
-To help you explore and experiment with **TorchSOM**, we provide Jupyter notebooks in the [`notebooks/`](notebooks) directory. There are multiples datasets and the corresponding results respectively in the [`data/`](data) and [`results/`](notebooks/results) directories.
+To help you explore and experiment with **`TorchSOM`**, we provide Jupyter notebooks in the [`notebooks/`](notebooks) directory. There are multiples datasets and the corresponding results respectively in the [`data/`](data) and [`results/`](notebooks/results) directories.
 - [`iris.ipynb`](notebooks/iris.ipynb): A multiclass classification example.
 - [`wine.ipynb`](notebooks/wine.ipynb): Another multiclass classification example.
 - [`boston_housing.ipynb`](notebooks/boston_housing.ipynb): A regression example.
 - [`energy_efficiency.ipynb`](notebooks/energy_efficiency.ipynb): A multi-regression example.
 - [`get_data.ipynb`](notebooks/get_data.ipynb): The notebook used to generated the datasets provided in the [`data/`](data) directory. 
 
-If you find this project interesting, we would be grateful for your support by starring ⭐ this [`GitHub repository`](https://github.com/LouisTier/TorchSOM).
+If you find this project interesting, we would be grateful for your support by starring ⭐ this [`GitHub repository`](https://github.com/michelin/TorchSOM).
+
+Here are some examples of visualizations you can obtain through the use of **`TorchSOM`**.
 
 
 
@@ -53,10 +55,10 @@ You can install the package using PyPI (not available yet):
 pip install torchsom
 ```
 
-If you want to use the latest version, or if you prefer the command line interface, you can use it locally by cloning or forking this repository to your local machine. TorchSOM requires a recent version of Python, preferably **3.9 or higher**.  
+If you want to use the latest version, or if you prefer the command line interface, you can use it locally by cloning or forking this repository to your local machine. `TorchSOM` requires a recent version of Python, preferably **3.9 or higher**.  
 
 ```bash
-git clone https://github.com/LouisTier/TorchSOM.git 
+git clone https://github.com/michelin/TorchSOM.git 
 ```
 
 If you want to develop the package and run the notebooks after cloning the repository, make sure you have the required dependencies installed before using it:
@@ -69,20 +71,40 @@ pip install -e '.[dev]' # Install the required dependencies
 
 
 
-<!-- ## Documentation
+## Documentation
 
-Here is the link to the documentation of this library: [https://ccsd.readthedocs.io/en/latest/](https://ccsd.readthedocs.io/en/latest/). It contains more information regarding all the classes and functions of this package. -->
+For more details on classes and functions, please refer to the `TorchSOM` [documentation](https://michelin.github.io/TorchSOM/index.html).
+
+<!-- 
+
+Generate the `.rst` files with
+
+```bash
+sphinx-apidoc -o docs/source torchsom
+```
+
+Then, to rebuild everything in [`docs/build/html`](docs/build/html):
+
+```bash
+cd docs/
+make clean
+make html
+```
+
+Open [`index.html`](docs/build/html/index.html) to preview locally the generated HTML. 
+
+-->
 
 
 
 ## Citation
 
-If you use TorchSOM in your research or work, please consider citing it using the following entries:
+If you use `TorchSOM` in your research or work, please cite both the article and the software itself using the following entries:
 
 1. **Paper**  
     ```bibtex
-    @inproceedings{Berthier2025TorchSOM_paper,
-        title        = {{TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps}},
+    @inproceedings{Berthier_TorchSOM_A_Scalable_2025_article,
+        title        = {TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},
         author       = {Berthier, Louis},
         year         = {2025},
     }
@@ -90,12 +112,14 @@ If you use TorchSOM in your research or work, please consider citing it using th
 
 2. **Software**  
     ```bibtex
-    @software{Berthier2025TorchSOM_software,
-        author       = {Berthier, Louis},
-        title        = {{TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps}},
-        year         = {2025},
-        url          = {https://github.com/LouisTier/TorchSOM},
-        license      = {Apache-2.0},
+    @software{Berthier_TorchSOM_A_Scalable_2025,
+        author = {Berthier, Louis},
+        license = {Apache-2.0},
+        month = may,
+        title = {{TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps}},
+        url = {https://github.com/michelin/TorchSOM},
+        version = {1.0.0},
+        year = {2025}
     }
     ```
 
@@ -105,7 +129,7 @@ For more details, please refer to the [`CITATION.cff`](CITATION.cff) file.
 
 ## Acknowledgement
 
-The [Centre de Mathématiques Appliquées](https://cmap.ip-paris.fr/) - CMAP - at the Ecole Polytechnique - X -, and [Manufacture Française des Pneumatiques Michelin](https://www.michelin.fr/) for the joint collaboration and supervision during my PhD thesis.
+The [Centre de Mathématiques Appliquées](https://cmap.ip-paris.fr/) - CMAP - at the Ecole Polytechnique - X -, and [Manufacture Française des Pneumatiques Michelin](https://www.michelin.com/) for the joint collaboration and supervision during my PhD thesis.
 
 [Giuseppe Vettigli](https://github.com/JustGlowing) for his GitHub repository [MiniSom](https://github.com/JustGlowing/minisom), which provided a first well-maintained and open-source implementation of Self-Organizing Maps.
 
@@ -117,7 +141,7 @@ Logo created using DALL-E.
 
 We invite contributors of all backgrounds and experience levels to get involved and contribute to this library. Whether you have innovative ideas to propose or are eager to submit pull requests, we encourage your contributions!
 
-Please take a moment to read our [`Code of Conduct`](CODE_OF_CONDUCT.md) if you're interested in contributing.
+Please take a moment to read our [`Code of Conduct`](CODE_OF_CONDUCT.md) and the [`Contributing guide`](CONTRIBUTING.md) if you're interested in contributing.
 
 
 
