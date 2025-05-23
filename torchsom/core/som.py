@@ -11,12 +11,7 @@ from tqdm import tqdm
 
 from ..utils.decay import DECAY_FUNCTIONS
 from ..utils.distances import DISTANCE_FUNCTIONS
-from ..utils.grid import (
-    adjust_meshgrid_topology,
-    axial_distance,
-    convert_to_axial_coords,
-    create_mesh_grid,
-)
+from ..utils.grid import adjust_meshgrid_topology, create_mesh_grid
 from ..utils.initialization import initialize_weights
 from ..utils.metrics import calculate_quantization_error, calculate_topographic_error
 from ..utils.neighborhood import NEIGHBORHOOD_FUNCTIONS
@@ -338,7 +333,7 @@ class SOM(BaseSOM):
             Tuple[List[float], List[float]]: Quantization and topographic errors [epoch]
         """
 
-        data = data.to(self.device)
+        # data = data.to(self.device)
         dataset = TensorDataset(data)
         dataloader = DataLoader(
             dataset, batch_size=self.batch_size, shuffle=True, pin_memory=False
@@ -682,7 +677,7 @@ class SOM(BaseSOM):
         # Normalize the distance map
         max_distance = torch.max(
             distance_matrix.masked_fill(torch.isnan(distance_matrix), float("-inf"))
-        )
+        )  # Replace NaNs with -inf to be ignored by max()
         return distance_matrix / max_distance if max_distance > 0 else distance_matrix
 
     def build_bmus_data_map(

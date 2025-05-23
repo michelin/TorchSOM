@@ -3,6 +3,8 @@ from typing import Tuple, Union
 
 import torch
 
+from ..utils.grid import axial_distance, convert_to_axial_coords
+
 
 def calculate_quantization_error(
     data: torch.Tensor,
@@ -94,9 +96,6 @@ def calculate_topographic_error(
             bmu1_col = int(indices[i, 0] % y_dim)
             bmu2_row = int(torch.div(indices[i, 1], y_dim, rounding_mode="floor"))
             bmu2_col = int(indices[i, 1] % y_dim)
-
-            # Convert to axial coordinates
-            from ..utils.grid import axial_distance, convert_to_axial_coords
 
             q1, r1 = convert_to_axial_coords(bmu1_row, bmu1_col)
             q2, r2 = convert_to_axial_coords(bmu2_row, bmu2_col)
