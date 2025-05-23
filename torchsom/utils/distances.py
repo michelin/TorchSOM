@@ -44,8 +44,9 @@ def _euclidean_distance(
     Returns:
         torch.Tensor: euclidean distance between input and weights [row_neurons, col_neurons]
     """
-
-    return torch.max(torch.abs(data - weights), dim=-1).values
+    return torch.norm(torch.subtract(data, weights), dim=-1)
+    # ! Modification to test
+    # return torch.max(torch.abs(data - weights), dim=-1).values
 
 
 def _manhattan_distance(
