@@ -121,7 +121,15 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_all"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_classification_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_classification_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_component_planes"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_component_planes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_distance_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_distance_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_hit_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_hit_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_metric_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_metric_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_rank_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_rank_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_score_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_score_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_training_errors"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_training_errors()</span></code></a></li>
 </ul>
 </li>
@@ -264,6 +272,17 @@
     <span class="n">r</span> <span class="o">=</span> <span class="n">row</span>  <span class="c1"># y axis</span>
     <span class="k">return</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span></div>
 
+
+    <span class="c1"># ! Modification to test</span>
+    <span class="c1"># # Match the even-r layout used in `adjust_meshgrid_topology`</span>
+    <span class="c1"># #   even rows -&gt; shifted left by 0.5</span>
+    <span class="c1"># #   odd  rows -&gt; no horizontal shift</span>
+    <span class="c1"># if row % 2 == 0:  # even-r</span>
+    <span class="c1">#     q = col - 0.5 - (row // 2)</span>
+    <span class="c1"># else:  # odd-r</span>
+    <span class="c1">#     q = col - (row // 2)</span>
+    <span class="c1"># r = row</span>
+    <span class="c1"># return q, r</span>
 
 
 <div class="viewcode-block" id="axial_distance">

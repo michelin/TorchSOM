@@ -121,7 +121,15 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_all"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_classification_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_classification_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_component_planes"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_component_planes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_distance_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_distance_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_hit_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_hit_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_metric_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_metric_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_rank_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_rank_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_score_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_score_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_training_errors"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_training_errors()</span></code></a></li>
 </ul>
 </li>
@@ -254,6 +262,7 @@
     <span class="c1"># Calculate distances between each data point and all neurons</span>
     <span class="n">distances</span> <span class="o">=</span> <span class="n">distance_fn</span><span class="p">(</span><span class="n">data_expanded</span><span class="p">,</span> <span class="n">weights_expanded</span><span class="p">)</span>
 
+    <span class="c1"># ! Modification to test: all the lines below could be vectorized</span>
     <span class="c1"># Get top 2 BMU indices for each sample</span>
     <span class="n">batch_size</span> <span class="o">=</span> <span class="n">distances</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">distances</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">largest</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>

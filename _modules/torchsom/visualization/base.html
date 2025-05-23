@@ -121,7 +121,15 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_all"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_classification_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_classification_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_component_planes"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_component_planes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_distance_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_distance_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_hit_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_hit_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_metric_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_metric_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_rank_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_rank_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_score_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_score_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_training_errors"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_training_errors()</span></code></a></li>
 </ul>
 </li>
@@ -309,6 +317,9 @@
             <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">map</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">col</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5</span> <span class="k">if</span> <span class="n">row</span> <span class="o">%</span> <span class="mi">2</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Offset to alternate rows</span>
                 <span class="n">y</span> <span class="o">=</span> <span class="n">row</span>
+                <span class="c1"># ! Modification to test</span>
+                <span class="c1"># x = col + (0.5 if row % 2 else 0)  # horizontal shift</span>
+                <span class="c1"># y = row * (np.sqrt(3) / 2)  # correct vertical spacing</span>
                 <span class="n">x_coords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
                 <span class="n">y_coords</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
                 <span class="n">map_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">map</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">])</span>
@@ -320,7 +331,7 @@
         <span class="n">x</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">y</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
         <span class="n">values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
-        <span class="n">gridsize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gridsize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">log_scale</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">cmap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">hexbin</span><span class="p">:</span>
@@ -331,7 +342,7 @@
 <span class="sd">            x (List[float]): X-coordinates for hexbin</span>
 <span class="sd">            y (List[float]): Y-coordinates for hexbin</span>
 <span class="sd">            values (List[float]): Values to plot in hexbin</span>
-<span class="sd">            gridsize (Optional[int], optional):  Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</span>
+<span class="sd">            gridsize (Optional[Union[int, Tuple[int, int]]], optional):  Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</span>
 <span class="sd">            log_scale (bool, optional): Whether to use logarithmic scale for colors. Defaults to False.</span>
 <span class="sd">            cmap (Optional[str], optional):  Custom colormap. If None, uses default from config. Defaults to None.</span>
 
@@ -469,6 +480,7 @@
 
         <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">figsize</span><span class="p">)</span>
 
+        <span class="c1"># ! Hard-coding “0 → NaN” may hide legitimate zeros.</span>
         <span class="c1"># Create a copy of the map to flag values of 0 as NaN, and retrieve it as a np array</span>
         <span class="n">masked_map</span> <span class="o">=</span> <span class="nb">map</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">masked_map</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
@@ -617,11 +629,325 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="SOMVisualizer.plot_distance_map">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_distance_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_distance_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">fig_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;distance_map&quot;</span><span class="p">,</span>
+        <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gridsize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot the D-Matrix (distance map) of a trained SOM.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fig_name (Optional[str], optional): The name of the file to save. Defaults to &quot;distance_map&quot;.</span>
+<span class="sd">            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.</span>
+<span class="sd">            gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">distance_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">som</span><span class="o">.</span><span class="n">build_distance_map</span><span class="p">(</span>
+            <span class="n">neighborhood_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">som</span><span class="o">.</span><span class="n">neighborhood_order</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">(</span>
+            <span class="nb">map</span><span class="o">=</span><span class="n">distance_map</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;D-Matrix (Distance Map) - Order </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">som</span><span class="o">.</span><span class="n">neighborhood_order</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">colorbar_label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">som</span><span class="o">.</span><span class="n">distance_fn_name</span><span class="si">}</span><span class="s2"> distance&quot;</span><span class="p">,</span>
+            <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fig_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">gridsize</span><span class="o">=</span><span class="n">gridsize</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SOMVisualizer.plot_classification_map">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_classification_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_classification_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">fig_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;classification_map&quot;</span><span class="p">,</span>
+        <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gridsize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot classification map showing the most frequent label for each neuron.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, n_features]</span>
+<span class="sd">            target (torch.Tensor): Labels tensor for data points [batch_size]. Must be encoded with values &gt; 1 to avoid white cells like unactivated.</span>
+<span class="sd">            fig_name (Optional[str], optional): The name of the file to save. Defaults to &quot;classification_map&quot;.</span>
+<span class="sd">            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.</span>
+<span class="sd">            gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">classification_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">som</span><span class="o">.</span><span class="n">build_classification_map</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">neighborhood_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">som</span><span class="o">.</span><span class="n">neighborhood_order</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">(</span>
+            <span class="nb">map</span><span class="o">=</span><span class="n">classification_map</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Classification Map&quot;</span><span class="p">,</span>
+            <span class="n">colorbar_label</span><span class="o">=</span><span class="s2">&quot;Most Frequent Encoded Label&quot;</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">fig_name</span><span class="p">,</span>
+            <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+            <span class="n">gridsize</span><span class="o">=</span><span class="n">gridsize</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SOMVisualizer.plot_hit_map">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_hit_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_hit_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">fig_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;hit_map&quot;</span><span class="p">,</span>
+        <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gridsize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot hit map showing the distribution of winning neurons from input data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, n_features]</span>
+<span class="sd">            fig_name (Optional[str], optional): The name of the file to save.. Defaults to &quot;hit_map&quot;.</span>
+<span class="sd">            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.</span>
+<span class="sd">            gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">hit_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">som</span><span class="o">.</span><span class="n">build_hit_map</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">(</span>
+            <span class="nb">map</span><span class="o">=</span><span class="n">hit_map</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Hit Map&quot;</span><span class="p">,</span>
+            <span class="n">colorbar_label</span><span class="o">=</span><span class="s2">&quot;Hits&quot;</span><span class="p">,</span>
+            <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">fig_name</span><span class="p">,</span>
+            <span class="n">gridsize</span><span class="o">=</span><span class="n">gridsize</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SOMVisualizer.plot_metric_map">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_metric_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_metric_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">reduction_parameter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+        <span class="n">fig_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gridsize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot target distribution of the corresponding input samples through SOM&#39;s neurons.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, n_features]</span>
+<span class="sd">            target (torch.Tensor): Optional labels tensor for data points [batch_size]. Defaults to None.</span>
+<span class="sd">            reduction_parameter (str, optional): Decide the calculation to apply to each neuron, &#39;mean&#39; or &#39;std&#39;. Defaults to &quot;mean&quot;.</span>
+<span class="sd">            fig_name (Optional[str], optional): The name of the file to save. Defaults to None.</span>
+<span class="sd">            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.</span>
+<span class="sd">            gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">metric_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">som</span><span class="o">.</span><span class="n">build_metric_map</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">reduction_parameter</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;Map of Mean Target Value&quot;</span>
+            <span class="k">if</span> <span class="n">reduction_parameter</span> <span class="o">==</span> <span class="s2">&quot;mean&quot;</span>
+            <span class="k">else</span> <span class="s2">&quot;Map of Standard Deviation of Target Values&quot;</span>
+        <span class="p">)</span>
+        <span class="n">fig_name</span> <span class="o">=</span> <span class="n">fig_name</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">reduction_parameter</span><span class="si">}</span><span class="s2">_target_map&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">(</span>
+            <span class="nb">map</span><span class="o">=</span><span class="n">metric_map</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">colorbar_label</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+            <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fig_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">show_values</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">value_format</span><span class="o">=</span><span class="s2">&quot;.3f&quot;</span><span class="p">,</span>
+            <span class="n">log_scale</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gridsize</span><span class="o">=</span><span class="n">gridsize</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SOMVisualizer.plot_score_map">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_score_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_score_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">fig_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;score_map&quot;</span><span class="p">,</span>
+        <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gridsize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot SOM neuron representativeness visualization.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, n_features]</span>
+<span class="sd">            target (torch.Tensor): Optional labels tensor for data points [batch_size]. Defaults to &quot;score_map&quot;.</span>
+<span class="sd">            fig_name (Optional[str], optional): The name of the file to save. Defaults to None.</span>
+<span class="sd">            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.</span>
+<span class="sd">            gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">score_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">som</span><span class="o">.</span><span class="n">build_score_map</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">(</span>
+            <span class="nb">map</span><span class="o">=</span><span class="n">score_map</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Neuron Map Representativeness&quot;</span><span class="p">,</span>
+            <span class="n">colorbar_label</span><span class="o">=</span><span class="s2">&quot;Relevance Score (lower = better)&quot;</span><span class="p">,</span>
+            <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fig_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">show_values</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">value_format</span><span class="o">=</span><span class="s2">&quot;.2f&quot;</span><span class="p">,</span>
+            <span class="n">log_scale</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gridsize</span><span class="o">=</span><span class="n">gridsize</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SOMVisualizer.plot_rank_map">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_rank_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_rank_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">fig_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rank_map&quot;</span><span class="p">,</span>
+        <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gridsize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot SOM ranked neurons visualization.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, n_features]</span>
+<span class="sd">            target (torch.Tensor): Optional labels tensor for data points [batch_size]. Defaults to None.</span>
+<span class="sd">            fig_name (Optional[str], optional): The name of the file to save. Defaults to &quot;rank_map&quot;.</span>
+<span class="sd">            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.</span>
+<span class="sd">            gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">rank_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">som</span><span class="o">.</span><span class="n">build_rank_map</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">(</span>
+            <span class="nb">map</span><span class="o">=</span><span class="n">rank_map</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Neuron Map Ranked Based on Output Std&quot;</span><span class="p">,</span>
+            <span class="n">colorbar_label</span><span class="o">=</span><span class="s2">&quot;Rank (lower std = higher rank)&quot;</span><span class="p">,</span>
+            <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fig_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">show_values</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">value_format</span><span class="o">=</span><span class="s2">&quot;.0f&quot;</span><span class="p">,</span>
+            <span class="n">gridsize</span><span class="o">=</span><span class="n">gridsize</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SOMVisualizer.plot_component_planes">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_component_planes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_component_planes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">component_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fig_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gridsize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot component planes (CPs), so one plane by input feature.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            component_names (Optional[List[str]], optional): Names for each component/feature. If None, uses &quot;Component {i+1}&quot;. Defaults to None.</span>
+<span class="sd">            fig_name (Optional[str], optional): The name of the file to save. Defaults to None.</span>
+<span class="sd">            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.</span>
+<span class="sd">            gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">n_components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">som</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">component_names</span> <span class="o">=</span> <span class="n">component_names</span> <span class="ow">or</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s2">&quot;Component_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_components</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">component_names</span><span class="p">):</span>
+            <span class="c1"># ! Modification to test: remove fig, ax from plt.subplots</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">figsize</span><span class="p">)</span>
+            <span class="n">component_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">som</span><span class="o">.</span><span class="n">weights</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+            <span class="n">fig_name</span> <span class="o">=</span> <span class="n">fig_name</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">(</span>
+                <span class="nb">map</span><span class="o">=</span><span class="n">component_weights</span><span class="p">,</span>
+                <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Component Plane </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">colorbar_label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> Weight Values&quot;</span><span class="p">,</span>
+                <span class="n">save_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">/component_planes&quot;</span><span class="p">,</span>
+                <span class="c1"># ! Modification to test</span>
+                <span class="c1"># save_path=(</span>
+                <span class="c1">#     Path(save_path).joinpath(&quot;component_planes&quot;) if save_path else None,</span>
+                <span class="c1"># ),</span>
+                <span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">show_values</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">is_component_plane</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">gridsize</span><span class="o">=</span><span class="n">gridsize</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="SOMVisualizer.plot_all">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_all">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">quantization_errors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">topographic_errors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">component_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">training_errors</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">distance_map</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">hit_map</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">score_map</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">rank_map</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">metric_map</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">component_planes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot all visualizations: hit map, score map, rank map, metric map, component planes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            quantization_errors (List[float]): List of quantization errors [epochs]</span>
+<span class="sd">            topographic_errors (List[float]): List of topographic errors [epochs]</span>
+<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, n_features]</span>
+<span class="sd">            target (Optional[torch.Tensor], optional): Optional labels tensor for data points [batch_size]. Defaults to None.</span>
+<span class="sd">            component_names (Optional[List[str]], optional): Names for each component/feature. If None, uses &quot;Component {i+1}&quot;. Defaults to None.</span>
+<span class="sd">            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.</span>
+<span class="sd">            training_errors (bool, optional): Boolean to decide if the visualizer plots training learning curves. Defaults to True.</span>
+<span class="sd">            distance_map (bool, optional): Boolean to decide if the visualizer plots distance map. Defaults to True.</span>
+<span class="sd">            hit_map (bool, optional): Boolean to decide if the visualizer plots hit map. Defaults to True.</span>
+<span class="sd">            score_map (bool, optional): Boolean to decide if the visualizer plots score map. Defaults to True.</span>
+<span class="sd">            rank_map (bool, optional): Boolean to decide if the visualizer plots rank map. Defaults to True.</span>
+<span class="sd">            metric_map (bool, optional): Boolean to decide if the visualizer plots metric map. Defaults to True.</span>
+<span class="sd">            component_planes (bool, optional): Boolean to decide if the visualizer plots component planes. Defaults to True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">training_errors</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_training_errors</span><span class="p">(</span>
+                <span class="n">quantization_errors</span><span class="o">=</span><span class="n">quantization_errors</span><span class="p">,</span>
+                <span class="n">topographic_errors</span><span class="o">=</span><span class="n">topographic_errors</span><span class="p">,</span>
+                <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">distance_map</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_distance_map</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">hit_map</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_hit_map</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">metric_map</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_metric_map</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">,</span>
+                <span class="n">target</span><span class="p">,</span>
+                <span class="n">reduction_parameter</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+                <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_metric_map</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">,</span>
+                <span class="n">target</span><span class="p">,</span>
+                <span class="n">reduction_parameter</span><span class="o">=</span><span class="s2">&quot;std&quot;</span><span class="p">,</span>
+                <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">score_map</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_score_map</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rank_map</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_rank_map</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">component_planes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_component_planes</span><span class="p">(</span>
+                <span class="n">component_names</span><span class="o">=</span><span class="n">component_names</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span>
+            <span class="p">)</span></div>
 </div>
 
-
-    <span class="c1"># Additional visualization methods such as plot_distance_map, plot_hit_map, etc.</span>
-    <span class="c1"># would be implemented here following the same pattern as in the original code</span>
 </pre></div>
 
            </div>

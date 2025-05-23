@@ -121,7 +121,15 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_all"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_classification_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_classification_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_component_planes"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_component_planes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_distance_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_distance_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_hit_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_hit_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_metric_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_metric_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_rank_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_rank_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_score_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_score_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../torchsom.html#torchsom.SOMVisualizer.plot_training_errors"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_training_errors()</span></code></a></li>
 </ul>
 </li>
@@ -328,6 +336,10 @@
                     <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">bmus</span>
                 <span class="p">]</span>
             <span class="p">)</span>  <span class="c1"># [batch_size, row_neurons, col_neurons]</span>
+            <span class="c1"># ! Modification to test</span>
+            <span class="c1"># # Vectorised: build a tensor of BMU coordinates and compute in one shot</span>
+            <span class="c1"># coords = torch.stack([bmus[:, 0], bmus[:, 1]], dim=1).to(torch.long)</span>
+            <span class="c1"># neighborhoods = self.neighborhood_fn(coords, sigma)  # update neighborhood_fn to accept batched coords  # [batch_size, row_neurons, col_neurons]</span>
 
             <span class="c1"># Reshape for broadcasting</span>
             <span class="n">neighborhoods</span> <span class="o">=</span> <span class="n">neighborhoods</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -790,6 +802,21 @@
                 <span class="n">max_neighbors</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbor_offsets</span><span class="p">)</span>
                 <span class="n">all_offsets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neighbor_offsets</span><span class="p">)</span>
 
+        <span class="c1"># # ! Modification to test</span>
+        <span class="c1"># def _offsets_for_row(r: int) -&gt; List[Tuple[int, int]]:</span>
+        <span class="c1">#     if self.topology == &quot;hexagonal&quot;:</span>
+        <span class="c1">#         merged = []</span>
+        <span class="c1">#         for order in range(1, neighborhood_order + 1):</span>
+        <span class="c1">#             merged.extend(</span>
+        <span class="c1">#                 get_hexagonal_offsets(order)[&quot;even&quot; if r % 2 == 0 else &quot;odd&quot;]</span>
+        <span class="c1">#             )</span>
+        <span class="c1">#         return merged</span>
+        <span class="c1">#     else:</span>
+        <span class="c1">#         merged = []</span>
+        <span class="c1">#         for order in range(1, neighborhood_order + 1):</span>
+        <span class="c1">#             merged.extend(get_rectangular_offsets(order))</span>
+        <span class="c1">#         return merged</span>
+
         <span class="c1"># Initialize distance map</span>
         <span class="n">distance_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">max_neighbors</span><span class="p">),</span>
@@ -1133,6 +1160,21 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">neighborhood_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="n">neighborhood_offsets</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_rectangular_offsets</span><span class="p">(</span><span class="n">order</span><span class="p">))</span>
+
+        <span class="c1"># ! Method to test</span>
+        <span class="c1"># def _offsets_for_row(r: int) -&gt; List[Tuple[int, int]]:</span>
+        <span class="c1">#     if self.topology == &quot;hexagonal&quot;:</span>
+        <span class="c1">#         merged = []</span>
+        <span class="c1">#         for order in range(1, neighborhood_order + 1):</span>
+        <span class="c1">#             merged.extend(</span>
+        <span class="c1">#                 get_hexagonal_offsets(order)[&quot;even&quot; if r % 2 == 0 else &quot;odd&quot;]</span>
+        <span class="c1">#             )</span>
+        <span class="c1">#         return merged</span>
+        <span class="c1">#     else:</span>
+        <span class="c1">#         merged = []</span>
+        <span class="c1">#         for order in range(1, neighborhood_order + 1):</span>
+        <span class="c1">#             merged.extend(get_rectangular_offsets(order))</span>
+        <span class="c1">#         return merged</span>
 
         <span class="c1"># Iterate through each activated neuron</span>
         <span class="k">for</span> <span class="n">bmu_pos</span><span class="p">,</span> <span class="n">sample_indices</span> <span class="ow">in</span> <span class="n">bmus_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>

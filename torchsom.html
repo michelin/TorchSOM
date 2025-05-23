@@ -123,7 +123,15 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.SOMVisualizer"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#torchsom.SOMVisualizer.plot_all"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#torchsom.SOMVisualizer.plot_classification_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_classification_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#torchsom.SOMVisualizer.plot_component_planes"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_component_planes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#torchsom.SOMVisualizer.plot_distance_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_distance_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#torchsom.SOMVisualizer.plot_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#torchsom.SOMVisualizer.plot_hit_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_hit_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#torchsom.SOMVisualizer.plot_metric_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_metric_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#torchsom.SOMVisualizer.plot_rank_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_rank_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#torchsom.SOMVisualizer.plot_score_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_score_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#torchsom.SOMVisualizer.plot_training_errors"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_training_errors()</span></code></a></li>
 </ul>
 </li>
@@ -1351,6 +1359,91 @@ It requires a data on the GPU if available for calculations with SOM’s weights
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="torchsom.SOMVisualizer.plot_all">
+<span class="sig-name descname"><span class="pre">plot_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quantization_errors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topographic_errors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hit_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_planes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/torchsom/visualization/base.html#SOMVisualizer.plot_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.SOMVisualizer.plot_all" title="Link to this definition"></a></dt>
+<dd><p>Plot all visualizations: hit map, score map, rank map, metric map, component planes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quantization_errors</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – List of quantization errors [epochs]</p></li>
+<li><p><strong>topographic_errors</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – List of topographic errors [epochs]</p></li>
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, n_features]</p></li>
+<li><p><strong>target</strong> (<em>Optional</em><em>[</em><em>torch.Tensor</em><em>]</em><em>, </em><em>optional</em>) – Optional labels tensor for data points [batch_size]. Defaults to None.</p></li>
+<li><p><strong>component_names</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Names for each component/feature. If None, uses “Component {i+1}”. Defaults to None.</p></li>
+<li><p><strong>save_path</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Optional path to save the visualization. Defaults to None.</p></li>
+<li><p><strong>training_errors</strong> (<em>bool</em><em>, </em><em>optional</em>) – Boolean to decide if the visualizer plots training learning curves. Defaults to True.</p></li>
+<li><p><strong>distance_map</strong> (<em>bool</em><em>, </em><em>optional</em>) – Boolean to decide if the visualizer plots distance map. Defaults to True.</p></li>
+<li><p><strong>hit_map</strong> (<em>bool</em><em>, </em><em>optional</em>) – Boolean to decide if the visualizer plots hit map. Defaults to True.</p></li>
+<li><p><strong>score_map</strong> (<em>bool</em><em>, </em><em>optional</em>) – Boolean to decide if the visualizer plots score map. Defaults to True.</p></li>
+<li><p><strong>rank_map</strong> (<em>bool</em><em>, </em><em>optional</em>) – Boolean to decide if the visualizer plots rank map. Defaults to True.</p></li>
+<li><p><strong>metric_map</strong> (<em>bool</em><em>, </em><em>optional</em>) – Boolean to decide if the visualizer plots metric map. Defaults to True.</p></li>
+<li><p><strong>component_planes</strong> (<em>bool</em><em>, </em><em>optional</em>) – Boolean to decide if the visualizer plots component planes. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="torchsom.SOMVisualizer.plot_classification_map">
+<span class="sig-name descname"><span class="pre">plot_classification_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification_map'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/torchsom/visualization/base.html#SOMVisualizer.plot_classification_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.SOMVisualizer.plot_classification_map" title="Link to this definition"></a></dt>
+<dd><p>Plot classification map showing the most frequent label for each neuron.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, n_features]</p></li>
+<li><p><strong>target</strong> (<em>torch.Tensor</em>) – Labels tensor for data points [batch_size]. Must be encoded with values &gt; 1 to avoid white cells like unactivated.</p></li>
+<li><p><strong>fig_name</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The name of the file to save. Defaults to “classification_map”.</p></li>
+<li><p><strong>save_path</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Optional path to save the visualization. Defaults to None.</p></li>
+<li><p><strong>gridsize</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="torchsom.SOMVisualizer.plot_component_planes">
+<span class="sig-name descname"><span class="pre">plot_component_planes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/torchsom/visualization/base.html#SOMVisualizer.plot_component_planes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.SOMVisualizer.plot_component_planes" title="Link to this definition"></a></dt>
+<dd><p>Plot component planes (CPs), so one plane by input feature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>component_names</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Names for each component/feature. If None, uses “Component {i+1}”. Defaults to None.</p></li>
+<li><p><strong>fig_name</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The name of the file to save. Defaults to None.</p></li>
+<li><p><strong>save_path</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Optional path to save the visualization. Defaults to None.</p></li>
+<li><p><strong>gridsize</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="torchsom.SOMVisualizer.plot_distance_map">
+<span class="sig-name descname"><span class="pre">plot_distance_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'distance_map'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/torchsom/visualization/base.html#SOMVisualizer.plot_distance_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.SOMVisualizer.plot_distance_map" title="Link to this definition"></a></dt>
+<dd><p>Plot the D-Matrix (distance map) of a trained SOM.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fig_name</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The name of the file to save. Defaults to “distance_map”.</p></li>
+<li><p><strong>save_path</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Optional path to save the visualization. Defaults to None.</p></li>
+<li><p><strong>gridsize</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="torchsom.SOMVisualizer.plot_grid">
 <span class="sig-name descname"><span class="pre">plot_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colorbar_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.2f'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_component_plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/torchsom/visualization/base.html#SOMVisualizer.plot_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.SOMVisualizer.plot_grid" title="Link to this definition"></a></dt>
 <dd><p>Universal plotting function for both rectangular and hexagonal grids.</p>
@@ -1368,6 +1461,86 @@ It requires a data on the GPU if available for calculations with SOM’s weights
 <li><p><strong>gridsize</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</p></li>
 <li><p><strong>value_format</strong> (<em>str</em><em>, </em><em>optional</em>) – Format string for displayed values. Defaults to “.2f”.</p></li>
 <li><p><strong>is_component_plane</strong> (<em>bool</em><em>, </em><em>optional</em>) – Boolean to check if current plot is a component plane. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="torchsom.SOMVisualizer.plot_hit_map">
+<span class="sig-name descname"><span class="pre">plot_hit_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hit_map'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/torchsom/visualization/base.html#SOMVisualizer.plot_hit_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.SOMVisualizer.plot_hit_map" title="Link to this definition"></a></dt>
+<dd><p>Plot hit map showing the distribution of winning neurons from input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, n_features]</p></li>
+<li><p><strong>fig_name</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The name of the file to save.. Defaults to “hit_map”.</p></li>
+<li><p><strong>save_path</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Optional path to save the visualization. Defaults to None.</p></li>
+<li><p><strong>gridsize</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="torchsom.SOMVisualizer.plot_metric_map">
+<span class="sig-name descname"><span class="pre">plot_metric_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduction_parameter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/torchsom/visualization/base.html#SOMVisualizer.plot_metric_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.SOMVisualizer.plot_metric_map" title="Link to this definition"></a></dt>
+<dd><p>Plot target distribution of the corresponding input samples through SOM’s neurons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, n_features]</p></li>
+<li><p><strong>target</strong> (<em>torch.Tensor</em>) – Optional labels tensor for data points [batch_size]. Defaults to None.</p></li>
+<li><p><strong>reduction_parameter</strong> (<em>str</em><em>, </em><em>optional</em>) – Decide the calculation to apply to each neuron, ‘mean’ or ‘std’. Defaults to “mean”.</p></li>
+<li><p><strong>fig_name</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The name of the file to save. Defaults to None.</p></li>
+<li><p><strong>save_path</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Optional path to save the visualization. Defaults to None.</p></li>
+<li><p><strong>gridsize</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="torchsom.SOMVisualizer.plot_rank_map">
+<span class="sig-name descname"><span class="pre">plot_rank_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rank_map'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/torchsom/visualization/base.html#SOMVisualizer.plot_rank_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.SOMVisualizer.plot_rank_map" title="Link to this definition"></a></dt>
+<dd><p>Plot SOM ranked neurons visualization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, n_features]</p></li>
+<li><p><strong>target</strong> (<em>torch.Tensor</em>) – Optional labels tensor for data points [batch_size]. Defaults to None.</p></li>
+<li><p><strong>fig_name</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The name of the file to save. Defaults to “rank_map”.</p></li>
+<li><p><strong>save_path</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Optional path to save the visualization. Defaults to None.</p></li>
+<li><p><strong>gridsize</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="torchsom.SOMVisualizer.plot_score_map">
+<span class="sig-name descname"><span class="pre">plot_score_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'score_map'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/torchsom/visualization/base.html#SOMVisualizer.plot_score_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.SOMVisualizer.plot_score_map" title="Link to this definition"></a></dt>
+<dd><p>Plot SOM neuron representativeness visualization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, n_features]</p></li>
+<li><p><strong>target</strong> (<em>torch.Tensor</em>) – Optional labels tensor for data points [batch_size]. Defaults to “score_map”.</p></li>
+<li><p><strong>fig_name</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The name of the file to save. Defaults to None.</p></li>
+<li><p><strong>save_path</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Optional path to save the visualization. Defaults to None.</p></li>
+<li><p><strong>gridsize</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
