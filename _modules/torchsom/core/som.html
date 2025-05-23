@@ -189,12 +189,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..utils.decay</span><span class="w"> </span><span class="kn">import</span> <span class="n">DECAY_FUNCTIONS</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..utils.distances</span><span class="w"> </span><span class="kn">import</span> <span class="n">DISTANCE_FUNCTIONS</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.grid</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">adjust_meshgrid_topology</span><span class="p">,</span>
-    <span class="n">axial_distance</span><span class="p">,</span>
-    <span class="n">convert_to_axial_coords</span><span class="p">,</span>
-    <span class="n">create_mesh_grid</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">adjust_meshgrid_topology</span><span class="p">,</span> <span class="n">create_mesh_grid</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..utils.initialization</span><span class="w"> </span><span class="kn">import</span> <span class="n">initialize_weights</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..utils.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_quantization_error</span><span class="p">,</span> <span class="n">calculate_topographic_error</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..utils.neighborhood</span><span class="w"> </span><span class="kn">import</span> <span class="n">NEIGHBORHOOD_FUNCTIONS</span>
@@ -532,7 +527,7 @@
 <span class="sd">            Tuple[List[float], List[float]]: Quantization and topographic errors [epoch]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="c1"># data = data.to(self.device)</span>
         <span class="n">dataset</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
             <span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">False</span>
@@ -885,7 +880,7 @@
         <span class="c1"># Normalize the distance map</span>
         <span class="n">max_distance</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span>
             <span class="n">distance_matrix</span><span class="o">.</span><span class="n">masked_fill</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">distance_matrix</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">))</span>
-        <span class="p">)</span>
+        <span class="p">)</span>  <span class="c1"># Replace NaNs with -inf to be ignored by max()</span>
         <span class="k">return</span> <span class="n">distance_matrix</span> <span class="o">/</span> <span class="n">max_distance</span> <span class="k">if</span> <span class="n">max_distance</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">distance_matrix</span></div>
 
 
