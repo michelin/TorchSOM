@@ -137,6 +137,9 @@ class SOMVisualizer:
             for col in range(map.shape[1]):
                 x = col + (0.5 if row % 2 else 0)  # Offset to alternate rows
                 y = row
+                # ! Modification to test
+                # x = col + (0.5 if row % 2 else 0)  # horizontal shift
+                # y = row * (np.sqrt(3) / 2)  # correct vertical spacing
                 x_coords.append(x)
                 y_coords.append(y)
                 map_values.append(map[row, col])
@@ -148,7 +151,7 @@ class SOMVisualizer:
         x: List[float],
         y: List[float],
         values: List[float],
-        gridsize: Optional[int] = None,
+        gridsize: Optional[Union[int, Tuple[int, int]]] = None,
         log_scale: bool = False,
         cmap: Optional[str] = None,
     ) -> plt.hexbin:
@@ -159,7 +162,7 @@ class SOMVisualizer:
             x (List[float]): X-coordinates for hexbin
             y (List[float]): Y-coordinates for hexbin
             values (List[float]): Values to plot in hexbin
-            gridsize (Optional[int], optional):  Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
+            gridsize (Optional[Union[int, Tuple[int, int]]], optional):  Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
             log_scale (bool, optional): Whether to use logarithmic scale for colors. Defaults to False.
             cmap (Optional[str], optional):  Custom colormap. If None, uses default from config. Defaults to None.
 
@@ -295,6 +298,7 @@ class SOMVisualizer:
 
         fig, ax = plt.subplots(figsize=self.config.figsize)
 
+        # ! Hard-coding “0 → NaN” may hide legitimate zeros.
         # Create a copy of the map to flag values of 0 as NaN, and retrieve it as a np array
         masked_map = map.clone()
         if isinstance(masked_map, torch.Tensor):
@@ -441,5 +445,295 @@ class SOMVisualizer:
             plt.show()
         torch.cuda.empty_cache() if torch.cuda.is_available() else None
 
-    # Additional visualization methods such as plot_distance_map, plot_hit_map, etc.
-    # would be implemented here following the same pattern as in the original code
+    def plot_distance_map(
+        self,
+        fig_name: Optional[str] = "distance_map",
+        save_path: Optional[Union[str, Path]] = None,
+        gridsize: Optional[Tuple[int, int]] = None,
+    ) -> None:
+        """Plot the D-Matrix (distance map) of a trained SOM.
+
+        Args:
+            fig_name (Optional[str], optional): The name of the file to save. Defaults to "distance_map".
+            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
+            gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
+        """
+
+        distance_map = self.som.build_distance_map(
+            neighborhood_order=self.som.neighborhood_order
+        )
+        self.plot_grid(
+            map=distance_map,
+            title=f"D-Matrix (Distance Map) - Order {self.som.neighborhood_order}",
+            colorbar_label=f"{self.som.distance_fn_name} distance",
+            save_path=save_path,
+            filename=f"{fig_name}",
+            gridsize=gridsize,
+        )
+
+    def plot_classification_map(
+        self,
+        data: torch.Tensor,
+        target: torch.Tensor,
+        fig_name: Optional[str] = "classification_map",
+        save_path: Optional[Union[str, Path]] = None,
+        gridsize: Optional[Tuple[int, int]] = None,
+    ) -> None:
+        """Plot classification map showing the most frequent label for each neuron.
+
+        Args:
+            data (torch.Tensor): Input data tensor [batch_size, n_features]
+            target (torch.Tensor): Labels tensor for data points [batch_size]. Must be encoded with values > 1 to avoid white cells like unactivated.
+            fig_name (Optional[str], optional): The name of the file to save. Defaults to "classification_map".
+            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
+            gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
+        """
+
+        classification_map = self.som.build_classification_map(
+            data, target, neighborhood_order=self.som.neighborhood_order
+        )
+        self.plot_grid(
+            map=classification_map,
+            title="Classification Map",
+            colorbar_label="Most Frequent Encoded Label",
+            filename=fig_name,
+            save_path=save_path,
+            gridsize=gridsize,
+        )
+
+    def plot_hit_map(
+        self,
+        data: torch.Tensor,
+        fig_name: Optional[str] = "hit_map",
+        save_path: Optional[Union[str, Path]] = None,
+        gridsize: Optional[Tuple[int, int]] = None,
+    ) -> None:
+        """Plot hit map showing the distribution of winning neurons from input data.
+
+        Args:
+            data (torch.Tensor): Input data tensor [batch_size, n_features]
+            fig_name (Optional[str], optional): The name of the file to save.. Defaults to "hit_map".
+            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
+            gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
+        """
+
+        hit_map = self.som.build_hit_map(data)
+        self.plot_grid(
+            map=hit_map,
+            title="Hit Map",
+            colorbar_label="Hits",
+            save_path=save_path,
+            filename=fig_name,
+            gridsize=gridsize,
+        )
+
+    def plot_metric_map(
+        self,
+        data: torch.Tensor,
+        target: torch.Tensor,
+        reduction_parameter: str = "mean",
+        fig_name: Optional[str] = None,
+        save_path: Optional[Union[str, Path]] = None,
+        gridsize: Optional[Tuple[int, int]] = None,
+    ) -> None:
+        """Plot target distribution of the corresponding input samples through SOM's neurons.
+
+        Args:
+            data (torch.Tensor): Input data tensor [batch_size, n_features]
+            target (torch.Tensor): Optional labels tensor for data points [batch_size]. Defaults to None.
+            reduction_parameter (str, optional): Decide the calculation to apply to each neuron, 'mean' or 'std'. Defaults to "mean".
+            fig_name (Optional[str], optional): The name of the file to save. Defaults to None.
+            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
+            gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
+        """
+
+        metric_map = self.som.build_metric_map(data, target, reduction_parameter)
+        title = (
+            "Map of Mean Target Value"
+            if reduction_parameter == "mean"
+            else "Map of Standard Deviation of Target Values"
+        )
+        fig_name = fig_name or f"{reduction_parameter}_target_map"
+        self.plot_grid(
+            map=metric_map,
+            title=f"{title}",
+            colorbar_label=title,
+            save_path=save_path,
+            filename=f"{fig_name}",
+            show_values=False,
+            value_format=".3f",
+            log_scale=False,
+            cmap=None,
+            gridsize=gridsize,
+        )
+
+    def plot_score_map(
+        self,
+        data: torch.Tensor,
+        target: torch.Tensor,
+        fig_name: Optional[str] = "score_map",
+        save_path: Optional[Union[str, Path]] = None,
+        gridsize: Optional[Tuple[int, int]] = None,
+    ) -> None:
+        """Plot SOM neuron representativeness visualization.
+
+        Args:
+            data (torch.Tensor): Input data tensor [batch_size, n_features]
+            target (torch.Tensor): Optional labels tensor for data points [batch_size]. Defaults to "score_map".
+            fig_name (Optional[str], optional): The name of the file to save. Defaults to None.
+            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
+            gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
+        """
+
+        score_map = self.som.build_score_map(data, target)
+        self.plot_grid(
+            map=score_map,
+            title="Neuron Map Representativeness",
+            colorbar_label="Relevance Score (lower = better)",
+            save_path=save_path,
+            filename=f"{fig_name}",
+            show_values=False,
+            value_format=".2f",
+            log_scale=False,
+            cmap=None,
+            gridsize=gridsize,
+        )
+
+    def plot_rank_map(
+        self,
+        data: torch.Tensor,
+        target: torch.Tensor,
+        fig_name: Optional[str] = "rank_map",
+        save_path: Optional[Union[str, Path]] = None,
+        gridsize: Optional[Tuple[int, int]] = None,
+    ) -> None:
+        """Plot SOM ranked neurons visualization.
+
+        Args:
+            data (torch.Tensor): Input data tensor [batch_size, n_features]
+            target (torch.Tensor): Optional labels tensor for data points [batch_size]. Defaults to None.
+            fig_name (Optional[str], optional): The name of the file to save. Defaults to "rank_map".
+            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
+            gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
+        """
+
+        rank_map = self.som.build_rank_map(data=data, target=target)
+        self.plot_grid(
+            map=rank_map,
+            title="Neuron Map Ranked Based on Output Std",
+            colorbar_label="Rank (lower std = higher rank)",
+            save_path=save_path,
+            filename=f"{fig_name}",
+            show_values=False,
+            value_format=".0f",
+            gridsize=gridsize,
+        )
+
+    def plot_component_planes(
+        self,
+        component_names: Optional[List[str]] = None,
+        fig_name: Optional[str] = None,
+        save_path: Optional[Union[str, Path]] = None,
+        gridsize: Optional[Tuple[int, int]] = None,
+    ) -> None:
+        """Plot component planes (CPs), so one plane by input feature.
+
+        Args:
+            component_names (Optional[List[str]], optional): Names for each component/feature. If None, uses "Component {i+1}". Defaults to None.
+            fig_name (Optional[str], optional): The name of the file to save. Defaults to None.
+            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
+            gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
+        """
+
+        n_components = self.som.weights.shape[-1]
+        component_names = component_names or [
+            f"Component_{i+1}" for i in range(n_components)
+        ]
+
+        for i, name in enumerate(component_names):
+            # ! Modification to test: remove fig, ax from plt.subplots
+            fig, ax = plt.subplots(figsize=self.config.figsize)
+            component_weights = self.som.weights[:, :, i].cpu()
+            fig_name = fig_name or f"{name}"
+            self.plot_grid(
+                map=component_weights,
+                title=f"Component Plane {name}",
+                colorbar_label=f"{name} Weight Values",
+                save_path=f"{save_path}/component_planes",
+                # ! Modification to test
+                # save_path=(
+                #     Path(save_path).joinpath("component_planes") if save_path else None,
+                # ),
+                filename=f"{name}",
+                show_values=False,
+                is_component_plane=True,
+                gridsize=gridsize,
+            )
+            plt.close()
+        torch.cuda.empty_cache() if torch.cuda.is_available() else None
+
+    def plot_all(
+        self,
+        quantization_errors: List[float],
+        topographic_errors: List[float],
+        data: torch.Tensor,
+        target: Optional[torch.Tensor] = None,
+        component_names: Optional[List[str]] = None,
+        save_path: Optional[Union[str, Path]] = None,
+        training_errors: bool = True,
+        distance_map: bool = True,
+        hit_map: bool = True,
+        score_map: bool = True,
+        rank_map: bool = True,
+        metric_map: bool = True,
+        component_planes: bool = True,
+    ) -> None:
+        """Plot all visualizations: hit map, score map, rank map, metric map, component planes.
+
+        Args:
+            quantization_errors (List[float]): List of quantization errors [epochs]
+            topographic_errors (List[float]): List of topographic errors [epochs]
+            data (torch.Tensor): Input data tensor [batch_size, n_features]
+            target (Optional[torch.Tensor], optional): Optional labels tensor for data points [batch_size]. Defaults to None.
+            component_names (Optional[List[str]], optional): Names for each component/feature. If None, uses "Component {i+1}". Defaults to None.
+            save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
+            training_errors (bool, optional): Boolean to decide if the visualizer plots training learning curves. Defaults to True.
+            distance_map (bool, optional): Boolean to decide if the visualizer plots distance map. Defaults to True.
+            hit_map (bool, optional): Boolean to decide if the visualizer plots hit map. Defaults to True.
+            score_map (bool, optional): Boolean to decide if the visualizer plots score map. Defaults to True.
+            rank_map (bool, optional): Boolean to decide if the visualizer plots rank map. Defaults to True.
+            metric_map (bool, optional): Boolean to decide if the visualizer plots metric map. Defaults to True.
+            component_planes (bool, optional): Boolean to decide if the visualizer plots component planes. Defaults to True.
+        """
+
+        if training_errors:
+            self.plot_training_errors(
+                quantization_errors=quantization_errors,
+                topographic_errors=topographic_errors,
+                save_path=save_path,
+            )
+        if distance_map:
+            self.plot_distance_map(save_path=save_path)
+        if hit_map:
+            self.plot_hit_map(data, save_path=save_path)
+        if metric_map:
+            self.plot_metric_map(
+                data,
+                target,
+                reduction_parameter="mean",
+                save_path=save_path,
+            )
+            self.plot_metric_map(
+                data,
+                target,
+                reduction_parameter="std",
+                save_path=save_path,
+            )
+        if score_map:
+            self.plot_score_map(data, target, save_path=save_path)
+        if rank_map:
+            self.plot_rank_map(data, target, save_path=save_path)
+        if component_planes:
+            self.plot_component_planes(
+                component_names=component_names, save_path=save_path
+            )

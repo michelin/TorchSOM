@@ -86,6 +86,17 @@ def convert_to_axial_coords(
     r = row  # y axis
     return q, r
 
+    # ! Modification to test
+    # # Match the even-r layout used in `adjust_meshgrid_topology`
+    # #   even rows -> shifted left by 0.5
+    # #   odd  rows -> no horizontal shift
+    # if row % 2 == 0:  # even-r
+    #     q = col - 0.5 - (row // 2)
+    # else:  # odd-r
+    #     q = col - (row // 2)
+    # r = row
+    # return q, r
+
 
 def axial_distance(
     q1: float,

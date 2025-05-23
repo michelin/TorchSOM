@@ -45,7 +45,7 @@ def _euclidean_distance(
         torch.Tensor: euclidean distance between input and weights [row_neurons, col_neurons]
     """
 
-    return torch.norm(torch.subtract(data, weights), dim=-1)
+    return torch.max(torch.abs(data - weights), dim=-1).values
 
 
 def _manhattan_distance(
@@ -79,7 +79,8 @@ def _chebyshev_distance(
         torch.Tensor: chebyshev distance between input and weights [row_neurons, col_neurons]
     """
 
-    return torch.max(torch.subtract(data, weights), dim=-1).values
+    # return torch.max(torch.subtract(data, weights), dim=-1).values
+    return torch.max(torch.abs(data - weights), dim=-1).values
 
 
 # TODO Check if this method works and if it is more efficient (also ensure it is compatible with batch framework)

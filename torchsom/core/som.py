@@ -156,6 +156,10 @@ class SOM(BaseSOM):
                     for row, col in bmus
                 ]
             )  # [batch_size, row_neurons, col_neurons]
+            # ! Modification to test
+            # # Vectorised: build a tensor of BMU coordinates and compute in one shot
+            # coords = torch.stack([bmus[:, 0], bmus[:, 1]], dim=1).to(torch.long)
+            # neighborhoods = self.neighborhood_fn(coords, sigma)  # update neighborhood_fn to accept batched coords  # [batch_size, row_neurons, col_neurons]
 
             # Reshape for broadcasting
             neighborhoods = neighborhoods.view(batch_size, self.x, self.y, 1)
@@ -595,6 +599,21 @@ class SOM(BaseSOM):
                 max_neighbors += len(neighbor_offsets)
                 all_offsets.append(neighbor_offsets)
 
+        # # ! Modification to test
+        # def _offsets_for_row(r: int) -> List[Tuple[int, int]]:
+        #     if self.topology == "hexagonal":
+        #         merged = []
+        #         for order in range(1, neighborhood_order + 1):
+        #             merged.extend(
+        #                 get_hexagonal_offsets(order)["even" if r % 2 == 0 else "odd"]
+        #             )
+        #         return merged
+        #     else:
+        #         merged = []
+        #         for order in range(1, neighborhood_order + 1):
+        #             merged.extend(get_rectangular_offsets(order))
+        #         return merged
+
         # Initialize distance map
         distance_matrix = torch.full(
             (self.weights.shape[0], self.weights.shape[1], max_neighbors),
@@ -923,6 +942,21 @@ class SOM(BaseSOM):
         else:
             for order in range(1, neighborhood_order + 1):
                 neighborhood_offsets.extend(get_rectangular_offsets(order))
+
+        # ! Method to test
+        # def _offsets_for_row(r: int) -> List[Tuple[int, int]]:
+        #     if self.topology == "hexagonal":
+        #         merged = []
+        #         for order in range(1, neighborhood_order + 1):
+        #             merged.extend(
+        #                 get_hexagonal_offsets(order)["even" if r % 2 == 0 else "odd"]
+        #             )
+        #         return merged
+        #     else:
+        #         merged = []
+        #         for order in range(1, neighborhood_order + 1):
+        #             merged.extend(get_rectangular_offsets(order))
+        #         return merged
 
         # Iterate through each activated neuron
         for bmu_pos, sample_indices in bmus_map.items():

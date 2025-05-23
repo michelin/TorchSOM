@@ -79,6 +79,7 @@ def calculate_topographic_error(
     # Calculate distances between each data point and all neurons
     distances = distance_fn(data_expanded, weights_expanded)
 
+    # ! Modification to test: all the lines below could be vectorized
     # Get top 2 BMU indices for each sample
     batch_size = distances.shape[0]
     _, indices = torch.topk(distances.view(batch_size, -1), k=2, largest=False, dim=1)

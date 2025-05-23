@@ -6,7 +6,7 @@ import torch
 def _gaussian(
     xx: torch.Tensor,
     yy: torch.Tensor,
-    c: Tuple[torch.Tensor, torch.Tensor],
+    c: Tuple[torch.Tensor, torch.Tensor],  # ! Tuple[int, int]
     sigma: float,
 ) -> torch.Tensor:
     """Gaussian neighborhood function to update weights.
@@ -55,7 +55,7 @@ def _gaussian(
 def _mexican_hat(
     xx: torch.Tensor,
     yy: torch.Tensor,
-    c: Tuple[torch.Tensor, torch.Tensor],
+    c: Tuple[torch.Tensor, torch.Tensor],  # ! Tuple[int, int]
     sigma: float,
 ) -> torch.Tensor:
     """
@@ -91,7 +91,6 @@ def _mexican_hat(
     Returns:
         torch.Tensor: Mexican hat neighborhood weights. Element-wise product standing for the combined influence of mexican neighborhood around center c with a spread sigma [row_neurons, col_neurons].
     """
-
     denum = 2 * sigma * sigma
     cst = 1 / (torch.pi * torch.pow(torch.tensor(sigma), 4))
     squared_distances = torch.pow(xx - c[0], 2) + torch.pow(
@@ -99,6 +98,16 @@ def _mexican_hat(
     )  # Squared distances from center [row_neurons, col_neurons]
     exp_distances = torch.exp(-squared_distances / denum)
     mexican_hat = cst * (1 - (1 / 2) * squared_distances / (2 * denum)) * exp_distances
+
+    # ! Modification to test
+    # denum = 2 * sigma * sigma
+    # sigma_t = torch.tensor(sigma, device=xx.device, dtype=xx.dtype)
+    # cst = 1 / (torch.pi * sigma_t.pow(4))
+    # squared_distances = torch.pow(xx - c[0], 2) + torch.pow(
+    #     yy - c[1], 2
+    # )  # Squared distances from center [row_neurons, col_neurons]
+    # exp_distances = torch.exp(-squared_distances / denum)
+    # mexican_hat = cst * (1 - (1 / 2) * squared_distances / (2 * denum)) * exp_distances
 
     # Ensure the central peak is exactly 1.0
     max_value = mexican_hat[c[0], c[1]]
@@ -110,7 +119,7 @@ def _mexican_hat(
 def _bubble(
     xx: torch.Tensor,
     yy: torch.Tensor,
-    c: Tuple[torch.Tensor, torch.Tensor],
+    c: Tuple[torch.Tensor, torch.Tensor],  # ! Tuple[int, int]
     sigma: float,
 ) -> torch.Tensor:
     """
@@ -159,7 +168,7 @@ def _bubble(
 def _triangle(
     xx: torch.Tensor,
     yy: torch.Tensor,
-    c: Tuple[torch.Tensor, torch.Tensor],
+    c: Tuple[torch.Tensor, torch.Tensor],  # ! Tuple[int, int]
     sigma: float,
 ) -> torch.Tensor:
     """
