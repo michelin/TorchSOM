@@ -86,9 +86,11 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.calculate_topographic_error"><code class="docutils literal notranslate"><span class="pre">calculate_topographic_error()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.convert_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">convert_to_axial_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.create_mesh_grid"><code class="docutils literal notranslate"><span class="pre">create_mesh_grid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.get_all_neighbors_up_to_order"><code class="docutils literal notranslate"><span class="pre">get_all_neighbors_up_to_order()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.get_hexagonal_offsets"><code class="docutils literal notranslate"><span class="pre">get_hexagonal_offsets()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.get_rectangular_offsets"><code class="docutils literal notranslate"><span class="pre">get_rectangular_offsets()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.initialize_weights"><code class="docutils literal notranslate"><span class="pre">initialize_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.offset_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">offset_to_axial_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.pca_init"><code class="docutils literal notranslate"><span class="pre">pca_init()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../torchsom.html#torchsom.utils.random_init"><code class="docutils literal notranslate"><span class="pre">random_init()</span></code></a></li>
 </ul>
@@ -176,109 +178,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for torchsom.utils.topology</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
-
-
-<div class="viewcode-block" id="get_hexagonal_offsets">
-<a class="viewcode-back" href="../../../torchsom.html#torchsom.utils.get_hexagonal_offsets">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_hexagonal_offsets</span><span class="p">(</span>
-    <span class="n">neighborhood_order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get neighbor offset coordinates for hexagonal topology.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        neighborhood_order (int, optional): Order of neighborhood ring. Defaults to 1.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Dict[str, List[Tuple[int, int]]]: Offsets for even and odd rows</span>
-
-<span class="sd">    Notes:</span>
-<span class="sd">        Neighboring ring of order 1 has 6 hexagonal elements,</span>
-<span class="sd">        Neighboring ring of order 2 has 12 hexagonal elements,</span>
-<span class="sd">        Neighboring ring of order 3 has 18 hexagonal elements</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">neighborhood_order</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;even&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span>
-            <span class="s2">&quot;odd&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)],</span>
-        <span class="p">}</span>
-    <span class="k">elif</span> <span class="n">neighborhood_order</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;even&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-            <span class="p">],</span>
-            <span class="s2">&quot;odd&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
-            <span class="p">],</span>
-        <span class="p">}</span>
-    <span class="k">elif</span> <span class="n">neighborhood_order</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;even&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
-            <span class="p">],</span>
-            <span class="s2">&quot;odd&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
-                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-            <span class="p">],</span>
-        <span class="p">}</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Neighborhood order </span><span class="si">{</span><span class="n">neighborhood_order</span><span class="si">}</span><span class="s2"> not supported&quot;</span><span class="p">)</span></div>
-
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 
 <div class="viewcode-block" id="get_rectangular_offsets">
@@ -286,7 +186,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">get_rectangular_offsets</span><span class="p">(</span>
     <span class="n">neighborhood_order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get neighbor offset coordinates for rectangular topology.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get neighbor offset coordinates for rectangular topology at any order.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        neighborhood_order (int, optional): Order of neighborhood ring. Defaults to 1.</span>
@@ -295,35 +195,135 @@
 <span class="sd">        List[Tuple[int, int]]: Coordinate offsets for rectangular grid</span>
 
 <span class="sd">    Notes:</span>
-<span class="sd">        Neighboring ring of order 1 has 4 elements: Von Neumann neighborhood (orthogonal only),</span>
-<span class="sd">        Neighboring ring of order 2 has 4 elements: Diagonal neighbors,</span>
-<span class="sd">        Neighboring ring of order 3 has 16 elements: outer edge of 5x5 grid (without inner squares)</span>
+<span class="sd">        Order 1: 8 neighbors</span>
+<span class="sd">        Order 2: 16 neighbors</span>
+<span class="sd">        Order 3: 24 neighbors</span>
+<span class="sd">        Order 3+: All positions at Chebyshev distance (order-1)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">neighborhood_order</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
-    <span class="k">elif</span> <span class="n">neighborhood_order</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
-    <span class="k">elif</span> <span class="n">neighborhood_order</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[</span>
-            <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-            <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-            <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-            <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-            <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-            <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-            <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-            <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-            <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-            <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-            <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-            <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-            <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
-            <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="k">if</span> <span class="n">neighborhood_order</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Neighborhood order must be &gt;= 1&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Generate all positions at chebyshev distance : where max(|dx|, |dy|) = order (chebyshev distance)</span>
+    <span class="n">chebyshev_distance</span> <span class="o">=</span> <span class="n">neighborhood_order</span>
+    <span class="n">offsets</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">dx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">chebyshev_distance</span><span class="p">,</span> <span class="n">chebyshev_distance</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">dy</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">chebyshev_distance</span><span class="p">,</span> <span class="n">chebyshev_distance</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">dx</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dy</span><span class="p">))</span> <span class="o">==</span> <span class="n">chebyshev_distance</span><span class="p">:</span>
+                <span class="n">offsets</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">offsets</span></div>
+
+
+
+<div class="viewcode-block" id="get_hexagonal_offsets">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.utils.get_hexagonal_offsets">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_hexagonal_offsets</span><span class="p">(</span>
+    <span class="n">neighborhood_order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get neighbor offset coordinates for hexagonal topology at any order.</span>
+<span class="sd">    Order n has 6*n elements.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        neighborhood_order (int, optional): Order of neighborhood ring. Defaults to 1.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict[str, List[Tuple[int, int]]]: Offsets for even and odd rows</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">neighborhood_order</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Neighborhood order must be &gt;= 1&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Generate neighbors in axial coordinates using mathematical approach</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_axial_ring</span><span class="p">(</span><span class="n">distance</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate all hexagonal neighbors at a specific distance in axial coordinates.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">distance</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
+
+        <span class="n">neighbors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Use cube coordinates for easier calculation</span>
+        <span class="c1"># Start at (distance, -distance, 0) and walk around the ring</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">distance</span><span class="p">,</span> <span class="o">-</span><span class="n">distance</span><span class="p">,</span> <span class="mi">0</span>
+
+        <span class="c1"># Six directions to walk around the hexagonal ring</span>
+        <span class="n">directions</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>  <span class="c1"># NE</span>
+            <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>  <span class="c1"># N</span>
+            <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>  <span class="c1"># NW</span>
+            <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>  <span class="c1"># SW</span>
+            <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>  <span class="c1"># S</span>
+            <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>  <span class="c1"># SE</span>
         <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">direction</span> <span class="ow">in</span> <span class="n">directions</span><span class="p">:</span>
+            <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">dz</span> <span class="o">=</span> <span class="n">direction</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">distance</span><span class="p">):</span>
+                <span class="c1"># Convert cube back to axial (q, r)</span>
+                <span class="n">q</span> <span class="o">=</span> <span class="n">x</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">y</span>
+                <span class="n">neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">))</span>
+
+                <span class="c1"># Move to next position along this edge</span>
+                <span class="n">x</span> <span class="o">+=</span> <span class="n">dx</span>
+                <span class="n">y</span> <span class="o">+=</span> <span class="n">dy</span>
+                <span class="n">z</span> <span class="o">+=</span> <span class="n">dz</span>
+
+        <span class="k">return</span> <span class="n">neighbors</span>
+
+    <span class="c1"># Generate axial coordinates for this order</span>
+    <span class="n">axial_neighbors</span> <span class="o">=</span> <span class="n">generate_axial_ring</span><span class="p">(</span><span class="n">neighborhood_order</span><span class="p">)</span>
+
+    <span class="c1"># Convert axial (q,r) to offset (x,y) coordinates for even and odd rows</span>
+    <span class="n">even_offsets</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">odd_offsets</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">axial_neighbors</span><span class="p">:</span>
+        <span class="n">even_col</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="p">(</span><span class="n">r</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">))</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">even_row</span> <span class="o">=</span> <span class="n">r</span>
+        <span class="n">even_offsets</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">even_row</span><span class="p">,</span> <span class="n">even_col</span><span class="p">))</span>
+        <span class="n">odd_col</span> <span class="o">=</span> <span class="n">q</span> <span class="o">+</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="p">(</span><span class="n">r</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">))</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">odd_row</span> <span class="o">=</span> <span class="n">r</span>
+        <span class="n">odd_offsets</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">odd_row</span><span class="p">,</span> <span class="n">odd_col</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;even&quot;</span><span class="p">:</span> <span class="n">even_offsets</span><span class="p">,</span>
+        <span class="s2">&quot;odd&quot;</span><span class="p">:</span> <span class="n">odd_offsets</span><span class="p">,</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="get_all_neighbors_up_to_order">
+<a class="viewcode-back" href="../../../torchsom.html#torchsom.utils.get_all_neighbors_up_to_order">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_all_neighbors_up_to_order</span><span class="p">(</span>
+    <span class="n">topology</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">max_order</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all neighbors from order 1 up to max_order.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        topology (str): &quot;rectangular&quot; or &quot;hexagonal&quot;</span>
+<span class="sd">        max_order (int): Maximum neighborhood order to include</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        All neighbor offsets from order 1 to max_order combined</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">topology</span> <span class="o">==</span> <span class="s2">&quot;rectangular&quot;</span><span class="p">:</span>
+        <span class="n">all_offsets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">all_offsets</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_rectangular_offsets</span><span class="p">(</span><span class="n">order</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">all_offsets</span>
+
+    <span class="k">elif</span> <span class="n">topology</span> <span class="o">==</span> <span class="s2">&quot;hexagonal&quot;</span><span class="p">:</span>
+        <span class="n">all_even_offsets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">all_odd_offsets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">order_offsets</span> <span class="o">=</span> <span class="n">get_hexagonal_offsets</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
+            <span class="n">all_even_offsets</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">order_offsets</span><span class="p">[</span><span class="s2">&quot;even&quot;</span><span class="p">])</span>
+            <span class="n">all_odd_offsets</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">order_offsets</span><span class="p">[</span><span class="s2">&quot;odd&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;even&quot;</span><span class="p">:</span> <span class="n">all_even_offsets</span><span class="p">,</span>
+            <span class="s2">&quot;odd&quot;</span><span class="p">:</span> <span class="n">all_odd_offsets</span><span class="p">,</span>
+        <span class="p">}</span>
+
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Neighborhood order </span><span class="si">{</span><span class="n">neighborhood_order</span><span class="si">}</span><span class="s2"> not supported&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported topology: </span><span class="si">{</span><span class="n">topology</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 </pre></div>
 

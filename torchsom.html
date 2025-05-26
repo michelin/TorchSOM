@@ -88,9 +88,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.calculate_topographic_error"><code class="docutils literal notranslate"><span class="pre">calculate_topographic_error()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.convert_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">convert_to_axial_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.create_mesh_grid"><code class="docutils literal notranslate"><span class="pre">create_mesh_grid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.get_all_neighbors_up_to_order"><code class="docutils literal notranslate"><span class="pre">get_all_neighbors_up_to_order()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.get_hexagonal_offsets"><code class="docutils literal notranslate"><span class="pre">get_hexagonal_offsets()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.get_rectangular_offsets"><code class="docutils literal notranslate"><span class="pre">get_rectangular_offsets()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.initialize_weights"><code class="docutils literal notranslate"><span class="pre">initialize_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.offset_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">offset_to_axial_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.pca_init"><code class="docutils literal notranslate"><span class="pre">pca_init()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.random_init"><code class="docutils literal notranslate"><span class="pre">random_init()</span></code></a></li>
 </ul>
@@ -740,6 +742,8 @@ It requires a data on the GPU if available for calculations with SOM’s weights
 <dt class="sig sig-object py" id="torchsom.utils.convert_to_axial_coords">
 <span class="sig-prename descclassname"><span class="pre">torchsom.utils.</span></span><span class="sig-name descname"><span class="pre">convert_to_axial_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/torchsom/utils/grid.html#convert_to_axial_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.convert_to_axial_coords" title="Link to this definition"></a></dt>
 <dd><p>Convert grid coordinates to axial coordinates for hexagonal grid.</p>
+<p>Uses even-r layout where even rows are shifted left by 0.5.
+This matches the layout used in adjust_meshgrid_topology.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -781,9 +785,30 @@ in Self-Organizing Maps (SOM).</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.get_all_neighbors_up_to_order">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.</span></span><span class="sig-name descname"><span class="pre">get_all_neighbors_up_to_order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topology</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/torchsom/utils/topology.html#get_all_neighbors_up_to_order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.get_all_neighbors_up_to_order" title="Link to this definition"></a></dt>
+<dd><p>Get all neighbors from order 1 up to max_order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topology</strong> (<em>str</em>) – “rectangular” or “hexagonal”</p></li>
+<li><p><strong>max_order</strong> (<em>int</em>) – Maximum neighborhood order to include</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>All neighbor offsets from order 1 to max_order combined</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>List</em>[<em>Tuple</em>[int, int]] | <em>Dict</em>[str, <em>List</em>[<em>Tuple</em>[int, int]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="torchsom.utils.get_hexagonal_offsets">
 <span class="sig-prename descclassname"><span class="pre">torchsom.utils.</span></span><span class="sig-name descname"><span class="pre">get_hexagonal_offsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/torchsom/utils/topology.html#get_hexagonal_offsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.get_hexagonal_offsets" title="Link to this definition"></a></dt>
-<dd><p>Get neighbor offset coordinates for hexagonal topology.</p>
+<dd><p>Get neighbor offset coordinates for hexagonal topology at any order.
+Order n has 6*n elements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>neighborhood_order</strong> (<em>int</em><em>, </em><em>optional</em>) – Order of neighborhood ring. Defaults to 1.</p>
@@ -795,16 +820,12 @@ in Self-Organizing Maps (SOM).</p>
 <dd class="field-odd"><p>Dict[str, List[Tuple[int, int]]]</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>Neighboring ring of order 1 has 6 hexagonal elements,
-Neighboring ring of order 2 has 12 hexagonal elements,
-Neighboring ring of order 3 has 18 hexagonal elements</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="torchsom.utils.get_rectangular_offsets">
 <span class="sig-prename descclassname"><span class="pre">torchsom.utils.</span></span><span class="sig-name descname"><span class="pre">get_rectangular_offsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/torchsom/utils/topology.html#get_rectangular_offsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.get_rectangular_offsets" title="Link to this definition"></a></dt>
-<dd><p>Get neighbor offset coordinates for rectangular topology.</p>
+<dd><p>Get neighbor offset coordinates for rectangular topology at any order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>neighborhood_order</strong> (<em>int</em><em>, </em><em>optional</em>) – Order of neighborhood ring. Defaults to 1.</p>
@@ -817,9 +838,10 @@ Neighboring ring of order 3 has 18 hexagonal elements</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Neighboring ring of order 1 has 4 elements: Von Neumann neighborhood (orthogonal only),
-Neighboring ring of order 2 has 4 elements: Diagonal neighbors,
-Neighboring ring of order 3 has 16 elements: outer edge of 5x5 grid (without inner squares)</p>
+<p>Order 1: 8 neighbors
+Order 2: 16 neighbors
+Order 3: 24 neighbors
+Order 3+: All positions at Chebyshev distance (order-1)</p>
 </dd></dl>
 
 <dl class="py function">
@@ -844,6 +866,27 @@ Neighboring ring of order 3 has 16 elements: outer edge of 5x5 grid (without inn
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If an invalid initialization mode is provided</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.offset_to_axial_coords">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.</span></span><span class="sig-name descname"><span class="pre">offset_to_axial_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/torchsom/utils/grid.html#offset_to_axial_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.offset_to_axial_coords" title="Link to this definition"></a></dt>
+<dd><p>Convert offset coordinates to axial coordinates for hexagonal grid.</p>
+<p>Alternative implementation that directly matches the mesh grid adjustment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>int</em>) – Grid row coordinate</p></li>
+<li><p><strong>col</strong> (<em>int</em>) – Grid column coordinate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Axial coordinates (q, r)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, float]</p>
 </dd>
 </dl>
 </dd></dl>
