@@ -601,7 +601,6 @@ class SOM(BaseSOM):
             topology=self.topology,
             max_order=neighborhood_order,
         )
-        print(all_offsets)
         # Calculate maximum possible neighbors for tensor initialization
         if self.topology == "hexagonal":
             # For hexagonal, we need to handle even/odd rows separately
