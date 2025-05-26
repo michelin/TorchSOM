@@ -42,7 +42,7 @@ def _euclidean_distance(
         weights (torch.Tensor): SOM weights tensor of shape [1, row_neurons, col_neurons, n_features]
 
     Returns:
-        torch.Tensor: euclidean distance between input and weights [row_neurons, col_neurons]
+        torch.Tensor: euclidean distance between input and weights [batch_size, row_neurons, col_neurons]
     """
     return torch.norm(torch.subtract(data, weights), dim=-1)
 
@@ -53,12 +53,12 @@ def _manhattan_distance(
 ) -> torch.Tensor:
     """Compute Manhattan distance between input and weights.
 
-    Args:
-        data (torch.Tensor): input data tensor of shape [batch_size, 1, 1, n_features]
-        weights (torch.Tensor): SOM weights tensor of shape [1, row_neurons, col_neurons, n_features]
+        Args:
+            data (torch.Tensor): input data tensor of shape [batch_size, 1, 1, n_features]
+            weights (torch.Tensor): SOM weights tensor of shape [1, row_neurons, col_neurons, n_features]
 
     Returns:
-        torch.Tensor: manhattan distance between input and weights [row_neurons, col_neurons]
+            torch.Tensor: manhattan distance between input and weights [batch_size, row_neurons, col_neurons]
     """
 
     return torch.norm(torch.subtract(data, weights), p=1, dim=-1)
@@ -70,12 +70,12 @@ def _chebyshev_distance(
 ) -> torch.Tensor:
     """Compute Chebyshev distance between input and weights.
 
-    Args:
-        data (torch.Tensor): input data tensor of shape [batch_size, 1, 1, n_features]
-        weights (torch.Tensor): SOM weights tensor of shape [1, row_neurons, col_neurons, n_features]
+        Args:
+            data (torch.Tensor): input data tensor of shape [batch_size, 1, 1, n_features]
+            weights (torch.Tensor): SOM weights tensor of shape [1, row_neurons, col_neurons, n_features]
 
     Returns:
-        torch.Tensor: chebyshev distance between input and weights [row_neurons, col_neurons]
+            torch.Tensor: chebyshev distance between input and weights [batch_size, row_neurons, col_neurons]
     """
 
     # return torch.max(torch.subtract(data, weights), dim=-1).values

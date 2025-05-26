@@ -1,7 +1,7 @@
-from typing import Literal, Optional, Union
+from typing import Literal
 
 import torch
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field
 
 
 class SOMConfig(BaseModel):
@@ -45,7 +45,7 @@ class SOMConfig(BaseModel):
         1, description="Neighborhood order for distance calculations", ge=1
     )
     device: str = Field(
-        "cuda" if torch.cuda.is_available() else "cpu",
+        default_factory=lambda: "cuda" if torch.cuda.is_available() else "cpu",
         description="Device for tensor computations",
     )
     random_seed: int = Field(42, description="Random seed for reproducibility")

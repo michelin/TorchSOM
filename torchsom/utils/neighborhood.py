@@ -6,7 +6,7 @@ import torch
 def _gaussian(
     xx: torch.Tensor,
     yy: torch.Tensor,
-    c: Tuple[torch.Tensor, torch.Tensor],  # ! Tuple[int, int]
+    c: Tuple[int, int],
     sigma: float,
 ) -> torch.Tensor:
     """Gaussian neighborhood function to update weights.
@@ -55,7 +55,7 @@ def _gaussian(
 def _mexican_hat(
     xx: torch.Tensor,
     yy: torch.Tensor,
-    c: Tuple[torch.Tensor, torch.Tensor],  # ! Tuple[int, int]
+    c: Tuple[int, int],
     sigma: float,
 ) -> torch.Tensor:
     """
@@ -119,7 +119,7 @@ def _mexican_hat(
 def _bubble(
     xx: torch.Tensor,
     yy: torch.Tensor,
-    c: Tuple[torch.Tensor, torch.Tensor],  # ! Tuple[int, int]
+    c: Tuple[int, int],
     sigma: float,
 ) -> torch.Tensor:
     """
@@ -168,7 +168,7 @@ def _bubble(
 def _triangle(
     xx: torch.Tensor,
     yy: torch.Tensor,
-    c: Tuple[torch.Tensor, torch.Tensor],  # ! Tuple[int, int]
+    c: Tuple[int, int],
     sigma: float,
 ) -> torch.Tensor:
     """
