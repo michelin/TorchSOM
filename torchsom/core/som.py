@@ -15,11 +15,7 @@ from ..utils.grid import adjust_meshgrid_topology, create_mesh_grid
 from ..utils.initialization import initialize_weights
 from ..utils.metrics import calculate_quantization_error, calculate_topographic_error
 from ..utils.neighborhood import NEIGHBORHOOD_FUNCTIONS
-from ..utils.topology import (
-    get_all_neighbors_up_to_order,
-    get_hexagonal_offsets,
-    get_rectangular_offsets,
-)
+from ..utils.topology import get_all_neighbors_up_to_order
 from .base_som import BaseSOM
 
 
