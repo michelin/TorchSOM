@@ -5,11 +5,16 @@ from .grid import (
     axial_distance,
     convert_to_axial_coords,
     create_mesh_grid,
+    offset_to_axial_coords,
 )
 from .initialization import initialize_weights, pca_init, random_init
 from .metrics import calculate_quantization_error, calculate_topographic_error
 from .neighborhood import NEIGHBORHOOD_FUNCTIONS
-from .topology import get_hexagonal_offsets, get_rectangular_offsets
+from .topology import (
+    get_all_neighbors_up_to_order,
+    get_hexagonal_offsets,
+    get_rectangular_offsets,
+)
 
 __all__ = [
     "DISTANCE_FUNCTIONS",
@@ -18,6 +23,7 @@ __all__ = [
     "create_mesh_grid",
     "adjust_meshgrid_topology",
     "convert_to_axial_coords",
+    "offset_to_axial_coords",
     "axial_distance",
     "initialize_weights",
     "random_init",
@@ -26,4 +32,5 @@ __all__ = [
     "calculate_topographic_error",
     "get_hexagonal_offsets",
     "get_rectangular_offsets",
+    "get_all_neighbors_up_to_order",
 ]

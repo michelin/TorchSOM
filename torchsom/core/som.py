@@ -15,7 +15,11 @@ from ..utils.grid import adjust_meshgrid_topology, create_mesh_grid
 from ..utils.initialization import initialize_weights
 from ..utils.metrics import calculate_quantization_error, calculate_topographic_error
 from ..utils.neighborhood import NEIGHBORHOOD_FUNCTIONS
-from ..utils.topology import get_hexagonal_offsets, get_rectangular_offsets
+from ..utils.topology import (
+    get_all_neighbors_up_to_order,
+    get_hexagonal_offsets,
+    get_rectangular_offsets,
+)
 from .base_som import BaseSOM
 
 
@@ -416,23 +420,35 @@ class SOM(BaseSOM):
         # Keep track of the neurons used to build the historical buffers
         visited_neurons = {bmu_tuple}
 
-        # Get neighbor offsets based on topology and neighborhood order
-        neighbor_order = self.neighborhood_order
-        for order in range(1, neighbor_order + 1):
-            # Get neighbor offsets based on topology
-            if self.topology == "hexagonal":
-                if bmu_pos[0] % 2 == 0:
-                    nei_order_offsets = get_hexagonal_offsets(order)["even"]
-                else:
-                    nei_order_offsets = get_hexagonal_offsets(order)["odd"]
-            else:
-                nei_order_offsets = get_rectangular_offsets(order)
+        # Get all neighbor offsets based on topology
+        all_offsets = get_all_neighbors_up_to_order(
+            topology=self.topology,
+            max_order=self.neighborhood_order,
+        )
 
-            """
-                First, explore all neighbors of the current BMU and retrieve historical samples if they exist
-                Only explore closed neighbors in terms of distance in the grid, not in terms of distance of the weights.
-                """
-            for dx, dy in nei_order_offsets:
+        # Handle topology-specific offset processing
+        if self.topology == "rectangular":
+            for dx, dy in all_offsets:
+                neighbor_pos = (
+                    int(bmu_pos[0].item() + dx),
+                    int(bmu_pos[1].item() + dy),
+                )
+                if neighbor_pos in visited_neurons:
+                    continue
+
+                visited_neurons.add(neighbor_pos)
+                # Check if the neighbor is 1) within SOM bounds, and 2) activated
+                if (
+                    0 <= neighbor_pos[0] < self.x
+                    and 0 <= neighbor_pos[1] < self.y
+                    and neighbor_pos in bmus_idx_map
+                ):
+                    sample_indices.extend(bmus_idx_map[neighbor_pos])
+
+        elif self.topology == "hexagonal":
+            bmu_row = int(bmu_pos[0].item())
+            row_type = "even" if bmu_row % 2 == 0 else "odd"
+            for dx, dy in all_offsets[row_type]:
                 neighbor_pos = (
                     int(bmu_pos[0].item() + dx),
                     int(bmu_pos[1].item() + dy),
@@ -450,9 +466,9 @@ class SOM(BaseSOM):
                     sample_indices.extend(bmus_idx_map[neighbor_pos])
 
         """
-            Secondly, ensure we have enough training samples.
-            This time, explore neighbors that are close in terms of distance in the weights space.
-            """
+        Secondly, ensure we have enough training samples.
+        This time, explore neighbors that are close in terms of distance in the weights space.
+        """
         if len(sample_indices) <= min_buffer_threshold:
             # Calculate distances from BMU weights to all neurons
             with torch.no_grad():
@@ -580,34 +596,19 @@ class SOM(BaseSOM):
                 raise ValueError(f"Unsupported distance metric: {distance_metric}")
             distance_fn = DISTANCE_FUNCTIONS[distance_metric]
 
-        # Retrieve neighbor offsets based on topology
-        all_offsets = []
-        max_neighbors = 0
+        # Get all neighbor offsets based on topology
+        all_offsets = get_all_neighbors_up_to_order(
+            topology=self.topology,
+            max_order=neighborhood_order,
+        )
+        print(all_offsets)
+        # Calculate maximum possible neighbors for tensor initialization
         if self.topology == "hexagonal":
-            for order in range(1, neighborhood_order + 1):
-                neighbor_offsets = get_hexagonal_offsets(order)
-                max_neighbors += len(neighbor_offsets["even"])
-                all_offsets.append(neighbor_offsets)
+            # For hexagonal, we need to handle even/odd rows separately
+            max_neighbors = max(len(all_offsets["even"]), len(all_offsets["odd"]))
         else:
-            for order in range(1, neighborhood_order + 1):
-                neighbor_offsets = get_rectangular_offsets(order)
-                max_neighbors += len(neighbor_offsets)
-                all_offsets.append(neighbor_offsets)
-
-        # # ! Modification to test
-        # def _offsets_for_row(r: int) -> List[Tuple[int, int]]:
-        #     if self.topology == "hexagonal":
-        #         merged = []
-        #         for order in range(1, neighborhood_order + 1):
-        #             merged.extend(
-        #                 get_hexagonal_offsets(order)["even" if r % 2 == 0 else "odd"]
-        #             )
-        #         return merged
-        #     else:
-        #         merged = []
-        #         for order in range(1, neighborhood_order + 1):
-        #             merged.extend(get_rectangular_offsets(order))
-        #         return merged
+            # For rectangular topology
+            max_neighbors = len(all_offsets)
 
         # Initialize distance map
         distance_matrix = torch.full(
@@ -622,18 +623,46 @@ class SOM(BaseSOM):
                 current_neuron = self.weights[row, col]
                 neighbor_idx = 0
 
-                # Process each neighbor order based on topology
-                for order_idx in range(len(all_offsets)):
-                    if self.topology == "hexagonal":
-                        offsets = all_offsets[order_idx][
-                            "even" if row % 2 == 0 else "odd"
-                        ]
-                    else:
-                        offsets = all_offsets[order_idx]
+                # Handle topology-specific neighbor processing
+                if self.topology == "hexagonal":
+                    # Use appropriate offsets based on row parity (even/odd)
+                    row_offsets = (
+                        all_offsets["even"] if row % 2 == 0 else all_offsets["odd"]
+                    )
 
-                    # Compute distances between current neuron and its neighbors
-                    for offset in offsets:
-                        row_offset, col_offset = offset
+                    for row_offset, col_offset in row_offsets:
+                        neighbor_row = row + row_offset
+                        neighbor_col = col + col_offset
+
+                        # Ensure neighbor is within bounds to compute the distance
+                        if (
+                            0 <= neighbor_row < self.weights.shape[0]
+                            and 0 <= neighbor_col < self.weights.shape[1]
+                        ):
+                            neighbor_neuron = self.weights[neighbor_row, neighbor_col]
+
+                            """
+                            Reshape weights to ensure batch compatibility with distance function => shape [a,b] becomes [1,a,b] after unsqueeze(0)
+                            Each neuron has a shape of [num_features] so they become [1,num_features] and then [1,1,num_features]
+                            Finally, distance function need to be squeezed because it returns [batch_size, 1] but there is only one sample, so let's just retrieve the scalar
+                            """
+                            solo_batch_current_neuron = current_neuron.unsqueeze(
+                                0
+                            ).unsqueeze(0)
+                            solo_batch_neighbor_neuron = neighbor_neuron.unsqueeze(
+                                0
+                            ).unsqueeze(0)
+
+                            # Calculate and store the distance
+                            distance_matrix[row, col, neighbor_idx] = distance_fn(
+                                solo_batch_current_neuron,
+                                solo_batch_neighbor_neuron,
+                            ).squeeze()
+
+                        neighbor_idx += 1
+                else:
+                    # Rectangular topology - process all offsets directly
+                    for row_offset, col_offset in all_offsets:
                         neighbor_row = row + row_offset
                         neighbor_col = col + col_offset
 
@@ -772,11 +801,7 @@ class SOM(BaseSOM):
         Returns:
             torch.Tensor: Metric map based on the reduction parameter.
         """
-        # # Ensure data is on the correct device
-        # data = data.to(self.device)
-        # target = target.to(self.device)
         epsilon = 1e-8
-
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
         metric_map = torch.full((self.x, self.y), float("nan"))
 
@@ -813,13 +838,8 @@ class SOM(BaseSOM):
             The score combines the standard error with a term penalizing uneven sample distribution across neurons. Lower scores indicate better neuron representativeness.
         """
 
-        # # Ensure device compatibility
-        # data = data.to(self.device)
-        # target = target.to(self.device)
         epsilon = 1e-8
-
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
-        # score_map = torch.full((self.x, self.y), float("nan"), device=self.device)
         score_map = torch.full((self.x, self.y), float("nan"))
 
         # For each activated neurons, calculate the corresponding target metric
@@ -860,9 +880,7 @@ class SOM(BaseSOM):
             torch.Tensor: Rank map where each neuron's value is its rank (1 = lowest std = best)
         """
 
-        # ! Now bmus_map is by default on the CPU
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
-        # neuron_stds = torch.full((self.x, self.y), float("nan"), device=self.device)
         neuron_stds = torch.full((self.x, self.y), float("nan"))
 
         # Calculate standard deviation for each neuron
@@ -924,34 +942,10 @@ class SOM(BaseSOM):
 
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
         classification_map = torch.full((self.x, self.y), float("nan"))
-
-        # Retrieve neighborhood offsets based on topology for tie-breaking
-        neighborhood_offsets = []
-        if self.topology == "hexagonal":
-            for order in range(1, neighborhood_order + 1):
-                for row in range(self.x):
-                    offsets = get_hexagonal_offsets(order)
-                    neighborhood_offsets.extend(
-                        offsets["even"] if (row % 2 == 0) else offsets["odd"]
-                    )
-        else:
-            for order in range(1, neighborhood_order + 1):
-                neighborhood_offsets.extend(get_rectangular_offsets(order))
-
-        # ! Method to test
-        # def _offsets_for_row(r: int) -> List[Tuple[int, int]]:
-        #     if self.topology == "hexagonal":
-        #         merged = []
-        #         for order in range(1, neighborhood_order + 1):
-        #             merged.extend(
-        #                 get_hexagonal_offsets(order)["even" if r % 2 == 0 else "odd"]
-        #             )
-        #         return merged
-        #     else:
-        #         merged = []
-        #         for order in range(1, neighborhood_order + 1):
-        #             merged.extend(get_rectangular_offsets(order))
-        #         return merged
+        neighborhood_offsets = get_all_neighbors_up_to_order(
+            topology=self.topology,
+            max_order=neighborhood_order,
+        )
 
         # Iterate through each activated neuron
         for bmu_pos, sample_indices in bmus_map.items():
@@ -980,9 +974,9 @@ class SOM(BaseSOM):
                 else:
                     neighbor_labels = []
                     row, col = bmu_pos
-                    for offset in neighborhood_offsets:
-                        neighbor_row = row + offset[0]
-                        neighbor_col = col + offset[1]
+                    for dx, dy in neighborhood_offsets:
+                        neighbor_row = row + dx
+                        neighbor_col = col + dy
                         if (
                             0 <= neighbor_row < self.x
                             and 0 <= neighbor_col < self.y

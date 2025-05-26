@@ -72,6 +72,9 @@ def convert_to_axial_coords(
 ) -> tuple[float, float]:
     """Convert grid coordinates to axial coordinates for hexagonal grid.
 
+    Uses even-r layout where even rows are shifted left by 0.5.
+    This matches the layout used in adjust_meshgrid_topology.
+
     Args:
         row (int): Grid row coordinate
         col (int): Grid column coordinate
@@ -79,23 +82,33 @@ def convert_to_axial_coords(
     Returns:
         tuple[float, float]: Axial coordinates (q, r)
     """
-
-    # For odd rows, columns are offset by +0.5
-    # This matches the shift applied in adjust_meshgrid_topology
-    q = col - (row - (row & 1)) / 2  # x axis
-    r = row  # y axis
+    if row % 2 == 0:
+        q = col - 0.5 - (row // 2)
+    else:
+        q = col - (row // 2)
+    r = row
     return q, r
 
-    # ! Modification to test
-    # # Match the even-r layout used in `adjust_meshgrid_topology`
-    # #   even rows -> shifted left by 0.5
-    # #   odd  rows -> no horizontal shift
-    # if row % 2 == 0:  # even-r
-    #     q = col - 0.5 - (row // 2)
-    # else:  # odd-r
-    #     q = col - (row // 2)
-    # r = row
-    # return q, r
+
+def offset_to_axial_coords(
+    row: int,
+    col: int,
+) -> tuple[float, float]:
+    """Convert offset coordinates to axial coordinates for hexagonal grid.
+
+    Alternative implementation that directly matches the mesh grid adjustment.
+
+    Args:
+        row (int): Grid row coordinate
+        col (int): Grid column coordinate
+
+    Returns:
+        tuple[float, float]: Axial coordinates (q, r)
+    """
+    # Direct conversion matching adjust_meshgrid_topology
+    q = col - (row - (row & 1)) / 2
+    r = row
+    return q, r
 
 
 def axial_distance(

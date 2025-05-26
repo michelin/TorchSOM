@@ -14,4 +14,4 @@ dist/
 torchsom/datasets/
 torchsom/logger.py
 torchsom/examples/
-torchsom/archive/
+archive/

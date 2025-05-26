@@ -45,8 +45,6 @@ def _euclidean_distance(
         torch.Tensor: euclidean distance between input and weights [row_neurons, col_neurons]
     """
     return torch.norm(torch.subtract(data, weights), dim=-1)
-    # ! Modification to test
-    # return torch.max(torch.abs(data - weights), dim=-1).values
 
 
 def _manhattan_distance(
@@ -84,58 +82,102 @@ def _chebyshev_distance(
     return torch.max(torch.abs(data - weights), dim=-1).values
 
 
-# TODO Check if this method works and if it is more efficient (also ensure it is compatible with batch framework)
+def _weighted_euclidean_distance(
+    data: torch.Tensor,
+    weights: torch.Tensor,
+    weight_proportions: Optional[torch.Tensor] = None,
+) -> torch.Tensor:
+    """Compute weighted Euclidean distance between input and weights.
+
+    Args:
+        data (torch.Tensor): Input data tensor of shape [batch_size, 1, 1, n_features]
+        weights (torch.Tensor): SOM weights tensor of shape [1, row_neurons, col_neurons, n_features]
+        weight_proportions (Optional[torch.Tensor], optional): Feature weights tensor of shape [n_features] or broadcastable shape. Defaults to None.
+
+    Returns:
+        torch.Tensor: Weighted Euclidean distance between input and weights [batch_size, row_neurons, col_neurons]
+
+    Raises:
+        ValueError: If weight_proportions shape is incompatible with feature dimensions
+        ValueError: If weight_proportions contains non-positive values
+    """
+    # Validate inputs
+    if weight_proportions is not None:
+        # Ensure weight_proportions is on the same device
+        weight_proportions = weight_proportions.to(data.device)
+
+        # Check for non-positive weights
+        if torch.any(weight_proportions <= 0):
+            raise ValueError("All weight proportions must be positive")
+
+        # Validate shape compatibility
+        expected_features = data.shape[-1]
+        if weight_proportions.numel() != expected_features:
+            # Try to reshape if possible
+            try:
+                weight_proportions = weight_proportions.view(expected_features)
+            except RuntimeError:
+                raise ValueError(
+                    f"Weight proportions shape {weight_proportions.shape} incompatible with "
+                    f"feature dimension {expected_features}"
+                )
+
+        # Ensure weight_proportions can be broadcast with the difference tensor
+        # Shape should be [1, 1, 1, n_features] to match data and weights broadcasting
+        weight_proportions = weight_proportions.view(1, 1, 1, -1)
+
+    # Compute squared differences
+    diff_squared = torch.pow(data - weights, 2)
+
+    # Apply feature weights if provided
+    if weight_proportions is not None:
+        diff_squared = diff_squared * weight_proportions
+
+    # Sum across feature dimension and take square root
+    return torch.sqrt(torch.sum(diff_squared, dim=-1))
+
+
 def _efficient_euclidean_distance(
     data: torch.Tensor,
     weights: torch.Tensor,
 ) -> torch.Tensor:
-    # """Calculate Euclidean distances between input data and all neurons' weights.
+    """Calculate Euclidean distances using vectorized operations for better performance.
 
-    # Args:
-    #     data (torch.Tensor): input data tensor [num_samples, num_features]
+    This implementation uses the mathematical identity:
+    ||x - w||² = ||x||² + ||w||² - 2⟨x, w⟩
 
-    # Returns:
-    #     torch.Tensor: distance between input data and weights [num_samples, row_neurons * col_neurons]
-    # """
+    Args:
+        data (torch.Tensor): Input data tensor of shape [batch_size, 1, 1, n_features]
+        weights (torch.Tensor): SOM weights tensor of shape [1, row_neurons, col_neurons, n_features]
 
-    input_data_sq = torch.pow(data, 2).sum(
-        dim=1, keepdim=True
-    )  # Sum along columns [num_samples]
-    weights_flat = weights.reshape(
-        -1, weights.shape[2]
-    )  # Convert [row_neurons, col_neurons, features] to [row_neurons * col_neurons, features]
-    weights_flat_sq = torch.pow(weights_flat, 2).sum(
-        dim=1, keepdim=True
-    )  # Sum along columns [num_samples]
-    dot_product = torch.mm(
-        data, weights_flat.T
-    )  # Dot product through matrix multiplication [num_samples, row_neurons * col_neurons]
-    return torch.sqrt(
-        -2 * dot_product + input_data_sq + weights_flat_sq.T
-    )  # L2(x-w) = L2(x) + L2(w) - 2*dot_prod(x,w)
+    Returns:
+        torch.Tensor: Euclidean distance between input and weights [batch_size, row_neurons, col_neurons]
+    """
+    # Reshape for efficient computation
+    batch_size = data.shape[0]
+    n_features = data.shape[-1]
+    n_neurons = weights.shape[1] * weights.shape[2]
 
+    # Flatten spatial dimensions of weights and data
+    data_flat = data.view(batch_size, n_features)  # [batch_size, n_features]
+    weights_flat = weights.view(n_neurons, n_features)  # [n_neurons, n_features]
 
-# TODO Check if this method works (also ensure it is compatible with batch framework)
-def _weighted_euclidean_distance(
-    data: torch.Tensor,
-    weights: torch.Tensor,
-    weights_proportion: Optional[torch.Tensor] = None,
-) -> torch.Tensor:
-    # """Compute weighted Euclidean distance between input and weights.
+    # Compute squared norms
+    data_norm_sq = torch.sum(data_flat**2, dim=1, keepdim=True)  # [batch_size, 1]
+    weights_norm_sq = torch.sum(weights_flat**2, dim=1, keepdim=True)  # [n_neurons, 1]
 
-    # Args:
-    #     data (torch.Tensor): input data [n_features]
-    #     weights (torch.Tensor): SOM weights [row_neurons, col_neurons, n_features]
-    #     weights_proportion (Optional[torch.Tensor], optional): Optional tensor to balance the weight of each feature [n_features]. Defaults to None.
+    # Compute dot products
+    dot_products = torch.mm(data_flat, weights_flat.T)  # [batch_size, n_neurons]
 
-    # Returns:
-    #     torch.Tensor: weighted Euclidean distance between input and weights [row_neurons, col_neurons]
-    # """
+    # Apply distance formula: ||x - w||² = ||x||² + ||w||² - 2⟨x, w⟩
+    distances_sq = data_norm_sq + weights_norm_sq.T - 2 * dot_products
 
-    distances_sq = torch.subtract(data, weights) ** 2
-    if weights_proportion is not None:
-        distances_sq = distances_sq * weights_proportion
-    return torch.sqrt(torch.sum(distances_sq, dim=-1))
+    # Clamp to avoid numerical issues with negative values
+    distances_sq = torch.clamp(distances_sq, min=0.0)
+
+    # Take square root and reshape back to original spatial dimensions
+    distances = torch.sqrt(distances_sq)
+    return distances.view(batch_size, weights.shape[1], weights.shape[2])
 
 
 DISTANCE_FUNCTIONS = {
