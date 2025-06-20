@@ -181,14 +181,4 @@ What's Next?
 Now that you've created your first SOM, explore:
 
 - :doc:`basic_concepts` - Understand how SOMs work
-- :doc:`../user_guide/som_training` - Advanced training techniques
-- :doc:`../user_guide/visualization` - Comprehensive visualization guide
-
-.. Tips for Success
-.. ---------------
-
-.. 1. **Normalize your data**: Always normalize features to similar scales
-.. 2. **Choose appropriate map size**: Roughly 5-10 times fewer neurons than data points
-.. 3. **Tune learning parameters**: Start with defaults, then adjust based on results
-.. 4. **Use GPU**: For large datasets, GPU acceleration provides significant speedup
-.. 5. **Visualize results**: Always examine the trained map with visualizations 
+- :doc:`../user_guide/visualization_help` - Comprehensive visualization guide

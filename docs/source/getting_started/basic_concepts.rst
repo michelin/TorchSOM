@@ -167,5 +167,4 @@ Next Steps
 
 Now that you understand the basics, explore:
 
-- :doc:`../user_guide/som_training` - Advanced training techniques
-- :doc:`../user_guide/visualization` - Visualization techniques 
+- :doc:`../user_guide/visualization_help` - Visualization techniques 

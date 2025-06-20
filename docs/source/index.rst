@@ -89,10 +89,7 @@ Documentation Structure
    :maxdepth: 2
    :caption: User Guide
 
-   user_guide/som_training
-   user_guide/visualization
-   user_guide/configuration
-   user_guide/advanced_usage
+   user_guide/visualization_help
 
 .. toctree::
    :maxdepth: 2
@@ -113,15 +110,6 @@ Documentation Structure
    api/configs
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Developer Guide
-
-   developer/architecture
-   developer/contributing
-   developer/testing
-   developer/performance
-
-.. toctree::
    :maxdepth: 1
    :caption: Additional Resources
 
@@ -134,8 +122,6 @@ Support & Community
 
 - 📖 **Documentation**: You're reading it!
 - 🐛 **Bug Reports**: `GitHub Issues <https://github.com/michelin/TorchSOM/issues>`_
-.. - 💬 **Discussions**: `GitHub Discussions <https://github.com/michelin/TorchSOM/discussions>`_
-.. - 📧 **Contact**: For commercial support and partnerships
 
 License
 -------
