@@ -62,5 +62,5 @@ html_context = {
     "conf_py_path": "/docs/source/",
 }
 html_static_path = ["_static"]
-html_logo = "../../logo.jpg"
+html_logo = "../../assets/logo.jpg"
 # html_favicon = "../../favicon.ico" # Icon shown in the browser tab
