@@ -9,25 +9,21 @@
 </p>
 
 **`TorchSOM`** is the official code for
-paper [PAPER ARTICLE AND LINK TO UPDATE](), @CONFERENCE @DATE.  
+paper [PAPER ARTICLE AND LINK TO UPDATE](update_link), @CONFERENCE @DATE.  
 It provides an efficient and scalable implementation of **Self-Organizing Maps (SOMs)** using PyTorch, making it easy to integrate with deep learning workflows while benefiting from GPU acceleration.
-
-
 
 ## Table of Contents
 
 - [TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps](#torchsom-a-scalable-pytorch-compatible-library-for-self-organizing-maps)
-    - [Table of Contents](#table-of-contents)
-    - [Introduction](#introduction)
-    - [Installation](#installation)
-    - [Documentation](#documentation)
-    - [Citation](#citation)
-    - [Acknowledgement](#acknowledgement)
-    - [Contributions](#contributions)
-    - [License](#license)
-    - [References](#references)
-
-
+- [Table of Contents](#table-of-contents)
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Documentation](#documentation)
+- [Citation](#citation)
+- [Acknowledgement](#acknowledgement)
+- [Contributions](#contributions)
+- [License](#license)
+- [References](#references)
 
 ## Introduction
 
@@ -35,16 +31,63 @@ It provides an efficient and scalable implementation of **Self-Organizing Maps (
 
 Also, this **repository is highly documented and commented**, which makes it easy to use, understand, deploy, and which offers endless possibilities for improvements.  
 To help you explore and experiment with **`TorchSOM`**, we provide Jupyter notebooks in the [`notebooks/`](notebooks) directory. There are multiples datasets and the corresponding results respectively in the [`data/`](data) and [`results/`](notebooks/results) directories.
+
 - [`iris.ipynb`](notebooks/iris.ipynb): A multiclass classification example.
 - [`wine.ipynb`](notebooks/wine.ipynb): Another multiclass classification example.
 - [`boston_housing.ipynb`](notebooks/boston_housing.ipynb): A regression example.
 - [`energy_efficiency.ipynb`](notebooks/energy_efficiency.ipynb): A multi-regression example.
-- [`get_data.ipynb`](notebooks/get_data.ipynb): The notebook used to generated the datasets provided in the [`data/`](data) directory. 
+- [`get_data.ipynb`](notebooks/get_data.ipynb): The notebook used to generated the datasets provided in the [`data/`](data) directory.
 
 If you find this project interesting, we would be grateful for your support by starring ⭐ this [`GitHub repository`](https://github.com/michelin/TorchSOM).
 
-Here are some examples of visualizations you can obtain through the use of **`TorchSOM`**.
+Below are some examples of visualizations you can obtain through the use of **`TorchSOM`**.
+A **regression case** is proposed using a Michelin real dataset, and **classification** is demonstrated through the [`wine`](https://archive.ics.uci.edu/dataset/109/wine) dataset.
 
+<p align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <b>D-Matrix Visualization</b><br>
+        <p>Michelin production line (regression)</p>
+        <img src="assets/michelin_dmatrix.png" alt="U-Matrix" width="220"/>
+        <!-- <img src="assets/michelin_dmatrix.gif" alt="U-Matrix" width="220"/> -->
+      </td>
+      <td align="center">
+        <b>Hit Map Visualization</b><br>
+        <p>Michelin production line (regression)</p>
+        <img src="assets/michelin_hitmap.png" alt="Component Plane" width="220"/>
+      </td>
+      <td align="center">
+        <b>Mean Map Visualization</b><br>
+        <p>Michelin production line (regression)</p>
+        <img src="assets/michelin_meanmap.png" alt="Component Plane" width="220"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" colspan="2">
+        <b>Component Planes Visualization</b><br>
+        <p>Michelin production line (regression)</p>
+        <table>
+          <tr>
+            <td align="center" style="vertical-align:top;">
+              <!-- <b>Hit Histogram</b><br> -->
+              <img src="assets/michelin_cp12.png" alt="Hit Histogram" width="220"/>
+            </td>
+            <td align="center" style="vertical-align:top;">
+              <!-- <b>Cluster Map</b><br> -->
+              <img src="assets/michelin_cp21.png" alt="Cluster Map" width="220"/>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td align="center">
+        <b>Classification Map</b><br>
+        <p>Wine dataset (multi-classification)</p>
+        <img src="assets/wine_classificationmap.png" alt="Cluster Map" width="220"/>
+      </td>
+    </tr>
+  </table>
+</p>
 
 
 ## Installation
@@ -68,8 +111,6 @@ python3.9 -m venv .torchsom_env # Create a virtual environment
 source .torchsom_env/bin/activate # Activate the environment 
 pip install -e '.[dev]' # Install the required dependencies 
 ```
-
-
 
 ## Documentation
 
@@ -95,13 +136,12 @@ Open [`index.html`](docs/build/html/index.html) to preview locally the generated
 
 -->
 
-
-
 ## Citation
 
 If you use `TorchSOM` in your research or work, please cite both the article and the software itself using the following entries:
 
 1. **Paper**  
+
     ```bibtex
     @inproceedings{Berthier_TorchSOM_A_Scalable_2025_article,
         title        = {TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},
@@ -111,6 +151,7 @@ If you use `TorchSOM` in your research or work, please cite both the article and
     ```
 
 2. **Software**  
+
     ```bibtex
     @software{Berthier_TorchSOM_A_Scalable_2025,
         author = {Berthier, Louis},
@@ -125,8 +166,6 @@ If you use `TorchSOM` in your research or work, please cite both the article and
 
 For more details, please refer to the [`CITATION.cff`](CITATION.cff) file.
 
-
-
 ## Acknowledgement
 
 The [Centre de Mathématiques Appliquées](https://cmap.ip-paris.fr/) - CMAP - at the Ecole Polytechnique - X -, and [Manufacture Française des Pneumatiques Michelin](https://www.michelin.com/) for the joint collaboration and supervision during my PhD thesis.
@@ -135,36 +174,31 @@ The [Centre de Mathématiques Appliquées](https://cmap.ip-paris.fr/) - CMAP - a
 
 Logo created using DALL-E.
 
-
-
 ## Contributions
 
 We invite contributors of all backgrounds and experience levels to get involved and contribute to this library. Whether you have innovative ideas to propose or are eager to submit pull requests, we encourage your contributions!
 
 Please take a moment to read our [`Code of Conduct`](CODE_OF_CONDUCT.md) and the [`Contributing guide`](CONTRIBUTING.md) if you're interested in contributing.
 
-
-
 ## License
 
 TorchSOM is licensed under the [Apache License, Version 2.0](https://opensource.org/license/apache-2-0). Feel free to use and modify the code as per the terms of the [`LICENSE`](LICENSE).
 
-
-
 ## References
 
-- **Related Papers**:
-    - [Self-Organizing Maps](https://link.springer.com/book/10.1007/978-3-642-56927-2) by Teuvo Kohonen, 2001
-    - [An Introduction to Self-Organizing Maps](https://link.springer.com/chapter/10.2991/978-94-91216-77-0_14) by Umut Asan & Secil Ercan, 2012
-    - [Brief Review of Self-Organizing Maps](https://www.researchgate.net/publication/317339061_Brief_Review_of_Self-Organizing_Maps) by Dubravko Miljković, 2017
-- **Code Inspiration**:  
-    Built upon concepts from [MiniSom](https://github.com/JustGlowing/minisom) by [Giuseppe Vettigli](https://github.com/JustGlowing)
-- **Repository Structure**:  
-    Organized following the [CCSD](https://github.com/AdrienC21/CCSD) format by [Adrien Carrel](https://github.com/AdrienC21)
+**Related Papers**:
 
+- [Self-Organizing Maps](https://link.springer.com/book/10.1007/978-3-642-56927-2) by Teuvo Kohonen, 2001
+- [An Introduction to Self-Organizing Maps](https://link.springer.com/chapter/10.2991/978-94-91216-77-0_14) by Umut Asan & Secil Ercan, 2012
+- [Brief Review of Self-Organizing Maps](https://www.researchgate.net/publication/317339061_Brief_Review_of_Self-Organizing_Maps) by Dubravko Miljković, 2017
 
+**Code Inspiration**:  
 
+- Built upon concepts from [MiniSom](https://github.com/JustGlowing/minisom) by [Giuseppe Vettigli](https://github.com/JustGlowing)
 
+**Repository Structure**:  
+
+- Organized following the [CCSD](https://github.com/AdrienC21/CCSD) format by [Adrien Carrel](https://github.com/AdrienC21)
 
 <!-- TO CHECK when swtiching from private to open repo
 
