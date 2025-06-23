@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>torchsom.core.base_som &mdash; TorchSOM 0.0.1 documentation</title>
+  <title>torchsom.configs.som_config &mdash; TorchSOM 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -390,7 +390,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">torchsom.core.base_som</li>
+      <li class="breadcrumb-item active">torchsom.configs.som_config</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -399,145 +399,80 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for torchsom.core.base_som</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+  <h1>Source code for torchsom.configs.som_config</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
 
 
-<div class="viewcode-block" id="BaseSOM">
-<a class="viewcode-back" href="../../../api/core.html#torchsom.core.base_som.BaseSOM">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">BaseSOM</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base class for all SOM variants.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SOMConfig">
+<a class="viewcode-back" href="../../../api/configs.html#torchsom.configs.som_config.SOMConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SOMConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for SOM parameters using pydantic for validation.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BaseSOM.fit">
-<a class="viewcode-back" href="../../../api/core.html#torchsom.core.base_som.BaseSOM.fit">[docs]</a>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Train the SOM on the given data.</span>
+    <span class="c1"># Map structure parameters</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of rows in the map&quot;</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of columns in the map&quot;</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">topology</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rectangular&quot;</span><span class="p">,</span> <span class="s2">&quot;hexagonal&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="s2">&quot;rectangular&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Grid topology&quot;</span>
+    <span class="p">)</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, num_features]</span>
+    <span class="c1"># Training parameters</span>
+    <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Number of training epochs&quot;</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Batch size for training&quot;</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Initial learning rate&quot;</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Initial neighborhood radius&quot;</span><span class="p">,</span> <span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            Tuple[List[float], List[float]]: Quantization and topographic errors [epoch]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
+    <span class="c1"># Function choices</span>
+    <span class="n">neighborhood_function</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> <span class="s2">&quot;mexican_hat&quot;</span><span class="p">,</span> <span class="s2">&quot;bubble&quot;</span><span class="p">,</span> <span class="s2">&quot;triangle&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Field</span><span class="p">(</span>
+            <span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Function to determine neuron neighborhood influence&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">distance_function</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;euclidean&quot;</span><span class="p">,</span> <span class="s2">&quot;cosine&quot;</span><span class="p">,</span> <span class="s2">&quot;manhattan&quot;</span><span class="p">,</span> <span class="s2">&quot;chebyshev&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="s2">&quot;euclidean&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Function to compute distances&quot;</span>
+    <span class="p">)</span>
+    <span class="n">lr_decay_function</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span>
+        <span class="s2">&quot;lr_inverse_decay_to_zero&quot;</span><span class="p">,</span> <span class="s2">&quot;lr_linear_decay_to_zero&quot;</span><span class="p">,</span> <span class="s2">&quot;asymptotic_decay&quot;</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;asymptotic_decay&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Learning rate decay function&quot;</span><span class="p">)</span>
+    <span class="n">sigma_decay_function</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span>
+        <span class="s2">&quot;sig_inverse_decay_to_one&quot;</span><span class="p">,</span> <span class="s2">&quot;sig_linear_decay_to_one&quot;</span><span class="p">,</span> <span class="s2">&quot;asymptotic_decay&quot;</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;asymptotic_decay&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sigma decay function&quot;</span><span class="p">)</span>
+    <span class="n">initialization_mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="s2">&quot;pca&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Weight initialization method&quot;</span>
+    <span class="p">)</span>
 
-
-<div class="viewcode-block" id="BaseSOM.identify_bmus">
-<a class="viewcode-back" href="../../../api/core.html#torchsom.core.base_som.BaseSOM.identify_bmus">[docs]</a>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">identify_bmus</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find best matching units for input data.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, num_features] or [num_features]</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            torch.Tensor: For single sample: Tensor of shape [2] with [row, col].</span>
-<span class="sd">                          For batch: Tensor of shape [batch_size, 2] with [row, col] pairs</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
-
-
-<div class="viewcode-block" id="BaseSOM.quantization_error">
-<a class="viewcode-back" href="../../../api/core.html#torchsom.core.base_som.BaseSOM.quantization_error">[docs]</a>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">quantization_error</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate quantization error.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, num_features] or [num_features]</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            float: Average quantization error value</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
+    <span class="c1"># Other parameters</span>
+    <span class="n">neighborhood_order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="mi">1</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Neighborhood order for distance calculations&quot;</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Device for tensor computations&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Random seed for reproducibility&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="BaseSOM.topographic_error">
-<a class="viewcode-back" href="../../../api/core.html#torchsom.core.base_som.BaseSOM.topographic_error">[docs]</a>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">topographic_error</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate topographic error.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, num_features] or [num_features]</span>
+<span class="c1"># SOM:</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            float: Topographic error ratio</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
-
-
-<div class="viewcode-block" id="BaseSOM.initialize_weights">
-<a class="viewcode-back" href="../../../api/core.html#torchsom.core.base_som.BaseSOM.initialize_weights">[docs]</a>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">initialize_weights</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the SOM weights.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, num_features]</span>
-<span class="sd">            mode (str, optional): Weight initialization method. Defaults to None.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
-
-
-<div class="viewcode-block" id="BaseSOM.build_hit_map">
-<a class="viewcode-back" href="../../../api/core.html#torchsom.core.base_som.BaseSOM.build_hit_map">[docs]</a>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">build_hit_map</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build a hit map showing neuron activation frequencies.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            data (torch.Tensor): Input data tensor [batch_size, num_features] or [num_features]</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            torch.Tensor: Hit map [row_neurons, col_neurons]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
-
-
-<div class="viewcode-block" id="BaseSOM.build_distance_map">
-<a class="viewcode-back" href="../../../api/core.html#torchsom.core.base_som.BaseSOM.build_distance_map">[docs]</a>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">build_distance_map</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">scaling</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sum&quot;</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build a distance map (U-matrix) showing neuron similarities.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            scaling (str, optional): Scaling method for distances. Defaults to &quot;sum&quot;.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            torch.Tensor: Distance map [row_neurons, col_neurons]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
-</div>
-
+<span class="c1">#   x: 100 # Number of rows: 100</span>
+<span class="c1">#   y: 75 # Number of columns: 75</span>
+<span class="c1">#   topology: &quot;rectangular&quot; # Grid topology: &quot;rectangular&quot; or &quot;hexagonal&quot;</span>
+<span class="c1">#   epochs: 50 # Number of epochs to train the model: 50</span>
+<span class="c1">#   batch_size: 256 # Number of samples to train the model: 64</span>
+<span class="c1">#   learning_rate: 0.95 # Initial learning rate: 0.95</span>
+<span class="c1">#   sigma: 5.0 # Initial spread of the neighborhood function: 5.0</span>
+<span class="c1">#   neighborhood_function: &quot;gaussian&quot; # Neighborhood function: &quot;gaussian&quot;, &quot;mexican_hat&quot;, &quot;bubble&quot;, &quot;triangle&quot;</span>
+<span class="c1">#   distance_function: &quot;euclidean&quot; # Function to calculate distance between data and neurons: &quot;euclidean&quot; &quot;cosine&quot; &quot;manhattan&quot; &quot;chebyshev&quot; &quot;weighted_euclidean&quot; (need to provide weights_proportion)</span>
+<span class="c1">#   lr_decay_function: &quot;asymptotic_decay&quot; # Learning rate scheduler: &quot;lr_inverse_decay_to_zero&quot;, &quot;lr_linear_decay_to_zero&quot;, &quot;asymptotic_decay&quot;</span>
+<span class="c1">#   sigma_decay_function: &quot;asymptotic_decay&quot; # Sigma scheduler: &quot;sig_inverse_decay_to_one&quot; &quot;sig_linear_decay_to_one&quot; &quot;asymptotic_decay&quot;</span>
+<span class="c1">#   initialization_mode: &quot;pca&quot; # Weights initialization method: &quot;random&quot; or &quot;pca&quot;</span>
+<span class="c1">#   neighborhood_order: 3 # Indicate which neighbors should be considered in SOM distance map and JITL buffer: 1</span>
+<span class="c1"># !  device: &quot;cuda&quot; # Device for tensor computations: &quot;cuda&quot; or &quot;cpu&quot;</span>
+<span class="c1"># !  random_seed: 42 # Random seed for reproducibility</span>
 </pre></div>
 
            </div>

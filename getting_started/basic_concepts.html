@@ -3,9 +3,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Overview: module code &mdash; TorchSOM 0.0.1 documentation</title>
+  <title>Basic Concepts &mdash; TorchSOM 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -18,9 +19,12 @@
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SOM Visualization Guide" href="../user_guide/visualization_help.html" />
+    <link rel="prev" title="Quick Start Guide" href="quickstart.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,64 +48,64 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../getting_started/installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#requirements">Requirements</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#systems">Systems</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#gpu">GPU</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#requirements">Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#systems">Systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#gpu">GPU</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#installation-methods">Installation Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#install-from-pypi-recommended">Install from PyPI (Recommended)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#install-from-source">Install from Source</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#ensure-gpu-support">Ensure GPU Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installation-methods">Installation Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#install-from-pypi-recommended">Install from PyPI (Recommended)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#install-from-source">Install from Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#ensure-gpu-support">Ensure GPU Support</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#verification">Verification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#dependencies">Dependencies</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#core-dependencies">Core Dependencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#verification">Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#dependencies">Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#core-dependencies">Core Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#optional-dependencies">Optional Dependencies</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#getting-help">Getting Help</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#getting-help">Getting Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#next-steps">Next Steps</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quick Start Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#your-first-som">Your First SOM</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#basic-visualization">Basic Visualization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#common-parameters">Common Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#complete-example">Complete Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#what-s-next">What’s Next?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#your-first-som">Your First SOM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#basic-visualization">Basic Visualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#common-parameters">Common Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#complete-example">Complete Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#what-s-next">What’s Next?</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../getting_started/basic_concepts.html">Basic Concepts</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#what-is-a-self-organizing-map">What is a Self-Organizing Map?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#how-soms-work">How SOMs Work</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#the-som-algorithm">The SOM Algorithm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#mathematical-foundation">Mathematical Foundation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Basic Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-a-self-organizing-map">What is a Self-Organizing Map?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-soms-work">How SOMs Work</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-som-algorithm">The SOM Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mathematical-foundation">Mathematical Foundation</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#core-components">Core Components</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#grid-topology">1. Grid Topology</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#neighborhood-function">2. Neighborhood Function</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#learning-rate-decay">3. Learning Rate Decay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#distance-functions">4. Distance Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#quality-metrics">5. Quality Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#core-components">Core Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#grid-topology">1. Grid Topology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#neighborhood-function">2. Neighborhood Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#learning-rate-decay">3. Learning Rate Decay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#distance-functions">4. Distance Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#quality-metrics">5. Quality Metrics</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#strengths-and-weaknesses">Strengths and Weaknesses</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#advantages">Advantages</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#limitations">Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#strengths-and-weaknesses">Strengths and Weaknesses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#advantages">Advantages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#limitations">Limitations</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#best-practices">Best Practices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#data-preparation">Data Preparation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#parameter-selection">Parameter Selection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#interpretation">Interpretation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-preparation">Data Preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameter-selection">Parameter Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interpretation">Interpretation</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
 </ul>
 </li>
 </ul>
@@ -389,30 +393,194 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Overview: module code</li>
+      <li class="breadcrumb-item active">Basic Concepts</li>
       <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/LouisTier/TorchSOM/blob/dev_org/docs/source/getting_started/basic_concepts.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
-  </ul>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quick Start Guide" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../user_guide/visualization_help.html" class="btn btn-neutral float-right" title="SOM Visualization Guide" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="torchsom/configs/som_config.html">torchsom.configs.som_config</a></li>
-<li><a href="torchsom/core/base_som.html">torchsom.core.base_som</a></li>
-<li><a href="torchsom/core/som.html">torchsom.core.som</a></li>
-<li><a href="torchsom/utils/grid.html">torchsom.utils.grid</a></li>
-<li><a href="torchsom/utils/initialization.html">torchsom.utils.initialization</a></li>
-<li><a href="torchsom/utils/metrics.html">torchsom.utils.metrics</a></li>
-<li><a href="torchsom/utils/topology.html">torchsom.utils.topology</a></li>
-<li><a href="torchsom/visualization/base.html">torchsom.visualization.base</a></li>
-<li><a href="torchsom/visualization/config.html">torchsom.visualization.config</a></li>
+  <section id="basic-concepts">
+<h1>Basic Concepts<a class="headerlink" href="#basic-concepts" title="Link to this heading"></a></h1>
+<p>This page introduces the fundamental concepts behind Self-Organizing Maps (SOMs) and how they work.</p>
+<section id="what-is-a-self-organizing-map">
+<h2>What is a Self-Organizing Map?<a class="headerlink" href="#what-is-a-self-organizing-map" title="Link to this heading"></a></h2>
+<p>A <strong>Self-Organizing Map (SOM)</strong>, also known as a Kohonen map, is an unsupervised neural network algorithm that:</p>
+<ul class="simple">
+<li><p><strong>Clusters</strong> similar data points together</p></li>
+<li><p><strong>Reduces dimensionality</strong> by mapping high-dimensional data to a lower-dimensional grid, usually 2D</p></li>
+<li><p><strong>Preserves topology</strong> by keeping similar data points close together on the map</p></li>
+<li><p><strong>Visualizes patterns</strong> in complex, high-dimensional datasets</p></li>
 </ul>
+<p><strong>Key Characteristics</strong>:</p>
+<ul class="simple">
+<li><p><strong>Unsupervised</strong>: No labeled data required</p></li>
+<li><p><strong>Competitive learning</strong>: Neurons compete to represent input data</p></li>
+<li><p><strong>Topology preservation</strong>: Maintains neighborhood relationships</p></li>
+<li><p><strong>Dimensionality reduction</strong>: Maps N-dimensional data to 2D grid</p></li>
+</ul>
+</section>
+<section id="how-soms-work">
+<h2>How SOMs Work<a class="headerlink" href="#how-soms-work" title="Link to this heading"></a></h2>
+<section id="the-som-algorithm">
+<h3>The SOM Algorithm<a class="headerlink" href="#the-som-algorithm" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Initialize</strong> weight vectors randomly for each neuron</p></li>
+<li><p><strong>Present</strong> input data to the network</p></li>
+<li><p><strong>Find</strong> the Best Matching Unit (BMU) - the neuron most similar to input</p></li>
+<li><p><strong>Update</strong> the BMU and its neighbors to be more similar to the input</p></li>
+<li><p><strong>Repeat</strong> until convergence or maximum iterations reached</p></li>
+</ol>
+</section>
+<section id="mathematical-foundation">
+<h3>Mathematical Foundation<a class="headerlink" href="#mathematical-foundation" title="Link to this heading"></a></h3>
+<p><strong>Distance Calculation</strong>
+The similarity between input <strong>x</strong> and neuron <strong>w</strong> is typically measured using Euclidean distance:</p>
+<div class="math notranslate nohighlight">
+\[d(x, w_i) = \sqrt{\sum_{j=1}^{n} (x_j - w_{i,j})^2}\]</div>
+<p><strong>Weight Update Rule</strong>
+The weight update follows:</p>
+<div class="math notranslate nohighlight">
+\[w_i(t+1) = w_i(t) + \alpha(t) \cdot h_{BMU,i}(t) \cdot (x(t) - w_i(t))\]</div>
+<p>Where:
+- <span class="math notranslate nohighlight">\(\alpha(t)\)</span> is the learning rate at time t
+- <span class="math notranslate nohighlight">\(h_{BMU,i}(t)\)</span> is the neighborhood function
+- <span class="math notranslate nohighlight">\(x(t)\)</span> is the input vector at time t</p>
+</section>
+</section>
+<section id="core-components">
+<h2>Core Components<a class="headerlink" href="#core-components" title="Link to this heading"></a></h2>
+<section id="grid-topology">
+<h3>1. Grid Topology<a class="headerlink" href="#grid-topology" title="Link to this heading"></a></h3>
+<p>SOMs organize neurons in a grid structure:</p>
+<dl class="simple">
+<dt><strong>Rectangular Grid</strong></dt><dd><ul class="simple">
+<li><p>Each neuron has up to 8 neighbors</p></li>
+<li><p>Simple, intuitive visualization</p></li>
+<li><p>Good for most applications</p></li>
+</ul>
+</dd>
+<dt><strong>Hexagonal Grid</strong></dt><dd><ul class="simple">
+<li><p>Each neuron has up to 6 neighbors</p></li>
+<li><p>More uniform neighborhood distances</p></li>
+<li><p>Better for circular/radial patterns</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="neighborhood-function">
+<h3>2. Neighborhood Function<a class="headerlink" href="#neighborhood-function" title="Link to this heading"></a></h3>
+<p>Determines how much each neuron is affected by the BMU:</p>
+<dl>
+<dt><strong>Gaussian</strong> (Most Common)</dt><dd><div class="math notranslate nohighlight">
+\[h_{BMU,i}(t) = \exp\left(-\frac{d_{BMU,i}^2}{2\sigma(t)^2}\right)\]</div>
+</dd>
+<dt><strong>Bubble</strong></dt><dd><p>Step function - neurons within radius are updated equally</p>
+</dd>
+<dt><strong>Triangle</strong></dt><dd><p>Linear decay from BMU to neighborhood boundary</p>
+</dd>
+</dl>
+</section>
+<section id="learning-rate-decay">
+<h3>3. Learning Rate Decay<a class="headerlink" href="#learning-rate-decay" title="Link to this heading"></a></h3>
+<p>Controls how much weights change during training:</p>
+<dl>
+<dt><strong>Asymptotic Decay</strong></dt><dd><div class="math notranslate nohighlight">
+\[\alpha(t) = \frac{\alpha_0}{1 + t/T}\]</div>
+</dd>
+<dt><strong>Linear Decay</strong></dt><dd><div class="math notranslate nohighlight">
+\[\alpha(t) = \alpha_0 \cdot (1 - t/T)\]</div>
+</dd>
+</dl>
+</section>
+<section id="distance-functions">
+<h3>4. Distance Functions<a class="headerlink" href="#distance-functions" title="Link to this heading"></a></h3>
+<p>Different ways to measure similarity:</p>
+<ul class="simple">
+<li><p><strong>Euclidean</strong>: Standard geometric distance</p></li>
+<li><p><strong>Cosine</strong>: Measures angle between vectors</p></li>
+<li><p><strong>Manhattan</strong>: Sum of absolute differences</p></li>
+<li><p><strong>Chebyshev</strong>: Maximum absolute difference</p></li>
+</ul>
+</section>
+<section id="quality-metrics">
+<h3>5. Quality Metrics<a class="headerlink" href="#quality-metrics" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Quantization Error</strong>: Average distance between data points and their BMUs. Lower is better, measures how well the map represents the data.</p></li>
+<li><p><strong>Topographic Error</strong>: Percentage of data points whose BMU and second-BMU are not neighbors. Lower is better, measures topology preservation.</p></li>
+</ul>
+</section>
+</section>
+<section id="strengths-and-weaknesses">
+<h2>Strengths and Weaknesses<a class="headerlink" href="#strengths-and-weaknesses" title="Link to this heading"></a></h2>
+<section id="advantages">
+<h3>Advantages<a class="headerlink" href="#advantages" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>No assumptions</strong> about data distribution</p></li>
+<li><p><strong>Topology preservation</strong> maintains relationships</p></li>
+<li><p><strong>Intuitive visualization</strong> of complex data</p></li>
+<li><p><strong>Unsupervised learning</strong> - no labels needed</p></li>
+</ul>
+</section>
+<section id="limitations">
+<h3>Limitations<a class="headerlink" href="#limitations" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Computationally expensive</strong> for large datasets</p></li>
+<li><p><strong>Parameter sensitive</strong> - requires tuning</p></li>
+<li><p><strong>Interpretation challenges</strong> for very high dimensions</p></li>
+</ul>
+</section>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<section id="data-preparation">
+<h3>Data Preparation<a class="headerlink" href="#data-preparation" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Normalize features</strong> to similar scales</p></li>
+<li><p><strong>Remove highly correlated</strong> features</p></li>
+<li><p><strong>Handle missing values</strong> appropriately</p></li>
+<li><p><strong>Consider dimensionality reduction</strong> for very high dimensions</p></li>
+</ol>
+</section>
+<section id="parameter-selection">
+<h3>Parameter Selection<a class="headerlink" href="#parameter-selection" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Experiment with different</strong> topologies and functions</p></li>
+<li><p><strong>Monitor training progress</strong> with error curves to guide parameter choice</p></li>
+</ol>
+</section>
+<section id="interpretation">
+<h3>Interpretation<a class="headerlink" href="#interpretation" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Use multiple visualizations</strong> to understand the map</p></li>
+<li><p><strong>Combine with domain knowledge</strong> for meaningful insights</p></li>
+<li><p><strong>Validate findings</strong> with other analysis methods</p></li>
+<li><p><strong>Document parameter choices</strong> for reproducibility</p></li>
+</ol>
+</section>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<p>Now that you understand the basics, explore:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../user_guide/visualization_help.html"><span class="doc">SOM Visualization Guide</span></a> - Visualization techniques</p></li>
+</ul>
+</section>
+</section>
+
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quick Start Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../user_guide/visualization_help.html" class="btn btn-neutral float-right" title="SOM Visualization Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

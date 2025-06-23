@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TorchSOM Documentation &mdash; TorchSOM 0.0.1 documentation</title>
+  <title>Changelog &mdash; TorchSOM 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -19,11 +19,11 @@
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="_static/copybutton.js?v=f281be69"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="getting_started/installation.html" /> 
+    <link rel="next" title="Frequently Asked Questions" href="faq.html" />
+    <link rel="prev" title="Configuration API" href="api/configs.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -34,7 +34,7 @@
 
           
           
-          <a href="#" class="icon icon-home">
+          <a href="index.html" class="icon icon-home">
             TorchSOM
               <img src="_static/logo.jpg" class="logo" alt="Logo"/>
           </a>
@@ -281,10 +281,10 @@
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#how-to-contribute">How to Contribute</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#report-issues">Report Issues</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-contribute">How to Contribute</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#report-issues">Report Issues</a></li>
 </ul>
 </li>
 </ul>
@@ -384,204 +384,53 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #B22222" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">TorchSOM</a>
+          <a href="index.html">TorchSOM</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">TorchSOM Documentation</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Changelog</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/LouisTier/TorchSOM/blob/dev_org/docs/source/index.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/LouisTier/TorchSOM/blob/dev_org/docs/source/changelog.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
-        <a href="getting_started/installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="api/configs.html" class="btn btn-neutral float-left" title="Configuration API" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="faq.html" class="btn btn-neutral float-right" title="Frequently Asked Questions" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
   </div>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="torchsom-documentation">
-<h1>TorchSOM Documentation<a class="headerlink" href="#torchsom-documentation" title="Link to this heading"></a></h1>
-<p><strong>TorchSOM</strong> is a modern PyTorch-based library for training and visualizing <strong>Self-Organizing Maps (SOMs)</strong>,
-a powerful unsupervised learning algorithm used for clustering, dimensionality reduction, and data exploration.</p>
-<p>Built with PyTorch at its core, TorchSOM seamlessly integrates with modern deep learning workflows while
-providing GPU acceleration for high-performance computing.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>🌟 If you find this project interesting, we would be grateful for your support by starring
-this <a class="reference external" href="https://github.com/michelin/TorchSOM">GitHub repository</a>.</p>
-</div>
-<section id="key-features">
-<h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>🚀 <strong>Performance</strong></dt><dd><ul class="simple">
-<li><p>GPU-accelerated training with PyTorch</p></li>
-<li><p>Efficient batch processing and memory management</p></li>
-<li><p>Optimized for large-scale data</p></li>
-</ul>
-</dd>
-<dt>🎯 <strong>Flexibility</strong></dt><dd><ul class="simple">
-<li><p>Multiple SOM variants (classical, growing, hierarchical, …)</p></li>
-<li><p>Configurable topologies (rectangular, hexagonal)</p></li>
-<li><p>Extensive customization options</p></li>
-</ul>
-</dd>
-<dt>📊 <strong>Visualization</strong></dt><dd><ul class="simple">
-<li><p>Rich visualization suite with matplotlib</p></li>
-<li><p>Publication-ready figures</p></li>
-</ul>
-</dd>
-<dt>🔧 <strong>Developer-Friendly</strong></dt><dd><ul class="simple">
-<li><p>Clean, modular architecture</p></li>
-<li><p>Comprehensive API documentation</p></li>
-<li><p>Type hints and validation with Pydantic</p></li>
-</ul>
-</dd>
-</dl>
-</section>
-<section id="quick-start">
-<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
-<p>Install TorchSOM:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>torchsom
-</pre></div>
-</div>
-<p>Basic usage:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">SOM</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">SOMVisualizer</span><span class="p">,</span>
-
-<span class="c1"># Create a 10x10 map for 3D input</span>
-<span class="n">som</span> <span class="o">=</span> <span class="n">SOM</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num_features</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-
-<span class="c1"># Train SOM for 50 epochs on 1000 samples</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="n">som</span><span class="o">.</span><span class="n">initialize_weights</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;pca&quot;</span><span class="p">)</span>
-<span class="n">QE</span><span class="p">,</span> <span class="n">TE</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">X</span><span class="p">)</span>
-
-<span class="c1"># Visualize results</span>
-<span class="n">visualizer</span> <span class="o">=</span> <span class="n">SOMVisualizer</span><span class="p">(</span><span class="n">som</span><span class="o">=</span><span class="n">som</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">visualizer</span><span class="o">.</span><span class="n">plot_training_errors</span><span class="p">(</span><span class="n">quantization_errors</span><span class="o">=</span><span class="n">QE</span><span class="p">,</span> <span class="n">topographic_errors</span><span class="o">=</span><span class="n">TE</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">visualizer</span><span class="o">.</span><span class="n">plot_distance_map</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">visualizer</span><span class="o">.</span><span class="n">plot_hit_map</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="documentation-structure">
-<h2>Documentation Structure<a class="headerlink" href="#documentation-structure" title="Link to this heading"></a></h2>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="getting_started/installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#installation-methods">Installation Methods</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#verification">Verification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#dependencies">Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#getting-help">Getting Help</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/installation.html#next-steps">Next Steps</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started/quickstart.html">Quick Start Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/quickstart.html#your-first-som">Your First SOM</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/quickstart.html#basic-visualization">Basic Visualization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/quickstart.html#common-parameters">Common Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/quickstart.html#complete-example">Complete Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/quickstart.html#what-s-next">What’s Next?</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started/basic_concepts.html">Basic Concepts</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/basic_concepts.html#what-is-a-self-organizing-map">What is a Self-Organizing Map?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/basic_concepts.html#how-soms-work">How SOMs Work</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/basic_concepts.html#core-components">Core Components</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/basic_concepts.html#strengths-and-weaknesses">Strengths and Weaknesses</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/basic_concepts.html#best-practices">Best Practices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started/basic_concepts.html#next-steps">Next Steps</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="user_guide/visualization_help.html">SOM Visualization Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/visualization_help.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/visualization_help.html#quick-start">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/visualization_help.html#visualization-types">Visualization Types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/visualization_help.html#advanced-usage-examples">Advanced Usage Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_guide/visualization_help.html#references">References</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="api/core.html">Core API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/core.html#module-torchsom.core.base_som">Base Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/core.html#module-torchsom.core.som">Classical SOM Implementation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/core.html#som-variants">SOM Variants</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api/utils.html">Utilities API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/utils.html#module-torchsom.utils.distances">Distance Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/utils.html#module-torchsom.utils.neighborhood">Neighborhood Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/utils.html#module-torchsom.utils.decay">Decay Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/utils.html#module-torchsom.utils.grid">Grid and Topology</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/utils.html#module-torchsom.utils.initialization">Initialization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/utils.html#module-torchsom.utils.metrics">Metrics</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api/visualization.html">Visualization API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/visualization.html#module-torchsom.visualization.base">SOM Visualizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/visualization.html#module-torchsom.visualization.config">Visualization Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/visualization.html#supported-formats">Supported Formats</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api/configs.html">Configuration API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/configs.html#module-torchsom.configs.som_config">SOM Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/configs.html#saving-configuration">Saving Configuration</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
-</ul>
-</div>
-</section>
-<section id="support-community">
-<h2>Support &amp; Community<a class="headerlink" href="#support-community" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p>📖 <strong>Documentation</strong>: You’re reading it!</p></li>
-<li><p>🐛 <strong>Bug Reports</strong>: <a class="reference external" href="https://github.com/michelin/TorchSOM/issues">GitHub Issues</a></p></li>
-</ul>
-</section>
-<section id="license">
-<h2>License<a class="headerlink" href="#license" title="Link to this heading"></a></h2>
-<p>TorchSOM is released under the Apache License 2.0 License. See the <a class="reference external" href="https://github.com/michelin/TorchSOM/blob/main/LICENSE">LICENSE</a> file for details.</p>
+  <section id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
+<p>All notable changes to TorchSOM will be documented in this file.</p>
+<p>The format is based on <a class="reference external" href="https://keepachangelog.com/">Keep a Changelog</a>, and this project adheres to <a class="reference external" href="https://semver.org/">Semantic Versioning</a>.</p>
+<section id="how-to-contribute">
+<h2>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Link to this heading"></a></h2>
+<p>We welcome contributions! See our <a class="reference external" href="https://github.com/michelin/TorchSOM/blob/main/CONTRIBUTING.md">contributing guide</a> for:</p>
+<section id="report-issues">
+<h3>Report Issues<a class="headerlink" href="#report-issues" title="Link to this heading"></a></h3>
+<p>Found a bug or have a feature request? Please:</p>
+<ol class="arabic simple">
+<li><p>Check existing <a class="reference external" href="https://github.com/michelin/TorchSOM/issues">GitHub Issues</a></p></li>
+<li><p>Create a new issue with detailed information</p></li>
+<li><p>Include minimal reproduction examples</p></li>
+<li><p>Specify your environment details</p></li>
+</ol>
 </section>
 </section>
-<section id="indices-and-tables">
-<h1>Indices and Tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="getting_started/installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="api/configs.html" class="btn btn-neutral float-left" title="Configuration API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="faq.html" class="btn btn-neutral float-right" title="Frequently Asked Questions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

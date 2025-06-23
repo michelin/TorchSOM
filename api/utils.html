@@ -1,0 +1,870 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Utilities API &mdash; TorchSOM 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Visualization API" href="visualization.html" />
+    <link rel="prev" title="Core API" href="core.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #B22222" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TorchSOM
+              <img src="../_static/logo.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#requirements">Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#systems">Systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#gpu">GPU</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#installation-methods">Installation Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#install-from-pypi-recommended">Install from PyPI (Recommended)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#install-from-source">Install from Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#ensure-gpu-support">Ensure GPU Support</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#verification">Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#dependencies">Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#core-dependencies">Core Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#optional-dependencies">Optional Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#getting-help">Getting Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quick Start Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#your-first-som">Your First SOM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#basic-visualization">Basic Visualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#common-parameters">Common Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#complete-example">Complete Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#what-s-next">What’s Next?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/basic_concepts.html">Basic Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#what-is-a-self-organizing-map">What is a Self-Organizing Map?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#how-soms-work">How SOMs Work</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#the-som-algorithm">The SOM Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#mathematical-foundation">Mathematical Foundation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#core-components">Core Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#grid-topology">1. Grid Topology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#neighborhood-function">2. Neighborhood Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#learning-rate-decay">3. Learning Rate Decay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#distance-functions">4. Distance Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#quality-metrics">5. Quality Metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#strengths-and-weaknesses">Strengths and Weaknesses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#advantages">Advantages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#limitations">Limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#data-preparation">Data Preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#parameter-selection">Parameter Selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#interpretation">Interpretation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/visualization_help.html">SOM Visualization Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#quick-start">Quick Start</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#basic-visualization-setup">Basic Visualization Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#custom-configuration">Custom Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#visualization-types">Visualization Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#training-errors">Training Errors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#distance-map-d-matrix">Distance Map (D-Matrix)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#hit-map">Hit Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#component-planes">Component Planes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#supervised-maps">Supervised Maps</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#classification-case">Classification Case</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#regression-case">Regression Case</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#advanced-visualizations">Advanced Visualizations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#score-map">Score Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#rank-map">Rank Map</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#advanced-usage-examples">Advanced Usage Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#batch-visualization-generation">Batch Visualization Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#custom-colormap-usage">Custom Colormap Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#references">References</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-torchsom.core.base_som">Base Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#torchsom.core.base_som.BaseSOM"><code class="docutils literal notranslate"><span class="pre">BaseSOM</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.base_som.BaseSOM.build_distance_map"><code class="docutils literal notranslate"><span class="pre">BaseSOM.build_distance_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.base_som.BaseSOM.build_hit_map"><code class="docutils literal notranslate"><span class="pre">BaseSOM.build_hit_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.base_som.BaseSOM.fit"><code class="docutils literal notranslate"><span class="pre">BaseSOM.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.base_som.BaseSOM.identify_bmus"><code class="docutils literal notranslate"><span class="pre">BaseSOM.identify_bmus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.base_som.BaseSOM.initialize_weights"><code class="docutils literal notranslate"><span class="pre">BaseSOM.initialize_weights()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.base_som.BaseSOM.quantization_error"><code class="docutils literal notranslate"><span class="pre">BaseSOM.quantization_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.base_som.BaseSOM.topographic_error"><code class="docutils literal notranslate"><span class="pre">BaseSOM.topographic_error()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#module-torchsom.core.som">Classical SOM Implementation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#torchsom.core.som.SOM"><code class="docutils literal notranslate"><span class="pre">SOM</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.build_bmus_data_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_bmus_data_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.build_classification_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_classification_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.build_distance_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_distance_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.build_hit_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_hit_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.build_metric_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_metric_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.build_rank_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_rank_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.build_score_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_score_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.collect_samples"><code class="docutils literal notranslate"><span class="pre">SOM.collect_samples()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.fit"><code class="docutils literal notranslate"><span class="pre">SOM.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.identify_bmus"><code class="docutils literal notranslate"><span class="pre">SOM.identify_bmus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.initialize_weights"><code class="docutils literal notranslate"><span class="pre">SOM.initialize_weights()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.quantization_error"><code class="docutils literal notranslate"><span class="pre">SOM.quantization_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.topographic_error"><code class="docutils literal notranslate"><span class="pre">SOM.topographic_error()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#som-variants">SOM Variants</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#module-torchsom.core.growing">Growing SOM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#module-torchsom.core.hierarchical">Hierarchical SOM</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Utilities API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-torchsom.utils.distances">Distance Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-torchsom.utils.neighborhood">Neighborhood Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-torchsom.utils.decay">Decay Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-torchsom.utils.grid">Grid and Topology</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.grid.adjust_meshgrid_topology"><code class="docutils literal notranslate"><span class="pre">adjust_meshgrid_topology()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.grid.axial_distance"><code class="docutils literal notranslate"><span class="pre">axial_distance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.grid.convert_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">convert_to_axial_coords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.grid.create_mesh_grid"><code class="docutils literal notranslate"><span class="pre">create_mesh_grid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.grid.offset_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">offset_to_axial_coords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.topology.get_all_neighbors_up_to_order"><code class="docutils literal notranslate"><span class="pre">get_all_neighbors_up_to_order()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.topology.get_hexagonal_offsets"><code class="docutils literal notranslate"><span class="pre">get_hexagonal_offsets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.topology.get_rectangular_offsets"><code class="docutils literal notranslate"><span class="pre">get_rectangular_offsets()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-torchsom.utils.initialization">Initialization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.initialization.initialize_weights"><code class="docutils literal notranslate"><span class="pre">initialize_weights()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.initialization.pca_init"><code class="docutils literal notranslate"><span class="pre">pca_init()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.initialization.random_init"><code class="docutils literal notranslate"><span class="pre">random_init()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-torchsom.utils.metrics">Metrics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.metrics.calculate_quantization_error"><code class="docutils literal notranslate"><span class="pre">calculate_quantization_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.metrics.calculate_topographic_error"><code class="docutils literal notranslate"><span class="pre">calculate_topographic_error()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="visualization.html#module-torchsom.visualization.base">SOM Visualizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_all"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_classification_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_classification_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_component_planes"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_component_planes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_distance_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_distance_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_hit_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_hit_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_metric_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_metric_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_rank_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_rank_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_score_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_score_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_training_errors"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_training_errors()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="visualization.html#module-torchsom.visualization.config">Visualization Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.cmap"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.cmap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.colorbar_pad"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.colorbar_pad</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.dpi"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.dpi</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.figsize"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.figsize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.fontsize"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontsize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.fontweight"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontweight</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.grid_alpha"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.grid_alpha</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.hexgrid_size"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hexgrid_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.save_format"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.save_format</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="visualization.html#supported-formats">Supported Formats</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configs.html">Configuration API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configs.html#module-torchsom.configs.som_config">SOM Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig"><code class="docutils literal notranslate"><span class="pre">SOMConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.batch_size"><code class="docutils literal notranslate"><span class="pre">SOMConfig.batch_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.device"><code class="docutils literal notranslate"><span class="pre">SOMConfig.device</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.distance_function"><code class="docutils literal notranslate"><span class="pre">SOMConfig.distance_function</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.epochs"><code class="docutils literal notranslate"><span class="pre">SOMConfig.epochs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.initialization_mode"><code class="docutils literal notranslate"><span class="pre">SOMConfig.initialization_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.learning_rate"><code class="docutils literal notranslate"><span class="pre">SOMConfig.learning_rate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.lr_decay_function"><code class="docutils literal notranslate"><span class="pre">SOMConfig.lr_decay_function</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.model_config"><code class="docutils literal notranslate"><span class="pre">SOMConfig.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.neighborhood_function"><code class="docutils literal notranslate"><span class="pre">SOMConfig.neighborhood_function</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.neighborhood_order"><code class="docutils literal notranslate"><span class="pre">SOMConfig.neighborhood_order</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.random_seed"><code class="docutils literal notranslate"><span class="pre">SOMConfig.random_seed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.sigma"><code class="docutils literal notranslate"><span class="pre">SOMConfig.sigma</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.sigma_decay_function"><code class="docutils literal notranslate"><span class="pre">SOMConfig.sigma_decay_function</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.topology"><code class="docutils literal notranslate"><span class="pre">SOMConfig.topology</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.x"><code class="docutils literal notranslate"><span class="pre">SOMConfig.x</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="configs.html#torchsom.configs.som_config.SOMConfig.y"><code class="docutils literal notranslate"><span class="pre">SOMConfig.y</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="configs.html#saving-configuration">Saving Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="configs.html#loading-configuration">Loading Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="configs.html#exporting-configuration">Exporting Configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#how-to-contribute">How to Contribute</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#report-issues">Report Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently Asked Questions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../faq.html#general-questions">General Questions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#what-is-torchsom">What is TorchSOM?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-does-torchsom-differ-from-other-som-implementations">How does TorchSOM differ from other SOM implementations?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../faq.html#installation-and-setup">Installation and Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#which-python-versions-are-supported">Which Python versions are supported?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#do-i-need-a-gpu-to-use-torchsom">Do I need a GPU to use TorchSOM?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../faq.html#data-preprocessing">Data Preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#should-i-always-normalize-my-data">Should I always normalize my data?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#what-about-categorical-features">What about categorical features?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../faq.html#performance-and-optimization">Performance and Optimization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#my-training-is-very-slow-how-can-i-speed-it-up">My training is very slow. How can I speed it up?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-much-memory-does-torchsom-use">How much memory does TorchSOM use?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../faq.html#visualization-issues">Visualization Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#why-are-some-neurons-white-in-my-visualizations">Why are some neurons white in my visualizations?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-do-i-interpret-the-distance-map-d-matrix">How do I interpret the distance map (D-Matrix)?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#can-i-customize-the-visualization-colors">Can I customize the visualization colors?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../faq.html#advanced-topics">Advanced Topics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#can-i-use-torchsom-for-time-series-data">Can I use TorchSOM for time series data?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-do-i-implement-custom-distance-functions">How do I implement custom distance functions?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#can-i-save-and-load-trained-soms">Can I save and load trained SOMs?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../faq.html#integration-questions">Integration Questions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-do-i-cite-torchsom-in-my-research">How do I cite TorchSOM in my research?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../faq.html#getting-help">Getting Help</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#where-can-i-get-more-help">Where can I get more help?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-do-i-report-a-bug">How do I report a bug?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../faq.html#can-i-contribute-to-torchsom">Can I contribute to TorchSOM?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#installation-issues">Installation Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#package-issues">Package Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#cuda-gpu-issues">CUDA/GPU Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#cuda-not-available">CUDA not available</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#training-problems">Training Problems</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#training-doesn-t-converge">Training doesn’t converge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#very-slow-training">Very slow training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#nan-values-in-results">NaN values in results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#visualization-issues">Visualization Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#empty-or-white-visualizations">Empty or white visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#figures-not-displaying">Figures not displaying</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#poor-visualization-quality">Poor visualization quality</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#data-issues">Data Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#poor-clustering-results">Poor clustering results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#configuration-errors">Configuration Errors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#validationerror-from-pydantic">ValidationError from Pydantic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#parameter-compatibility-issues">Parameter compatibility issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#memory-issues">Memory Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#memory-usage-too-high">Memory usage too high</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#memory-leaks">Memory leaks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#getting-help">Getting Help</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#diagnostic-information">Diagnostic Information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#creating-minimal-examples">Creating Minimal Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#where-to-get-help">Where to Get Help</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#debug-mode">Debug Mode</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #B22222" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TorchSOM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Utilities API</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/LouisTier/TorchSOM/blob/dev_org/docs/source/api/utils.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="core.html" class="btn btn-neutral float-left" title="Core API" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="visualization.html" class="btn btn-neutral float-right" title="Visualization API" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="utilities-api">
+<h1>Utilities API<a class="headerlink" href="#utilities-api" title="Link to this heading"></a></h1>
+<p>The utils module provides supporting functions for SOM training and analysis.</p>
+<section id="module-torchsom.utils.distances">
+<span id="distance-functions"></span><h2>Distance Functions<a class="headerlink" href="#module-torchsom.utils.distances" title="Link to this heading"></a></h2>
+<p>Available distance functions:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 75.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">euclidean</span></code></p></td>
+<td><p>Standard Euclidean distance (default)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cosine</span></code></p></td>
+<td><p>Cosine distance (1 - cosine similarity)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">manhattan</span></code></p></td>
+<td><p>Manhattan (L1) distance</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chebyshev</span></code></p></td>
+<td><p>Chebyshev (L∞) distance</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">weighted_euclidean</span></code></p></td>
+<td><p>Weighted Euclidean distance with feature weights</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-torchsom.utils.neighborhood">
+<span id="neighborhood-functions"></span><h2>Neighborhood Functions<a class="headerlink" href="#module-torchsom.utils.neighborhood" title="Link to this heading"></a></h2>
+<p>Available neighborhood functions:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 75.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gaussian</span></code></p></td>
+<td><p>Gaussian neighborhood (default, smooth)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mexican_hat</span></code></p></td>
+<td><p>Mexican hat (Ricker wavelet, inhibitory surround)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bubble</span></code></p></td>
+<td><p>Bubble function (step function)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">triangle</span></code></p></td>
+<td><p>Triangular function (linear decay)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-torchsom.utils.decay">
+<span id="decay-functions"></span><h2>Decay Functions<a class="headerlink" href="#module-torchsom.utils.decay" title="Link to this heading"></a></h2>
+<p>Available decay functions:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">asymptotic_decay</span></code></p></td>
+<td><p>General asymptotic decay (default)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lr_inverse_decay_to_zero</span></code></p></td>
+<td><p>Learning rate inverse decay to zero</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lr_linear_decay_to_zero</span></code></p></td>
+<td><p>Learning rate linear decay to zero</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sig_inverse_decay_to_one</span></code></p></td>
+<td><p>Sigma inverse decay to one</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sig_linear_decay_to_one</span></code></p></td>
+<td><p>Sigma linear decay to one</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-torchsom.utils.grid">
+<span id="grid-and-topology"></span><h2>Grid and Topology<a class="headerlink" href="#module-torchsom.utils.grid" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.grid.adjust_meshgrid_topology">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.grid.</span></span><span class="sig-name descname"><span class="pre">adjust_meshgrid_topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topology</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/grid.html#adjust_meshgrid_topology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.grid.adjust_meshgrid_topology" title="Link to this definition"></a></dt>
+<dd><p>Adjust coordinates based on topology.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xx</strong> (<em>torch.Tensor</em>) – Mesh grid of x coordinates</p></li>
+<li><p><strong>yy</strong> (<em>torch.Tensor</em>) – Mesh grid of y coordinates</p></li>
+<li><p><strong>topology</strong> (<em>str</em>) – SOM configuration, usually rectangular or hexagonal</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Adjusted x and y mesh grids for a hexagonal topology.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[torch.Tensor, torch.Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.grid.axial_distance">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.grid.</span></span><span class="sig-name descname"><span class="pre">axial_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/grid.html#axial_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.grid.axial_distance" title="Link to this definition"></a></dt>
+<dd><p>Calculate the distance between two hexes in axial coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q1</strong> (<em>float</em>) – column of first hex</p></li>
+<li><p><strong>r1</strong> (<em>float</em>) – row of first hex</p></li>
+<li><p><strong>q2</strong> (<em>float</em>) – column of second hex</p></li>
+<li><p><strong>r2</strong> (<em>float</em>) – row of second hex</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Distance in hex steps</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.grid.convert_to_axial_coords">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.grid.</span></span><span class="sig-name descname"><span class="pre">convert_to_axial_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/grid.html#convert_to_axial_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.grid.convert_to_axial_coords" title="Link to this definition"></a></dt>
+<dd><p>Convert grid coordinates to axial coordinates for hexagonal grid.</p>
+<p>Uses even-r layout where even rows are shifted left by 0.5.
+This matches the layout used in adjust_meshgrid_topology.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>int</em>) – Grid row coordinate</p></li>
+<li><p><strong>col</strong> (<em>int</em>) – Grid column coordinate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Axial coordinates (q, r)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.grid.create_mesh_grid">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.grid.</span></span><span class="sig-name descname"><span class="pre">create_mesh_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/grid.html#create_mesh_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.grid.create_mesh_grid" title="Link to this definition"></a></dt>
+<dd><p>Create a mesh grid for neighborhood calculations.</p>
+<p>The function returns two 2D tensors representing the x-coordinates and y-coordinates
+of a grid of shape (x, y). This is useful for computing distance-based neighborhood functions
+in Self-Organizing Maps (SOM).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – Number of rows (height of the grid).</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – Number of columns (width of the grid).</p></li>
+<li><p><strong>device</strong> (<em>str</em>) – The device on which tensors should be allocated (‘cpu’ or ‘cuda’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Two tensors (xx, yy) of shape (x, y), representing the x and y coordinates of the mesh grid.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[torch.Tensor, torch.Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.grid.offset_to_axial_coords">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.grid.</span></span><span class="sig-name descname"><span class="pre">offset_to_axial_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/grid.html#offset_to_axial_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.grid.offset_to_axial_coords" title="Link to this definition"></a></dt>
+<dd><p>Convert offset coordinates to axial coordinates for hexagonal grid.</p>
+<p>Alternative implementation that directly matches the mesh grid adjustment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>int</em>) – Grid row coordinate</p></li>
+<li><p><strong>col</strong> (<em>int</em>) – Grid column coordinate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Axial coordinates (q, r)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function" id="module-torchsom.utils.topology">
+<dt class="sig sig-object py" id="torchsom.utils.topology.get_all_neighbors_up_to_order">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.topology.</span></span><span class="sig-name descname"><span class="pre">get_all_neighbors_up_to_order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topology</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/topology.html#get_all_neighbors_up_to_order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.topology.get_all_neighbors_up_to_order" title="Link to this definition"></a></dt>
+<dd><p>Get all neighbors from order 1 up to max_order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topology</strong> (<em>str</em>) – “rectangular” or “hexagonal”</p></li>
+<li><p><strong>max_order</strong> (<em>int</em>) – Maximum neighborhood order to include</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>All neighbor offsets from order 1 to max_order combined</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>List</em>[<em>Tuple</em>[int, int]] | <em>Dict</em>[str, <em>List</em>[<em>Tuple</em>[int, int]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.topology.get_hexagonal_offsets">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.topology.</span></span><span class="sig-name descname"><span class="pre">get_hexagonal_offsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/topology.html#get_hexagonal_offsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.topology.get_hexagonal_offsets" title="Link to this definition"></a></dt>
+<dd><p>Get neighbor offset coordinates for hexagonal topology at any order.
+Order n has 6*n elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>neighborhood_order</strong> (<em>int</em><em>, </em><em>optional</em>) – Order of neighborhood ring. Defaults to 1.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Offsets for even and odd rows</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, List[Tuple[int, int]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.topology.get_rectangular_offsets">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.topology.</span></span><span class="sig-name descname"><span class="pre">get_rectangular_offsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/topology.html#get_rectangular_offsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.topology.get_rectangular_offsets" title="Link to this definition"></a></dt>
+<dd><p>Get neighbor offset coordinates for rectangular topology at any order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>neighborhood_order</strong> (<em>int</em><em>, </em><em>optional</em>) – Order of neighborhood ring. Defaults to 1.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Coordinate offsets for rectangular grid</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple[int, int]]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Order 1: 8 neighbors
+Order 2: 16 neighbors
+Order 3: 24 neighbors
+Order 3+: All positions at Chebyshev distance (order-1)</p>
+</dd></dl>
+
+</section>
+<section id="module-torchsom.utils.initialization">
+<span id="initialization"></span><h2>Initialization<a class="headerlink" href="#module-torchsom.utils.initialization" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.initialization.initialize_weights">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.initialization.</span></span><span class="sig-name descname"><span class="pre">initialize_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topology</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rectangular'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/initialization.html#initialize_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.initialization.initialize_weights" title="Link to this definition"></a></dt>
+<dd><p>Main function to initialize weights based on specified method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>weights</strong> (<em>torch.Tensor</em>) – Weight tensor to initialize [row_neurons, col_neurons, num_features]</p></li>
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, num_features]</p></li>
+<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – Initialization method, “random” or “pca”. Defaults to “random”.</p></li>
+<li><p><strong>topology</strong> (<em>str</em><em>, </em><em>optional</em>) – Grid configuration, “rectangular” or “hexagonal”. Defaults to “rectangular”.</p></li>
+<li><p><strong>device</strong> (<em>str</em><em>, </em><em>optional</em>) – Device for tensor computations. Defaults to “cuda” if available, else “cpu”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Initialized weights</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If an invalid initialization mode is provided</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.initialization.pca_init">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.initialization.</span></span><span class="sig-name descname"><span class="pre">pca_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topology</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/initialization.html#pca_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.initialization.pca_init" title="Link to this definition"></a></dt>
+<dd><p>Initialize SOM weights using PCA for faster convergence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>weights</strong> (<em>torch.Tensor</em>) – Weight tensor to initialize [row_neurons, col_neurons, num_features]</p></li>
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, num_features]</p></li>
+<li><p><strong>topology</strong> (<em>str</em>) – Grid configuration, “rectangular” or “hexagonal”</p></li>
+<li><p><strong>device</strong> (<em>str</em><em>, </em><em>optional</em>) – Device for tensor computations. Defaults to “cuda” if available, else “cpu”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Initialized weights</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.initialization.random_init">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.initialization.</span></span><span class="sig-name descname"><span class="pre">random_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/initialization.html#random_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.initialization.random_init" title="Link to this definition"></a></dt>
+<dd><p>Initialize SOM weights by sampling random data points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>weights</strong> (<em>torch.Tensor</em>) – Weight tensor to initialize [row_neurons, col_neurons, num_features]</p></li>
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor to sample from [batch_size, num_features]</p></li>
+<li><p><strong>device</strong> (<em>str</em><em>, </em><em>optional</em>) – Device for tensor computations. Defaults to “cuda” if available, else “cpu”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Initialized weights</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Available initialization methods:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 75.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">random</span></code></p></td>
+<td><p>Random sampling from input data (default)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pca</span></code></p></td>
+<td><p>PCA-based initialization for faster convergence</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-torchsom.utils.metrics">
+<span id="metrics"></span><h2>Metrics<a class="headerlink" href="#module-torchsom.utils.metrics" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.metrics.calculate_quantization_error">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.metrics.</span></span><span class="sig-name descname"><span class="pre">calculate_quantization_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_fn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/metrics.html#calculate_quantization_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.metrics.calculate_quantization_error" title="Link to this definition"></a></dt>
+<dd><p>Calculate quantization error for a SOM.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, num_features] or [num_features]</p></li>
+<li><p><strong>weights</strong> (<em>torch.Tensor</em>) – SOM weights [row_neurons, col_neurons, num_features]</p></li>
+<li><p><strong>distance_fn</strong> (<em>callable</em>) – Function to compute distances between data and weights</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Average quantization error value</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.metrics.calculate_topographic_error">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.metrics.</span></span><span class="sig-name descname"><span class="pre">calculate_topographic_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topology</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rectangular'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/metrics.html#calculate_topographic_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.metrics.calculate_topographic_error" title="Link to this definition"></a></dt>
+<dd><p>Calculate topographic error for a SOM.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, num_features] or [num_features]</p></li>
+<li><p><strong>weights</strong> (<em>torch.Tensor</em>) – SOM weights [row_neurons, col_neurons, num_features]</p></li>
+<li><p><strong>distance_fn</strong> (<em>callable</em>) – Function to compute distances between data and weights</p></li>
+<li><p><strong>topology</strong> (<em>str</em><em>, </em><em>optional</em>) – Grid configuration. Defaults to “rectangular”.</p></li>
+<li><p><strong>xx</strong> (<em>#</em>) – Meshgrid of x coordinates. Required for hexagonal topology. Defaults to None.</p></li>
+<li><p><strong>yy</strong> (<em>#</em>) – Meshgrid of y coordinates. Required for hexagonal topology. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Topographic error ratio</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Quality metrics for evaluating SOM training:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 75.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">quantization_error</span></code></p></td>
+<td><p>Average distance between input vectors and their Best Matching Units (BMUs)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">topographic_error</span></code></p></td>
+<td><p>Percentage of data vectors for which the first and second BMUs are not adjacent</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core.html" class="btn btn-neutral float-left" title="Core API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="visualization.html" class="btn btn-neutral float-right" title="Visualization API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Manufacture Française des Pneumatiques Michelin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
