@@ -76,7 +76,7 @@ SOMs organize neurons in a grid structure:
    - Better for circular/radial patterns
 
 2. Neighborhood Function
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Determines how much each neuron is affected by the BMU:
 
@@ -91,7 +91,7 @@ Determines how much each neuron is affected by the BMU:
    Linear decay from BMU to neighborhood boundary
 
 3. Learning Rate Decay
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 Controls how much weights change during training:
 
@@ -104,7 +104,7 @@ Controls how much weights change during training:
       \alpha(t) = \alpha_0 \cdot (1 - t/T)
 
 4. Distance Functions
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 Different ways to measure similarity:
 
@@ -123,7 +123,7 @@ Strengths and Weaknesses
 ------------------------
 
 Advantages
-~~~~~~~~~
+~~~~~~~~~~
 
 - **No assumptions** about data distribution
 - **Topology preservation** maintains relationships
@@ -131,7 +131,7 @@ Advantages
 - **Unsupervised learning** - no labels needed
 
 Limitations
-~~~~~~~~~~
+~~~~~~~~~~~
 
 - **Computationally expensive** for large datasets
 - **Parameter sensitive** - requires tuning
@@ -141,7 +141,7 @@ Best Practices
 --------------
 
 Data Preparation
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 1. **Normalize features** to similar scales
 2. **Remove highly correlated** features
@@ -149,13 +149,13 @@ Data Preparation
 4. **Consider dimensionality reduction** for very high dimensions
 
 Parameter Selection
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 1. **Experiment with different** topologies and functions
 2. **Monitor training progress** with error curves to guide parameter choice
 
 Interpretation
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 1. **Use multiple visualizations** to understand the map
 2. **Combine with domain knowledge** for meaningful insights

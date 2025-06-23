@@ -309,7 +309,7 @@ Batch Visualization Generation
    )
 
 Custom Colormap Usage
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -323,38 +323,6 @@ Custom Colormap Usage
        cmap="RdYlBu_r",  # Red-Yellow-Blue reversed
        log_scale=False
    )
-
-.. Memory Management
-.. ~~~~~~~~~~~~~~~~
-
-.. For large SOMs, use batch processing to manage memory:
-
-.. .. code-block:: python
-
-..    # Large dataset hit map with memory management
-..    large_data = torch.randn(50000, 10)
-..    hit_map = som.build_hit_map(large_data, batch_size=1024)
-   
-..    visualizer.plot_grid(
-..        map=hit_map,
-..        title="Large Dataset Hit Map",
-..        colorbar_label="Hits",
-..        filename="large_hitmap",
-..        save_path="results"
-..    )
-
-.. Best Practices
-.. --------------
-
-.. Visualization Workflow
-.. ~~~~~~~~~~~~~~~~~~~~~~
-
-.. 1. **Start with Training Errors**: Ensure your SOM has converged properly
-.. 2. **Examine Hit Map**: Check for dead neurons and data distribution
-.. 3. **Analyze Distance Map**: Identify cluster structure and boundaries
-.. 4. **Study Component Planes**: Understand feature contributions
-.. 5. **Use Metric Maps**: For regression tasks, analyze target distributions
-.. 6. **Apply Classification Maps**: For supervised tasks, examine class separation
 
 Troubleshooting
 ~~~~~~~~~~~~~~~

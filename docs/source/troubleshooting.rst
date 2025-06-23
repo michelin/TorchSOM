@@ -7,7 +7,7 @@ Installation Issues
 -------------------
 
 Package Issues
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
@@ -114,7 +114,7 @@ Training Problems
 -----------------
 
 Training doesn't converge
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Symptoms**: Quantization error doesn't decrease or fluctuates wildly.
 
@@ -203,7 +203,7 @@ Very slow training
       print(f"Training time: {time.time() - start_time:.2f} seconds")
 
 NaN values in results
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 **Problem**: Getting NaN values in errors or visualizations.
 
@@ -279,7 +279,7 @@ Empty or white visualizations
       viz = SOMVisualizer(som, config=config)
 
 Figures not displaying
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 **Problem**: Plots don't show up in Jupyter notebooks or scripts.
 
@@ -307,7 +307,7 @@ Figures not displaying
       viz.plot_distance_map(save_path="results", fig_name="distance_map")
 
 Poor visualization quality
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Problem**: Plots look pixelated or unclear.
 
@@ -338,7 +338,7 @@ Data Issues
 -----------
 
 Poor clustering results
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 **Problem**: SOM doesn't find meaningful clusters.
 
@@ -443,7 +443,7 @@ ValidationError from Pydantic
            print(f"- {error['loc'][0]}: {error['msg']}")
 
 Parameter compatibility issues
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Problem**: Certain parameter combinations don't work.
 
@@ -507,7 +507,7 @@ Memory usage too high
            som.fit(chunk)  # Incremental training
 
 Memory leaks
-~~~~~~~~~~~
+~~~~~~~~~~~~
 
 **Problem**: Memory usage increases over time.
 
@@ -539,7 +539,7 @@ Getting Help
 ------------
 
 Diagnostic Information
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 When reporting issues, please include:
 
@@ -563,7 +563,7 @@ When reporting issues, please include:
            print(f"GPU {i}: {torch.cuda.get_device_name(i)}")
 
 Creating Minimal Examples
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For bug reports, create minimal reproducible examples:
 
@@ -586,7 +586,7 @@ For bug reports, create minimal reproducible examples:
        raise
 
 Where to Get Help
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 1. **Documentation**: Check our comprehensive guides first
 2. **FAQ**: Review the :doc:`faq` for common questions

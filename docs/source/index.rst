@@ -93,15 +93,6 @@ Documentation Structure
 
 .. toctree::
    :maxdepth: 2
-   :caption: Tutorials & Examples
-
-   tutorials/basic_clustering
-   tutorials/data_exploration
-   tutorials/advanced_techniques
-   tutorials/custom_implementations
-
-.. toctree::
-   :maxdepth: 2
    :caption: API Reference
 
    api/core

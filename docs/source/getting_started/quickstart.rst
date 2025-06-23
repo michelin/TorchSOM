@@ -176,7 +176,7 @@ Here's a complete example with data preprocessing and multiple visualizations:
    )
 
 What's Next?
------------
+------------
 
 Now that you've created your first SOM, explore:
 

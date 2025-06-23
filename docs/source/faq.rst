@@ -5,12 +5,12 @@ General Questions
 -----------------
 
 What is TorchSOM?
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 TorchSOM is a modern PyTorch-based implementation of Self-Organizing Maps (SOMs), designed for efficient training and comprehensive visualization of high-dimensional data clustering and analysis.
 
 How does TorchSOM differ from other SOM implementations?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TorchSOM offers several advantages:
 
@@ -23,22 +23,22 @@ Installation and Setup
 ----------------------
 
 Which Python versions are supported?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We recommend using Python 3.9+.
 
 Do I need a GPU to use TorchSOM?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 No, TorchSOM works on both CPU and GPU. 
 However, GPU acceleration significantly improves training speed for large datasets and maps.
 We recommend using a GPU for training.
 
 Data Preprocessing
------------------
+------------------
 
 Should I always normalize my data?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Yes, normalization is crucial because:
 
@@ -47,7 +47,7 @@ Yes, normalization is crucial because:
 - StandardScaler or MinMaxScaler from scikit-learn  both work well
 
 What about categorical features?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 SOMs operate exclusively on numerical data. Therefore, it is essential to convert any categorical features into a numerical format before using them with TorchSOM. Common strategies include:
 
@@ -63,7 +63,7 @@ Performance and Optimization
 ----------------------------
 
 My training is very slow. How can I speed it up?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Try these optimizations:
 
@@ -74,7 +74,7 @@ Try these optimizations:
 5. **Reduce epochs**: Monitor convergence and stop early
 
 How much memory does TorchSOM use?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Memory usage depends on:
 
@@ -88,10 +88,10 @@ For large datasets, consider:
 - Reducing precision (float32 vs float64)
 
 Visualization Issues
--------------------
+--------------------
 
 Why are some neurons white in my visualizations?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 White neurons typically indicate:
 
@@ -102,7 +102,7 @@ White neurons typically indicate:
 This is normal for sparse data or oversized maps.
 
 How do I interpret the distance map (D-Matrix)?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the D-Matrix:
 
@@ -111,14 +111,14 @@ In the D-Matrix:
 - **Patterns**: Reveal cluster structure and boundaries
 
 Can I customize the visualization colors?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Yes! Use the VisualizationConfig:
 
 .. code-block:: python
 
    from torchsom.visualization.config import VisualizationConfig
-   
+
    config = VisualizationConfig(
        cmap="plasma",        # Use a different colormap
        figsize=(15, 10),     # Set larger figure size
@@ -126,10 +126,10 @@ Yes! Use the VisualizationConfig:
    )
 
 Advanced Topics
---------------
+---------------
 
 Can I use TorchSOM for time series data?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TorchSOM is designed to work with tabular data, meaning any data type—such as time series, images, or text—can be used as long as it is represented in a tabular (2D array) format. 
 This typically means that each sample should be a fixed-length feature vector.
@@ -139,7 +139,7 @@ Common approaches include extracting statistical features, flattening fixed-leng
 As long as your data can be converted into a matrix of shape `[n_samples, n_features]`, it can be used with TorchSOM.
 
 How do I implement custom distance functions?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Create a function following the signature:
 
@@ -157,7 +157,7 @@ Create a function following the signature:
        return distances
 
 Can I save and load trained SOMs?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Yes, use PyTorch's standard mechanisms:
 
@@ -171,10 +171,10 @@ Yes, use PyTorch's standard mechanisms:
    som.load_state_dict(torch.load('som_weights.pth'))
 
 Integration Questions
---------------------
+---------------------
 
 How do I cite TorchSOM in my research?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Please cite TorchSOM as:
 
@@ -198,17 +198,17 @@ Please cite TorchSOM as:
     }
 
 Getting Help
------------
+------------
 
 Where can I get more help?
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. **`Documentation <https://opensource.michelin.io/TorchSOM/>`_**: Check our comprehensive guides
 2. **`GitHub Issues <https://github.com/michelin/TorchSOM/issues>`_**: Report bugs and request features
 3. **`Notebooks <https://github.com/michelin/TorchSOM/tree/main/notebooks>`_**: See our tutorial notebooks.
 
 How do I report a bug?
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 Please include:
 
@@ -220,7 +220,7 @@ Please include:
 6. **Full error traceback**
 
 Can I contribute to TorchSOM?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Yes! We welcome contributions:
 
