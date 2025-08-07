@@ -77,6 +77,14 @@ class SOM(BaseSOM):
             )
         if topology not in ["hexagonal", "rectangular"]:
             raise ValueError("Only hexagonal and rectangular topologies are supported")
+        if lr_decay_function not in DECAY_FUNCTIONS:
+            raise ValueError("Invalid learning rate decay function")
+        if sigma_decay_function not in DECAY_FUNCTIONS:
+            raise ValueError("Invalid sigma decay function")
+        if distance_function not in DISTANCE_FUNCTIONS:
+            raise ValueError("Invalid distance function")
+        if neighborhood_function not in NEIGHBORHOOD_FUNCTIONS:
+            raise ValueError("Invalid neighborhood function")
 
         # Input parameters
         self.x = x
