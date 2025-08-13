@@ -1,14 +1,90 @@
+# Project specific
 # data/
 # notebooks/results/
+torchsom/logger.py
+logos/
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.env
 .venv/
 .torchsom_env/
-*.egg-info/
-__pycache__/
-setup.py
-logos/
-build/
-dist/
-.cursor/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
-torchsom/logger.py
+# IDE
+.vscode/
+.idea/
+.cursor/
+*.swp
+*.swo
+*~
+
+# Testing
+.tox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+htmlcov/
+.hypothesis/
+junit.xml
+*-report.json
+*.xml
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Documentation
+docs/build/
+docs/_build/
+.readthedocs.yml
+
+# Distribution / packaging
+.Python
+setup.py
+
+# Security
+bandit-report.json
+safety-report.json
+pip-audit-report.json
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini

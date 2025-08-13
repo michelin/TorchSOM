@@ -16,7 +16,7 @@ dynamic = [
     "version",                          # Version will be determined dynamically (via git)
     "readme",                           # README will be dynamically loaded
 ]
-description = "A Scalable PyTorch-Compatible Library for Self-Organizing Maps"
+description = "torchsom: The Reference PyTorch Library for Self-Organizing Maps"
 requires-python = ">=3.9"               # Minimum Python version required
 classifiers = [
     "Development Status :: 3 - Alpha",  
@@ -29,8 +29,6 @@ classifiers = [
 ]
 dependencies = [
     "torch",
-    # "torch @ https://download.pytorch.org/whl/cu118/torch-2.6.0-cp39-cp39-linux_x86_64.whl", # Specify torch 2.6.0 with GPU
-    # "torch @ https://download.pytorch.org/whl/cu118/torch-*.whl", # Specify torch with GPU and last version
     "numpy",
     "matplotlib",
     "tqdm",
@@ -59,17 +57,252 @@ dev = [
     "pandas",
     "scikit-learn",
     "openpyxl",
-    "black",     
+    "black",
     "isort",
-    "rich",                       
-    "pytest",                           
-    "pytest-cov",                       
-    "pytest-html", 
-    "certifi", 
-    "typing_extensions",    
-    "notebook",      
+    "rich",
+    "typing_extensions",
+]
+
+tests = [
+    "pytest",
+    "pytest-cov",
+    "pytest-html",
+    "pytest-xdist",
+    "pytest-timeout",
+    "pydocstyle",
+    "interrogate",
+]
+
+docs = [
+    "notebook",
     "sphinx",
     "sphinx-rtd-theme",
     "sphinx-autodoc-typehints",
     "sphinx-copybutton",
 ]
+
+security = [
+    "bandit[toml]",
+    "safety",
+    "pip-audit",
+]
+
+linting = [
+    "ruff",
+    "mypy",
+    "radon",
+    "certifi",
+]
+
+# ==================== Testing Configuration ====================
+
+[tool.pytest.ini_options]
+# Directory containing test files
+testpaths = ["tests"] 
+# File name patterns pytest will recognize as test files
+python_files = ["test_*.py", "*_test.py"] 
+# Class name patterns pytest will recognize as test classes
+python_classes = ["Test*"] 
+# Function name patterns pytest will recognize as test functions
+python_functions = ["test_*"] 
+# Additional pytest CLI options:
+addopts = [
+    "-v",                    # Verbose output
+    "--strict-markers",      # Fail if unknown @pytest.mark is used
+    "--strict-config",       # Fail if unknown config option is found
+    "--tb=short",            # Short traceback format
+    "--durations=10",        # Report 10 slowest tests
+]
+# Custom pytest markers with descriptions
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "gpu: Tests requiring GPU",
+    "slow: Slow running tests",
+    "smoke: Smoke tests for basic functionality",
+]
+# Configure pytest to handle and ignore specific warnings
+filterwarnings = [
+    "error",
+    "ignore::UserWarning",
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+# Timeout for each test in seconds
+timeout = 300
+
+[tool.coverage.run]
+# Directories or modules to measure coverage for
+source = ["torchsom"]
+# Files to exclude from coverage stats
+omit = [ 
+    "torchsom/core/base_som.py",           # Exclude base SOM implementation
+    "torchsom/core/growing/*",             # Exclude growing SOM implementation
+    "torchsom/core/hierarchical/*",        # Exclude hierarchical SOM implementation
+    "torchsom/visualization/*",            # Exclude visualization utilities
+    "torchsom/logger.py",                  # Exclude logging utilities
+    "torchsom/version.py",                 # Exclude version info file
+    "*/tests/*",                           # Exclude tests themselves
+    "*/conftest.py",                        # Exclude pytest config
+    "*/__init__.py",                        # Exclude package init files
+    "*/setup.py",                           # Exclude setup scripts
+]
+# Measure branch coverage in addition to line coverage
+branch = true       
+# Allow combining coverage results from parallel runs
+parallel = true     
+
+[tool.coverage.report]
+# Lines to exclude from coverage measurement
+exclude_lines = [
+    "pragma: no cover",              # Explicit coverage skip marker
+    "def __repr__",                  # Representation methods
+    "raise AssertionError",          # Assertion errors not tested
+    "raise NotImplementedError",     # Abstract/unimplemented methods
+    "if __name__ == .__main__.:",    # Script entry points
+    "if TYPE_CHECKING:",             # Type hinting blocks
+]
+# Show missing lines in the report
+show_missing = true  
+# Report numbers with 2 decimal places
+precision = 2        
+# Fail if coverage percentage is below 60%
+fail_under = 60      
+
+[tool.coverage.html]
+# Output directory for HTML coverage report
+directory = "htmlcov"
+
+# ==================== Code Quality Configuration ====================
+
+[tool.black]
+# Maximum line length for Black
+line-length = 88
+# Target Python versions for Black
+target-version = ["py39", "py310", "py311"]
+# Include files with .pyi extension
+include = "\\.pyi?$"
+# Exclude directories from Black formatting
+extend-exclude = """
+/(
+  # directories
+  \\.eggs
+  | \\.git
+  | \\.hg
+  | \\.mypy_cache
+  | \\.tox
+  | \\.venv
+  | build
+  | dist
+)/
+"""
+
+[tool.isort]
+# Use Black's configuration for isort
+profile = "black"
+# Maximum number of lines in a single import block
+multi_line_output = 3
+# Maximum line length for isort
+line_length = 88
+# Known first-party packages
+known_first_party = ["torchsom"]
+# Known third-party packages
+known_third_party = ["torch", "numpy", "matplotlib", "pytest", "pydantic"]
+# Force grid wrap for imports
+force_grid_wrap = 0
+# Use parentheses for grouped imports
+use_parentheses = true
+# Ensure newline before comments
+ensure_newline_before_comments = true
+
+[tool.ruff]
+# Maximum line length for Ruff
+line-length = 88
+# Target Python versions for Ruff
+target-version = "py39"
+# Select rules to apply
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "ARG", # flake8-unused-arguments
+    "SIM", # flake8-simplify
+    "ICN", # flake8-import-conventions
+    "S",   # bandit
+]
+# Ignore specific rules
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+    "S101",  # use of assert
+]
+# Exclude directories from Ruff
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+[tool.ruff.per-file-ignores]
+# Ignore specific rules for test files
+"tests/*" = ["S101", "ARG", "SIM"]
+
+[tool.mypy]
+# Target Python version for mypy
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+# Module-level type overrides for mypy
+module = [
+    "sklearn.*",
+    "matplotlib.*",
+    "tqdm.*",
+]
+# Ignore missing imports
+ignore_missing_imports = true
+
+[tool.bandit]
+# Exclude directories from Bandit
+exclude_dirs = ["docs", "build", "dist"]
+# Skip assert_used and shell_injection tests
+skips = ["B601"]  
+
+[tool.bandit.assert_used]
+# Skip assert_used for test files
+skips = ["*_test.py", "test_*.py"]

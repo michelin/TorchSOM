@@ -463,7 +463,8 @@ class TestInputValidation:
     # TODO: Implement explicit checks for NaN in SOM.fit and raise ValueError.
     @pytest.mark.unit
     @pytest.mark.xfail(
-        reason="SOM.fit does not currently validate for NaN values in input data."
+        strict=False,  # If the test fails, it won't cause a non-zero exit
+        reason="SOM.fit does not currently validate for NaN values in input data.",
     )
     def test_nan_data_handling(
         self,
@@ -482,7 +483,8 @@ class TestInputValidation:
     # TODO: Implement explicit checks for Inf in SOM.fit and raise ValueError.
     @pytest.mark.unit
     @pytest.mark.xfail(
-        reason="SOM.fit does not currently validate for Inf values in input data."
+        strict=False,
+        reason="SOM.fit does not currently validate for Inf values in input data.",
     )
     def test_inf_data_handling(
         self,
@@ -518,10 +520,11 @@ class TestDeviceCompatibility:
 
     @pytest.mark.unit
     @pytest.mark.xfail(
+        strict=False,
         reason=(
             "SOM weight initialization is not currently deterministic across consecutive instantiations, "
             "even with the same device and random seed. This is due to the random initialization logic in SOM."
-        )
+        ),
     )
     def test_cpu_gpu_weight_consistency(
         self,
