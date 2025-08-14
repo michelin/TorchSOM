@@ -95,7 +95,7 @@ clean-docs:  ## Remove Sphinx build artifacts
 # rm -rf build/*
 
 # ! NEED TO CHECK IF THIS WORKS
-pre-commit:  ## Run pre-commit hooks on all files
+precommit:  ## Run pre-commit hooks on all files
 	@echo "🔧 Running pre-commit hooks..."
 	pre-commit run --all-files
 
