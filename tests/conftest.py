@@ -171,12 +171,13 @@ def regression_data() -> tuple[torch.Tensor, torch.Tensor]:
 @pytest.fixture
 def som_config_minimal(
     device: str,
+    topology: str,
 ) -> dict[str, Any]:
     """Minimal SOM configuration for basic tests."""
     return {
         "x": 5,
         "y": 5,
-        "topology": "rectangular",
+        "topology": topology,
         "num_features": 4,
         "epochs": 5,
         "batch_size": 8,
@@ -196,12 +197,13 @@ def som_config_minimal(
 @pytest.fixture
 def som_config_standard(
     device: str,
+    topology: str,
 ) -> dict[str, Any]:
     """Standard SOM configuration for comprehensive tests."""
     return {
         "x": 15,
         "y": 10,
-        "topology": "rectangular",
+        "topology": topology,
         "num_features": 4,
         "epochs": 15,
         "batch_size": 32,

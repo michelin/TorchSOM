@@ -21,8 +21,6 @@ from torchsom.core.som import SOM
 from torchsom.utils.decay import DECAY_FUNCTIONS
 from torchsom.utils.distances import DISTANCE_FUNCTIONS
 
-# from torchsom.utils.neighborhood import NEIGHBORHOOD_FUNCTIONS
-
 
 class TestSOMInitialization:
     """Test SOM constructor and parameter validation."""
@@ -774,3 +772,114 @@ class TestMapBuilding:
         torch.testing.assert_close(
             classification_map1, classification_map2, equal_nan=True
         )
+
+
+class TestCollectSamples:
+    """Tests for SOM.collect_samples method."""
+
+    @pytest.mark.unit
+    def test_collect_samples_basic_thresholding(self):
+        """Collect samples from BMU bucket first, then nearest neighbor until threshold."""
+        # Build a small deterministic SOM on CPU
+        som = SOM(x=3, y=3, num_features=2, device="cpu", random_seed=0)
+
+        # Manually set weights so that BMU at (1,1) is the query and (1,2) is the closest neighbor
+        weights = torch.full((3, 3, 2), 10.0)
+        weights[1, 1] = torch.tensor([0.0, 0.0])  # BMU
+        weights[1, 2] = torch.tensor([0.1, 0.0])  # Closest neighbor
+        som.weights.data = weights
+
+        # Historical data: first column uniquely encodes the index
+        historical_samples = torch.stack(
+            [torch.tensor([float(i), 0.0]) for i in range(10)]
+        )
+        historical_outputs = torch.arange(10, dtype=torch.float32)
+
+        # Map of BMUs to sample indices: BMU has [0], neighbor has [1,2]
+        bmus_idx_map = {
+            (1, 1): [0],
+            (1, 2): [1, 2],
+        }
+
+        # Query equal to BMU weight guarantees BMU at (1,1)
+        query = som.weights.data[1, 1].clone()
+
+        data_buf, out_buf = som.collect_samples(
+            query_sample=query,
+            historical_samples=historical_samples,
+            historical_outputs=historical_outputs,
+            bmus_idx_map=bmus_idx_map,
+            min_buffer_threshold=3,
+        )
+
+        # Expect exactly indices {0,1,2} gathered
+        gathered_ids = set(data_buf[:, 0].tolist())
+        assert gathered_ids == {0.0, 1.0, 2.0}
+        assert data_buf.shape == (3, 2)
+        assert out_buf.shape == (3, 1)
+
+    @pytest.mark.unit
+    def test_collect_samples_empty_bmu_uses_neighbors(self):
+        """When BMU bucket is empty, it should pull from nearest neighbors via heap stage."""
+        som = SOM(x=3, y=3, num_features=2, device="cpu", random_seed=0)
+
+        # BMU weight at (1,1) and close neighbor at (1,2)
+        weights = torch.full((3, 3, 2), 10.0)
+        weights[1, 1] = torch.tensor([0.0, 0.0])
+        weights[1, 2] = torch.tensor([0.1, 0.0])
+        som.weights.data = weights
+
+        historical_samples = torch.stack(
+            [torch.tensor([float(i), 0.0]) for i in range(10)]
+        )
+        historical_outputs = torch.arange(10, dtype=torch.float32)
+
+        # BMU bucket empty; neighbor has two indices
+        bmus_idx_map = {
+            (1, 1): [],
+            (1, 2): [4, 5],
+        }
+
+        query = som.weights.data[1, 1].clone()
+        data_buf, out_buf = som.collect_samples(
+            query_sample=query,
+            historical_samples=historical_samples,
+            historical_outputs=historical_outputs,
+            bmus_idx_map=bmus_idx_map,
+            min_buffer_threshold=2,
+        )
+
+        gathered_ids = set(data_buf[:, 0].tolist())
+        assert gathered_ids == {4.0, 5.0}
+        assert out_buf.view(-1).tolist() == [4.0, 5.0]
+
+    @pytest.mark.unit
+    def test_collect_samples_no_available_samples_returns_empty(
+        self,
+        som_comprehensive,
+    ):
+        """Returns empty buffers when no BMU/neighbor neurons provide indices."""
+        # Set BMU weight for determinism
+        som_comprehensive.weights.data = torch.zeros_like(
+            som_comprehensive.weights.data
+        )
+        som_comprehensive.weights.data[1, 1] = torch.zeros(
+            som_comprehensive.num_features
+        )
+
+        historical_samples = torch.randn(5, som_comprehensive.num_features)
+        historical_outputs = torch.randn(5)
+
+        bmus_idx_map = {}  # No samples anywhere
+
+        query = som_comprehensive.weights.data[1, 1].clone()
+        data_buf, out_buf = som_comprehensive.collect_samples(
+            query_sample=query,
+            historical_samples=historical_samples,
+            historical_outputs=historical_outputs,
+            bmus_idx_map=bmus_idx_map,
+            min_buffer_threshold=3,
+        )
+
+        assert data_buf.numel() == 0
+        assert out_buf.numel() == 0

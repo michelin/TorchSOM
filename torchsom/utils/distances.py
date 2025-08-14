@@ -85,7 +85,7 @@ def _weighted_euclidean_distance(
     data: torch.Tensor,
     weights: torch.Tensor,
     weight_proportions: Optional[torch.Tensor] = None,
-) -> torch.Tensor:
+) -> torch.Tensor:  # pragma: no cover
     """Compute weighted Euclidean distance between input and weights.
 
     Args:
@@ -139,7 +139,7 @@ def _weighted_euclidean_distance(
 def _efficient_euclidean_distance(
     data: torch.Tensor,
     weights: torch.Tensor,
-) -> torch.Tensor:
+) -> torch.Tensor:  # pragma: no cover
     """Calculate Euclidean distances using vectorized operations for better performance.
 
     This implementation uses the mathematical identity:

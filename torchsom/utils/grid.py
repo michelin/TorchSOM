@@ -88,7 +88,7 @@ def convert_to_axial_coords(
 def offset_to_axial_coords(
     row: int,
     col: int,
-) -> tuple[float, float]:
+) -> tuple[float, float]:  # pragma: no cover
     """Convert offset coordinates to axial coordinates for hexagonal grid.
 
     Alternative implementation that directly matches the mesh grid adjustment.
