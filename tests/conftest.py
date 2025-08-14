@@ -1,13 +1,12 @@
 """Shared fixtures and configuration for TorchSOM tests."""
 
-from typing import Any, Dict, Tuple
+from typing import Any
 
 import numpy as np
 import pytest
 import torch
 from sklearn.datasets import make_blobs, make_regression
 
-# from torchsom.configs.som_config import SOMConfig
 from torchsom.core.som import SOM
 
 # ==================== SOM Initialization Fixtures ====================
@@ -141,7 +140,7 @@ def high_dim_data() -> torch.Tensor:
 
 
 @pytest.fixture
-def clustered_data() -> Tuple[torch.Tensor, torch.Tensor]:
+def clustered_data() -> tuple[torch.Tensor, torch.Tensor]:
     """Generate clustered standardized data using sklearn make_blobs for topology validation.
 
     Returns:
@@ -158,7 +157,7 @@ def clustered_data() -> Tuple[torch.Tensor, torch.Tensor]:
 
 
 @pytest.fixture
-def regression_data() -> Tuple[torch.Tensor, torch.Tensor]:
+def regression_data() -> tuple[torch.Tensor, torch.Tensor]:
     """Generate regression data for testing."""
     X, y = make_regression(n_samples=200, n_features=4, noise=0.1, random_state=42)
     data = torch.tensor(X, dtype=torch.float32)
@@ -172,7 +171,7 @@ def regression_data() -> Tuple[torch.Tensor, torch.Tensor]:
 @pytest.fixture
 def som_config_minimal(
     device: str,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Minimal SOM configuration for basic tests."""
     return {
         "x": 5,
@@ -197,7 +196,7 @@ def som_config_minimal(
 @pytest.fixture
 def som_config_standard(
     device: str,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Standard SOM configuration for comprehensive tests."""
     return {
         "x": 15,
@@ -229,7 +228,7 @@ def som_config_comprehensive(
     initialization_mode: str,
     fixed_seed: int,
     device: str,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Comprehensive SOM configuration testing multiple parameter combinations."""
     return {
         "x": 8,
@@ -256,7 +255,7 @@ def som_config_comprehensive(
 
 @pytest.fixture
 def som_small(
-    som_config_minimal: Dict[str, Any],
+    som_config_minimal: dict[str, Any],
 ) -> SOM:
     """Small SOM instance for quick unit tests.
 
@@ -271,7 +270,7 @@ def som_small(
 
 @pytest.fixture
 def som_standard(
-    som_config_standard: Dict[str, Any],
+    som_config_standard: dict[str, Any],
 ) -> SOM:
     """Standard SOM instance for comprehensive tests.
 
@@ -286,7 +285,7 @@ def som_standard(
 
 @pytest.fixture
 def som_comprehensive(
-    som_config_comprehensive: Dict[str, Any],
+    som_config_comprehensive: dict[str, Any],
 ) -> SOM:
     """Comprehensive SOM instance for comprehensive tests.
 

@@ -1,20 +1,22 @@
+"""Configuration settings for SOM visualizations."""
+
 from dataclasses import dataclass, field
-from typing import Dict, Optional, Tuple
+from typing import Optional
 
 
 @dataclass
 class VisualizationConfig:
     """Configuration settings for SOM visualizations."""
 
-    figsize: Tuple[int, int] = (12, 8)
-    fontsize: Dict[str, int] = field(
+    figsize: tuple[int, int] = (12, 8)
+    fontsize: dict[str, int] = field(
         default_factory=lambda: {
             "title": 16,
             "axis": 13,
             "legend": 11,
         }
     )
-    fontweight: Dict[str, str] = field(
+    fontweight: dict[str, str] = field(
         default_factory=lambda: {
             "title": "bold",
             "axis": "normal",  # normal bold

@@ -1,4 +1,4 @@
-from typing import Tuple
+"""Utility functions for grid operations."""
 
 import torch
 
@@ -7,7 +7,7 @@ def create_mesh_grid(
     x: int,
     y: int,
     device: str,
-) -> Tuple[torch.Tensor, torch.Tensor]:
+) -> tuple[torch.Tensor, torch.Tensor]:
     """Create a mesh grid for neighborhood calculations.
 
     The function returns two 2D tensors representing the x-coordinates and y-coordinates
@@ -22,7 +22,6 @@ def create_mesh_grid(
     Returns:
         Tuple[torch.Tensor, torch.Tensor]: Two tensors (xx, yy) of shape (x, y), representing the x and y coordinates of the mesh grid.
     """
-
     x_tensor, y_tensor = torch.arange(x, device=device), torch.arange(
         y, device=device
     )  # Shape: (x) and (y)
@@ -39,7 +38,7 @@ def adjust_meshgrid_topology(
     xx: torch.Tensor,
     yy: torch.Tensor,
     topology: str,
-) -> Tuple[torch.Tensor, torch.Tensor]:
+) -> tuple[torch.Tensor, torch.Tensor]:
     """Adjust coordinates based on topology.
 
     Args:
@@ -50,7 +49,6 @@ def adjust_meshgrid_topology(
     Returns:
         Tuple[torch.Tensor, torch.Tensor]: Adjusted x and y mesh grids for a hexagonal topology.
     """
-
     if topology == "hexagonal":
         # Create new tensors to avoid modifying in-place
         adjusted_xx = xx.clone()
@@ -82,10 +80,7 @@ def convert_to_axial_coords(
     Returns:
         tuple[float, float]: Axial coordinates (q, r)
     """
-    if row % 2 == 0:
-        q = col - 0.5 - (row // 2)
-    else:
-        q = col - (row // 2)
+    q = col - 0.5 - row // 2 if row % 2 == 0 else col - row // 2
     r = row
     return q, r
 
@@ -128,7 +123,6 @@ def axial_distance(
     Returns:
         int: Distance in hex steps
     """
-
     # Convert axial to cube coordinates
     x1, y1, z1 = q1, r1, -q1 - r1
     x2, y2, z2 = q2, r2, -q2 - r2

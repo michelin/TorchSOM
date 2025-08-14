@@ -1,3 +1,5 @@
+"""Utility functions for torchsom."""
+
 from .decay import DECAY_FUNCTIONS
 from .distances import DISTANCE_FUNCTIONS
 from .grid import (

@@ -1,10 +1,13 @@
-from dataclasses import dataclass
+"""Base class for all visualization methods."""
+
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Optional, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+from matplotlib.collections import PolyCollection
+from matplotlib.colors import Colormap
 from matplotlib.image import AxesImage
 
 from ..core import BaseSOM
@@ -25,7 +28,6 @@ class SOMVisualizer:
             som (BaseSOM): Trained SOM
             config (Optional[VisualizationConfig]): Visualization configuration settings
         """
-
         self.som = som
         self.config = config or VisualizationConfig()
         self._setup_style()
@@ -38,7 +40,6 @@ class SOMVisualizer:
         self,
     ) -> None:
         """Configure global plotting style."""
-
         plt.style.use("default")  # Reset matplotlib to default style
         plt.rcParams.update(
             {
@@ -87,7 +88,6 @@ class SOMVisualizer:
         Returns:
             Path: The path to save the visualization.
         """
-
         save_path = Path(save_path)
         save_path.mkdir(parents=True, exist_ok=True)
         return save_path
@@ -103,7 +103,6 @@ class SOMVisualizer:
             save_path (Union[str, Path]): The path to save the visualization.
             name (str): The name of the file to save.
         """
-
         save_path = self._prepare_save_path(save_path=save_path)
         plt.savefig(
             save_path / f"{name}.{self.config.save_format}",
@@ -118,7 +117,7 @@ class SOMVisualizer:
     def _generate_hexbin_coordinates(
         self,
         map: torch.Tensor,
-    ) -> Tuple[List[float], List[float], List[float]]:
+    ) -> tuple[list[Union[float, int]], list[int], list[torch.Tensor]]:
         """Generate coordinates for hexagonal grid.
 
         Args:
@@ -127,7 +126,6 @@ class SOMVisualizer:
         Returns:
             Tuple[List[float], List[float], List[float]]: (col, row) hexbin coordinates and corresponding values. [row_neurons, col_neurons]
         """
-
         # Convert torch map into a numpy array
         if isinstance(map, torch.Tensor):
             map = map.detach().cpu().numpy()
@@ -148,13 +146,13 @@ class SOMVisualizer:
     def _create_hexbin(
         self,
         ax: plt.Axes,
-        x: List[float],
-        y: List[float],
-        values: List[float],
-        gridsize: Optional[Union[int, Tuple[int, int]]] = None,
+        x: list[float],
+        y: list[float],
+        values: list[float],
+        gridsize: Optional[Union[int, tuple[int, int]]] = None,
         log_scale: bool = False,
-        cmap: Optional[str] = None,
-    ) -> plt.hexbin:
+        cmap: Optional[Union[str, Colormap]] = None,
+    ) -> PolyCollection:
         """Create hexbin plot with specified parameters.
 
         Args:
@@ -167,9 +165,8 @@ class SOMVisualizer:
             cmap (Optional[str], optional):  Custom colormap. If None, uses default from config. Defaults to None.
 
         Returns:
-            plt.hexbin: The created hexbin plot object
+            PolyCollection: The created hexbin plot object
         """
-
         if gridsize is None:
             gridsize = self.config.hexgrid_size or int(
                 min(self.som.x, self.som.y) * 1.75
@@ -192,7 +189,7 @@ class SOMVisualizer:
             gridsize=gridsize,  # Number of hexagons in the x-direction (and y-direction)
             cmap=cmap or self.config.cmap,
             bins="log" if log_scale else None,  # Logarithmic scale for colors
-            extent=[x_min, x_max, y_min, y_max],  # Limits of the bins
+            extent=(x_min, x_max, y_min, y_max),  # Limits of the bins
             mincnt=1,  # Minimum count to consider and display a bin
             reduce_C_function=np.mean,  # Function to reduce values in each bin
         )
@@ -202,7 +199,7 @@ class SOMVisualizer:
         ax: plt.Axes,
         title: str,
         colorbar_label: str,
-        mappable_item: Union[AxesImage, plt.hexbin] = None,
+        mappable_item: Optional[Union[AxesImage, PolyCollection]] = None,
         topology: str = "rectangular",
     ) -> None:
         """Provide a universal customization adapted to both rectangular and hexagonal settings.
@@ -211,10 +208,9 @@ class SOMVisualizer:
             ax (plt.Axes):  Matplotlib axes object to plot on
             title (str): Title of the figure to plot.
             colorbar_label (str): Label for the colorbar.
-            mappable_item (Union[AxesImage, plt.hexbin], optional): Item to plot, to adjust the colorbar values. Defaults to None.
+            mappable_item (Union[AxesImage, PolyCollection], optional): Item to plot, to adjust the colorbar values. Defaults to None.
             topology (str): Topology of som grid. Defaults to "rectangular"
         """
-
         # Adjust title and axis labels
         ax.set_title(
             title,
@@ -276,7 +272,7 @@ class SOMVisualizer:
         log_scale: bool = False,
         cmap: Optional[str] = None,
         show_values: bool = False,
-        gridsize: Optional[Tuple[int, int]] = None,
+        gridsize: Optional[tuple[int, int]] = None,
         value_format: str = ".2f",
         is_component_plane: bool = False,
     ) -> None:
@@ -295,7 +291,6 @@ class SOMVisualizer:
             value_format (str, optional):  Format string for displayed values. Defaults to ".2f".
             is_component_plane (bool, optional): Boolean to check if current plot is a component plane. Defaults to False.
         """
-
         fig, ax = plt.subplots(figsize=self.config.figsize)
 
         # ! Hard-coding “0 → NaN” may hide legitimate zeros.
@@ -375,9 +370,9 @@ class SOMVisualizer:
 
     def plot_training_errors(
         self,
-        quantization_errors: List[float],
-        topographic_errors: List[float],
-        fig_name: Optional[str] = "training_errors",
+        quantization_errors: list[float],
+        topographic_errors: list[float],
+        fig_name: str = "training_errors",
         save_path: Optional[Union[str, Path]] = None,
     ) -> None:
         """Plot training errors over epochs.
@@ -388,7 +383,6 @@ class SOMVisualizer:
             fig_name (Optional[str], optional): The name of the file to save.. Defaults to "training_errors".
             save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization figure. Defaults to None.
         """
-
         # Ensure tensors are moved to CPU before plotting
         if isinstance(quantization_errors, torch.Tensor):
             quantization_errors = quantization_errors.cpu().numpy()
@@ -447,9 +441,9 @@ class SOMVisualizer:
 
     def plot_distance_map(
         self,
-        fig_name: Optional[str] = "distance_map",
+        fig_name: str = "distance_map",
         save_path: Optional[Union[str, Path]] = None,
-        gridsize: Optional[Tuple[int, int]] = None,
+        gridsize: Optional[tuple[int, int]] = None,
     ) -> None:
         """Plot the D-Matrix (distance map) of a trained SOM.
 
@@ -458,7 +452,6 @@ class SOMVisualizer:
             save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
             gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
         """
-
         distance_map = self.som.build_distance_map(
             neighborhood_order=self.som.neighborhood_order
         )
@@ -475,9 +468,9 @@ class SOMVisualizer:
         self,
         data: torch.Tensor,
         target: torch.Tensor,
-        fig_name: Optional[str] = "classification_map",
+        fig_name: str = "classification_map",
         save_path: Optional[Union[str, Path]] = None,
-        gridsize: Optional[Tuple[int, int]] = None,
+        gridsize: Optional[tuple[int, int]] = None,
     ) -> None:
         """Plot classification map showing the most frequent label for each neuron.
 
@@ -488,7 +481,6 @@ class SOMVisualizer:
             save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
             gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
         """
-
         classification_map = self.som.build_classification_map(
             data, target, neighborhood_order=self.som.neighborhood_order
         )
@@ -504,9 +496,9 @@ class SOMVisualizer:
     def plot_hit_map(
         self,
         data: torch.Tensor,
-        fig_name: Optional[str] = "hit_map",
+        fig_name: str = "hit_map",
         save_path: Optional[Union[str, Path]] = None,
-        gridsize: Optional[Tuple[int, int]] = None,
+        gridsize: Optional[tuple[int, int]] = None,
     ) -> None:
         """Plot hit map showing the distribution of winning neurons from input data.
 
@@ -516,7 +508,6 @@ class SOMVisualizer:
             save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
             gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
         """
-
         hit_map = self.som.build_hit_map(data)
         self.plot_grid(
             map=hit_map,
@@ -534,7 +525,7 @@ class SOMVisualizer:
         reduction_parameter: str = "mean",
         fig_name: Optional[str] = None,
         save_path: Optional[Union[str, Path]] = None,
-        gridsize: Optional[Tuple[int, int]] = None,
+        gridsize: Optional[tuple[int, int]] = None,
     ) -> None:
         """Plot target distribution of the corresponding input samples through SOM's neurons.
 
@@ -546,7 +537,6 @@ class SOMVisualizer:
             save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
             gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
         """
-
         metric_map = self.som.build_metric_map(data, target, reduction_parameter)
         title = (
             "Map of Mean Target Value"
@@ -571,9 +561,9 @@ class SOMVisualizer:
         self,
         data: torch.Tensor,
         target: torch.Tensor,
-        fig_name: Optional[str] = "score_map",
+        fig_name: str = "score_map",
         save_path: Optional[Union[str, Path]] = None,
-        gridsize: Optional[Tuple[int, int]] = None,
+        gridsize: Optional[tuple[int, int]] = None,
     ) -> None:
         """Plot SOM neuron representativeness visualization.
 
@@ -584,7 +574,6 @@ class SOMVisualizer:
             save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
             gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
         """
-
         score_map = self.som.build_score_map(data, target)
         self.plot_grid(
             map=score_map,
@@ -603,9 +592,9 @@ class SOMVisualizer:
         self,
         data: torch.Tensor,
         target: torch.Tensor,
-        fig_name: Optional[str] = "rank_map",
+        fig_name: str = "rank_map",
         save_path: Optional[Union[str, Path]] = None,
-        gridsize: Optional[Tuple[int, int]] = None,
+        gridsize: Optional[tuple[int, int]] = None,
     ) -> None:
         """Plot SOM ranked neurons visualization.
 
@@ -616,7 +605,6 @@ class SOMVisualizer:
             save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
             gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
         """
-
         rank_map = self.som.build_rank_map(data=data, target=target)
         self.plot_grid(
             map=rank_map,
@@ -631,10 +619,10 @@ class SOMVisualizer:
 
     def plot_component_planes(
         self,
-        component_names: Optional[List[str]] = None,
+        component_names: Optional[list[str]] = None,
         fig_name: Optional[str] = None,
         save_path: Optional[Union[str, Path]] = None,
-        gridsize: Optional[Tuple[int, int]] = None,
+        gridsize: Optional[tuple[int, int]] = None,
     ) -> None:
         """Plot component planes (CPs), so one plane by input feature.
 
@@ -644,7 +632,6 @@ class SOMVisualizer:
             save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
             gridsize (Optional[Tuple[int, int]], optional): Size of hexagonal grid. If None, calculated from map dimensions. Defaults to None.
         """
-
         n_components = self.som.weights.shape[-1]
         component_names = component_names or [
             f"Component_{i+1}" for i in range(n_components)
@@ -674,11 +661,11 @@ class SOMVisualizer:
 
     def plot_all(
         self,
-        quantization_errors: List[float],
-        topographic_errors: List[float],
+        quantization_errors: list[float],
+        topographic_errors: list[float],
         data: torch.Tensor,
-        target: Optional[torch.Tensor] = None,
-        component_names: Optional[List[str]] = None,
+        target: torch.Tensor,
+        component_names: Optional[list[str]] = None,
         save_path: Optional[Union[str, Path]] = None,
         training_errors: bool = True,
         distance_map: bool = True,
@@ -694,7 +681,7 @@ class SOMVisualizer:
             quantization_errors (List[float]): List of quantization errors [epochs]
             topographic_errors (List[float]): List of topographic errors [epochs]
             data (torch.Tensor): Input data tensor [batch_size, n_features]
-            target (Optional[torch.Tensor], optional): Optional labels tensor for data points [batch_size]. Defaults to None.
+            target (torch.Tensor): Optional labels tensor for data points [batch_size]. Defaults to None.
             component_names (Optional[List[str]], optional): Names for each component/feature. If None, uses "Component {i+1}". Defaults to None.
             save_path (Optional[Union[str, Path]], optional): Optional path to save the visualization. Defaults to None.
             training_errors (bool, optional): Boolean to decide if the visualizer plots training learning curves. Defaults to True.
@@ -705,7 +692,6 @@ class SOMVisualizer:
             metric_map (bool, optional): Boolean to decide if the visualizer plots metric map. Defaults to True.
             component_planes (bool, optional): Boolean to decide if the visualizer plots component planes. Defaults to True.
         """
-
         if training_errors:
             self.plot_training_errors(
                 quantization_errors=quantization_errors,

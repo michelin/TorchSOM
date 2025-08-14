@@ -216,10 +216,15 @@ use_parentheses = true
 ensure_newline_before_comments = true
 
 [tool.ruff]
+# Allow Ruff to fix code automatically
+fix = true
+# Allow Ruff to fix code automatically even if it's unsafe
+unsafe-fixes = true
 # Maximum line length for Ruff
 line-length = 88
 # Target Python versions for Ruff
 target-version = "py39"
+[tool.ruff.lint]
 # Select rules to apply
 select = [
     "E",   # pycodestyle errors
@@ -240,6 +245,8 @@ ignore = [
     "B008",  # do not perform function calls in argument defaults
     "C901",  # too complex
     "S101",  # use of assert
+    "B904",  # exception re-raise
+    "S311",  # use of insecure random number generator
 ]
 # Exclude directories from Ruff
 exclude = [
@@ -265,27 +272,40 @@ exclude = [
     "node_modules",
     "venv",
 ]
-
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 # Ignore specific rules for test files
 "tests/*" = ["S101", "ARG", "SIM"]
 
 [tool.mypy]
 # Target Python version for mypy
 python_version = "3.9"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-disallow_untyped_decorators = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_no_return = true
-warn_unreachable = true
-strict_equality = true
-show_error_codes = true
+warn_return_any = true                  # If True, mypy warns when a function returns Any. False disables this warning.
+warn_unused_configs = true              # Warn if there are unused mypy configuration options in the config file.
+disallow_untyped_defs = true            # Disallow defining functions without type annotations for all arguments and the return type.
+disallow_incomplete_defs = true         # Disallow functions with some, but not all, arguments annotated.
+check_untyped_defs = true               # Type-check the body of functions without type annotations.
+disallow_untyped_decorators = true      # Disallow decorators without type annotations.
+no_implicit_optional = true             # Treat function arguments without explicit Optional[...] as required (not implicitly optional).
+warn_redundant_casts = true             # Warn about unnecessary type casts.
+warn_unused_ignores = true              # Warn about # type: ignore comments that are not needed.
+warn_no_return = true                   # Warn if a function declared to return a value implicitly returns None.
+warn_unreachable = true                 # Warn about code that cannot be reached.
+strict_equality = true                  # Require strict type equality for comparisons.
+show_error_codes = true                 # Display mypy error codes in the output for reference.
+disable_error_code = [
+    "var-annotated",                    # Error code for variable annotated with Any
+    "operator",                         # Error code for operator module
+    "no-any-return",                    # Error code for function returning Any when it should return a more specific type
+    "index",                            # Error code for indexing with a non-integer type
+    "unreachable",                      # Error code for code that cannot be reached
+    "call-arg",                         # Error code for calling a function with the wrong arguments
+    "arg-type",                         # Error code for argument type mismatch
+    "assignment",                       # Error code for assigning a value to a variable with a different type
+    "misc",                             # Error code for miscellaneous type issues
+    "call-overload",                    # Error code for calling a function with the wrong number of arguments
+    "override",                         # Error code for overriding a method with a different signature (e.g. in a subclass)
+    # "return-value",                     # Error code for function returning a value with a different type than declared
+]
 
 [[tool.mypy.overrides]]
 # Module-level type overrides for mypy

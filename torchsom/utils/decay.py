@@ -1,3 +1,6 @@
+"""Utility functions for decay functions."""
+
+
 def _lr_inverse_decay_to_zero(
     learning_rate: float,
     t: int,
@@ -13,7 +16,6 @@ def _lr_inverse_decay_to_zero(
     Returns:
         float: learning rate at iteration t
     """
-
     gamma = max_iter / 100.0
     return learning_rate * gamma / (gamma + t)
 
@@ -33,7 +35,6 @@ def _lr_linear_decay_to_zero(
     Returns:
         float: learning rate at iteration t
     """
-
     return learning_rate * (1 - t / max_iter)
 
 
@@ -52,7 +53,6 @@ def _sig_inverse_decay_to_one(
     Returns:
         float: sigma at iteration t
     """
-
     gamma = (sigma - 1) / max_iter
     return sigma / (1 + (t * gamma))
 
@@ -72,7 +72,6 @@ def _sig_linear_decay_to_one(
     Returns:
         float: sigma at iteration t
     """
-
     return sigma + (t * (1 - sigma) / max_iter)
 
 
@@ -91,7 +90,6 @@ def _asymptotic_decay(
     Returns:
         float: dynamic parameter at iteration t
     """
-
     return dynamic_parameter / (1 + t / (max_iter / 2))
 
 

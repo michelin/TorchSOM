@@ -1,4 +1,4 @@
-from typing import Tuple
+"""Utility functions for neighborhood functions."""
 
 import torch
 
@@ -6,10 +6,11 @@ import torch
 def _gaussian(
     xx: torch.Tensor,
     yy: torch.Tensor,
-    c: Tuple[int, int],
+    c: tuple[int, int],
     sigma: float,
 ) -> torch.Tensor:
     """Gaussian neighborhood function to update weights.
+
     See also: https://en.wikipedia.org/wiki/Gaussian_function
 
     Args:
@@ -41,7 +42,6 @@ def _gaussian(
     Returns:
         torch.Tensor: Gaussian neighborhood weights. Element-wise product standing for the combined influence of gaussian neighborhood around center c with a spread sigma [row_neurons, col_neurons].
     """
-
     denum = 2 * sigma * sigma
     gaussian_x = torch.exp(
         -torch.pow(xx - c[0], 2) / denum
@@ -55,11 +55,11 @@ def _gaussian(
 def _mexican_hat(
     xx: torch.Tensor,
     yy: torch.Tensor,
-    c: Tuple[int, int],
+    c: tuple[int, int],
     sigma: float,
 ) -> torch.Tensor:
-    """
-    Mexican hat (Ricker wavelet) neighborhood function to update weights.
+    """Mexican hat (Ricker wavelet) neighborhood function to update weights.
+
     See also: https://en.wikipedia.org/wiki/Ricker_wavelet
 
     Args:
@@ -119,11 +119,10 @@ def _mexican_hat(
 def _bubble(
     xx: torch.Tensor,
     yy: torch.Tensor,
-    c: Tuple[int, int],
+    c: tuple[int, int],
     sigma: float,
 ) -> torch.Tensor:
-    """
-    Bubble (step function) neighborhood function to update weights.
+    """Bubble (step function) neighborhood function to update weights.
 
     Args:
         xx (torch.Tensor): Meshgrid of x coordinates [row_neurons, col_neurons]
@@ -154,7 +153,6 @@ def _bubble(
     Returns:
         torch.Tensor: Binary bubble neighborhood weights. Mask to update elements only striclty within the sigma radius, hence bubble name [row_neurons, col_neurons].
     """
-
     x_distance, y_distance = torch.abs(xx - c[0]), torch.abs(
         yy - c[1]
     )  # Both [row_neurons, col_neurons]
@@ -168,11 +166,10 @@ def _bubble(
 def _triangle(
     xx: torch.Tensor,
     yy: torch.Tensor,
-    c: Tuple[int, int],
+    c: tuple[int, int],
     sigma: float,
 ) -> torch.Tensor:
-    """
-    Triangle (linear) neighborhood function to update weights.
+    """Triangle (linear) neighborhood function to update weights.
 
     Args:
         xx (torch.Tensor): Meshgrid of x coordinates [row_neurons, col_neurons]
@@ -203,7 +200,6 @@ def _triangle(
     Returns:
         torch.Tensor: Triangle neighborhood weights. Element-wise product standing for the combined influence of gaussian neighborhood around center c with a spread sigma [row_neurons, col_neurons].
     """
-
     triangle_x, triangle_y = (-torch.abs(c[0] - xx)) + sigma, (
         -torch.abs(c[1] - yy)
     ) + sigma  # Linear decay in both directions, both [row_neurons, col_neurons]

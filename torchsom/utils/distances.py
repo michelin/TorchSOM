@@ -1,3 +1,5 @@
+"""Utility functions for distances."""
+
 from typing import Optional
 
 import torch
@@ -16,7 +18,6 @@ def _cosine_distance(
     Returns:
         torch.Tensor: cosine distance between input and weights [batch_size, row_neurons, col_neurons]
     """
-
     # Normalize vectors to unit length for numerical stability
     eps = 1e-8
     data_normalized = data / (torch.norm(data, dim=-1, keepdim=True) + eps)
@@ -60,7 +61,6 @@ def _manhattan_distance(
     Returns:
             torch.Tensor: manhattan distance between input and weights [batch_size, row_neurons, col_neurons]
     """
-
     return torch.norm(torch.subtract(data, weights), p=1, dim=-1)
 
 
@@ -77,7 +77,6 @@ def _chebyshev_distance(
     Returns:
             torch.Tensor: chebyshev distance between input and weights [batch_size, row_neurons, col_neurons]
     """
-
     # return torch.max(torch.subtract(data, weights), dim=-1).values
     return torch.max(torch.abs(data - weights), dim=-1).values
 

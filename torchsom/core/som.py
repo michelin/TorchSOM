@@ -1,8 +1,10 @@
+"""PyTorch implementation of classic Self Organizing Maps using batch learning."""
+
 import heapq
 import random
 import warnings
 from collections import Counter, defaultdict
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Callable, Optional, Union
 
 import torch
 import torch.nn as nn
@@ -68,12 +70,13 @@ class SOM(BaseSOM):
         Raises:
             ValueError: Ensure valid topology
         """
-        super(SOM, self).__init__()
+        super().__init__()
 
         # Validate parameters
         if sigma > torch.sqrt(torch.tensor(float(x * x + y * y))):
             warnings.warn(
-                "Warning: sigma might be too high for the dimension of the map."
+                "Warning: sigma might be too high for the dimension of the map.",
+                stacklevel=2,
             )
         if topology not in ["hexagonal", "rectangular"]:
             raise ValueError("Only hexagonal and rectangular topologies are supported")
@@ -100,7 +103,9 @@ class SOM(BaseSOM):
         self.neighborhood_order = neighborhood_order
         self.distance_fn_name = distance_function
         self.initialization_mode = initialization_mode
-        self.distance_fn = DISTANCE_FUNCTIONS[distance_function]
+        self.distance_fn: Callable[[torch.Tensor, torch.Tensor], torch.Tensor] = (
+            DISTANCE_FUNCTIONS[distance_function]
+        )
         self.lr_decay_fn = DECAY_FUNCTIONS[lr_decay_function]
         self.sigma_decay_fn = DECAY_FUNCTIONS[sigma_decay_function]
 
@@ -124,7 +129,7 @@ class SOM(BaseSOM):
     def _update_weights(
         self,
         data: torch.Tensor,
-        bmus: Union[Tuple[int, int], torch.Tensor],
+        bmus: Union[tuple[int, int], torch.Tensor],
         learning_rate: float,
         sigma: float,
     ) -> None:
@@ -136,7 +141,6 @@ class SOM(BaseSOM):
             learning_rate (float): Current learning rate
             sigma (float): Current sigma value
         """
-
         # Single sample
         if isinstance(bmus, tuple):
             # Calculate neighborhood contributions for the BMU and reshape for broadcasting
@@ -186,7 +190,6 @@ class SOM(BaseSOM):
         Returns:
             Distances tensor of shape [row_neurons, col_neurons] or [batch_size, row_neurons, col_neurons]
         """
-
         # Ensure device and batch compatibility
         data = data.to(self.device)
         if data.dim() == 1:
@@ -215,6 +218,7 @@ class SOM(BaseSOM):
         data: torch.Tensor,
     ) -> torch.Tensor:
         """Find BMUs for input data.  Handles both single samples and batches.
+
         It requires a data on the GPU if available for calculations with SOM's weights on GPU's too.
 
         Args:
@@ -224,7 +228,6 @@ class SOM(BaseSOM):
             torch.Tensor: For single sample: Tensor of shape [2] with [row, col].
                         For batch: Tensor of shape [batch_size, 2] with [row, col] pairs
         """
-
         distances = self._calculate_distances_to_neurons(data)
 
         # Unique sample [row_neurons, col_neurons]
@@ -261,7 +264,6 @@ class SOM(BaseSOM):
         Returns:
             float: Average quantization error value
         """
-
         # Ensure device and batch compatibility
         data = data.to(self.device)
         if data.dim() == 1:
@@ -274,7 +276,7 @@ class SOM(BaseSOM):
         self,
         data: torch.Tensor,
     ) -> float:
-        """Calculate topographic error with batch support
+        """Calculate topographic error with batch support.
 
         Args:
             data (torch.Tensor): input data tensor [batch_size, num_features] or [num_features]
@@ -282,7 +284,6 @@ class SOM(BaseSOM):
         Returns:
             float: Topographic error ratio
         """
-
         # Ensure device and batch compatibility
         data = data.to(self.device)
         if data.dim() == 1:
@@ -295,9 +296,11 @@ class SOM(BaseSOM):
     def initialize_weights(
         self,
         data: torch.Tensor,
-        mode: str = None,
+        mode: Optional[str] = None,
     ) -> None:
-        """Data should be normalized before initialization. Initialize weights using
+        """Data should be normalized before initialization.
+
+        Initialize weights using:
 
             1. Random samples from input data.
             2. PCA components to make the training process converge faster.
@@ -331,7 +334,7 @@ class SOM(BaseSOM):
     def fit(
         self,
         data: torch.Tensor,
-    ) -> Tuple[List[float], List[float]]:
+    ) -> tuple[list[float], list[float]]:
         """Train the SOM using batches and track errors.
 
         Args:
@@ -340,7 +343,6 @@ class SOM(BaseSOM):
         Returns:
             Tuple[List[float], List[float]]: Quantization and topographic errors [epoch]
         """
-
         # data = data.to(self.device)
         dataset = TensorDataset(data)
         dataloader = DataLoader(
@@ -392,9 +394,9 @@ class SOM(BaseSOM):
         query_sample: torch.Tensor,
         historical_samples: torch.Tensor,
         historical_outputs: torch.Tensor,
+        bmus_idx_map: Optional[dict[tuple[int, int], list[int]]],
         min_buffer_threshold: int = 50,
-        bmus_idx_map: Dict[Tuple[int, int], List[int]] = None,
-    ) -> Tuple[torch.Tensor, torch.Tensor]:
+    ) -> tuple[torch.Tensor, torch.Tensor]:
         """Collect historical samples similar to the query sample using SOM projection.
 
         Args:
@@ -406,7 +408,6 @@ class SOM(BaseSOM):
         Returns:
             Tuple[torch.Tensor, torch.Tensor]: (historical_data_buffer, historical_output_buffer)
         """
-
         # Ensure device compatibility
         query_sample = query_sample.to(self.device)
 
@@ -508,6 +509,7 @@ class SOM(BaseSOM):
         batch_size: int = 1024,
     ) -> torch.Tensor:
         """Returns a matrix where element i,j is the number of times that neuron i,j has been the winner.
+
         It processes the data in batches to save memory.
         The hit map is built on CPU, but the calculations are done on GPU if available.
 
@@ -560,9 +562,9 @@ class SOM(BaseSOM):
 
     def build_distance_map(
         self,
+        distance_metric: Optional[str] = None,
+        neighborhood_order: Optional[int] = None,
         scaling: str = "sum",
-        distance_metric: str = None,
-        neighborhood_order: int = None,
     ) -> torch.Tensor:
         """Computes the distance map of each neuron with its neighbors.
 
@@ -717,8 +719,9 @@ class SOM(BaseSOM):
         data: torch.Tensor,
         return_indices: bool = False,
         batch_size: int = 1024,
-    ) -> Dict[Tuple[int, int], Any]:
+    ) -> dict[tuple[int, int], Any]:
         """Create a mapping of winning neurons to their corresponding data points.
+
         It processes the data in batches to save memory.
         The hit map is built on CPU, but the calculations are done on GPU if available.
 
@@ -840,7 +843,6 @@ class SOM(BaseSOM):
             torch.Tensor: Score map based on a chosen score function: std_neuron / sqrt(n_neuron) * log(N_data/n_neuron).
             The score combines the standard error with a term penalizing uneven sample distribution across neurons. Lower scores indicate better neuron representativeness.
         """
-
         epsilon = 1e-8
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
         score_map = torch.full((self.x, self.y), float("nan"))
@@ -882,7 +884,6 @@ class SOM(BaseSOM):
         Returns:
             torch.Tensor: Rank map where each neuron's value is its rank (1 = lowest std = best)
         """
-
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
         neuron_stds = torch.full((self.x, self.y), float("nan"))
 
@@ -929,8 +930,8 @@ class SOM(BaseSOM):
         target: torch.Tensor,
         neighborhood_order: int = 1,
     ) -> torch.Tensor:
-        """
-        Build a classification map where each neuron is assigned the most frequent label.
+        """Build a classification map where each neuron is assigned the most frequent label.
+
         In case of a tie, consider labels from neighboring neurons.
         If there are no neighboring neurons or a second tie, then randomly select one of the top label.
 
@@ -942,7 +943,6 @@ class SOM(BaseSOM):
         Returns:
             torch.Tensor: Classification map with the most frequent label for each neuron
         """
-
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
         classification_map = torch.full((self.x, self.y), float("nan"))
         neighborhood_offsets = get_all_neighbors_up_to_order(

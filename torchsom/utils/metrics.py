@@ -1,5 +1,7 @@
+"""Utility functions for metrics."""
+
 import warnings
-from typing import Tuple, Union
+from typing import Callable
 
 import torch
 
@@ -9,14 +11,14 @@ from ..utils.grid import axial_distance, convert_to_axial_coords
 def calculate_quantization_error(
     data: torch.Tensor,
     weights: torch.Tensor,
-    distance_fn: callable,
+    distance_fn: Callable,
 ) -> float:
     """Calculate quantization error for a SOM.
 
     Args:
         data (torch.Tensor): Input data tensor [batch_size, num_features] or [num_features]
         weights (torch.Tensor): SOM weights [row_neurons, col_neurons, num_features]
-        distance_fn (callable): Function to compute distances between data and weights
+        distance_fn (Callable): Function to compute distances between data and weights
 
     Returns:
         float: Average quantization error value
@@ -44,7 +46,7 @@ def calculate_quantization_error(
 def calculate_topographic_error(
     data: torch.Tensor,
     weights: torch.Tensor,
-    distance_fn: callable,
+    distance_fn: Callable,
     topology: str = "rectangular",
     # xx: torch.Tensor = None,
     # yy: torch.Tensor = None,
@@ -54,7 +56,7 @@ def calculate_topographic_error(
     Args:
         data (torch.Tensor): Input data tensor [batch_size, num_features] or [num_features]
         weights (torch.Tensor): SOM weights [row_neurons, col_neurons, num_features]
-        distance_fn (callable): Function to compute distances between data and weights
+        distance_fn (Callable): Function to compute distances between data and weights
         topology (str, optional): Grid configuration. Defaults to "rectangular".
         # xx (torch.Tensor, optional): Meshgrid of x coordinates. Required for hexagonal topology. Defaults to None.
         # yy (torch.Tensor, optional): Meshgrid of y coordinates. Required for hexagonal topology. Defaults to None.
@@ -71,7 +73,10 @@ def calculate_topographic_error(
     x_dim, y_dim = weights.shape[0], weights.shape[1]
 
     if x_dim * y_dim == 1:
-        warnings.warn("The topographic error is not defined for a 1-by-1 map.")
+        warnings.warn(
+            "The topographic error is not defined for a 1-by-1 map.",
+            stacklevel=2,
+        )
         return float("nan")
 
     # Reshape for distance calculation

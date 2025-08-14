@@ -12,7 +12,7 @@ Tests cover:
 """
 
 import warnings
-from typing import Any, Dict, Tuple
+from typing import Any
 
 import pytest
 import torch
@@ -32,7 +32,7 @@ class TestSOMInitialization:
     @pytest.mark.unit
     def test_initialization_with_all_parameters(
         self,
-        som_config_comprehensive: Dict[str, Any],
+        som_config_comprehensive: dict[str, Any],
     ):
         """Test SOM initialization with all parameters specified."""
         som = SOM(**som_config_comprehensive)
@@ -233,6 +233,7 @@ class TestSOMTraining:
             assert len(q_errors) == som.epochs
             assert len(t_errors) == som.epochs
 
+    @pytest.mark.unit
     def test_training_convergence_direction(
         self,
         som_standard: SOM,
@@ -548,7 +549,7 @@ class TestDeviceCompatibility:
     @pytest.mark.gpu
     def test_gpu_memory_efficiency(
         self,
-        som_config_standard: Dict[str, Any],
+        som_config_standard: dict[str, Any],
     ):
         """Test GPU memory usage during training, it should be less than 25MB (not excessive)."""
         if not torch.cuda.is_available():
@@ -656,7 +657,7 @@ class TestMapBuilding:
     def test_build_metric_map(
         self,
         som_trained: SOM,
-        regression_data: Tuple[torch.Tensor, torch.Tensor],
+        regression_data: tuple[torch.Tensor, torch.Tensor],
         reduction_parameter: str,
     ):
         """Test metric map generation."""
@@ -673,7 +674,7 @@ class TestMapBuilding:
     def test_build_score_map(
         self,
         som_trained: SOM,
-        regression_data: Tuple[torch.Tensor, torch.Tensor],
+        regression_data: tuple[torch.Tensor, torch.Tensor],
     ):
         """Test score map generation."""
         data, target = regression_data
@@ -691,7 +692,7 @@ class TestMapBuilding:
     def test_build_rank_map(
         self,
         som_trained: SOM,
-        regression_data: Tuple[torch.Tensor, torch.Tensor],
+        regression_data: tuple[torch.Tensor, torch.Tensor],
     ):
         """Test rank map generation."""
         data, target = regression_data
@@ -709,7 +710,7 @@ class TestMapBuilding:
     def test_build_classification_map(
         self,
         som_trained: SOM,
-        clustered_data: Tuple[torch.Tensor, torch.Tensor],
+        clustered_data: tuple[torch.Tensor, torch.Tensor],
     ):
         """Test classification map generation."""
         data, target = clustered_data
@@ -729,8 +730,8 @@ class TestMapBuilding:
     def test_map_building_consistency(
         self,
         som_trained: SOM,
-        regression_data: Tuple[torch.Tensor, torch.Tensor],
-        clustered_data: Tuple[torch.Tensor, torch.Tensor],
+        regression_data: tuple[torch.Tensor, torch.Tensor],
+        clustered_data: tuple[torch.Tensor, torch.Tensor],
         return_indices: bool,
         reduction_parameter: str,
     ):

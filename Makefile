@@ -31,8 +31,8 @@ test:  ## Run all tests with coverage
 		--cov-report=html \
 		--cov-config=pyproject.toml \
 		--junit-xml=junit.xml \
-		-m "unit and not gpu"
-
+		-m "unit or gpu"
+# -m "not unit and not gpu"
 # -v verbose, -x exit on first failure, -m marker: run only tests with the corresponding markers
 test-quick:  ## Run tests without coverage (faster)
 	@echo "⚡ Running quick tests..."
@@ -42,7 +42,6 @@ test-gpu:  ## Run GPU tests (requires CUDA)
 	@echo "🖥️ Running GPU tests..."
 	pytest tests/unit/ -v -m "gpu"
 
-# ! NEED TO CHECK IF THIS WORKS
 lint:  ## Run all code quality checks
 	@echo "🔍 Running code quality checks..."
 	@echo "  🎨 Checking code formatting..."
@@ -50,15 +49,16 @@ lint:  ## Run all code quality checks
 	@echo "  📦 Checking import sorting..."
 	isort --check-only --diff torchsom/ tests/
 	@echo "  🔍 Running linter..."
-	ruff check torchsom/ tests/ 
+	ruff check torchsom/ tests/
 	@echo "  🎯 Type checking..."
-	mypy torchsom/ --ignore-missing-imports
+	mypy torchsom/
 	@echo "✅ All quality checks passed!"
 # ruff check torchsom/ tests/ => read-only mode, report violations without modifications
 # ruff check torchsom/ tests/ --fix => fix safe, non-destructive violations
 # ruff check torchsom/ tests/ --fix --unsafe-fixes => fix unsafe, potentially destructive violations (might need review)
+# ruff check torchsom/ tests/ --fix --unsafe-fixes --diff => fix unsafe, potentially destructive violations (might need review)
+# mypy torchsom/ --ignore-missing-imports => Skip checking for modules it cannot find
 
-# ! NEED TO CHECK IF THIS WORKS
 format:  ## Auto-fix formatting and import issues
 	@echo "🎨 Auto-fixing code formatting..."
 	black torchsom/ tests/
@@ -78,7 +78,6 @@ security:  ## Run security scans
 # @echo "⚠️ Safety vulnerability check..."
 # safety scan
 
-# ! NEED TO CHECK IF THIS WORKS
 docs:  ## Check documentation quality
 	@echo "📚 Checking documentation..."
 	@echo "  📝 Docstring style..."
@@ -86,13 +85,14 @@ docs:  ## Check documentation quality
 	@echo "  📊 Docstring coverage..."
 	interrogate torchsom/ --verbose --ignore-init-method --ignore-magic --ignore-module --fail-under=80
 	@echo "  🏗️ Building HTML documentation..."
-	sphinx-build -b html source/ build/html
+	sphinx-build -b html docs/source/ docs/build/html_temp
 	@echo "✅ Documentation checks and build complete!"
 
 clean-docs:  ## Remove Sphinx build artifacts
 	@echo "🧹 Cleaning documentation build..."
-	rm -rf build/*
+	rm -rf docs/build/html_temp/
 	@echo "✅ Cleaned!"
+# rm -rf build/*
 
 # ! NEED TO CHECK IF THIS WORKS
 pre-commit:  ## Run pre-commit hooks on all files
@@ -110,8 +110,7 @@ clean:  ## Clean up generated files
 	find . -type f -name "*.pyc" -delete
 	@echo "✅ Cleanup completed!"
 
-# ! NEED TO CHECK IF THIS WORKS
-all: format lint test security docs  ## Run everything (full CI simulation)
+all: format lint security docs test  ## Run everything (full CI simulation)
 	@echo ""
 	@echo "🎉 All checks passed! Ready to push to GitHub!"
 

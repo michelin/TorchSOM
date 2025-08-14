@@ -88,3 +88,6 @@ pip-audit-report.json
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# Ruff
+.ruff_cache/

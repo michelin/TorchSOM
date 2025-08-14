@@ -1,9 +1,11 @@
-from typing import Dict, List, Tuple, Union
+"""Utility functions for topology."""
+
+from typing import Union
 
 
 def get_rectangular_offsets(
     neighborhood_order: int = 1,
-) -> List[Tuple[int, int]]:
+) -> list[tuple[int, int]]:
     """Get neighbor offset coordinates for rectangular topology at any order.
 
     Args:
@@ -34,8 +36,9 @@ def get_rectangular_offsets(
 
 def get_hexagonal_offsets(
     neighborhood_order: int = 1,
-) -> Dict[str, List[Tuple[int, int]]]:
+) -> dict[str, list[tuple[int, int]]]:
     """Get neighbor offset coordinates for hexagonal topology at any order.
+
     Order n has 6*n elements.
 
     Args:
@@ -48,7 +51,7 @@ def get_hexagonal_offsets(
         raise ValueError("Neighborhood order must be >= 1")
 
     # Generate neighbors in axial coordinates using mathematical approach
-    def generate_axial_ring(distance: int) -> List[Tuple[int, int]]:
+    def generate_axial_ring(distance: int) -> list[tuple[int, int]]:
         """Generate all hexagonal neighbors at a specific distance in axial coordinates."""
         if distance == 0:
             return [(0, 0)]
@@ -70,7 +73,7 @@ def get_hexagonal_offsets(
 
         for direction in directions:
             dx, dy, dz = direction
-            for i in range(distance):
+            for _i in range(distance):
                 # Convert cube back to axial (q, r)
                 q = x
                 r = y
@@ -106,7 +109,7 @@ def get_hexagonal_offsets(
 def get_all_neighbors_up_to_order(
     topology: str,
     max_order: int,
-) -> Union[List[Tuple[int, int]], Dict[str, List[Tuple[int, int]]]]:
+) -> Union[list[tuple[int, int]], dict[str, list[tuple[int, int]]]]:
     """Get all neighbors from order 1 up to max_order.
 
     Args:

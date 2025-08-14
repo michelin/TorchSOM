@@ -1,5 +1,6 @@
+"""Utility functions for initialization."""
+
 import warnings
-from typing import Optional, Union
 
 import torch
 
@@ -68,7 +69,10 @@ def pca_init(
         raise ValueError("Data needs at least 2 features for PCA initialization")
 
     if weights.shape[0] == 1 or weights.shape[1] == 1:
-        warnings.warn("PCA initialization may be inappropriate for 1D map")
+        warnings.warn(
+            "PCA initialization may be inappropriate for 1D map",
+            stacklevel=2,
+        )
 
     try:
         # Center the data efficiently using running mean
@@ -91,7 +95,9 @@ def pca_init(
             pc = V[:2]  # Take first two principal components
 
         except RuntimeError:
-            warnings.warn("SVD failed, falling back to eigendecomposition")
+            warnings.warn(
+                "SVD failed, falling back to eigendecomposition", stacklevel=2
+            )
             eigenvalues, eigenvectors = torch.linalg.eigh(cov)
             idx = torch.argsort(
                 eigenvalues, descending=True
@@ -123,7 +129,8 @@ def pca_init(
 
     except Exception as e:
         warnings.warn(
-            f"PCA initialization failed: {str(e)}. Falling back to random initialization"
+            f"PCA initialization failed: {str(e)}. Falling back to random initialization",
+            stacklevel=2,
         )
         return random_init(weights, data, device)
 

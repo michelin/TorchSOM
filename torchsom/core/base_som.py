@@ -1,5 +1,7 @@
+"""Abstract base class for all SOM variants."""
+
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Optional
 
 import torch
 import torch.nn as nn
@@ -12,7 +14,7 @@ class BaseSOM(nn.Module, ABC):
     def fit(
         self,
         data: torch.Tensor,
-    ) -> Tuple[List[float], List[float]]:
+    ) -> tuple[list[float], list[float]]:
         """Train the SOM on the given data.
 
         Args:
@@ -73,7 +75,7 @@ class BaseSOM(nn.Module, ABC):
     def initialize_weights(
         self,
         data: torch.Tensor,
-        mode: str = None,
+        mode: Optional[str] = None,
     ) -> None:
         """Initialize the SOM weights.
 

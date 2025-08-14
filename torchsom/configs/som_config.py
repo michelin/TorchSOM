@@ -1,3 +1,5 @@
+"""Configuration for SOM parameters using pydantic for validation."""
+
 from typing import Literal
 
 import torch
@@ -49,22 +51,3 @@ class SOMConfig(BaseModel):
         description="Device for tensor computations",
     )
     random_seed: int = Field(42, description="Random seed for reproducibility")
-
-
-# SOM:
-
-#   x: 100 # Number of rows: 100
-#   y: 75 # Number of columns: 75
-#   topology: "rectangular" # Grid topology: "rectangular" or "hexagonal"
-#   epochs: 50 # Number of epochs to train the model: 50
-#   batch_size: 256 # Number of samples to train the model: 64
-#   learning_rate: 0.95 # Initial learning rate: 0.95
-#   sigma: 5.0 # Initial spread of the neighborhood function: 5.0
-#   neighborhood_function: "gaussian" # Neighborhood function: "gaussian", "mexican_hat", "bubble", "triangle"
-#   distance_function: "euclidean" # Function to calculate distance between data and neurons: "euclidean" "cosine" "manhattan" "chebyshev" "weighted_euclidean" (need to provide weights_proportion)
-#   lr_decay_function: "asymptotic_decay" # Learning rate scheduler: "lr_inverse_decay_to_zero", "lr_linear_decay_to_zero", "asymptotic_decay"
-#   sigma_decay_function: "asymptotic_decay" # Sigma scheduler: "sig_inverse_decay_to_one" "sig_linear_decay_to_one" "asymptotic_decay"
-#   initialization_mode: "pca" # Weights initialization method: "random" or "pca"
-#   neighborhood_order: 3 # Indicate which neighbors should be considered in SOM distance map and JITL buffer: 1
-# !  device: "cuda" # Device for tensor computations: "cuda" or "cpu"
-# !  random_seed: 42 # Random seed for reproducibility
