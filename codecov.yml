@@ -1,0 +1,50 @@
+# Codecov configuration file
+# This file defines coverage thresholds, PR comment behavior, ignored files, flags, and GitHub annotations.
+
+coverage:
+  status:
+    project:
+      default:
+        target: 60%         # Minimum total project coverage required
+        threshold: 1%       # Allowable drop in coverage before failing the check
+        base: auto          # Automatically choose base commit for comparison
+    patch:
+      default:
+        target: 60%         # Minimum coverage required for changed lines in a PR
+        threshold: 1%       # Allowable drop in patch coverage before failing the check
+
+comment:
+  layout: "header, diff, flags, files"    # Content shown in PR comments: summary, diff coverage, flags, file breakdown
+  behavior: default                       # Update existing comment instead of creating new ones
+  require_changes: false                  # Post comment even if there are no coverage changes
+  require_base: no                        # No requirement for base commit coverage before posting comment
+  require_head: yes                       # Require coverage data for head commit before posting comment
+
+ignore:
+  # Mirror coverage omit rules from pyproject.toml and general non-source paths
+  - "tests/**"                         # Ignore all test files
+  - "docs/**"                          # Ignore documentation
+  - "notebooks/**"                     # Ignore Jupyter notebooks
+  - "torchsom/core/base_som.py"        # Exclude base SOM implementation
+  - "torchsom/core/growing/**"         # Exclude growing SOM implementation
+  - "torchsom/core/hierarchical/**"    # Exclude hierarchical SOM implementation
+  - "torchsom/visualization/**"        # Exclude visualization utilities
+  - "torchsom/logger.py"               # Exclude logging utilities
+  - "torchsom/version.py"              # Exclude version info file
+  - "**/conftest.py"                   # Exclude pytest config
+  - "**/__init__.py"                   # Exclude package init files
+  - "**/setup.py"                      # Exclude setup scripts
+
+flags:
+  unittests:
+    # paths:
+    #   - torchsom/                   # Group library coverage under a single flag
+    carryforward: true                # If flag data is missing in a build, reuse the last known coverage for this flag
+
+  gpu:
+    # paths:
+    #   - torchsom/
+    carryforward: true
+
+github_checks:
+  annotations: true                   # Enable inline annotations in GitHub PR view showing uncovered lines
