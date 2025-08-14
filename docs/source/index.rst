@@ -11,14 +11,14 @@ TorchSOM Documentation
 ..    :width: 200px
 ..    :align: center
 
-**TorchSOM** is a modern PyTorch-based library for training and visualizing **Self-Organizing Maps (SOMs)**, 
+**TorchSOM** is a modern PyTorch-based library for training and visualizing **Self-Organizing Maps (SOMs)**,
 a powerful unsupervised learning algorithm used for clustering, dimensionality reduction, and data exploration.
 
-Built with PyTorch at its core, TorchSOM seamlessly integrates with modern deep learning workflows while 
+Built with PyTorch at its core, TorchSOM seamlessly integrates with modern deep learning workflows while
 providing GPU acceleration for high-performance computing.
 
 .. note::
-   🌟 If you find this project interesting, we would be grateful for your support by starring 
+   🌟 If you find this project interesting, we would be grateful for your support by starring
    this `GitHub repository <https://github.com/michelin/TorchSOM>`_.
 
 Key Features

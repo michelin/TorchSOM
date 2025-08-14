@@ -74,30 +74,30 @@ The format is based on `Keep a Changelog <https://keepachangelog.com/>`_, and th
 .. - **Import paths changed**: Update import statements
 
 ..   .. code-block:: python
-  
+
 ..      # Old
 ..      from torchsom.som import SOM
-     
-..      # New  
+
+..      # New
 ..      from torchsom import SOM
 
 .. - **Parameter names**: Some parameter names were standardized
 
 ..   .. code-block:: python
-  
+
 ..      # Old
 ..      som = SOM(map_size=(10, 10), learning_rate=0.5)
-     
+
 ..      # New
 ..      som = SOM(x=10, y=10, learning_rate=0.5)
 
 .. - **Visualization API**: Updated method signatures
 
 ..   .. code-block:: python
-  
+
 ..      # Old
 ..      som.plot_distance_map()
-     
+
 ..      # New
 ..      from torchsom.visualization import SOMVisualizer
 ..      viz = SOMVisualizer(som)

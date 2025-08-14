@@ -30,7 +30,7 @@ We recommend using Python 3.9+.
 Do I need a GPU to use TorchSOM?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-No, TorchSOM works on both CPU and GPU. 
+No, TorchSOM works on both CPU and GPU.
 However, GPU acceleration significantly improves training speed for large datasets and maps.
 We recommend using a GPU for training.
 
@@ -55,7 +55,7 @@ SOMs operate exclusively on numerical data. Therefore, it is essential to conver
 2. **Ordinal encoding** for ordered categories
 3. **Target or frequency encoding** for high-cardinality categories
 
-If your dataset contains a mix of numerical and categorical features, ensure all features are numerically encoded prior to training. 
+If your dataset contains a mix of numerical and categorical features, ensure all features are numerically encoded prior to training.
 
 Similarly, when visualizing classification or label maps, assign numerical levels to each class or category to enable proper mapping and interpretation in the visualization outputs.
 
@@ -131,11 +131,11 @@ Advanced Topics
 Can I use TorchSOM for time series data?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-TorchSOM is designed to work with tabular data, meaning any data type—such as time series, images, or text—can be used as long as it is represented in a tabular (2D array) format. 
+TorchSOM is designed to work with tabular data, meaning any data type—such as time series, images, or text—can be used as long as it is represented in a tabular (2D array) format.
 This typically means that each sample should be a fixed-length feature vector.
 
-For time series or other complex data types, you can preprocess your data to obtain such representations. 
-Common approaches include extracting statistical features, flattening fixed-length windows, or generating embeddings (e.g., using autoencoders or other neural networks) before projecting them onto the SOM map. 
+For time series or other complex data types, you can preprocess your data to obtain such representations.
+Common approaches include extracting statistical features, flattening fixed-length windows, or generating embeddings (e.g., using autoencoders or other neural networks) before projecting them onto the SOM map.
 As long as your data can be converted into a matrix of shape `[n_samples, n_features]`, it can be used with TorchSOM.
 
 How do I implement custom distance functions?
@@ -165,7 +165,7 @@ Yes, use PyTorch's standard mechanisms:
 
    # Save
    torch.save(som.state_dict(), 'som_weights.pth')
-   
+
    # Load
    som = SOM(x=10, y=10, num_features=4)
    som.load_state_dict(torch.load('som_weights.pth'))
@@ -188,7 +188,7 @@ Please cite TorchSOM as:
         version={1.0.0},
         year={2025}
     }
-    
+
     # Conference Paper
     @inproceedings{Berthier2025TorchSOM,
         title={TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},

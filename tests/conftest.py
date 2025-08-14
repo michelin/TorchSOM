@@ -13,7 +13,9 @@ from torchsom.core.som import SOM
 
 
 @pytest.fixture(params=["cpu", "cuda"])
-def device(request) -> str:
+def device(
+    request: pytest.FixtureRequest,
+) -> str:
     """Parametrized device fixture for testing CPU/GPU compatibility."""
     device_name = request.param
     if device_name == "cuda" and not torch.cuda.is_available():
@@ -28,19 +30,25 @@ def fixed_seed() -> int:
 
 
 @pytest.fixture(params=["rectangular", "hexagonal"])
-def topology(request) -> str:
+def topology(
+    request: pytest.FixtureRequest,
+) -> str:
     """Parametrized topology fixture for testing both topologies."""
     return request.param
 
 
 @pytest.fixture(params=["euclidean", "cosine", "manhattan", "chebyshev"])
-def distance_function(request) -> str:
+def distance_function(
+    request: pytest.FixtureRequest,
+) -> str:
     """Parametrized distance function fixture."""
     return request.param
 
 
 @pytest.fixture(params=["gaussian", "bubble", "triangle", "mexican_hat"])
-def neighborhood_function(request) -> str:
+def neighborhood_function(
+    request: pytest.FixtureRequest,
+) -> str:
     """Parametrized neighborhood function fixture."""
     return request.param
 
@@ -48,7 +56,9 @@ def neighborhood_function(request) -> str:
 @pytest.fixture(
     params=["lr_inverse_decay_to_zero", "lr_linear_decay_to_zero", "asymptotic_decay"]
 )
-def lr_decay_function(request) -> str:
+def lr_decay_function(
+    request: pytest.FixtureRequest,
+) -> str:
     """Parametrized learning rate decay function fixture."""
     return request.param
 
@@ -56,25 +66,33 @@ def lr_decay_function(request) -> str:
 @pytest.fixture(
     params=["sig_inverse_decay_to_one", "sig_linear_decay_to_one", "asymptotic_decay"]
 )
-def sigma_decay_function(request) -> str:
+def sigma_decay_function(
+    request: pytest.FixtureRequest,
+) -> str:
     """Parametrized sigma decay function fixture."""
     return request.param
 
 
 @pytest.fixture(params=["random", "pca"])
-def initialization_mode(request) -> str:
+def initialization_mode(
+    request: pytest.FixtureRequest,
+) -> str:
     """Parametrized initialization mode fixture."""
     return request.param
 
 
 @pytest.fixture(params=["mean", "std"])
-def reduction_parameter(request) -> str:
+def reduction_parameter(
+    request: pytest.FixtureRequest,
+) -> str:
     """Parametrized reduction parameter fixture."""
     return request.param
 
 
 @pytest.fixture(params=[True, False])
-def return_indices(request) -> bool:
+def return_indices(
+    request: pytest.FixtureRequest,
+) -> bool:
     """Parametrized return indices fixture."""
     return request.param
 
@@ -84,7 +102,9 @@ def return_indices(request) -> bool:
 
 # ! autouse=True means that the fixture will be applied automatically to test functions without including it as an argument
 @pytest.fixture(autouse=True)
-def set_random_seeds(fixed_seed) -> None:
+def set_random_seeds(
+    fixed_seed: int,
+) -> None:
     """Set all random seeds for reproducibility across the test suite."""
     torch.manual_seed(fixed_seed)
     np.random.seed(fixed_seed)
@@ -373,7 +393,9 @@ def som_trained(
 # ==================== Test Markers Configuration ====================
 
 
-def pytest_configure(config):
+def pytest_configure(
+    config: pytest.Config,
+) -> None:
     """Configure custom pytest markers."""
     config.addinivalue_line("markers", "unit: Unit test markers")
     config.addinivalue_line("markers", "integration: Integration test markers")

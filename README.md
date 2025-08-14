@@ -33,8 +33,8 @@
 
 ## 🎯 Why TorchSOM?
 
-**TorchSOM** is the reference PyTorch library for Self-Organizing Maps (SOMs), purpose-built for seamless integration with modern deep learning and scientific workflows.  
-Unlike legacy SOM packages, TorchSOM is engineered from the ground up to fully leverage PyTorch’s ecosystem—offering native GPU acceleration, scalable performance, and compatibility with neural network pipelines.  
+**TorchSOM** is the reference PyTorch library for Self-Organizing Maps (SOMs), purpose-built for seamless integration with modern deep learning and scientific workflows.
+Unlike legacy SOM packages, TorchSOM is engineered from the ground up to fully leverage PyTorch’s ecosystem—offering native GPU acceleration, scalable performance, and compatibility with neural network pipelines.
 Whether you are a researcher or practitioner, TorchSOM empowers you to efficiently incorporate SOMs into your machine learning projects, from exploratory data analysis to advanced model architectures.
 
 TorchSOM is the official implementation accompanying the paper: [TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps](update_link), presented at @CONFERENCE, @DATE.
@@ -165,7 +165,7 @@ pip install torchsom
 ```bash
 git clone https://github.com/michelin/TorchSOM.git
 cd TorchSOM
-python3.9 -m venv .torchsom_env 
+python3.9 -m venv .torchsom_env
 source .torchsom_env/bin/activate
 pip install -e ".[dev]"
 ```
@@ -290,7 +290,7 @@ TorchSOM is licensed under the [Apache License 2.0](LICENSE). See the [LICENSE](
 | 9    | 80,000  | 200      | 100×100  | 85.6 ± 3.0               | 12.1 ± 0.8               | 6.2 ± 0.20               | 1.8 ± 0.09               | 295.0 ± 10.0            | 18.7 ± 1.2              |
 | 10   | 100,000 | 300      | 125×125  | 120.3 ± 4.0              | 18.5 ± 1.2               | 8.9 ± 0.25               | 2.7 ± 0.12               | 410.2 ± 15.0            | 27.5 ± 2.0              |
 
-*RAM values are in GB. Times are in seconds. "OOM" = (out of memory).  
+*RAM values are in GB. Times are in seconds. "OOM" = (out of memory).
 Benchmarks performed on NVIDIA RTX 3090 (GPU), AMD Ryzen 9 5900X (CPU).*
 
 ### Training & Memory Speedup
@@ -310,7 +310,7 @@ Benchmarks performed on NVIDIA RTX 3090 (GPU), AMD Ryzen 9 5900X (CPU).*
 
 *Speedup = (MiniSom CPU Time / TorchSOM Time) for each mode.*
 
-**Summary:**  
+**Summary:**
 
 - TorchSOM (GPU) achieves up to ~Z× speedup and ~Z× lower memory usage compared to MiniSom (CPU) on large datasets.
 - TorchSOM (CPU) is consistently Y–Z× faster and more memory efficient than MiniSom (CPU).

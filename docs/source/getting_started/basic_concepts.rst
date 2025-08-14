@@ -13,7 +13,7 @@ A **Self-Organizing Map (SOM)**, also known as a Kohonen map, is an unsupervised
 - **Preserves topology** by keeping similar data points close together on the map
 - **Visualizes patterns** in complex, high-dimensional datasets
 
-**Key Characteristics**: 
+**Key Characteristics**:
 
 - **Unsupervised**: No labeled data required
 - **Competitive learning**: Neurons compete to represent input data
@@ -167,4 +167,4 @@ Next Steps
 
 Now that you understand the basics, explore:
 
-- :doc:`../user_guide/visualization_help` - Visualization techniques 
+- :doc:`../user_guide/visualization_help` - Visualization techniques

@@ -1,0 +1,90 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-json
+      - id: debug-statements
+      # - id: name-tests-test
+      #   args: ['--pytest-test-first']
+
+  - repo: https://github.com/psf/black
+    rev: 24.3.0
+    hooks:
+      - id: black
+        name: black
+        args: ['--config', 'pyproject.toml']
+        language_version: python3
+        # args: ['--line-length=88']
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: isort
+        args: ['--settings-path', 'pyproject.toml']
+        # args: ['--profile=black']
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.3.4
+    hooks:
+      - id: ruff
+        name: ruff
+        args: ['--config', 'pyproject.toml']
+        # args: [--fix, --exit-non-zero-on-fix]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.9.0
+    hooks:
+      - id: mypy
+        name: mypy
+        args: ['--config-file', 'pyproject.toml']
+        # additional_dependencies: [torch, numpy, pydantic, types-requests]
+        # args: [--ignore-missing-imports, --strict]
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.5
+    hooks:
+      - id: bandit
+        name: bandit
+        args: ['--configfile', 'pyproject.toml']
+      #   args: ['-r', 'torchsom/', '--exclude', 'tests', '--skip', 'B101,B311,B601']
+      # - id: bandit
+      #   name: bandit-tests
+      #   args: ['-r', 'tests/', '--skip', 'B101,B311,B601']
+
+  - repo: https://github.com/pycqa/pydocstyle
+    rev: 6.3.0
+    hooks:
+      - id: pydocstyle
+        name: pydocstyle
+        args: ['--config', 'pyproject.toml']
+        # additional_dependencies: [toml]
+
+  - repo: https://github.com/econchick/interrogate
+    rev: 1.5.0
+    hooks:
+      - id: interrogate
+        name: interrogate
+        args: ['--config', 'pyproject.toml']
+        # args: ['torchsom/', '--verbose', '--ignore-init-method', '--ignore-magic', '--ignore-module', '--fail-under=80']
+
+  # - repo: local
+  #   hooks:
+  #     - id: pytest-check
+  #       name: pytest-check
+  #       description: Run pytest with configuration from pyproject.toml
+  #       # stages: [commit]
+  #       types: [python]
+  #       entry: pytest
+  #       language: system
+  #       # args: [] # LONG Leave empty to use pytest configuration from pyproject.toml
+  #       args: ['-x', '-v', 'tests/unit/', '-m', 'gpu', '--tb=short'] # SHORT
+  #       pass_filenames: false
+  #       always_run: true

@@ -1,0 +1,1 @@
+"""Test visualization configuration."""

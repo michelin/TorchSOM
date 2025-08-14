@@ -31,7 +31,7 @@ class TestSOMInitialization:
     def test_initialization_with_all_parameters(
         self,
         som_config_comprehensive: dict[str, Any],
-    ):
+    ) -> None:
         """Test SOM initialization with all parameters specified."""
         som = SOM(**som_config_comprehensive)
 
@@ -65,7 +65,9 @@ class TestSOMInitialization:
         assert som.random_seed == som_config_comprehensive["random_seed"]
 
     @pytest.mark.unit
-    def test_invalid_topology_raises_error(self):
+    def test_invalid_topology_raises_error(
+        self,
+    ) -> None:
         """Test that invalid topology raises ValueError."""
         with pytest.raises(
             ValueError, match="Only hexagonal and rectangular topologies are supported"
@@ -73,7 +75,9 @@ class TestSOMInitialization:
             SOM(x=5, y=5, num_features=4, topology="invalid_topology")
 
     @pytest.mark.unit
-    def test_invalid_distance_function_raises_error(self):
+    def test_invalid_distance_function_raises_error(
+        self,
+    ) -> None:
         """Test that invalid topology raises ValueError."""
         with pytest.raises(ValueError, match="Invalid distance function"):
             SOM(
@@ -86,7 +90,7 @@ class TestSOMInitialization:
     @pytest.mark.unit
     def test_invalid_neighborhood_function_raises_error(
         self,
-    ):
+    ) -> None:
         """Test that invalid neighborhood function raises ValueError."""
         with pytest.raises(ValueError, match="Invalid neighborhood function"):
             SOM(
@@ -99,7 +103,7 @@ class TestSOMInitialization:
     @pytest.mark.unit
     def test_invalid_lr_decay_function_raises_error(
         self,
-    ):
+    ) -> None:
         """Test that invalid learning rate decay function raises ValueError."""
         with pytest.raises(ValueError, match="Invalid learning rate decay function"):
             SOM(
@@ -112,7 +116,7 @@ class TestSOMInitialization:
     @pytest.mark.unit
     def test_invalid_sigma_decay_function_raises_error(
         self,
-    ):
+    ) -> None:
         """Test that invalid sigma decay function raises ValueError."""
         with pytest.raises(ValueError, match="Invalid sigma decay function"):
             SOM(
@@ -123,7 +127,9 @@ class TestSOMInitialization:
             )
 
     @pytest.mark.unit
-    def test_high_sigma_warning(self):
+    def test_high_sigma_warning(
+        self,
+    ) -> None:
         """
         Test that initializing a SOM with a sigma value much larger than the map dimensions
         triggers a user warning.
@@ -158,7 +164,7 @@ class TestSOMInitialization:
         device: str,
         initialization_mode: str,
         fixed_seed: int,
-    ):
+    ) -> None:
         """Test that initial weights are properly normalized (unit vectors)."""
         som = SOM(
             x=3,
@@ -182,7 +188,7 @@ class TestSOMTraining:
         self,
         som_small: SOM,
         small_random_data: torch.Tensor,
-    ):
+    ) -> None:
         """Test that fit method returns quantization and topographic error lists."""
         data = small_random_data.to(som_small.device)
         q_errors, t_errors = som_small.fit(data)
@@ -198,7 +204,7 @@ class TestSOMTraining:
         self,
         som_comprehensive: SOM,
         small_random_data: torch.Tensor,
-    ):
+    ) -> None:
         """Test fit method with comprehensive configuration."""
         data = small_random_data.to(som_comprehensive.device)
         q_errors, t_errors = som_comprehensive.fit(data)
@@ -216,7 +222,7 @@ class TestSOMTraining:
         device: str,
         som_small: SOM,
         medium_random_data: torch.Tensor,
-    ):
+    ) -> None:
         """Test training with different batch sizes.
 
         Note:
@@ -236,7 +242,7 @@ class TestSOMTraining:
         self,
         som_standard: SOM,
         medium_random_data: torch.Tensor,
-    ):
+    ) -> None:
         """Test that training generally improves (decreases) quantization error."""
         data = medium_random_data.to(som_standard.device)
         q_errors, _ = som_standard.fit(data)
@@ -248,7 +254,7 @@ class TestSOMTraining:
     def test_fit_empty_data_raises_error(
         self,
         som_small: SOM,
-    ):
+    ) -> None:
         """Test that fit method handles empty data appropriately."""
         empty_data = torch.empty(0, som_small.num_features).to(som_small.device)
         with pytest.raises(ValueError):
@@ -263,7 +269,7 @@ class TestBMUIdentification:
         self,
         som_trained: SOM,
         single_sample: torch.Tensor,
-    ):
+    ) -> None:
         """Test BMU identification for a single sample."""
         sample = single_sample.to(som_trained.device)
         bmu = som_trained.identify_bmus(sample)
@@ -278,7 +284,7 @@ class TestBMUIdentification:
         self,
         som_trained: SOM,
         medium_random_data: torch.Tensor,
-    ):
+    ) -> None:
         """Test BMU identification for a batch of samples."""
         data = medium_random_data.to(som_trained.device)
         bmus = som_trained.identify_bmus(data)
@@ -292,7 +298,7 @@ class TestBMUIdentification:
     def test_bmu_deterministic(
         self,
         som_small: SOM,
-    ):
+    ) -> None:
         """Test that BMU identification is deterministic for same input."""
         sample = torch.randn(som_small.num_features).to(som_small.device)
         bmu1 = som_small.identify_bmus(sample)
@@ -305,7 +311,7 @@ class TestBMUIdentification:
     def test_bmu_different_device_compatibility(
         self,
         som_small: SOM,
-    ):
+    ) -> None:
         """Test BMU identification when data is on different device than SOM."""
         # Create sample on CPU
         sample = torch.randn(som_small.num_features)
@@ -323,7 +329,7 @@ class TestErrorCalculations:
         self,
         som_trained: SOM,
         single_sample: torch.Tensor,
-    ):
+    ) -> None:
         """Test quantization error calculation for single sample."""
         sample = single_sample.to(som_trained.device)
         qe = som_trained.quantization_error(sample)
@@ -336,7 +342,7 @@ class TestErrorCalculations:
         self,
         som_trained: SOM,
         small_random_data: torch.Tensor,
-    ):
+    ) -> None:
         """Test quantization error calculation for batch."""
         data = small_random_data.to(som_trained.device)
         qe = som_trained.quantization_error(data)
@@ -349,7 +355,7 @@ class TestErrorCalculations:
         self,
         som_trained: SOM,
         small_random_data: torch.Tensor,
-    ):
+    ) -> None:
         """Test topographic error calculation."""
         data = small_random_data.to(som_trained.device)
         te = som_trained.topographic_error(data)
@@ -362,7 +368,7 @@ class TestErrorCalculations:
         self,
         som_trained: SOM,
         small_random_data: torch.Tensor,
-    ):
+    ) -> None:
         """Test that error calculations are consistent across calls."""
         data = small_random_data.to(som_trained.device)
 
@@ -383,7 +389,7 @@ class TestWeightInitialization:
         self,
         som_small: SOM,
         small_random_data: torch.Tensor,
-    ):
+    ) -> None:
         """Test random weight initialization."""
         data = small_random_data.to(som_small.device)
         original_weights = som_small.weights.clone()
@@ -409,7 +415,7 @@ class TestWeightInitialization:
         self,
         som_small: SOM,
         medium_random_data: torch.Tensor,
-    ):
+    ) -> None:
         """Test PCA weight initialization."""
         data = medium_random_data.to(som_small.device)
         original_weights = som_small.weights.clone()
@@ -435,7 +441,7 @@ class TestWeightInitialization:
         self,
         som_small: SOM,
         small_random_data: torch.Tensor,
-    ):
+    ) -> None:
         """Test that invalid initialization mode raises error."""
         data = small_random_data.to(som_small.device)
         with pytest.raises(ValueError):
@@ -449,7 +455,7 @@ class TestInputValidation:
     def test_wrong_feature_dimension_raises_error(
         self,
         som_small: SOM,
-    ):
+    ) -> None:
         """Test that wrong feature dimensions are handled appropriately."""
         wrong_data = torch.randn(10, som_small.num_features + 1).to(som_small.device)
         with pytest.raises(RuntimeError):
@@ -468,7 +474,7 @@ class TestInputValidation:
     def test_nan_data_handling(
         self,
         som_small: SOM,
-    ):
+    ) -> None:
         """Test that SOM.fit raises an error when input data contains NaN values.
 
         This test is expected to fail until explicit NaN handling is implemented.
@@ -488,7 +494,7 @@ class TestInputValidation:
     def test_inf_data_handling(
         self,
         som_small: SOM,
-    ):
+    ) -> None:
         """Test that SOM.fit raises an error when input data contains Inf values.
 
         This test is expected to fail until explicit Inf handling is implemented.
@@ -503,7 +509,7 @@ class TestInputValidation:
     def test_single_point_dataset(
         self,
         som_small: SOM,
-    ):
+    ) -> None:
         """Test that training with a single data point raises an error.
 
         SOM should not allow training on a dataset with only one sample,
@@ -528,7 +534,7 @@ class TestDeviceCompatibility:
     def test_cpu_gpu_weight_consistency(
         self,
         fixed_seed: int,
-    ):
+    ) -> None:
         """Test that weights are consistent between CPU and GPU initialization.
 
         Note:
@@ -548,7 +554,7 @@ class TestDeviceCompatibility:
     def test_gpu_memory_efficiency(
         self,
         som_config_standard: dict[str, Any],
-    ):
+    ) -> None:
         """Test GPU memory usage during training, it should be less than 25MB (not excessive)."""
         if not torch.cuda.is_available():
             pytest.skip("CUDA not available")
@@ -568,7 +574,7 @@ class TestDeviceCompatibility:
         self,
         som_small: SOM,
         device: str,
-    ):
+    ) -> None:
         """Test that methods handle device transfer correctly."""
         data_cpu = torch.randn(10, som_small.num_features, device="cpu")
         bmus = som_small.identify_bmus(data_cpu)
@@ -588,7 +594,7 @@ class TestMapBuilding:
         self,
         som_trained: SOM,
         small_random_data: torch.Tensor,
-    ):
+    ) -> None:
         """Test hit map generation."""
         data = small_random_data.to(som_trained.device)
         hit_map = som_trained.build_hit_map(data)
@@ -601,7 +607,7 @@ class TestMapBuilding:
     def test_build_distance_map(
         self,
         som_trained: SOM,
-    ):
+    ) -> None:
         """Test distance map (U-matrix) generation."""
         distance_map = som_trained.build_distance_map()
 
@@ -614,7 +620,7 @@ class TestMapBuilding:
         som_trained: SOM,
         small_random_data: torch.Tensor,
         return_indices: bool,
-    ):
+    ) -> None:
         """
         Test mapping of winning neurons (BMUs) to their corresponding data points or indices.
 
@@ -657,7 +663,7 @@ class TestMapBuilding:
         som_trained: SOM,
         regression_data: tuple[torch.Tensor, torch.Tensor],
         reduction_parameter: str,
-    ):
+    ) -> None:
         """Test metric map generation."""
         data, target = regression_data
         data = data.to(som_trained.device)
@@ -673,7 +679,7 @@ class TestMapBuilding:
         self,
         som_trained: SOM,
         regression_data: tuple[torch.Tensor, torch.Tensor],
-    ):
+    ) -> None:
         """Test score map generation."""
         data, target = regression_data
         data = data.to(som_trained.device)
@@ -691,7 +697,7 @@ class TestMapBuilding:
         self,
         som_trained: SOM,
         regression_data: tuple[torch.Tensor, torch.Tensor],
-    ):
+    ) -> None:
         """Test rank map generation."""
         data, target = regression_data
         data = data.to(som_trained.device)
@@ -709,7 +715,7 @@ class TestMapBuilding:
         self,
         som_trained: SOM,
         clustered_data: tuple[torch.Tensor, torch.Tensor],
-    ):
+    ) -> None:
         """Test classification map generation."""
         data, target = clustered_data
         data = data.to(som_trained.device)
@@ -732,7 +738,7 @@ class TestMapBuilding:
         clustered_data: tuple[torch.Tensor, torch.Tensor],
         return_indices: bool,
         reduction_parameter: str,
-    ):
+    ) -> None:
         """Test that map building is consistent across calls."""
         data, target = regression_data
         data = data.to(som_trained.device)
@@ -778,7 +784,9 @@ class TestCollectSamples:
     """Tests for SOM.collect_samples method."""
 
     @pytest.mark.unit
-    def test_collect_samples_basic_thresholding(self):
+    def test_collect_samples_basic_thresholding(
+        self,
+    ) -> None:
         """Collect samples from BMU bucket first, then nearest neighbor until threshold."""
         # Build a small deterministic SOM on CPU
         som = SOM(x=3, y=3, num_features=2, device="cpu", random_seed=0)
@@ -819,7 +827,9 @@ class TestCollectSamples:
         assert out_buf.shape == (3, 1)
 
     @pytest.mark.unit
-    def test_collect_samples_empty_bmu_uses_neighbors(self):
+    def test_collect_samples_empty_bmu_uses_neighbors(
+        self,
+    ) -> None:
         """When BMU bucket is empty, it should pull from nearest neighbors via heap stage."""
         som = SOM(x=3, y=3, num_features=2, device="cpu", random_seed=0)
 
@@ -856,8 +866,8 @@ class TestCollectSamples:
     @pytest.mark.unit
     def test_collect_samples_no_available_samples_returns_empty(
         self,
-        som_comprehensive,
-    ):
+        som_comprehensive: SOM,
+    ) -> None:
         """Returns empty buffers when no BMU/neighbor neurons provide indices."""
         # Set BMU weight for determinism
         som_comprehensive.weights.data = torch.zeros_like(

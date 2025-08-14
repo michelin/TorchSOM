@@ -95,21 +95,21 @@ Please [write a great commit message](https://chris.beams.io/posts/git-commit/).
 ```text
 [TAG] Short summary of changes in 50 chars or less
 
-Add a more detailed explanation here, if necessary. Possibly give 
-some background about the issue being fixed, etc. The body of the 
-commit message can be several paragraphs. Further paragraphs come 
+Add a more detailed explanation here, if necessary. Possibly give
+some background about the issue being fixed, etc. The body of the
+commit message can be several paragraphs. Further paragraphs come
 after blank lines and please do proper word-wrap.
 
-Wrap it to about 72 characters or so. In some contexts, 
-the first line is treated as the subject of the commit and the 
-rest of the text as the body. The blank line separating the summary 
-from the body is critical (unless you omit the body entirely); 
-various tools like `log`, `shortlog` and `rebase` can get confused 
+Wrap it to about 72 characters or so. In some contexts,
+the first line is treated as the subject of the commit and the
+rest of the text as the body. The blank line separating the summary
+from the body is critical (unless you omit the body entirely);
+various tools like `log`, `shortlog` and `rebase` can get confused
 if you run the two together.
 
 Explain the problem that this commit is solving. Focus on why you
-are making this change as opposed to how or what. The code explains 
-how or what. Reviewers and your future self can read the patch, 
+are making this change as opposed to how or what. The code explains
+how or what. Reviewers and your future self can read the patch,
 but might not understand why a particular solution was implemented.
 Are there side effects or other unintuitive consequences of this
 change? Here's the place to explain them.

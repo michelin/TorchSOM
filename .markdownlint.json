@@ -1,9 +1,11 @@
 {
   "MD013": {
-    "line_length": 450
+    "line_length": 500
   },
   "MD033": {
     "allowed_elements": ["div", "p", "br", "table", "tr", "td", "details", "summary", "b", "img"]
   },
-  "MD036": false
-} 
+  "MD036": false,
+  "MD007": false,
+  "MD041": false
+}

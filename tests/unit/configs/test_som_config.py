@@ -67,7 +67,7 @@ def test_som_config_repr_contains_key_fields() -> None:
     ],
 )
 def test_som_config_validation_errors(
-    bad_kwargs: dict,
+    bad_kwargs: dict[str, Any],
 ) -> None:
     """Invalid values should raise pydantic ValidationError."""
     with pytest.raises(ValidationError):

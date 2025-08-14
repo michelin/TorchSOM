@@ -72,7 +72,7 @@ Verify your installation by running:
 
    import torchsom
    print(f"TorchSOM version: {torchsom.__version__}")
-   
+
    # Check GPU availability
    import torch
    print(f"CUDA available: {torch.cuda.is_available()}")
@@ -121,4 +121,4 @@ Next Steps
 Once installed, continue with:
 
 - :doc:`quickstart` - Your first SOM in 5 minutes
-- :doc:`basic_concepts` - Understanding SOM fundamentals 
+- :doc:`basic_concepts` - Understanding SOM fundamentals

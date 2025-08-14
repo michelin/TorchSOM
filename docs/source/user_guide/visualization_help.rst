@@ -25,16 +25,16 @@ Basic Visualization Setup
    from torchsom import SOM
    from torchsom.visualization import SOMVisualizer, VisualizationConfig
    import torch
-   
+
    # Train a SOM
    data = torch.randn(1000, 4)
    som = SOM(x=20, y=15, num_features=4, epochs=50)
    som.initialize_weights(data=data, mode="pca")
    q_errors, t_errors = som.fit(data)
-   
+
    # Create visualizer with default configuration
    visualizer = SOMVisualizer(som=som)
-   
+
    # Generate all visualizations at once
    visualizer.plot_all(
        quantization_errors=q_errors,

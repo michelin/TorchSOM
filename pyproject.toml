@@ -8,9 +8,9 @@ requires = [
 
 # Main project/package metadata
 [project]
-name = "torchsom"                
+name = "torchsom"
 authors = [
-    {name = "Louis Berthier", email = "louis-desire-romeo.berthier@michelin.com"},  
+    {name = "Louis Berthier", email = "louis-desire-romeo.berthier@michelin.com"},
 ]
 dynamic = [
     "version",                          # Version will be determined dynamically (via git)
@@ -19,10 +19,10 @@ dynamic = [
 description = "torchsom: The Reference PyTorch Library for Self-Organizing Maps"
 requires-python = ">=3.9"               # Minimum Python version required
 classifiers = [
-    "Development Status :: 3 - Alpha",  
-    "Natural Language :: English",      
-    "Operating System :: OS Independent",  
-    "Programming Language :: Python",   
+    "Development Status :: 3 - Alpha",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -98,20 +98,26 @@ linting = [
 
 [tool.pytest.ini_options]
 # Directory containing test files
-testpaths = ["tests"] 
+testpaths = ["tests"]
 # File name patterns pytest will recognize as test files
-python_files = ["test_*.py", "*_test.py"] 
+python_files = ["test_*.py", "*_test.py"]
 # Class name patterns pytest will recognize as test classes
-python_classes = ["Test*"] 
+python_classes = ["Test*"]
 # Function name patterns pytest will recognize as test functions
-python_functions = ["test_*"] 
+python_functions = ["test_*"]
 # Additional pytest CLI options:
 addopts = [
-    "-v",                    # Verbose output
-    "--strict-markers",      # Fail if unknown @pytest.mark is used
-    "--strict-config",       # Fail if unknown config option is found
-    "--tb=short",            # Short traceback format
-    "--durations=10",        # Report 10 slowest tests
+    "-v",                               # Verbose output
+    "--strict-markers",                 # Fail if unknown @pytest.mark is used
+    "--strict-config",                  # Fail if unknown config option is found
+    "--tb=short",                       # Short traceback format
+    "--durations=10",                   # Report 10 slowest tests
+    "--cov=torchsom",                   # Coverage of torchsom
+    "--cov-report=term-missing",        # Show missing lines in the report
+    "--cov-report=html",                # Generate HTML coverage report
+    "--cov-config=pyproject.toml",      # Use configuration from pyproject.toml
+    "-m unit or gpu",                   # default marker selection
+    "--junit-xml=junit.xml",            # Create JUnit XML file for CI compatibility
 ]
 # Custom pytest markers with descriptions
 markers = [
@@ -135,7 +141,7 @@ timeout = 300
 # Directories or modules to measure coverage for
 source = ["torchsom"]
 # Files to exclude from coverage stats
-omit = [ 
+omit = [
     "torchsom/core/base_som.py",           # Exclude base SOM implementation
     "torchsom/core/growing/*",             # Exclude growing SOM implementation
     "torchsom/core/hierarchical/*",        # Exclude hierarchical SOM implementation
@@ -148,9 +154,9 @@ omit = [
     "*/setup.py",                          # Exclude setup scripts
 ]
 # Measure branch coverage in addition to line coverage
-branch = true       
+branch = true
 # Allow combining coverage results from parallel runs
-parallel = true     
+parallel = true
 
 [tool.coverage.report]
 # Lines to exclude from coverage measurement
@@ -163,11 +169,11 @@ exclude_lines = [
     "if TYPE_CHECKING:",             # Type hinting blocks
 ]
 # Show missing lines in the report
-show_missing = true  
+show_missing = true
 # Report numbers with 2 decimal places
-precision = 2        
+precision = 2
 # Fail if coverage percentage is below 60%
-fail_under = 60      
+fail_under = 60
 
 [tool.coverage.html]
 # Output directory for HTML coverage report
@@ -313,6 +319,10 @@ module = [
     "sklearn.*",
     "matplotlib.*",
     "tqdm.*",
+    "torch.*",
+    "numpy.*",
+    "pydantic.*",
+    "pytest.*",
 ]
 # Ignore missing imports
 ignore_missing_imports = true
@@ -321,8 +331,22 @@ ignore_missing_imports = true
 # Exclude directories from Bandit
 exclude_dirs = ["docs", "build", "dist"]
 # Skip assert_used and shell_injection tests
-skips = ["B601"]  
+skips = ["B101", "B311", "B601"]
 
 [tool.bandit.assert_used]
 # Skip assert_used for test files
 skips = ["*_test.py", "test_*.py"]
+[tool.pydocstyle]
+convention = "google"
+match-dir = "torchsom"
+# match = ".*\.py"  # optional; defaults to all .py
+# add-ignore = ["D104"] # example: ignore missing package docstring
+
+[tool.interrogate]
+verbose = 1
+ignore-init-method = true
+ignore-magic = true
+ignore-module = true
+fail-under = 80
+path = ["torchsom"]
+# exclude = ["tests", "docs"]

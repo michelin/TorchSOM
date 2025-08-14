@@ -18,22 +18,22 @@ Package Issues
 **Solutions**:
 
 1. Install TorchSOM:
-   
+
    .. code-block:: bash
-   
+
       pip install torchsom
 
 2. If using conda environment, make sure it's activated:
-   
+
    .. code-block:: bash
-   
+
       conda activate your_environment
       pip install torchsom
 
 3. Check installation:
-   
+
    .. code-block:: python
-   
+
       import torchsom
       print(torchsom.__version__)
 
@@ -49,28 +49,28 @@ CUDA/GPU Issues
 **Solutions**:
 
 1. **Reduce batch size**:
-   
+
    .. code-block:: python
-   
+
       som = SOM(x=10, y=10, num_features=4, batch_size=16)  # Smaller batch
 
 2. **Use CPU instead**:
-   
+
    .. code-block:: python
-   
+
       som = SOM(x=10, y=10, num_features=4, device="cpu")
 
 3. **Clear GPU cache**:
-   
+
    .. code-block:: python
-   
+
       import torch
       torch.cuda.empty_cache()
 
 4. **Reduce map size**:
-   
+
    .. code-block:: python
-   
+
       som = SOM(x=8, y=8, num_features=4)  # Smaller SOM
 
 CUDA not available
@@ -90,23 +90,23 @@ CUDA not available
 **Solutions**:
 
 1. **Install CUDA-enabled PyTorch**:
-   
+
    .. code-block:: bash
-   
+
       # For CUDA 11.8
       pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 2. **Check CUDA installation**:
-   
+
    .. code-block:: bash
-   
+
       nvidia-smi
       nvcc --version
 
 3. **Use CPU if no GPU available**:
-   
+
    .. code-block:: python
-   
+
       device = "cuda" if torch.cuda.is_available() else "cpu"
       som = SOM(x=10, y=10, num_features=4, device=device)
 
@@ -124,7 +124,7 @@ Training doesn't converge
 
    # Monitor training progress
    q_errors, t_errors = som.fit(data)
-   
+
    import matplotlib.pyplot as plt
    plt.plot(q_errors)
    plt.title('Quantization Error')
@@ -133,30 +133,30 @@ Training doesn't converge
 **Common causes and solutions**:
 
 1. **Learning rate too high**:
-   
+
    .. code-block:: python
-   
+
       som = SOM(x=10, y=10, num_features=4, learning_rate=0.1)  # Lower LR
 
 2. **Data not normalized**:
-   
+
    .. code-block:: python
-   
+
       from sklearn.preprocessing import StandardScaler
       scaler = StandardScaler()
       data_scaled = scaler.fit_transform(data)
       data_tensor = torch.tensor(data_scaled, dtype=torch.float32)
 
 3. **Poor initialization**:
-   
+
    .. code-block:: python
-   
+
       som = SOM(x=10, y=10, num_features=4, initialization_mode="pca")
 
 4. **Map too large**:
-   
+
    .. code-block:: python
-   
+
       # Rule of thumb: 5-10x fewer neurons than data points
       data_size = len(data)
       map_size = int(np.sqrt(data_size / 7))
@@ -170,33 +170,33 @@ Very slow training
 **Performance optimization**:
 
 1. **Enable GPU acceleration**:
-   
+
    .. code-block:: python
-   
+
       som = SOM(x=10, y=10, num_features=4, device="cuda")
 
 2. **Increase batch size**:
-   
+
    .. code-block:: python
-   
+
       som = SOM(x=10, y=10, num_features=4, batch_size=128)
 
 3. **Use PCA initialization**:
-   
+
    .. code-block:: python
-   
+
       som = SOM(x=10, y=10, num_features=4, initialization_mode="pca")
 
 4. **Reduce epochs if acceptable**:
-   
+
    .. code-block:: python
-   
+
       som = SOM(x=10, y=10, num_features=4, epochs=50)
 
 5. **Profile your code**:
-   
+
    .. code-block:: python
-   
+
       import time
       start_time = time.time()
       som.fit(data)
@@ -213,19 +213,19 @@ NaN values in results
 
    # Check for NaN in data
    print(f"NaN in data: {torch.isnan(data).any()}")
-   
+
    # Check SOM weights
    print(f"NaN in weights: {torch.isnan(som.weights).any()}")
 
 **Solutions**:
 
 1. **Check input data**:
-   
+
    .. code-block:: python
-   
+
       # Remove NaN values
       data_clean = data[~torch.isnan(data).any(dim=1)]
-      
+
       # Or impute missing values
       from sklearn.impute import SimpleImputer
       imputer = SimpleImputer(strategy='mean')
@@ -233,15 +233,15 @@ NaN values in results
       data_clean = torch.tensor(data_imputed, dtype=torch.float32)
 
 2. **Reduce learning rate**:
-   
+
    .. code-block:: python
-   
+
       som = SOM(x=10, y=10, num_features=4, learning_rate=0.1)
 
 3. **Check for inf values**:
-   
+
    .. code-block:: python
-   
+
       data = torch.clamp(data, min=-1e6, max=1e6)  # Clip extreme values
 
 Visualization Issues
@@ -255,24 +255,24 @@ Empty or white visualizations
 **Possible causes**:
 
 1. **No data passed to visualization**:
-   
+
    .. code-block:: python
-   
+
       # Make sure to pass data to hit map
       viz.plot_hit_map(data=data_tensor)
 
 2. **All neurons have same values**:
-   
+
    .. code-block:: python
-   
+
       # Check weight variance
       weights = som.weights.detach().cpu().numpy()
       print(f"Weight std: {np.std(weights)}")
 
 3. **Colormap issues**:
-   
+
    .. code-block:: python
-   
+
       # Try different colormap
       from torchsom.visualization import VisualizationConfig
       config = VisualizationConfig(cmap="viridis")
@@ -286,24 +286,24 @@ Figures not displaying
 **Solutions**:
 
 1. **For Jupyter notebooks**:
-   
+
    .. code-block:: python
-   
+
       %matplotlib inline
       import matplotlib.pyplot as plt
 
 2. **For scripts**:
-   
+
    .. code-block:: python
-   
+
       import matplotlib.pyplot as plt
       # ... create plots ...
       plt.show()  # Don't forget this
 
 3. **Save figures instead**:
-   
+
    .. code-block:: python
-   
+
       viz.plot_distance_map(save_path="results", fig_name="distance_map")
 
 Poor visualization quality
@@ -314,23 +314,23 @@ Poor visualization quality
 **Solutions**:
 
 1. **Increase resolution**:
-   
+
    .. code-block:: python
-   
+
       config = VisualizationConfig(dpi=300)
       viz = SOMVisualizer(som, config=config)
 
 2. **Larger figure size**:
-   
+
    .. code-block:: python
-   
+
       config = VisualizationConfig(figsize=(12, 10))
       viz = SOMVisualizer(som, config=config)
 
 3. **Better colormap**:
-   
+
    .. code-block:: python
-   
+
       config = VisualizationConfig(cmap="plasma")
       viz = SOMVisualizer(som, config=config)
 
@@ -345,12 +345,12 @@ Poor clustering results
 **Diagnostic steps**:
 
 1. **Visualize raw data**:
-   
+
    .. code-block:: python
-   
+
       from sklearn.decomposition import PCA
       from sklearn.manifold import TSNE
-      
+
       # PCA visualization
       pca = PCA(n_components=2)
       data_pca = pca.fit_transform(data.numpy())
@@ -359,17 +359,17 @@ Poor clustering results
       plt.show()
 
 2. **Check data distribution**:
-   
+
    .. code-block:: python
-   
+
       print(f"Data shape: {data.shape}")
       print(f"Data mean: {data.mean(dim=0)}")
       print(f"Data std: {data.std(dim=0)}")
 
 3. **Compare with K-means**:
-   
+
    .. code-block:: python
-   
+
       from sklearn.cluster import KMeans
       kmeans = KMeans(n_clusters=3)
       kmeans_labels = kmeans.fit_predict(data.numpy())
@@ -377,18 +377,18 @@ Poor clustering results
 **Solutions**:
 
 1. **Better preprocessing**:
-   
+
    .. code-block:: python
-   
+
       # Remove outliers
       from sklearn.preprocessing import RobustScaler
       scaler = RobustScaler()
       data_scaled = scaler.fit_transform(data.numpy())
 
 2. **Feature selection**:
-   
+
    .. code-block:: python
-   
+
       # Remove highly correlated features
       import pandas as pd
       df = pd.DataFrame(data.numpy())
@@ -396,9 +396,9 @@ Poor clustering results
       # Remove features with correlation > 0.95
 
 3. **Adjust SOM parameters**:
-   
+
    .. code-block:: python
-   
+
       som = SOM(
           x=15, y=15,  # Larger map
           num_features=data.shape[1],
@@ -429,7 +429,7 @@ ValidationError from Pydantic
 
    from torchsom.configs import SOMConfig
    from pydantic import ValidationError
-   
+
    try:
        config = SOMConfig(
            x=10, y=10,
@@ -450,16 +450,16 @@ Parameter compatibility issues
 **Common incompatibilities**:
 
 1. **Sigma too large for map size**:
-   
+
    .. code-block:: python
-   
+
       # Problem: sigma=10 on 5x5 map
       som = SOM(x=5, y=5, num_features=4, sigma=2.0)  # Better
 
 2. **Batch size larger than dataset**:
-   
+
    .. code-block:: python
-   
+
       batch_size = min(64, len(data))
       som = SOM(x=10, y=10, num_features=4, batch_size=batch_size)
 
@@ -479,27 +479,27 @@ Memory usage too high
 **Solutions**:
 
 1. **Reduce map size**:
-   
+
    .. code-block:: python
-   
+
       som = SOM(x=10, y=10, num_features=4)  # Instead of 20x20
 
 2. **Smaller batch size**:
-   
+
    .. code-block:: python
-   
+
       som = SOM(x=10, y=10, num_features=4, batch_size=32)
 
 3. **Use CPU for large maps**:
-   
+
    .. code-block:: python
-   
+
       som = SOM(x=50, y=50, num_features=4, device="cpu")
 
 4. **Process data in chunks**:
-   
+
    .. code-block:: python
-   
+
       # For very large datasets
       chunk_size = 1000
       for i in range(0, len(data), chunk_size):
@@ -514,24 +514,24 @@ Memory leaks
 **Solutions**:
 
 1. **Clear GPU cache periodically**:
-   
+
    .. code-block:: python
-   
+
       import torch
       torch.cuda.empty_cache()
 
 2. **Use context managers**:
-   
+
    .. code-block:: python
-   
+
       with torch.no_grad():
            # Inference operations
            bmus = som.identify_bmus(data)
 
 3. **Delete large variables**:
-   
+
    .. code-block:: python
-   
+
       del large_data_tensor
       torch.cuda.empty_cache()
 
@@ -549,7 +549,7 @@ When reporting issues, please include:
    import torch
    import sys
    import platform
-   
+
    print("=== Diagnostic Information ===")
    print(f"TorchSOM version: {torchsom.__version__}")
    print(f"PyTorch version: {torch.__version__}")
@@ -571,13 +571,13 @@ For bug reports, create minimal reproducible examples:
 
    import torch
    from torchsom import SOM
-   
+
    # Minimal data
    data = torch.randn(100, 4)
-   
+
    # Minimal SOM
    som = SOM(x=5, y=5, num_features=4, epochs=10)
-   
+
    # Show the problem
    try:
        som.fit(data)
@@ -603,7 +603,7 @@ Enable debug logging for more detailed information:
 
    import logging
    logging.basicConfig(level=logging.DEBUG)
-   
+
    # Your TorchSOM code here
    som = SOM(x=10, y=10, num_features=4)
-   som.fit(data) 
+   som.fit(data)

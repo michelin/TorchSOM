@@ -56,4 +56,4 @@ Hierarchical SOM
 .. automodule:: torchsom.core.hierarchical.hierarchical_som
    :members:
    :undoc-members:
-   :show-inheritance: 
+   :show-inheritance:
