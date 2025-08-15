@@ -79,6 +79,7 @@ jobs:
         fail_ci_if_error: true
         verbose: true
         token: ${{ secrets.CODECOV_TOKEN }}
+        slug: michelin/TorchSOM
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
