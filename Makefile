@@ -41,6 +41,9 @@ test-quick:  ## Run tests without coverage (faster)
 test-gpu:  ## Run GPU tests (requires CUDA)
 	@echo "🖥️ Running GPU tests..."
 	pytest tests/unit/ -v -m "gpu"
+test-integration:  ## Run GPU tests (requires CUDA)
+	@echo "🖥️ Running integration tests..."
+	pytest tests/unit/ -v -m "integration"
 
 lint:  ## Run all code quality checks
 	@echo "🔍 Running code quality checks..."
