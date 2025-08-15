@@ -52,9 +52,6 @@ jobs:
     - name: Install package, dev, and test dependencies
       run: pip install -e ".[dev, tests]"
 
-    # - name: Install additional test dependencies
-    #   run: pip install pytest-xdist pytest-timeout
-
     - name: Run unit and gpu tests with coverage
       # Automatically uses pytest configuration from pyproject.toml
       run: pytest
