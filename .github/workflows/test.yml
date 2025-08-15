@@ -17,7 +17,9 @@ jobs:
         python-version: ["3.9", "3.10", "3.11"]
         pytorch-version: ["2.7.0+cu126"]
         exclude:
-          # Exclude some combinations to reduce CI load
+          # Exclude some combinations to reduce CI load: macos doesn't work with CUDA, and ubuntu 3.9 triggers Codecov not available
+          - os: ubuntu-latest
+            python-version: "3.9"
           - os: macos-latest
             python-version: "3.9"
           - os: macos-latest
@@ -25,7 +27,7 @@ jobs:
           - os: macos-latest
             python-version: "3.11"
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v4
       # with:
       #     fetch-depth: 0
 
@@ -100,7 +102,7 @@ jobs:
         python-version: ["3.10"]
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
@@ -141,7 +143,7 @@ jobs:
     needs: test
     if: github.event_name == 'push'
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v4
 
     - name: Set up Python 3.10
       uses: actions/setup-python@v4

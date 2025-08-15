@@ -18,7 +18,7 @@ help:  ## Show this help message
 
 install:  ## Install development dependencies
 	@echo "📦 Installing development dependencies..."
-	pip install -e ".[dev]"
+	pip install -e ".[dev, tests, security, linting, docs]"
 	pip install pre-commit
 	pre-commit install
 
@@ -109,11 +109,22 @@ clean:  ## Clean up generated files
 	find . -type f -name "*.pyc" -delete
 	@echo "✅ Cleanup completed!"
 
-ci: format lint security docs  ## Run CI pipeline (full CI simulation)
+complexity:  ## Run complexity analysis: cc = cyclomatic complexity, mi = maintainability index
+	@echo "🔍 Running complexity analysis..."
+	radon cc torchsom/ --show-complexity --min B
+	radon mi torchsom/ --show --min B
+	@echo "✅ Complexity analysis completed!"
+
+dependencies:  ## Check for dependency conflicts: super super long
+	@echo "🔍 Checking for dependency conflicts..."
+	pip-compile pyproject.toml --dry-run --verbose
+	@echo "✅ Dependency checks completed!"
+
+ci: format lint security complexity docs  ## Run CI pipeline (full CI simulation)
 	@echo ""
 	@echo "🎉 All checks passed (without tests)! Ready to push to GitHub!"
 
-all: format lint security docs test  ## Run everything (full CI simulation)
+all: format lint security complexity docs test  ## Run everything (full CI simulation)
 	@echo ""
 	@echo "🎉 All checks passed! Ready to push to GitHub!"
 

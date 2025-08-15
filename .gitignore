@@ -4,6 +4,8 @@
 torchsom/logger.py
 logos/
 
+.github/workflows/security.yml
+
 # Python
 __pycache__/
 *.py[cod]
@@ -13,6 +15,7 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+dist_copy/
 downloads/
 eggs/
 .eggs/

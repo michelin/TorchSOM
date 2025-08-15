@@ -6,9 +6,9 @@
 [![Python versions](https://img.shields.io/pypi/pyversions/torchsom.svg)](https://pypi.org/project/torchsom/)
 [![PyTorch versions](https://img.shields.io/badge/PyTorch-2.7-EE4C2C.svg)](https://pytorch.org/)
 
-<!-- [![Tests](https://github.com/michelin/TorchSOM/workflows/Tests/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/test.yml)
+[![Tests](https://github.com/michelin/TorchSOM/workflows/Tests/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/test.yml)
 [![Code Quality](https://github.com/michelin/TorchSOM/workflows/Code%20Quality/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/code-quality.yml)
-[![Security](https://github.com/michelin/TorchSOM/workflows/Security%20Scanning/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/security.yml)
+<!-- [![Security](https://github.com/michelin/TorchSOM/workflows/Security%20Scanning/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/security.yml)
 [![codecov](https://codecov.io/gh/michelin/TorchSOM/branch/main/graph/badge.svg)](https://codecov.io/gh/michelin/TorchSOM) -->
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)

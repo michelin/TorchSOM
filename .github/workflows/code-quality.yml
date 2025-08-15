@@ -1,0 +1,171 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main, dev/jmlr ]
+  pull_request:
+    branches: [ main, dev/jmlr ]
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-quality-${{ hashFiles('pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-quality-
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev, security, linting]"
+      # pip install ruff mypy bandit safety
+
+    - name: Check code formatting with Black
+      run: |
+        black --check --diff torchsom/ tests/
+
+    - name: Check import sorting with isort
+      run: |
+        isort --check-only --diff torchsom/ tests/
+
+    - name: Lint with Ruff
+      run: |
+        ruff check torchsom/ tests/ --output-format=github
+
+    - name: Type checking with MyPy
+      run: |
+        mypy torchsom/ --ignore-missing-imports --strict
+      continue-on-error: true
+
+    - name: Check for security issues with Bandit (library code)
+      run: |
+        bandit -r torchsom/ -f json -o bandit-report-library.json --skip B101,B311,B601
+      continue-on-error: true
+
+    - name: Check for security issues with Bandit (tests)
+      run: |
+        bandit -r tests/ -f json -o bandit-report-tests.json --skip B101,B311,B601
+      continue-on-error: true
+
+    # - name: Check for known security vulnerabilities
+    #   run: |
+    #     safety check --json --output safety-report.json
+    #   continue-on-error: true
+
+    - name: Upload security reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: security-reports
+        path: |
+          bandit-report-library.json
+          bandit-report-tests.json
+        # safety-report.json
+
+  docstring-quality:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-quality-${{ hashFiles('pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-quality-
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev, docs]"
+      # pip install pydocstyle interrogate
+
+    - name: Check docstring style
+      run: |
+        pydocstyle torchsom/ --convention=google
+      continue-on-error: true
+
+    - name: Check docstring coverage
+      run: |
+        interrogate torchsom/ --verbose --ignore-init-method --ignore-magic --ignore-module --fail-under=80
+      continue-on-error: true
+
+  complexity-analysis:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-quality-${{ hashFiles('pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-quality-
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev, linting]"
+      # pip install radon
+
+    - name: Analyze code complexity
+      run: |
+        radon cc torchsom/ --show-complexity --min B
+        radon mi torchsom/ --show --min B
+      continue-on-error: true
+
+  check-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-quality-${{ hashFiles('pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-quality-
+          ${{ runner.os }}-pip-
+
+    - name: Install pip-tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[security]"
+      # pip install pip-tools
+
+    - name: Check for dependency conflicts
+      run: |
+        pip-compile pyproject.toml --dry-run --verbose
+      continue-on-error: true

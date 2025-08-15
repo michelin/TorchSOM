@@ -44,7 +44,7 @@ dirty_template = "{tag}.post{ccount}+dirty"     # Format when the working tree i
 
 # Dynamically load the README from file
 [tool.setuptools.dynamic]
-readme = {file = "README.md"}          # Long description for PyPI and docs
+readme = {file = "README.md", content-type = "text/markdown"}          # Long description for PyPI and docs
 
 # Package discovery configuration
 [tool.setuptools.packages.find]
@@ -61,6 +61,8 @@ dev = [
     "isort",
     "rich",
     "typing_extensions",
+    "build",
+    "twine",
 ]
 
 tests = [
@@ -85,6 +87,7 @@ security = [
     "bandit[toml]",
     "safety",
     "pip-audit",
+    "pip-tools",
 ]
 
 linting = [
