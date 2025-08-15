@@ -11,7 +11,7 @@ from ..utils.grid import axial_distance, convert_to_axial_coords
 def calculate_quantization_error(
     data: torch.Tensor,
     weights: torch.Tensor,
-    distance_fn: Callable,
+    distance_fn: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
 ) -> float:
     """Calculate quantization error for a SOM.
 
@@ -46,7 +46,7 @@ def calculate_quantization_error(
 def calculate_topographic_error(
     data: torch.Tensor,
     weights: torch.Tensor,
-    distance_fn: Callable,
+    distance_fn: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
     topology: str = "rectangular",
     # xx: torch.Tensor = None,
     # yy: torch.Tensor = None,

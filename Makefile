@@ -51,7 +51,7 @@ lint:  ## Run all code quality checks
 	@echo "  🔍 Running linter..."
 	ruff check torchsom/ tests/
 	@echo "  🎯 Type checking..."
-	mypy torchsom/
+	mypy torchsom/ --ignore-missing-imports --strict
 	@echo "✅ All quality checks passed!"
 # ruff check torchsom/ tests/ => read-only mode, report violations without modifications
 # ruff check torchsom/ tests/ --fix => fix safe, non-destructive violations

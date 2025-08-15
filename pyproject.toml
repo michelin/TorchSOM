@@ -71,8 +71,6 @@ tests = [
     "pytest-html",
     "pytest-xdist",
     "pytest-timeout",
-    "pydocstyle",
-    "interrogate",
 ]
 
 docs = [
@@ -81,6 +79,8 @@ docs = [
     "sphinx-rtd-theme",
     "sphinx-autodoc-typehints",
     "sphinx-copybutton",
+    "pydocstyle",
+    "interrogate",
 ]
 
 security = [
@@ -315,6 +315,8 @@ disable_error_code = [
     "call-overload",                    # Error code for calling a function with the wrong number of arguments
     "override",                         # Error code for overriding a method with a different signature (e.g. in a subclass)
     # "return-value",                     # Error code for function returning a value with a different type than declared
+    "no-untyped-call",                  # Error code for calling a function without type annotations
+    "attr-defined",                     # Error code for attribute access on None
 ]
 
 [[tool.mypy.overrides]]

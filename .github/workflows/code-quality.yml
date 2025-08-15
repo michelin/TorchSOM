@@ -47,6 +47,7 @@ jobs:
     - name: Type checking with MyPy
       run: |
         mypy torchsom/ --ignore-missing-imports --strict
+      # mypy torchsom/
       continue-on-error: true
 
     - name: Check for security issues with Bandit (library code)

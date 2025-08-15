@@ -6,6 +6,7 @@ from typing import Optional, Union
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+from matplotlib.axes import Axes
 from matplotlib.collections import PolyCollection
 from matplotlib.colors import Colormap
 from matplotlib.image import AxesImage
@@ -145,7 +146,7 @@ class SOMVisualizer:
 
     def _create_hexbin(
         self,
-        ax: plt.Axes,
+        ax: Axes,
         x: list[float],
         y: list[float],
         values: list[float],
@@ -196,7 +197,7 @@ class SOMVisualizer:
 
     def _customize_plot(
         self,
-        ax: plt.Axes,
+        ax: Axes,
         title: str,
         colorbar_label: str,
         mappable_item: Optional[Union[AxesImage, PolyCollection]] = None,
