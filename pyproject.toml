@@ -114,10 +114,11 @@ addopts = [
     "--durations=10",                   # Report 10 slowest tests
     "--cov=torchsom",                   # Coverage of torchsom
     "--cov-report=term-missing",        # Show missing lines in the report
+    "--cov-report=xml",                 # Generate XML coverage report
     "--cov-report=html",                # Generate HTML coverage report
     "--cov-config=pyproject.toml",      # Use configuration from pyproject.toml
-    "-m unit or gpu",                   # default marker selection
     "--junit-xml=junit.xml",            # Create JUnit XML file for CI compatibility
+    "-m unit or gpu",                   # default marker selection
 ]
 # Custom pytest markers with descriptions
 markers = [
