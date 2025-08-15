@@ -17,6 +17,8 @@ a powerful unsupervised learning algorithm used for clustering, dimensionality r
 Built with PyTorch at its core, TorchSOM seamlessly integrates with modern deep learning workflows while
 providing GPU acceleration for high-performance computing.
 
+JE RAJOUTE UN TEXTE POUR VOIR SI LE WORKFLOW FONCTIONNE BIEN.
+
 .. note::
    🌟 If you find this project interesting, we would be grateful for your support by starring
    this `GitHub repository <https://github.com/michelin/TorchSOM>`_.

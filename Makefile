@@ -85,16 +85,15 @@ docs:  ## Check documentation quality
 	@echo "  📊 Docstring coverage..."
 	interrogate torchsom/ --verbose --ignore-init-method --ignore-magic --ignore-module --fail-under=80
 	@echo "  🏗️ Building HTML documentation..."
-	sphinx-build -b html docs/source/ docs/build/html_temp
+	sphinx-build -b html docs/source/ docs/build/html
 	@echo "✅ Documentation checks and build complete!"
 
 clean-docs:  ## Remove Sphinx build artifacts
 	@echo "🧹 Cleaning documentation build..."
-	rm -rf docs/build/html_temp/
+	rm -rf docs/build/html/
 	@echo "✅ Cleaned!"
 # rm -rf build/*
 
-# ! NEED TO CHECK IF THIS WORKS
 precommit:  ## Run pre-commit hooks on all files
 	@echo "🔧 Running pre-commit hooks..."
 	pre-commit run --all-files
@@ -109,6 +108,10 @@ clean:  ## Clean up generated files
 	find . -type d -name __pycache__ -delete
 	find . -type f -name "*.pyc" -delete
 	@echo "✅ Cleanup completed!"
+
+ci: format lint security docs  ## Run CI pipeline (full CI simulation)
+	@echo ""
+	@echo "🎉 All checks passed (without tests)! Ready to push to GitHub!"
 
 all: format lint security docs test  ## Run everything (full CI simulation)
 	@echo ""
