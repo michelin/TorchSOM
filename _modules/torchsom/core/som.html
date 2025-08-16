@@ -189,10 +189,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#module-torchsom.utils.decay">Decay Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#module-torchsom.utils.grid">Grid and Topology</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.adjust_meshgrid_topology"><code class="docutils literal notranslate"><span class="pre">adjust_meshgrid_topology()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.axial_distance"><code class="docutils literal notranslate"><span class="pre">axial_distance()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.convert_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">convert_to_axial_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.create_mesh_grid"><code class="docutils literal notranslate"><span class="pre">create_mesh_grid()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.offset_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">offset_to_axial_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.topology.get_all_neighbors_up_to_order"><code class="docutils literal notranslate"><span class="pre">get_all_neighbors_up_to_order()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.topology.get_hexagonal_offsets"><code class="docutils literal notranslate"><span class="pre">get_hexagonal_offsets()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.topology.get_rectangular_offsets"><code class="docutils literal notranslate"><span class="pre">get_rectangular_offsets()</span></code></a></li>
@@ -237,7 +234,9 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.fontsize"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontsize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.fontweight"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontweight</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.grid_alpha"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.grid_alpha</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hexgrid_size"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hexgrid_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_color"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_border_color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_width"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_border_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_radius"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_radius</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.save_format"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.save_format</span></code></a></li>
 </ul>
 </li>
@@ -413,14 +412,17 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">TensorDataset</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.decay</span><span class="w"> </span><span class="kn">import</span> <span class="n">DECAY_FUNCTIONS</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.distances</span><span class="w"> </span><span class="kn">import</span> <span class="n">DISTANCE_FUNCTIONS</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">adjust_meshgrid_topology</span><span class="p">,</span> <span class="n">create_mesh_grid</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.initialization</span><span class="w"> </span><span class="kn">import</span> <span class="n">initialize_weights</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_quantization_error</span><span class="p">,</span> <span class="n">calculate_topographic_error</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.neighborhood</span><span class="w"> </span><span class="kn">import</span> <span class="n">NEIGHBORHOOD_FUNCTIONS</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.topology</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_neighbors_up_to_order</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.base_som</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseSOM</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom.core.base_som</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseSOM</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom.utils.decay</span><span class="w"> </span><span class="kn">import</span> <span class="n">DECAY_FUNCTIONS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom.utils.distances</span><span class="w"> </span><span class="kn">import</span> <span class="n">DISTANCE_FUNCTIONS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom.utils.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">adjust_meshgrid_topology</span><span class="p">,</span> <span class="n">create_mesh_grid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom.utils.initialization</span><span class="w"> </span><span class="kn">import</span> <span class="n">initialize_weights</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom.utils.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">calculate_quantization_error</span><span class="p">,</span>
+    <span class="n">calculate_topographic_error</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom.utils.neighborhood</span><span class="w"> </span><span class="kn">import</span> <span class="n">NEIGHBORHOOD_FUNCTIONS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom.utils.topology</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_all_neighbors_up_to_order</span>
 
 
 <div class="viewcode-block" id="SOM">
@@ -567,10 +569,6 @@
                     <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">bmus</span>
                 <span class="p">]</span>
             <span class="p">)</span>  <span class="c1"># [batch_size, row_neurons, col_neurons]</span>
-            <span class="c1"># ! Modification to test</span>
-            <span class="c1"># # Vectorised: build a tensor of BMU coordinates and compute in one shot</span>
-            <span class="c1"># coords = torch.stack([bmus[:, 0], bmus[:, 1]], dim=1).to(torch.long)</span>
-            <span class="c1"># neighborhoods = self.neighborhood_fn(coords, sigma)  # update neighborhood_fn to accept batched coords  # [batch_size, row_neurons, col_neurons]</span>
 
             <span class="c1"># Reshape for broadcasting</span>
             <span class="n">neighborhoods</span> <span class="o">=</span> <span class="n">neighborhoods</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -1419,20 +1417,45 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">neighbor_labels</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">bmu_pos</span>
-                    <span class="k">for</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="ow">in</span> <span class="n">neighborhood_offsets</span><span class="p">:</span>
-                        <span class="n">neighbor_row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="n">dx</span>
-                        <span class="n">neighbor_col</span> <span class="o">=</span> <span class="n">col</span> <span class="o">+</span> <span class="n">dy</span>
-                        <span class="k">if</span> <span class="p">(</span>
-                            <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">neighbor_row</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
-                            <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">neighbor_col</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
-                            <span class="ow">and</span> <span class="p">(</span><span class="n">neighbor_row</span><span class="p">,</span> <span class="n">neighbor_col</span><span class="p">)</span> <span class="ow">in</span> <span class="n">bmus_map</span>
-                        <span class="p">):</span>
-                            <span class="n">neighbor_samples_indices</span> <span class="o">=</span> <span class="n">bmus_map</span><span class="p">[</span>
-                                <span class="p">(</span><span class="n">neighbor_row</span><span class="p">,</span> <span class="n">neighbor_col</span><span class="p">)</span>
-                            <span class="p">]</span>
-                            <span class="n">neighbor_labels</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
-                                <span class="n">target</span><span class="p">[</span><span class="n">neighbor_samples_indices</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-                            <span class="p">)</span>
+
+                    <span class="c1"># Handle topology-specific neighborhood processing</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">topology</span> <span class="o">==</span> <span class="s2">&quot;hexagonal&quot;</span><span class="p">:</span>
+                        <span class="c1"># Use appropriate offsets based on row parity (even/odd)</span>
+                        <span class="n">row_offsets</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">neighborhood_offsets</span><span class="p">[</span><span class="s2">&quot;even&quot;</span><span class="p">]</span>
+                            <span class="k">if</span> <span class="n">row</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
+                            <span class="k">else</span> <span class="n">neighborhood_offsets</span><span class="p">[</span><span class="s2">&quot;odd&quot;</span><span class="p">]</span>
+                        <span class="p">)</span>
+                        <span class="k">for</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="ow">in</span> <span class="n">row_offsets</span><span class="p">:</span>
+                            <span class="n">neighbor_row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="n">dx</span>
+                            <span class="n">neighbor_col</span> <span class="o">=</span> <span class="n">col</span> <span class="o">+</span> <span class="n">dy</span>
+                            <span class="k">if</span> <span class="p">(</span>
+                                <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">neighbor_row</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+                                <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">neighbor_col</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+                                <span class="ow">and</span> <span class="p">(</span><span class="n">neighbor_row</span><span class="p">,</span> <span class="n">neighbor_col</span><span class="p">)</span> <span class="ow">in</span> <span class="n">bmus_map</span>
+                            <span class="p">):</span>
+                                <span class="n">neighbor_samples_indices</span> <span class="o">=</span> <span class="n">bmus_map</span><span class="p">[</span>
+                                    <span class="p">(</span><span class="n">neighbor_row</span><span class="p">,</span> <span class="n">neighbor_col</span><span class="p">)</span>
+                                <span class="p">]</span>
+                                <span class="n">neighbor_labels</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                                    <span class="n">target</span><span class="p">[</span><span class="n">neighbor_samples_indices</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                                <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Rectangular topology - process all offsets directly</span>
+                        <span class="k">for</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="ow">in</span> <span class="n">neighborhood_offsets</span><span class="p">:</span>
+                            <span class="n">neighbor_row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="n">dx</span>
+                            <span class="n">neighbor_col</span> <span class="o">=</span> <span class="n">col</span> <span class="o">+</span> <span class="n">dy</span>
+                            <span class="k">if</span> <span class="p">(</span>
+                                <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">neighbor_row</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+                                <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">neighbor_col</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+                                <span class="ow">and</span> <span class="p">(</span><span class="n">neighbor_row</span><span class="p">,</span> <span class="n">neighbor_col</span><span class="p">)</span> <span class="ow">in</span> <span class="n">bmus_map</span>
+                            <span class="p">):</span>
+                                <span class="n">neighbor_samples_indices</span> <span class="o">=</span> <span class="n">bmus_map</span><span class="p">[</span>
+                                    <span class="p">(</span><span class="n">neighbor_row</span><span class="p">,</span> <span class="n">neighbor_col</span><span class="p">)</span>
+                                <span class="p">]</span>
+                                <span class="n">neighbor_labels</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                                    <span class="n">target</span><span class="p">[</span><span class="n">neighbor_samples_indices</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                                <span class="p">)</span>
 
                     <span class="c1"># After collecting all neighbor labels, recompute label counts with neighborhood labels.</span>
                     <span class="k">if</span> <span class="n">neighbor_labels</span><span class="p">:</span>

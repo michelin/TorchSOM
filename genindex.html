@@ -189,10 +189,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/utils.html#module-torchsom.utils.decay">Decay Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/utils.html#module-torchsom.utils.grid">Grid and Topology</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/utils.html#torchsom.utils.grid.adjust_meshgrid_topology"><code class="docutils literal notranslate"><span class="pre">adjust_meshgrid_topology()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/utils.html#torchsom.utils.grid.axial_distance"><code class="docutils literal notranslate"><span class="pre">axial_distance()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/utils.html#torchsom.utils.grid.convert_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">convert_to_axial_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/utils.html#torchsom.utils.grid.create_mesh_grid"><code class="docutils literal notranslate"><span class="pre">create_mesh_grid()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/utils.html#torchsom.utils.grid.offset_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">offset_to_axial_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/utils.html#torchsom.utils.topology.get_all_neighbors_up_to_order"><code class="docutils literal notranslate"><span class="pre">get_all_neighbors_up_to_order()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/utils.html#torchsom.utils.topology.get_hexagonal_offsets"><code class="docutils literal notranslate"><span class="pre">get_hexagonal_offsets()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/utils.html#torchsom.utils.topology.get_rectangular_offsets"><code class="docutils literal notranslate"><span class="pre">get_rectangular_offsets()</span></code></a></li>
@@ -237,7 +234,9 @@
 <li class="toctree-l4"><a class="reference internal" href="api/visualization.html#torchsom.visualization.config.VisualizationConfig.fontsize"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontsize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/visualization.html#torchsom.visualization.config.VisualizationConfig.fontweight"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontweight</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/visualization.html#torchsom.visualization.config.VisualizationConfig.grid_alpha"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.grid_alpha</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/visualization.html#torchsom.visualization.config.VisualizationConfig.hexgrid_size"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hexgrid_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_color"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_border_color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_width"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_border_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_radius"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_radius</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/visualization.html#torchsom.visualization.config.VisualizationConfig.save_format"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.save_format</span></code></a></li>
 </ul>
 </li>
@@ -415,7 +414,6 @@
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
- | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#Q"><strong>Q</strong></a>
  | <a href="#R"><strong>R</strong></a>
@@ -430,10 +428,6 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/utils.html#torchsom.utils.grid.adjust_meshgrid_topology">adjust_meshgrid_topology() (in module torchsom.utils.grid)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/utils.html#torchsom.utils.grid.axial_distance">axial_distance() (in module torchsom.utils.grid)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -486,8 +480,6 @@
       <li><a href="api/core.html#torchsom.core.som.SOM.collect_samples">collect_samples() (torchsom.core.som.SOM method)</a>
 </li>
       <li><a href="api/visualization.html#torchsom.visualization.config.VisualizationConfig.colorbar_pad">colorbar_pad (torchsom.visualization.config.VisualizationConfig attribute)</a>
-</li>
-      <li><a href="api/utils.html#torchsom.utils.grid.convert_to_axial_coords">convert_to_axial_coords() (in module torchsom.utils.grid)</a>
 </li>
       <li><a href="api/utils.html#torchsom.utils.grid.create_mesh_grid">create_mesh_grid() (in module torchsom.utils.grid)</a>
 </li>
@@ -555,7 +547,13 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/visualization.html#torchsom.visualization.config.VisualizationConfig.hexgrid_size">hexgrid_size (torchsom.visualization.config.VisualizationConfig attribute)</a>
+      <li><a href="api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_color">hex_border_color (torchsom.visualization.config.VisualizationConfig attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_width">hex_border_width (torchsom.visualization.config.VisualizationConfig attribute)</a>
+</li>
+      <li><a href="api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_radius">hex_radius (torchsom.visualization.config.VisualizationConfig attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -653,14 +651,6 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/configs.html#torchsom.configs.som_config.SOMConfig.neighborhood_order">neighborhood_order (torchsom.configs.som_config.SOMConfig attribute)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="O">O</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/utils.html#torchsom.utils.grid.offset_to_axial_coords">offset_to_axial_coords() (in module torchsom.utils.grid)</a>
 </li>
   </ul></td>
 </tr></table>

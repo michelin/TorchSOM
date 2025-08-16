@@ -192,10 +192,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-torchsom.utils.decay">Decay Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-torchsom.utils.grid">Grid and Topology</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.grid.adjust_meshgrid_topology"><code class="docutils literal notranslate"><span class="pre">adjust_meshgrid_topology()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.grid.axial_distance"><code class="docutils literal notranslate"><span class="pre">axial_distance()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.grid.convert_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">convert_to_axial_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.grid.create_mesh_grid"><code class="docutils literal notranslate"><span class="pre">create_mesh_grid()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.grid.offset_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">offset_to_axial_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.topology.get_all_neighbors_up_to_order"><code class="docutils literal notranslate"><span class="pre">get_all_neighbors_up_to_order()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.topology.get_hexagonal_offsets"><code class="docutils literal notranslate"><span class="pre">get_hexagonal_offsets()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.topology.get_rectangular_offsets"><code class="docutils literal notranslate"><span class="pre">get_rectangular_offsets()</span></code></a></li>
@@ -240,7 +237,9 @@
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.fontsize"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontsize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.fontweight"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontweight</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.grid_alpha"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.grid_alpha</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.hexgrid_size"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hexgrid_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_color"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_border_color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_width"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_border_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.hex_radius"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_radius</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.config.VisualizationConfig.save_format"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.save_format</span></code></a></li>
 </ul>
 </li>
@@ -529,50 +528,6 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="torchsom.utils.grid.axial_distance">
-<span class="sig-prename descclassname"><span class="pre">torchsom.utils.grid.</span></span><span class="sig-name descname"><span class="pre">axial_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/grid.html#axial_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.grid.axial_distance" title="Link to this definition"></a></dt>
-<dd><p>Calculate the distance between two hexes in axial coordinates.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>q1</strong> (<em>float</em>) – column of first hex</p></li>
-<li><p><strong>r1</strong> (<em>float</em>) – row of first hex</p></li>
-<li><p><strong>q2</strong> (<em>float</em>) – column of second hex</p></li>
-<li><p><strong>r2</strong> (<em>float</em>) – row of second hex</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Distance in hex steps</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="torchsom.utils.grid.convert_to_axial_coords">
-<span class="sig-prename descclassname"><span class="pre">torchsom.utils.grid.</span></span><span class="sig-name descname"><span class="pre">convert_to_axial_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/grid.html#convert_to_axial_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.grid.convert_to_axial_coords" title="Link to this definition"></a></dt>
-<dd><p>Convert grid coordinates to axial coordinates for hexagonal grid.</p>
-<p>Uses even-r layout where even rows are shifted left by 0.5.
-This matches the layout used in adjust_meshgrid_topology.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>row</strong> (<em>int</em>) – Grid row coordinate</p></li>
-<li><p><strong>col</strong> (<em>int</em>) – Grid column coordinate</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Axial coordinates (q, r)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple[float, float]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="torchsom.utils.grid.create_mesh_grid">
 <span class="sig-prename descclassname"><span class="pre">torchsom.utils.grid.</span></span><span class="sig-name descname"><span class="pre">create_mesh_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/grid.html#create_mesh_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.grid.create_mesh_grid" title="Link to this definition"></a></dt>
 <dd><p>Create a mesh grid for neighborhood calculations.</p>
@@ -592,27 +547,6 @@ in Self-Organizing Maps (SOM).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Tuple[torch.Tensor, torch.Tensor]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="torchsom.utils.grid.offset_to_axial_coords">
-<span class="sig-prename descclassname"><span class="pre">torchsom.utils.grid.</span></span><span class="sig-name descname"><span class="pre">offset_to_axial_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/grid.html#offset_to_axial_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.grid.offset_to_axial_coords" title="Link to this definition"></a></dt>
-<dd><p>Convert offset coordinates to axial coordinates for hexagonal grid.</p>
-<p>Alternative implementation that directly matches the mesh grid adjustment.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>row</strong> (<em>int</em>) – Grid row coordinate</p></li>
-<li><p><strong>col</strong> (<em>int</em>) – Grid column coordinate</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Axial coordinates (q, r)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple[float, float]</p>
 </dd>
 </dl>
 </dd></dl>

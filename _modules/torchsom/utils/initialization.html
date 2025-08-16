@@ -189,10 +189,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#module-torchsom.utils.decay">Decay Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#module-torchsom.utils.grid">Grid and Topology</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.adjust_meshgrid_topology"><code class="docutils literal notranslate"><span class="pre">adjust_meshgrid_topology()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.axial_distance"><code class="docutils literal notranslate"><span class="pre">axial_distance()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.convert_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">convert_to_axial_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.create_mesh_grid"><code class="docutils literal notranslate"><span class="pre">create_mesh_grid()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.offset_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">offset_to_axial_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.topology.get_all_neighbors_up_to_order"><code class="docutils literal notranslate"><span class="pre">get_all_neighbors_up_to_order()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.topology.get_hexagonal_offsets"><code class="docutils literal notranslate"><span class="pre">get_hexagonal_offsets()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.topology.get_rectangular_offsets"><code class="docutils literal notranslate"><span class="pre">get_rectangular_offsets()</span></code></a></li>
@@ -237,7 +234,9 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.fontsize"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontsize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.fontweight"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontweight</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.grid_alpha"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.grid_alpha</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hexgrid_size"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hexgrid_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_color"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_border_color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_width"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_border_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_radius"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_radius</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.save_format"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.save_format</span></code></a></li>
 </ul>
 </li>
@@ -406,7 +405,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">adjust_meshgrid_topology</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom.utils.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">adjust_meshgrid_topology</span>
 
 
 <div class="viewcode-block" id="random_init">
@@ -439,11 +438,6 @@
         <span class="n">sampled_weights</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">sampled_weights</span>
-
-        <span class="c1"># ! Modification to test</span>
-        <span class="c1"># # Return value ignores the original weights tensor</span>
-        <span class="c1"># weights.copy_(data[indices])</span>
-        <span class="c1"># return weights</span>
 
     <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Random initialization failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>

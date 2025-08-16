@@ -189,10 +189,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#module-torchsom.utils.decay">Decay Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#module-torchsom.utils.grid">Grid and Topology</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.adjust_meshgrid_topology"><code class="docutils literal notranslate"><span class="pre">adjust_meshgrid_topology()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.axial_distance"><code class="docutils literal notranslate"><span class="pre">axial_distance()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.convert_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">convert_to_axial_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.create_mesh_grid"><code class="docutils literal notranslate"><span class="pre">create_mesh_grid()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.grid.offset_to_axial_coords"><code class="docutils literal notranslate"><span class="pre">offset_to_axial_coords()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.topology.get_all_neighbors_up_to_order"><code class="docutils literal notranslate"><span class="pre">get_all_neighbors_up_to_order()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.topology.get_hexagonal_offsets"><code class="docutils literal notranslate"><span class="pre">get_hexagonal_offsets()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.topology.get_rectangular_offsets"><code class="docutils literal notranslate"><span class="pre">get_rectangular_offsets()</span></code></a></li>
@@ -237,7 +234,9 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.fontsize"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontsize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.fontweight"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontweight</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.grid_alpha"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.grid_alpha</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hexgrid_size"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hexgrid_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_color"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_border_color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_width"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_border_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_radius"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_radius</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.config.VisualizationConfig.save_format"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.save_format</span></code></a></li>
 </ul>
 </li>
@@ -402,7 +401,11 @@
   <h1>Source code for torchsom.utils.grid</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Utility functions for grid operations.&quot;&quot;&quot;</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="c1"># NOTE: Coordinate conversion functions moved to hexagonal_coordinates.py to eliminate duplication and provide single source of truth.</span>
 
 
 <div class="viewcode-block" id="create_mesh_grid">
@@ -461,91 +464,85 @@
         <span class="n">adjusted_xx</span> <span class="o">=</span> <span class="n">xx</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
         <span class="n">adjusted_yy</span> <span class="o">=</span> <span class="n">yy</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
 
-        <span class="n">adjusted_xx</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span> <span class="o">-=</span> <span class="mf">0.5</span>  <span class="c1"># Adjust x-coordinates for even-indexed rows</span>
-        <span class="n">adjusted_yy</span> <span class="o">*=</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
-            <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
-        <span class="p">)</span>  <span class="c1"># Adjust all y-coordinates</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Use even-r offset coordinate system (consistent with visualization)</span>
+<span class="sd">            1. Even rows (0, 2, 4...): no horizontal shift</span>
+<span class="sd">            2. Odd rows (1, 3, 5...): shift right by 0.5</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">adjusted_xx</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">0.5</span>
+        <span class="n">adjusted_yy</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
 
-        <span class="k">return</span> <span class="n">adjusted_xx</span><span class="p">,</span> <span class="n">adjusted_yy</span>  <span class="c1"># Return the modified copies</span>
+        <span class="k">return</span> <span class="n">adjusted_xx</span><span class="p">,</span> <span class="n">adjusted_yy</span>
 
-    <span class="k">return</span> <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span>  <span class="c1"># If not hexagonal, return the original tensors</span></div>
-
-
-
-<div class="viewcode-block" id="convert_to_axial_coords">
-<a class="viewcode-back" href="../../../api/utils.html#torchsom.utils.grid.convert_to_axial_coords">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">convert_to_axial_coords</span><span class="p">(</span>
-    <span class="n">row</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert grid coordinates to axial coordinates for hexagonal grid.</span>
-
-<span class="sd">    Uses even-r layout where even rows are shifted left by 0.5.</span>
-<span class="sd">    This matches the layout used in adjust_meshgrid_topology.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        row (int): Grid row coordinate</span>
-<span class="sd">        col (int): Grid column coordinate</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        tuple[float, float]: Axial coordinates (q, r)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="n">col</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">row</span> <span class="o">//</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">row</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">col</span> <span class="o">-</span> <span class="n">row</span> <span class="o">//</span> <span class="mi">2</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">row</span>
-    <span class="k">return</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span></div>
+    <span class="k">return</span> <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span></div>
 
 
 
-<div class="viewcode-block" id="offset_to_axial_coords">
-<a class="viewcode-back" href="../../../api/utils.html#torchsom.utils.grid.offset_to_axial_coords">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">offset_to_axial_coords</span><span class="p">(</span>
-    <span class="n">row</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>  <span class="c1"># pragma: no cover</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert offset coordinates to axial coordinates for hexagonal grid.</span>
+<span class="c1"># def convert_to_axial_coords(</span>
+<span class="c1">#     row: int,</span>
+<span class="c1">#     col: int,</span>
+<span class="c1"># ) -&gt; tuple[float, float]:</span>
+<span class="c1">#     &quot;&quot;&quot;Convert grid coordinates to axial coordinates for hexagonal grid.</span>
 
-<span class="sd">    Alternative implementation that directly matches the mesh grid adjustment.</span>
+<span class="c1">#     Uses even-r layout where even rows are shifted left by 0.5.</span>
+<span class="c1">#     This matches the layout used in adjust_meshgrid_topology.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        row (int): Grid row coordinate</span>
-<span class="sd">        col (int): Grid column coordinate</span>
+<span class="c1">#     Args:</span>
+<span class="c1">#         row (int): Grid row coordinate</span>
+<span class="c1">#         col (int): Grid column coordinate</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        tuple[float, float]: Axial coordinates (q, r)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Direct conversion matching adjust_meshgrid_topology</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="n">col</span> <span class="o">-</span> <span class="p">(</span><span class="n">row</span> <span class="o">-</span> <span class="p">(</span><span class="n">row</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">row</span>
-    <span class="k">return</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span></div>
+<span class="c1">#     Returns:</span>
+<span class="c1">#         tuple[float, float]: Axial coordinates (q, r)</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     q = col - 0.5 - row // 2 if row % 2 == 0 else col - row // 2</span>
+<span class="c1">#     r = row</span>
+<span class="c1">#     return q, r</span>
 
 
+<span class="c1"># def offset_to_axial_coords(</span>
+<span class="c1">#     row: int,</span>
+<span class="c1">#     col: int,</span>
+<span class="c1"># ) -&gt; tuple[float, float]:  # pragma: no cover</span>
+<span class="c1">#     &quot;&quot;&quot;Convert offset coordinates to axial coordinates for hexagonal grid.</span>
 
-<div class="viewcode-block" id="axial_distance">
-<a class="viewcode-back" href="../../../api/utils.html#torchsom.utils.grid.axial_distance">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">axial_distance</span><span class="p">(</span>
-    <span class="n">q1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">r1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">q2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">r2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the distance between two hexes in axial coordinates.</span>
+<span class="c1">#     Alternative implementation that directly matches the mesh grid adjustment.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        q1 (float): column of first hex</span>
-<span class="sd">        r1 (float): row of first hex</span>
-<span class="sd">        q2 (float): column of second hex</span>
-<span class="sd">        r2 (float): row of second hex</span>
+<span class="c1">#     Args:</span>
+<span class="c1">#         row (int): Grid row coordinate</span>
+<span class="c1">#         col (int): Grid column coordinate</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        int: Distance in hex steps</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Convert axial to cube coordinates</span>
-    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">q1</span><span class="p">,</span> <span class="n">r1</span><span class="p">,</span> <span class="o">-</span><span class="n">q1</span> <span class="o">-</span> <span class="n">r1</span>
-    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">q2</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="o">-</span><span class="n">q2</span> <span class="o">-</span> <span class="n">r2</span>
+<span class="c1">#     Returns:</span>
+<span class="c1">#         tuple[float, float]: Axial coordinates (q, r)</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     # Direct conversion matching adjust_meshgrid_topology</span>
+<span class="c1">#     q = col - (row - (row &amp; 1)) / 2</span>
+<span class="c1">#     r = row</span>
+<span class="c1">#     return q, r</span>
 
-    <span class="c1"># Manhattan distance divided by 2</span>
-    <span class="k">return</span> <span class="nb">int</span><span class="p">((</span><span class="nb">abs</span><span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">z1</span> <span class="o">-</span> <span class="n">z2</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span></div>
 
+<span class="c1"># def axial_distance(</span>
+<span class="c1">#     q1: float,</span>
+<span class="c1">#     r1: float,</span>
+<span class="c1">#     q2: float,</span>
+<span class="c1">#     r2: float,</span>
+<span class="c1"># ) -&gt; int:</span>
+<span class="c1">#     &quot;&quot;&quot;Calculate the distance between two hexes in axial coordinates.</span>
+
+<span class="c1">#     Args:</span>
+<span class="c1">#         q1 (float): column of first hex</span>
+<span class="c1">#         r1 (float): row of first hex</span>
+<span class="c1">#         q2 (float): column of second hex</span>
+<span class="c1">#         r2 (float): row of second hex</span>
+
+<span class="c1">#     Returns:</span>
+<span class="c1">#         int: Distance in hex steps</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     # Convert axial to cube coordinates</span>
+<span class="c1">#     x1, y1, z1 = q1, r1, -q1 - r1</span>
+<span class="c1">#     x2, y2, z2 = q2, r2, -q2 - r2</span>
+
+<span class="c1">#     # Manhattan distance divided by 2</span>
+<span class="c1">#     return int((abs(x1 - x2) + abs(y1 - y2) + abs(z1 - z2)) / 2)</span>
 </pre></div>
 
            </div>
