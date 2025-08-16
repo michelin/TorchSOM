@@ -1,7 +1,6 @@
 """Configuration settings for SOM visualizations."""
 
 from dataclasses import dataclass, field
-from typing import Optional
 
 
 @dataclass
@@ -28,4 +27,8 @@ class VisualizationConfig:
     grid_alpha: float = 0.3
     colorbar_pad: float = 0.01
     save_format: str = "png"
-    hexgrid_size: Optional[int] = None
+
+    # Hexagonal visualization settings
+    hex_radius: float = 0.5
+    hex_border_color: str = "black"
+    hex_border_width: float = 0.3

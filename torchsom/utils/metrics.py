@@ -5,7 +5,10 @@ from typing import Callable
 
 import torch
 
-from ..utils.grid import axial_distance, convert_to_axial_coords
+from torchsom.utils.hexagonal_coordinates import (
+    hexagonal_distance_axial,
+    offset_to_axial_coords,
+)
 
 
 def calculate_quantization_error(
@@ -102,11 +105,11 @@ def calculate_topographic_error(
             bmu2_row = int(torch.div(indices[i, 1], y_dim, rounding_mode="floor"))
             bmu2_col = int(indices[i, 1] % y_dim)
 
-            q1, r1 = convert_to_axial_coords(bmu1_row, bmu1_col)
-            q2, r2 = convert_to_axial_coords(bmu2_row, bmu2_col)
+            q1, r1 = offset_to_axial_coords(bmu1_row, bmu1_col)
+            q2, r2 = offset_to_axial_coords(bmu2_row, bmu2_col)
 
             # Calculate distance in hex steps
-            hex_distance = axial_distance(q1, r1, q2, r2)
+            hex_distance = hexagonal_distance_axial(q1, r1, q2, r2)
 
             # Count as error if not neighbors (distance > 1)
             if hex_distance > 1:

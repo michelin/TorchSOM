@@ -12,6 +12,7 @@ def _gaussian(
     """Gaussian neighborhood function to update weights.
 
     See also: https://en.wikipedia.org/wiki/Gaussian_function
+    Uses proper Euclidean distance in coordinate space, works for both rectangular and hexagonal topologies.
 
     Args:
         xx (torch.Tensor): Meshgrid of x coordinates [row_neurons, col_neurons]
@@ -36,20 +37,23 @@ def _gaussian(
             [ 0.,  1.,  2.,  ...,  col_neurons],]
         )
 
-        c (Tuple[int, int]): center of winning neuron coordinates [row, col]
+        c (Tuple[int, int]): center of winning neuron coordinates [row, col] (grid indices)
         sigma (float): width of the neighborhood, so standard deviation. It controls the spread of the update influence.
 
     Returns:
-        torch.Tensor: Gaussian neighborhood weights. Element-wise product standing for the combined influence of gaussian neighborhood around center c with a spread sigma [row_neurons, col_neurons].
+        torch.Tensor: Gaussian neighborhood weights based on Euclidean distance [row_neurons, col_neurons]. Element-wise product standing for the combined influence of gaussian neighborhood around center c with a spread sigma [row_neurons, col_neurons].
     """
-    denum = 2 * sigma * sigma
-    gaussian_x = torch.exp(
-        -torch.pow(xx - c[0], 2) / denum
-    )  # Gaussian function in x direction [row_neurons, col_neurons]
-    gaussian_y = torch.exp(
-        -torch.pow(yy - c[1], 2) / denum
-    )  # Gaussian function in y direction [row_neurons, col_neurons]
-    return gaussian_x * gaussian_y
+    # Get the coordinate of the center neuron from the meshgrid
+    center_x = xx[c[0], c[1]]
+    center_y = yy[c[0], c[1]]
+
+    # Calculate squared Euclidean distances from center
+    dx = xx - center_x
+    dy = yy - center_y
+    squared_distances = dx * dx + dy * dy
+
+    # Apply Gaussian function based on Euclidean distance
+    return torch.exp(-squared_distances / (2 * sigma * sigma))
 
 
 def _mexican_hat(
@@ -61,6 +65,7 @@ def _mexican_hat(
     """Mexican hat (Ricker wavelet) neighborhood function to update weights.
 
     See also: https://en.wikipedia.org/wiki/Ricker_wavelet
+    Uses proper Euclidean distance in coordinate space, works for both rectangular and hexagonal topologies.
 
     Args:
         xx (torch.Tensor): Meshgrid of x coordinates [row_neurons, col_neurons]
@@ -85,29 +90,29 @@ def _mexican_hat(
             [ 0.,  1.,  2.,  ...,  col_neurons],]
         )
 
-        c (Tuple[int, int]): center of winning neuron coordinates [row, col]
+        c (Tuple[int, int]): center of winning neuron coordinates [row, col] (grid indices)
         sigma (float): width of the neighborhood, so standard deviation. It controls the spread of the update influence.
 
     Returns:
-        torch.Tensor: Mexican hat neighborhood weights. Element-wise product standing for the combined influence of mexican neighborhood around center c with a spread sigma [row_neurons, col_neurons].
+        torch.Tensor: Mexican hat neighborhood weights based on Euclidean distance [row_neurons, col_neurons]. Element-wise product standing for the combined influence of mexican neighborhood around center c with a spread sigma [row_neurons, col_neurons].
     """
+    # Get the coordinate of the center neuron from the meshgrid
+    center_x = xx[c[0], c[1]]
+    center_y = yy[c[0], c[1]]
+
+    # Calculate squared Euclidean distances from center
+    dx = xx - center_x
+    dy = yy - center_y
+    squared_distances = dx * dx + dy * dy
+
+    # Mexican hat parameters
     denum = 2 * sigma * sigma
-    cst = 1 / (torch.pi * torch.pow(torch.tensor(sigma), 4))
-    squared_distances = torch.pow(xx - c[0], 2) + torch.pow(
-        yy - c[1], 2
-    )  # Squared distances from center [row_neurons, col_neurons]
+    sigma_tensor = torch.tensor(sigma, device=xx.device, dtype=xx.dtype)
+    cst = 1 / (torch.pi * sigma_tensor.pow(4))
+
+    # Apply Mexican hat function
     exp_distances = torch.exp(-squared_distances / denum)
     mexican_hat = cst * (1 - (1 / 2) * squared_distances / (2 * denum)) * exp_distances
-
-    # ! Modification to test
-    # denum = 2 * sigma * sigma
-    # sigma_t = torch.tensor(sigma, device=xx.device, dtype=xx.dtype)
-    # cst = 1 / (torch.pi * sigma_t.pow(4))
-    # squared_distances = torch.pow(xx - c[0], 2) + torch.pow(
-    #     yy - c[1], 2
-    # )  # Squared distances from center [row_neurons, col_neurons]
-    # exp_distances = torch.exp(-squared_distances / denum)
-    # mexican_hat = cst * (1 - (1 / 2) * squared_distances / (2 * denum)) * exp_distances
 
     # Ensure the central peak is exactly 1.0
     max_value = mexican_hat[c[0], c[1]]
@@ -124,6 +129,8 @@ def _bubble(
 ) -> torch.Tensor:
     """Bubble (step function) neighborhood function to update weights.
 
+    Uses proper Euclidean distance in coordinate space, works for both rectangular and hexagonal topologies.
+
     Args:
         xx (torch.Tensor): Meshgrid of x coordinates [row_neurons, col_neurons]
         tensor(
@@ -147,19 +154,23 @@ def _bubble(
             [ 0.,  1.,  2.,  ...,  col_neurons],]
         )
 
-        c (Tuple[int, int]): center of winning neuron coordinates [row, col]
+        c (Tuple[int, int]): center of winning neuron coordinates [row, col] (grid indices)
         sigma (float): width of the neighborhood, so standard deviation. It controls the spread of the update influence.
 
     Returns:
-        torch.Tensor: Binary bubble neighborhood weights. Mask to update elements only striclty within the sigma radius, hence bubble name [row_neurons, col_neurons].
+        torch.Tensor: Binary bubble neighborhood weights based on Euclidean distance [row_neurons, col_neurons]. Mask to update elements only striclty within the sigma radius, hence bubble name [row_neurons, col_neurons].
     """
-    x_distance, y_distance = torch.abs(xx - c[0]), torch.abs(
-        yy - c[1]
-    )  # Both [row_neurons, col_neurons]
+    # Get the coordinate of the center neuron from the meshgrid
+    center_x = xx[c[0], c[1]]
+    center_y = yy[c[0], c[1]]
 
-    mask = (x_distance <= sigma) & (
-        y_distance <= sigma
-    )  # Binary mask set to true if both distances are below sigma for each neuron [row_neurons, col_neurons]
+    # Calculate Euclidean distances from center
+    dx = xx - center_x
+    dy = yy - center_y
+    distances = torch.sqrt(dx * dx + dy * dy)
+
+    # Binary mask: 1.0 within sigma radius, 0.0 outside
+    mask = distances <= sigma
     return mask.float()  # Convert binary (True/False) to float (1./0.)
 
 
@@ -171,6 +182,8 @@ def _triangle(
 ) -> torch.Tensor:
     """Triangle (linear) neighborhood function to update weights.
 
+    Uses proper Euclidean distance in coordinate space, works for both rectangular and hexagonal topologies.
+
     Args:
         xx (torch.Tensor): Meshgrid of x coordinates [row_neurons, col_neurons]
         tensor(
@@ -194,20 +207,24 @@ def _triangle(
             [ 0.,  1.,  2.,  ...,  col_neurons],]
         )
 
-        c (Tuple[int, int]): center of winning neuron coordinates [row, col]
+        c (Tuple[int, int]): center of winning neuron coordinates [row, col] (grid indices)
         sigma (float): width of the neighborhood, so standard deviation. It controls the spread of the update influence.
 
     Returns:
-        torch.Tensor: Triangle neighborhood weights. Element-wise product standing for the combined influence of gaussian neighborhood around center c with a spread sigma [row_neurons, col_neurons].
+        torch.Tensor: Triangle neighborhood weights based on Euclidean distance [row_neurons, col_neurons]. Element-wise product standing for the combined influence of triangle neighborhood around center c with a spread sigma [row_neurons, col_neurons].
     """
-    triangle_x, triangle_y = (-torch.abs(c[0] - xx)) + sigma, (
-        -torch.abs(c[1] - yy)
-    ) + sigma  # Linear decay in both directions, both [row_neurons, col_neurons]
+    # Get the coordinate of the center neuron from the meshgrid
+    center_x = xx[c[0], c[1]]
+    center_y = yy[c[0], c[1]]
 
-    triangle_x, triangle_y = torch.clamp(triangle_x, min=0.0), torch.clamp(
-        triangle_y, min=0.0
-    )  # Clip negative values to zero, both [row_neurons, col_neurons]
-    return triangle_x * triangle_y
+    # Calculate Euclidean distances from center
+    dx = xx - center_x
+    dy = yy - center_y
+    distances = torch.sqrt(dx * dx + dy * dy)
+
+    # Linear decay from 1.0 at center to 0.0 at distance sigma
+    triangle_weights = torch.clamp(sigma - distances, min=0.0) / sigma
+    return triangle_weights
 
 
 NEIGHBORHOOD_FUNCTIONS = {

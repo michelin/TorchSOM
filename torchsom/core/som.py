@@ -11,14 +11,17 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 from tqdm import tqdm
 
-from ..utils.decay import DECAY_FUNCTIONS
-from ..utils.distances import DISTANCE_FUNCTIONS
-from ..utils.grid import adjust_meshgrid_topology, create_mesh_grid
-from ..utils.initialization import initialize_weights
-from ..utils.metrics import calculate_quantization_error, calculate_topographic_error
-from ..utils.neighborhood import NEIGHBORHOOD_FUNCTIONS
-from ..utils.topology import get_all_neighbors_up_to_order
-from .base_som import BaseSOM
+from torchsom.core.base_som import BaseSOM
+from torchsom.utils.decay import DECAY_FUNCTIONS
+from torchsom.utils.distances import DISTANCE_FUNCTIONS
+from torchsom.utils.grid import adjust_meshgrid_topology, create_mesh_grid
+from torchsom.utils.initialization import initialize_weights
+from torchsom.utils.metrics import (
+    calculate_quantization_error,
+    calculate_topographic_error,
+)
+from torchsom.utils.neighborhood import NEIGHBORHOOD_FUNCTIONS
+from torchsom.utils.topology import get_all_neighbors_up_to_order
 
 
 class SOM(BaseSOM):
@@ -163,10 +166,6 @@ class SOM(BaseSOM):
                     for row, col in bmus
                 ]
             )  # [batch_size, row_neurons, col_neurons]
-            # ! Modification to test
-            # # Vectorised: build a tensor of BMU coordinates and compute in one shot
-            # coords = torch.stack([bmus[:, 0], bmus[:, 1]], dim=1).to(torch.long)
-            # neighborhoods = self.neighborhood_fn(coords, sigma)  # update neighborhood_fn to accept batched coords  # [batch_size, row_neurons, col_neurons]
 
             # Reshape for broadcasting
             neighborhoods = neighborhoods.view(batch_size, self.x, self.y, 1)
@@ -977,20 +976,45 @@ class SOM(BaseSOM):
                 else:
                     neighbor_labels = []
                     row, col = bmu_pos
-                    for dx, dy in neighborhood_offsets:
-                        neighbor_row = row + dx
-                        neighbor_col = col + dy
-                        if (
-                            0 <= neighbor_row < self.x
-                            and 0 <= neighbor_col < self.y
-                            and (neighbor_row, neighbor_col) in bmus_map
-                        ):
-                            neighbor_samples_indices = bmus_map[
-                                (neighbor_row, neighbor_col)
-                            ]
-                            neighbor_labels.extend(
-                                target[neighbor_samples_indices].cpu().numpy()
-                            )
+
+                    # Handle topology-specific neighborhood processing
+                    if self.topology == "hexagonal":
+                        # Use appropriate offsets based on row parity (even/odd)
+                        row_offsets = (
+                            neighborhood_offsets["even"]
+                            if row % 2 == 0
+                            else neighborhood_offsets["odd"]
+                        )
+                        for dx, dy in row_offsets:
+                            neighbor_row = row + dx
+                            neighbor_col = col + dy
+                            if (
+                                0 <= neighbor_row < self.x
+                                and 0 <= neighbor_col < self.y
+                                and (neighbor_row, neighbor_col) in bmus_map
+                            ):
+                                neighbor_samples_indices = bmus_map[
+                                    (neighbor_row, neighbor_col)
+                                ]
+                                neighbor_labels.extend(
+                                    target[neighbor_samples_indices].cpu().numpy()
+                                )
+                    else:
+                        # Rectangular topology - process all offsets directly
+                        for dx, dy in neighborhood_offsets:
+                            neighbor_row = row + dx
+                            neighbor_col = col + dy
+                            if (
+                                0 <= neighbor_row < self.x
+                                and 0 <= neighbor_col < self.y
+                                and (neighbor_row, neighbor_col) in bmus_map
+                            ):
+                                neighbor_samples_indices = bmus_map[
+                                    (neighbor_row, neighbor_col)
+                                ]
+                                neighbor_labels.extend(
+                                    target[neighbor_samples_indices].cpu().numpy()
+                                )
 
                     # After collecting all neighbor labels, recompute label counts with neighborhood labels.
                     if neighbor_labels:

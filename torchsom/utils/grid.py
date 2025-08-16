@@ -1,6 +1,10 @@
 """Utility functions for grid operations."""
 
+import math
+
 import torch
+
+# NOTE: Coordinate conversion functions moved to hexagonal_coordinates.py to eliminate duplication and provide single source of truth.
 
 
 def create_mesh_grid(
@@ -54,78 +58,81 @@ def adjust_meshgrid_topology(
         adjusted_xx = xx.clone()
         adjusted_yy = yy.clone()
 
-        adjusted_xx[::2] -= 0.5  # Adjust x-coordinates for even-indexed rows
-        adjusted_yy *= (3.0 / 2.0) / torch.sqrt(
-            torch.tensor(3.0)
-        )  # Adjust all y-coordinates
+        """
+        Use even-r offset coordinate system (consistent with visualization)
+            1. Even rows (0, 2, 4...): no horizontal shift
+            2. Odd rows (1, 3, 5...): shift right by 0.5
+        """
+        adjusted_xx[1::2] += 0.5
+        adjusted_yy *= math.sqrt(3) / 2
 
-        return adjusted_xx, adjusted_yy  # Return the modified copies
+        return adjusted_xx, adjusted_yy
 
-    return xx, yy  # If not hexagonal, return the original tensors
-
-
-def convert_to_axial_coords(
-    row: int,
-    col: int,
-) -> tuple[float, float]:
-    """Convert grid coordinates to axial coordinates for hexagonal grid.
-
-    Uses even-r layout where even rows are shifted left by 0.5.
-    This matches the layout used in adjust_meshgrid_topology.
-
-    Args:
-        row (int): Grid row coordinate
-        col (int): Grid column coordinate
-
-    Returns:
-        tuple[float, float]: Axial coordinates (q, r)
-    """
-    q = col - 0.5 - row // 2 if row % 2 == 0 else col - row // 2
-    r = row
-    return q, r
+    return xx, yy
 
 
-def offset_to_axial_coords(
-    row: int,
-    col: int,
-) -> tuple[float, float]:  # pragma: no cover
-    """Convert offset coordinates to axial coordinates for hexagonal grid.
+# def convert_to_axial_coords(
+#     row: int,
+#     col: int,
+# ) -> tuple[float, float]:
+#     """Convert grid coordinates to axial coordinates for hexagonal grid.
 
-    Alternative implementation that directly matches the mesh grid adjustment.
+#     Uses even-r layout where even rows are shifted left by 0.5.
+#     This matches the layout used in adjust_meshgrid_topology.
 
-    Args:
-        row (int): Grid row coordinate
-        col (int): Grid column coordinate
+#     Args:
+#         row (int): Grid row coordinate
+#         col (int): Grid column coordinate
 
-    Returns:
-        tuple[float, float]: Axial coordinates (q, r)
-    """
-    # Direct conversion matching adjust_meshgrid_topology
-    q = col - (row - (row & 1)) / 2
-    r = row
-    return q, r
+#     Returns:
+#         tuple[float, float]: Axial coordinates (q, r)
+#     """
+#     q = col - 0.5 - row // 2 if row % 2 == 0 else col - row // 2
+#     r = row
+#     return q, r
 
 
-def axial_distance(
-    q1: float,
-    r1: float,
-    q2: float,
-    r2: float,
-) -> int:
-    """Calculate the distance between two hexes in axial coordinates.
+# def offset_to_axial_coords(
+#     row: int,
+#     col: int,
+# ) -> tuple[float, float]:  # pragma: no cover
+#     """Convert offset coordinates to axial coordinates for hexagonal grid.
 
-    Args:
-        q1 (float): column of first hex
-        r1 (float): row of first hex
-        q2 (float): column of second hex
-        r2 (float): row of second hex
+#     Alternative implementation that directly matches the mesh grid adjustment.
 
-    Returns:
-        int: Distance in hex steps
-    """
-    # Convert axial to cube coordinates
-    x1, y1, z1 = q1, r1, -q1 - r1
-    x2, y2, z2 = q2, r2, -q2 - r2
+#     Args:
+#         row (int): Grid row coordinate
+#         col (int): Grid column coordinate
 
-    # Manhattan distance divided by 2
-    return int((abs(x1 - x2) + abs(y1 - y2) + abs(z1 - z2)) / 2)
+#     Returns:
+#         tuple[float, float]: Axial coordinates (q, r)
+#     """
+#     # Direct conversion matching adjust_meshgrid_topology
+#     q = col - (row - (row & 1)) / 2
+#     r = row
+#     return q, r
+
+
+# def axial_distance(
+#     q1: float,
+#     r1: float,
+#     q2: float,
+#     r2: float,
+# ) -> int:
+#     """Calculate the distance between two hexes in axial coordinates.
+
+#     Args:
+#         q1 (float): column of first hex
+#         r1 (float): row of first hex
+#         q2 (float): column of second hex
+#         r2 (float): row of second hex
+
+#     Returns:
+#         int: Distance in hex steps
+#     """
+#     # Convert axial to cube coordinates
+#     x1, y1, z1 = q1, r1, -q1 - r1
+#     x2, y2, z2 = q2, r2, -q2 - r2
+
+#     # Manhattan distance divided by 2
+#     return int((abs(x1 - x2) + abs(y1 - y2) + abs(z1 - z2)) / 2)

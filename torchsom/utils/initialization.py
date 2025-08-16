@@ -4,7 +4,7 @@ import warnings
 
 import torch
 
-from ..utils.grid import adjust_meshgrid_topology
+from torchsom.utils.grid import adjust_meshgrid_topology
 
 
 def random_init(
@@ -35,11 +35,6 @@ def random_init(
         sampled_weights = data[indices]
 
         return sampled_weights
-
-        # ! Modification to test
-        # # Return value ignores the original weights tensor
-        # weights.copy_(data[indices])
-        # return weights
 
     except RuntimeError as e:
         raise RuntimeError(f"Random initialization failed: {str(e)}")

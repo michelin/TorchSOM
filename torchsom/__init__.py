@@ -1,10 +1,10 @@
 """Torchsom package."""
 
-from .core import SOM, BaseSOM
-from .utils.decay import DECAY_FUNCTIONS
-from .utils.distances import DISTANCE_FUNCTIONS
-from .utils.neighborhood import NEIGHBORHOOD_FUNCTIONS
-from .visualization import SOMVisualizer, VisualizationConfig
+from torchsom.core import SOM, BaseSOM
+from torchsom.utils.decay import DECAY_FUNCTIONS
+from torchsom.utils.distances import DISTANCE_FUNCTIONS
+from torchsom.utils.neighborhood import NEIGHBORHOOD_FUNCTIONS
+from torchsom.visualization import SOMVisualizer, VisualizationConfig
 
 # from .version import __version__
 
