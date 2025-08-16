@@ -12,20 +12,36 @@ name = "torchsom"
 authors = [
     {name = "Louis Berthier", email = "louis-desire-romeo.berthier@michelin.com"},
 ]
+maintainers = [
+    {name = "Louis Berthier", email = "louis-desire-romeo.berthier@michelin.com"},
+]
 dynamic = [
     "version",                          # Version will be determined dynamically (via git)
     "readme",                           # README will be dynamically loaded
 ]
 description = "torchsom: The Reference PyTorch Library for Self-Organizing Maps"
 requires-python = ">=3.9"               # Minimum Python version required
+# https://pypi.org/classifiers/
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta", # 3 - Alpha, 4 - Beta, 5 - Production/Stable
     "Natural Language :: English",
     "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Healthcare Industry",
+    "Intended Audience :: Manufacturing",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Scientific/Engineering :: Information Retrieval",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Testing :: Unit",
+    "Topic :: Software Development :: Version Control :: Git",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: Apache Software License",
 ]
 dependencies = [
     "torch",
@@ -34,6 +50,28 @@ dependencies = [
     "tqdm",
     "pydantic",
 ]
+keywords = [
+    "Self-Organizing-Maps",
+    "SOM",
+    "PyTorch",
+    "Machine-Learning",
+    "Unsupervised-Learning",
+    "Dimensionality-Reduction",
+    "Clustering",
+    "Data-Visualization",
+    "Just-In-Time-Learning",
+]
+
+[project.urls]
+"Source" = "https://github.com/michelin/torchsom"
+"Documentation" = "https://opensource.michelin.io/TorchSOM/"
+"Tracker" = "https://github.com/michelin/TorchSOM/issues"
+"License" = "https://github.com/michelin/TorchSOM/blob/main/LICENSE"
+"Contributing" = "https://github.com/michelin/TorchSOM/blob/main/CONTRIBUTING.md"
+"Code of Conduct" = "https://github.com/michelin/TorchSOM/blob/main/CODE_OF_CONDUCT.md"
+"Citation" = "https://github.com/michelin/TorchSOM/blob/main/CITATION.cff"
+# "Changelog" = "https://github.com/michelin/torchsom/releases"
+# "Author" = "https://github.com/michelin/TorchSOM/blob/main/AUTHORS.md"
 
 # Configuration for setuptools-git-versioning plugin
 [tool.setuptools-git-versioning]

@@ -131,6 +131,13 @@ all: format lint security complexity docs test  ## Run everything (full CI simul
 	@echo ""
 	@echo "🎉 All checks passed! Ready to push to GitHub!"
 
+publish:  ## Publish to PyPI
+	@echo "📦 Publishing to PyPI..."
+# export $(cat .env | xargs)
+	python -m build
+	twine upload dist/*
+	@echo "✅ Published to PyPI!"
+
 # Quick commands for common tasks, defining aliases for the most common commands (alias: common_command)
 fix: format
 check: lint
