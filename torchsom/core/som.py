@@ -12,11 +12,13 @@ from torch.utils.data import DataLoader, TensorDataset
 from tqdm import tqdm
 
 from torchsom.core.base_som import BaseSOM
+from torchsom.utils.clustering import cluster_data
 from torchsom.utils.decay import DECAY_FUNCTIONS
 from torchsom.utils.distances import DISTANCE_FUNCTIONS
 from torchsom.utils.grid import adjust_meshgrid_topology, create_mesh_grid
 from torchsom.utils.initialization import initialize_weights
 from torchsom.utils.metrics import (
+    calculate_clustering_metrics,
     calculate_quantization_error,
     calculate_topographic_error,
 )
@@ -1045,3 +1047,89 @@ class SOM(BaseSOM):
                         )
 
         return classification_map
+
+    def cluster(
+        self,
+        method: str = "kmeans",
+        n_clusters: Optional[int] = None,
+        feature_space: str = "weights",
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        """Cluster SOM neurons using various clustering algorithms.
+
+        Args:
+            method (str): Clustering method. Options: "kmeans", "gmm", "hdbscan"
+            n_clusters (Optional[int]): Number of clusters. If None, uses automatic selection
+            feature_space (str): Feature space for clustering. Options:
+                - "weights": Cluster based on neuron weight vectors
+                - "positions": Cluster based on 2D neuron coordinates
+                - "combined": Use both weights and positions
+            **kwargs: Additional arguments for clustering algorithms
+
+        Returns:
+            dict[str, Any]: Clustering results containing:
+                - labels: Cluster assignments for neurons [n_neurons]
+                - centers: Cluster centers [n_clusters, n_features]
+                - n_clusters: Number of clusters found
+                - method: Clustering method used
+                - metrics: Dictionary of clustering quality metrics
+                - feature_space: Feature space used for clustering
+                - original_data: Features used for clustering
+
+        Raises:
+            ValueError: If invalid method or feature_space is specified
+        """
+        if method not in ["kmeans", "gmm", "hdbscan"]:
+            raise ValueError(f"Unsupported clustering method: {method}")
+
+        if feature_space not in ["weights", "positions", "combined"]:
+            raise ValueError(f"Unsupported feature space: {feature_space}")
+
+        # Extract features based on feature_space parameter
+        data = self._extract_clustering_features(feature_space)
+
+        # Perform clustering
+        cluster_result = cluster_data(
+            data=data, method=method, n_clusters=n_clusters, **kwargs
+        )
+
+        # Calculate clustering quality metrics
+        metrics = calculate_clustering_metrics(data, cluster_result["labels"], som=self)
+        cluster_result["metrics"] = metrics
+
+        # Store additional information
+        cluster_result["feature_space"] = feature_space
+        cluster_result["original_data"] = data
+
+        return cluster_result
+
+    def _extract_clustering_features(self, feature_space: str) -> torch.Tensor:
+        """Extract features for clustering based on feature space specification.
+
+        Args:
+            feature_space (str): Type of features to extract
+
+        Returns:
+            torch.Tensor: Features for clustering [n_neurons, n_features]
+        """
+        if feature_space == "weights":
+            # Use neuron weight vectors (already normalized)
+            data = self.weights.view(-1, self.num_features)  # [n_neurons, n_features]
+
+        elif feature_space == "positions":
+            # Use 2D neuron coordinates (topology-adjusted)
+            positions = torch.stack([self.xx.flatten(), self.yy.flatten()], dim=1)
+            data = positions  # [n_neurons, 2]
+
+        elif feature_space == "combined":
+            # Combine weights and positions without normalization
+            # (weights are already normalized, positions are in consistent scale)
+            weights_flat = self.weights.view(-1, self.num_features)
+            positions = torch.stack([self.xx.flatten(), self.yy.flatten()], dim=1)
+
+            data = torch.cat([weights_flat, positions], dim=1)
+
+        else:
+            raise ValueError(f"Unsupported feature space: {feature_space}")
+
+        return data

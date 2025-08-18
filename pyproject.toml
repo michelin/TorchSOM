@@ -49,6 +49,8 @@ dependencies = [
     "matplotlib",
     "tqdm",
     "pydantic",
+    "hdbscan",
+    "scikit-learn",
 ]
 keywords = [
     "Self-Organizing-Maps",
@@ -93,7 +95,7 @@ include = ["torchsom*"]                # Include packages matching this pattern 
 [project.optional-dependencies]
 dev = [
     "pandas",
-    "scikit-learn",
+    # "scikit-learn",
     "openpyxl",
     "black",
     "isort",

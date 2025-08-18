@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import torch
 
 from torchsom.core import BaseSOM
+from torchsom.visualization.clustering import ClusteringVisualizer
 from torchsom.visualization.config import VisualizationConfig
 from torchsom.visualization.hexagonal import HexagonalVisualizer
 from torchsom.visualization.rectangular import RectangularVisualizer
@@ -41,6 +42,9 @@ class SOMVisualizer:
             self._visualizer = RectangularVisualizer(som, config)
         else:
             raise ValueError(f"Unsupported topology: {som.topology}")
+
+        # Create clustering visualizer
+        self._clustering_visualizer = ClusteringVisualizer(som, config)
 
     def _setup_style(self) -> None:
         """Configure global plotting style."""
@@ -114,6 +118,31 @@ class SOMVisualizer:
     def plot_component_planes(self, *args: Any, **kwargs: Any) -> None:
         """Plot component planes using topology-specific visualizer."""
         return self._visualizer.plot_component_planes(*args, **kwargs)
+
+    # Clustering visualization methods
+    def plot_cluster_map(self, *args: Any, **kwargs: Any) -> None:
+        """Plot clustering results overlaid on SOM grid."""
+        return self._clustering_visualizer.plot_cluster_map(*args, **kwargs)
+
+    def plot_silhouette_analysis(self, *args: Any, **kwargs: Any) -> None:
+        """Plot silhouette analysis for clustering results."""
+        return self._clustering_visualizer.plot_silhouette_analysis(*args, **kwargs)
+
+    def plot_cluster_quality_comparison(self, *args: Any, **kwargs: Any) -> None:
+        """Compare clustering quality metrics across different methods."""
+        return self._clustering_visualizer.plot_cluster_quality_comparison(
+            *args, **kwargs
+        )
+
+    def plot_elbow_analysis(self, *args: Any, **kwargs: Any) -> None:
+        """Plot elbow analysis for optimal K selection in K-means."""
+        return self._clustering_visualizer.plot_elbow_analysis(*args, **kwargs)
+
+    def plot_clustering_comparison_grid(self, *args: Any, **kwargs: Any) -> None:
+        """Plot a grid comparing different clustering methods and feature spaces."""
+        return self._clustering_visualizer.plot_clustering_comparison_grid(
+            *args, **kwargs
+        )
 
     def plot_all(
         self,

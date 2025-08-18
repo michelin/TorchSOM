@@ -44,9 +44,8 @@ repos:
     hooks:
       - id: mypy
         name: mypy
-        args: ['--config-file', 'pyproject.toml']
+        args: ['--config-file', 'pyproject.toml', '--ignore-missing-imports', '--strict']
         # additional_dependencies: [torch, numpy, pydantic, types-requests]
-        # args: [--ignore-missing-imports, --strict]
 
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.5
