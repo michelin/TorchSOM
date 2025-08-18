@@ -2,19 +2,31 @@
 
 <div align="center">
 
-[![PyPI version](https://img.shields.io/pypi/v/torchsom.svg)](https://pypi.org/project/torchsom/)
-[![Python versions](https://img.shields.io/pypi/pyversions/torchsom.svg)](https://pypi.org/project/torchsom/)
+<!-- Global Package information -->
+[![PyPI version](https://img.shields.io/pypi/v/torchsom.svg?color=blue)](https://pypi.org/project/torchsom/)
+[![Python versions](https://img.shields.io/pypi/pyversions/torchsom.svg?color=blue)](https://pypi.org/project/torchsom/)
 [![PyTorch versions](https://img.shields.io/badge/PyTorch-2.7-EE4C2C.svg)](https://pytorch.org/)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/license/apache-2-0)
 
+<!-- Sonar Qube badges -->
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=michelin_TorchSOM)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=coverage)](https://sonarcloud.io/summary/new_code?id=michelin_TorchSOM)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=michelin_TorchSOM)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=michelin_TorchSOM)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=michelin_TorchSOM)
+
+<!-- [![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=michelin_TorchSOM) -->
+
+<!-- GitHub Workflows -->
 [![Tests](https://github.com/michelin/TorchSOM/workflows/Tests/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/test.yml)
 [![Code Quality](https://github.com/michelin/TorchSOM/workflows/Code%20Quality/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/code-quality.yml)
-<!-- [![Security](https://github.com/michelin/TorchSOM/workflows/Security%20Scanning/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/security.yml)
-[![codecov](https://codecov.io/gh/michelin/TorchSOM/branch/main/graph/badge.svg)](https://codecov.io/gh/michelin/TorchSOM) -->
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-red.svg)](https://opensource.org/license/apache-2-0)
+[![Downloads](https://static.pepy.tech/badge/torchsom)](https://pepy.tech/project/torchsom)
+<!-- [![Security](https://github.com/michelin/TorchSOM/workflows/Security%20Scanning/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/security.yml) -->
 
-<!-- [![Downloads](https://static.pepy.tech/badge/torchsom)](https://pepy.tech/project/torchsom) -->
+<!-- Code Style and Tools -->
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Imports: isort](https://img.shields.io/badge/imports-isort-6c757d.svg?color=blue)](https://pycqa.github.io/isort/)
+[![Ruff](https://img.shields.io/badge/linter-ruff-6c757d.svg?color=blue)](https://github.com/astral-sh/ruff)
 
 <p align="center">
     <img src="assets/logo.jpg" alt="TorchSOM_logo" width="400"/>
@@ -27,6 +39,8 @@
 | [📊 Examples](notebooks/)
 | [🤝 Contributing](CONTRIBUTING.md)
 
+**⭐ If you find [`torchsom`](https://github.com/michelin/TorchSOM) valuable, please consider starring this repository ⭐**
+
 </div>
 
 ---
@@ -38,8 +52,6 @@ Unlike legacy SOM packages, TorchSOM is engineered from the ground up to fully l
 Whether you are a researcher or practitioner, TorchSOM empowers you to efficiently incorporate SOMs into your machine learning projects, from exploratory data analysis to advanced model architectures.
 
 TorchSOM is the official implementation accompanying the paper: [TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps](update_link), presented at @CONFERENCE, @DATE.
-
-**⭐ If you find TorchSOM valuable, please consider starring this repository ⭐**
 
 ### ⚡ Key Advantages
 

@@ -18,8 +18,8 @@ jobs:
         pytorch-version: ["2.7.0+cu126"]
         exclude:
           # Exclude some combinations to reduce CI load: macos doesn't work with CUDA, and ubuntu 3.9 triggers Codecov not available
-          - os: ubuntu-latest
-            python-version: "3.9"
+          # - os: ubuntu-latest
+          #   python-version: "3.9"
           - os: macos-latest
             python-version: "3.9"
           - os: macos-latest
@@ -71,17 +71,13 @@ jobs:
       #     -n auto \
       #     -m "unit or gpu"
 
-    - name: Upload coverage to Codecov
+    - name: Analyze code with SonarQube
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' && matrix.pytorch-version == '2.7.0+cu126'
-      uses: codecov/codecov-action@v5
+      uses: SonarSource/sonarqube-scan-action@v5
       with:
-        files: coverage.xml
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: true
-        verbose: true
-        token: ${{ secrets.CODECOV_TOKEN }}
-        slug: michelin/TorchSOM
+        token: ${{ secrets.SONAR_TOKEN }}
+        # organization: michelin
+        # projectKey: michelin_TorchSOM
 
     - name: Upload test results
       uses: actions/upload-artifact@v4

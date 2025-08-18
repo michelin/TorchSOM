@@ -186,16 +186,18 @@ timeout = 300
 source = ["torchsom"]
 # Files to exclude from coverage stats
 omit = [
+    "tests/**",                            # Exclude all test files
+    "docs/**",                             # Exclude documentation
+    "notebooks/**",                        # Exclude Jupyter notebooks
     "torchsom/core/base_som.py",           # Exclude base SOM implementation
-    "torchsom/core/growing/*",             # Exclude growing SOM implementation
-    "torchsom/core/hierarchical/*",        # Exclude hierarchical SOM implementation
-    "torchsom/visualization/*",            # Exclude visualization utilities
+    "torchsom/core/growing/**",            # Exclude growing SOM implementation
+    "torchsom/core/hierarchical/**",       # Exclude hierarchical SOM implementation
+    "torchsom/visualization/**",           # Exclude visualization utilities
     "torchsom/logger.py",                  # Exclude logging utilities
     "torchsom/version.py",                 # Exclude version info file
-    "*/tests/*",                           # Exclude tests themselves
-    "*/conftest.py",                       # Exclude pytest config
-    "*/__init__.py",                       # Exclude package init files
-    "*/setup.py",                          # Exclude setup scripts
+    "**/conftest.py",                      # Exclude pytest config
+    "**/__init__.py",                      # Exclude package init files
+    "**/setup.py",                         # Exclude setup scripts
 ]
 # Measure branch coverage in addition to line coverage
 branch = true
