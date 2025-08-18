@@ -74,10 +74,12 @@ jobs:
     - name: Analyze code with SonarQube
       if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' && matrix.pytorch-version == '2.7.0+cu126'
       uses: SonarSource/sonarqube-scan-action@v5
-      with:
-        token: ${{ secrets.SONAR_TOKEN }}
-        # organization: michelin
-        # projectKey: michelin_TorchSOM
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # with:
+      #   token: ${{ env.SONAR_TOKEN }}
+      #   organization: michelin
+      #   projectKey: michelin_TorchSOM
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
