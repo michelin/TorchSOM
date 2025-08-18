@@ -166,6 +166,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../api/core.html#torchsom.core.som.SOM.build_metric_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_metric_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/core.html#torchsom.core.som.SOM.build_rank_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_rank_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/core.html#torchsom.core.som.SOM.build_score_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_score_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/core.html#torchsom.core.som.SOM.cluster"><code class="docutils literal notranslate"><span class="pre">SOM.cluster()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/core.html#torchsom.core.som.SOM.collect_samples"><code class="docutils literal notranslate"><span class="pre">SOM.collect_samples()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/core.html#torchsom.core.som.SOM.fit"><code class="docutils literal notranslate"><span class="pre">SOM.fit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/core.html#torchsom.core.som.SOM.identify_bmus"><code class="docutils literal notranslate"><span class="pre">SOM.identify_bmus()</span></code></a></li>
@@ -202,8 +203,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/utils.html#module-torchsom.utils.metrics">Metrics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.metrics.calculate_calinski_harabasz_score"><code class="docutils literal notranslate"><span class="pre">calculate_calinski_harabasz_score()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.metrics.calculate_clustering_metrics"><code class="docutils literal notranslate"><span class="pre">calculate_clustering_metrics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.metrics.calculate_davies_bouldin_score"><code class="docutils literal notranslate"><span class="pre">calculate_davies_bouldin_score()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.metrics.calculate_quantization_error"><code class="docutils literal notranslate"><span class="pre">calculate_quantization_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.metrics.calculate_silhouette_score"><code class="docutils literal notranslate"><span class="pre">calculate_silhouette_score()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.metrics.calculate_topographic_error"><code class="docutils literal notranslate"><span class="pre">calculate_topographic_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/utils.html#torchsom.utils.metrics.calculate_topological_clustering_quality"><code class="docutils literal notranslate"><span class="pre">calculate_topological_clustering_quality()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -213,13 +219,18 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_all"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_all()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_classification_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_classification_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_cluster_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_cluster_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_cluster_quality_comparison"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_cluster_quality_comparison()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_clustering_comparison_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_clustering_comparison_grid()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_component_planes"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_component_planes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_distance_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_distance_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_elbow_analysis"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_elbow_analysis()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_grid()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_hit_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_hit_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_metric_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_metric_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_rank_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_rank_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_score_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_score_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_silhouette_analysis"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_silhouette_analysis()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_training_errors"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_training_errors()</span></code></a></li>
 </ul>
 </li>

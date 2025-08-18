@@ -169,6 +169,7 @@
 <li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.build_metric_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_metric_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.build_rank_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_rank_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.build_score_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_score_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.cluster"><code class="docutils literal notranslate"><span class="pre">SOM.cluster()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.collect_samples"><code class="docutils literal notranslate"><span class="pre">SOM.collect_samples()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.fit"><code class="docutils literal notranslate"><span class="pre">SOM.fit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="core.html#torchsom.core.som.SOM.identify_bmus"><code class="docutils literal notranslate"><span class="pre">SOM.identify_bmus()</span></code></a></li>
@@ -205,8 +206,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-torchsom.utils.metrics">Metrics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.metrics.calculate_calinski_harabasz_score"><code class="docutils literal notranslate"><span class="pre">calculate_calinski_harabasz_score()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.metrics.calculate_clustering_metrics"><code class="docutils literal notranslate"><span class="pre">calculate_clustering_metrics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.metrics.calculate_davies_bouldin_score"><code class="docutils literal notranslate"><span class="pre">calculate_davies_bouldin_score()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.metrics.calculate_quantization_error"><code class="docutils literal notranslate"><span class="pre">calculate_quantization_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.metrics.calculate_silhouette_score"><code class="docutils literal notranslate"><span class="pre">calculate_silhouette_score()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.metrics.calculate_topographic_error"><code class="docutils literal notranslate"><span class="pre">calculate_topographic_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#torchsom.utils.metrics.calculate_topological_clustering_quality"><code class="docutils literal notranslate"><span class="pre">calculate_topological_clustering_quality()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -216,13 +222,18 @@
 <li class="toctree-l3"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_all"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_all()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_classification_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_classification_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_cluster_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_cluster_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_cluster_quality_comparison"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_cluster_quality_comparison()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_clustering_comparison_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_clustering_comparison_grid()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_component_planes"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_component_planes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_distance_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_distance_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_elbow_analysis"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_elbow_analysis()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_grid()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_hit_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_hit_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_metric_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_metric_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_rank_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_rank_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_score_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_score_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_silhouette_analysis"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_silhouette_analysis()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_training_errors"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_training_errors()</span></code></a></li>
 </ul>
 </li>
@@ -710,6 +721,67 @@ Order 3+: All positions at Chebyshev distance (order-1)</p>
 <span id="metrics"></span><h2>Metrics<a class="headerlink" href="#module-torchsom.utils.metrics" title="Link to this heading"></a></h2>
 <p>Utility functions for metrics.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.metrics.calculate_calinski_harabasz_score">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.metrics.</span></span><span class="sig-name descname"><span class="pre">calculate_calinski_harabasz_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/metrics.html#calculate_calinski_harabasz_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.metrics.calculate_calinski_harabasz_score" title="Link to this definition"></a></dt>
+<dd><p>Calculate Calinski-Harabasz index using scikit-learn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data [n_samples, n_features]</p></li>
+<li><p><strong>labels</strong> (<em>torch.Tensor</em>) – Cluster labels [n_samples]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Calinski-Harabasz index (higher is better, &gt;= 0)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.metrics.calculate_clustering_metrics">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.metrics.</span></span><span class="sig-name descname"><span class="pre">calculate_clustering_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">som</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/metrics.html#calculate_clustering_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.metrics.calculate_clustering_metrics" title="Link to this definition"></a></dt>
+<dd><p>Calculate comprehensive clustering quality metrics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data [n_samples, n_features]</p></li>
+<li><p><strong>labels</strong> (<em>torch.Tensor</em>) – Cluster labels [n_samples]</p></li>
+<li><p><strong>som</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="core.html#torchsom.core.base_som.BaseSOM" title="torchsom.core.base_som.BaseSOM"><em>BaseSOM</em></a><em>]</em>) – SOM instance for topological metrics</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of clustering quality metrics</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.metrics.calculate_davies_bouldin_score">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.metrics.</span></span><span class="sig-name descname"><span class="pre">calculate_davies_bouldin_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/metrics.html#calculate_davies_bouldin_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.metrics.calculate_davies_bouldin_score" title="Link to this definition"></a></dt>
+<dd><p>Calculate Davies-Bouldin index using scikit-learn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data [n_samples, n_features]</p></li>
+<li><p><strong>labels</strong> (<em>torch.Tensor</em>) – Cluster labels [n_samples]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Davies-Bouldin index (lower is better, &gt;= 0)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="torchsom.utils.metrics.calculate_quantization_error">
 <span class="sig-prename descclassname"><span class="pre">torchsom.utils.metrics.</span></span><span class="sig-name descname"><span class="pre">calculate_quantization_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_fn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/metrics.html#calculate_quantization_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.metrics.calculate_quantization_error" title="Link to this definition"></a></dt>
 <dd><p>Calculate quantization error for a SOM.</p>
@@ -723,6 +795,26 @@ Order 3+: All positions at Chebyshev distance (order-1)</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Average quantization error value</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.metrics.calculate_silhouette_score">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.metrics.</span></span><span class="sig-name descname"><span class="pre">calculate_silhouette_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/metrics.html#calculate_silhouette_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.metrics.calculate_silhouette_score" title="Link to this definition"></a></dt>
+<dd><p>Calculate silhouette score for clustering results using scikit-learn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data [n_samples, n_features]</p></li>
+<li><p><strong>labels</strong> (<em>torch.Tensor</em>) – Cluster labels [n_samples]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Silhouette score (-1 to 1, higher is better)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -747,6 +839,28 @@ Order 3+: All positions at Chebyshev distance (order-1)</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Topographic error ratio</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="torchsom.utils.metrics.calculate_topological_clustering_quality">
+<span class="sig-prename descclassname"><span class="pre">torchsom.utils.metrics.</span></span><span class="sig-name descname"><span class="pre">calculate_topological_clustering_quality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">som</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/utils/metrics.html#calculate_topological_clustering_quality"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.utils.metrics.calculate_topological_clustering_quality" title="Link to this definition"></a></dt>
+<dd><p>Calculate how well clusters respect SOM topological structure.</p>
+<p>This metric measures the spatial coherence of clusters on the SOM grid.
+Higher values indicate that clusters are more spatially compact on the grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>som</strong> (<a class="reference internal" href="core.html#torchsom.core.base_som.BaseSOM" title="torchsom.core.base_som.BaseSOM"><em>BaseSOM</em></a>) – Trained SOM instance</p></li>
+<li><p><strong>labels</strong> (<em>torch.Tensor</em>) – Cluster labels for neurons [n_neurons]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Topological clustering quality (0 to 1, higher is better)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
