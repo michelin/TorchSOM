@@ -6,7 +6,7 @@ from typing import Any, Optional, Union
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-from matplotlib.colors import ListedColormap
+from matplotlib.colors import BoundaryNorm, ListedColormap
 from sklearn.metrics import silhouette_samples
 
 from torchsom.core.som import SOM
@@ -63,19 +63,27 @@ class ClusteringVisualizer:
 
     def _create_cluster_colormap(
         self,
-        n_clusters: int,
+        n_colors: int,
+        include_noise: bool = False,
     ) -> ListedColormap:
-        """Create a discrete colormap for cluster visualization."""
-        if n_clusters <= 10:
+        """Create a discrete colormap for cluster visualization.
+
+        If include_noise is True, the first color is reserved for noise (gray).
+        """
+        effective_clusters = n_colors - 1 if include_noise else n_colors
+
+        if effective_clusters <= 10:
             base_colors = plt.cm.tab10(np.linspace(0, 1, 10))
-        elif n_clusters <= 20:
+        elif effective_clusters <= 20:
             base_colors = plt.cm.tab20(np.linspace(0, 1, 20))
         else:
-            base_colors = plt.cm.viridis(np.linspace(0, 1, n_clusters))
+            base_colors = plt.cm.viridis(np.linspace(0, 1, effective_clusters))
 
-        colors = base_colors[:n_clusters]
-        # Add gray for noise points if needed
-        colors = np.vstack([[[0.7, 0.7, 0.7, 1.0]], colors])  # Gray for noise (-1)
+        colors = base_colors[:effective_clusters]
+
+        if include_noise:
+            noise_color = np.array([[0.7, 0.7, 0.7, 1.0]])
+            colors = np.vstack([noise_color, colors])
 
         return ListedColormap(colors)
 
@@ -96,20 +104,38 @@ class ClusteringVisualizer:
         # Reshape labels to grid
         labels_grid = labels.view(self.som.x, self.som.y)
 
-        # Create custom colormap for clusters
+        # Create discrete colormap and mapping for clusters
         unique_labels = torch.unique(labels)
-        n_unique = len(unique_labels)
-        cmap = self._create_cluster_colormap(n_unique)
+        has_noise = -1 in unique_labels
 
-        # Adjust labels for colormap (shift by 1 to account for noise at index 0)
+        # Remap labels to contiguous integers for plotting
         labels_for_plotting = labels_grid.clone()
-        if -1 in unique_labels:
+        if has_noise:
             labels_for_plotting[labels_grid == -1] = 0
             for i, label in enumerate(unique_labels[unique_labels != -1]):
                 labels_for_plotting[labels_grid == label] = i + 1
         else:
             for i, label in enumerate(unique_labels):
                 labels_for_plotting[labels_grid == label] = i
+
+        # Build discrete cmap and norm
+        if labels_for_plotting.numel() > 0:
+            n_bins = int(labels_for_plotting.max().item() + 1)
+        else:
+            n_bins = 1
+        cmap = self._create_cluster_colormap(n_bins, include_noise=has_noise)
+        boundaries = np.arange(-0.5, n_bins + 0.5, 1)
+        norm = BoundaryNorm(boundaries, ncolors=cmap.N)
+
+        # Colorbar ticks and labels
+        ticks = np.arange(n_bins)
+        if has_noise:
+            non_noise_labels = [
+                int(v.item()) for v in unique_labels[unique_labels != -1]
+            ]
+            tick_labels = ["Uncertain"] + [str(v) for v in non_noise_labels]
+        else:
+            tick_labels = [str(int(v.item())) for v in unique_labels]
 
         # Generate title
         if title is None:
@@ -133,6 +159,10 @@ class ClusteringVisualizer:
             cmap=cmap,
             show_values=show_values,
             value_format=".0f",
+            norm=norm,
+            ticks=ticks,
+            tick_labels=tick_labels,
+            mask_zeros=False,
             **kwargs,
         )
 

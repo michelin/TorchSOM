@@ -5,7 +5,7 @@ from typing import Any, Optional
 
 import numpy as np
 import torch
-from hdbscan import HDBSCAN
+from hdbscan import HDBSCAN, prediction
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
 
@@ -145,10 +145,12 @@ def cluster_hdbscan(
     # Apply HDBSCAN
     clusterer = HDBSCAN(
         min_cluster_size=min_cluster_size,
-        # prediction_data=True,
+        prediction_data=True,
         **kwargs,
     )
-    labels = clusterer.fit_predict(data_np)
+    # labels = clusterer.fit_predict(data_np)
+    clusterer.fit(data_np)
+    labels, strengths = prediction.approximate_predict(clusterer, data_np)
 
     # Calculate cluster centers (excluding noise points)
     unique_labels = np.unique(labels)
@@ -313,12 +315,12 @@ def cluster_data(
     elif method == "gmm":
         return cluster_gmm(data, n_components=n_clusters, **kwargs)
     elif method == "hdbscan":
-        if n_clusters is not None:
-            warnings.warn(
-                "n_clusters parameter is ignored for HDBSCAN. "
-                "Use min_cluster_size to influence cluster formation.",
-                stacklevel=2,
-            )
+        # if n_clusters is not None:
+        #     warnings.warn(
+        #         "n_clusters parameter is ignored for HDBSCAN. "
+        #         "Use min_cluster_size to influence cluster formation.",
+        #         stacklevel=2,
+        #     )
         return cluster_hdbscan(data, **kwargs)
     else:
         raise ValueError(

@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from matplotlib.axes import Axes
-from matplotlib.colors import Colormap
+from matplotlib.colors import Colormap, Normalize
 from matplotlib.figure import Figure
 
 from torchsom.core.som import SOM
@@ -39,6 +39,9 @@ class HexagonalVisualizer(BaseVisualizer):
         cmap: Optional[Union[str, Colormap]] = None,
         show_values: bool = False,
         value_format: str = ".2f",
+        norm: Optional[Normalize] = None,
+        ticks: Optional[np.ndarray[int, Any]] = None,
+        tick_labels: Optional[list[str]] = None,
     ) -> tuple[Figure, Axes]:
         """Create a hexagonal plot with proper hexagonal patches.
 
@@ -49,6 +52,9 @@ class HexagonalVisualizer(BaseVisualizer):
             cmap (Optional[Union[str, Colormap]]): Colormap to use
             show_values (bool): Whether to show values in hexagons
             value_format (str): Format string for displayed values
+            norm (Optional[Normalize]): Normalization for the colormap
+            ticks (Optional[np.ndarray]): Ticks to plot
+            tick_labels (Optional[list[str]]): Tick labels to plot
 
         Returns:
             tuple[plt.Figure, Axes]: Figure and axes objects
@@ -63,11 +69,11 @@ class HexagonalVisualizer(BaseVisualizer):
         fig, ax = plt.subplots(figsize=self.config.figsize)
 
         # Set up colormap
-        cmap_name = cmap or self.config.cmap
-        if isinstance(cmap_name, str):
-            cmap_obj = plt.cm.get_cmap(cmap_name)
+        cmap_name_or_obj = cmap or self.config.cmap
+        if isinstance(cmap_name_or_obj, str):
+            cmap_obj = plt.cm.get_cmap(cmap_name_or_obj)
         else:
-            cmap_obj = cmap_name
+            cmap_obj = cmap_name_or_obj
 
         # Handle NaN values by setting them to white in colormap
         cmap_copy = cmap_obj.copy()
@@ -77,7 +83,8 @@ class HexagonalVisualizer(BaseVisualizer):
         patches, x_min, x_max, y_min, y_max = create_hexagonal_grid_patches(
             map_data_np,
             hex_radius=self.config.hex_radius,
-            cmap_name=cmap_name if isinstance(cmap_name, str) else "viridis",
+            cmap=cmap_copy,
+            norm=norm,
             edgecolor=self.config.hex_border_color,
             linewidth=self.config.hex_border_width,
         )
@@ -112,10 +119,14 @@ class HexagonalVisualizer(BaseVisualizer):
         # Create colorbar
         valid_mask = ~np.isnan(map_data_np)
         if valid_mask.any():
-            vmin = np.nanmin(map_data_np)
-            vmax = np.nanmax(map_data_np)
-            norm = mcolors.Normalize(vmin=vmin, vmax=vmax)
-            sm = plt.cm.ScalarMappable(cmap=cmap_copy, norm=norm)
+            if norm is None:
+                vmin = np.nanmin(map_data_np)
+                vmax = np.nanmax(map_data_np)
+                norm_to_use = mcolors.Normalize(vmin=vmin, vmax=vmax)
+            else:
+                norm_to_use = norm
+
+            sm = plt.cm.ScalarMappable(cmap=cmap_copy, norm=norm_to_use)
             sm.set_array([])
 
             cb = plt.colorbar(sm, ax=ax, pad=self.config.colorbar_pad)
@@ -124,6 +135,10 @@ class HexagonalVisualizer(BaseVisualizer):
                 fontsize=self.config.fontsize["axis"],
                 fontweight=self.config.fontweight["axis"],
             )
+            if ticks is not None:
+                cb.set_ticks(ticks)
+            if tick_labels is not None:
+                cb.set_ticklabels(tick_labels)
             cb.ax.tick_params(labelsize=self.config.fontsize["axis"] - 2)
 
         # Add value annotations if requested
@@ -133,23 +148,13 @@ class HexagonalVisualizer(BaseVisualizer):
                     if not np.isnan(map_data_np[row, col]):
                         center_x, center_y = grid_to_hex_coords(row, col)
                         value = map_data_np[row, col]
-
-                        # Choose text color based on background
-                        if valid_mask.any():
-                            normalized_value = (
-                                (value - vmin) / (vmax - vmin) if vmax > vmin else 0.5
-                            )
-                            text_color = "white" if normalized_value > 0.5 else "black"
-                        else:
-                            text_color = "black"
-
                         ax.text(
                             center_x,
                             center_y,
                             f"{value:{value_format}}",
                             ha="center",
                             va="center",
-                            color=text_color,
+                            color="black",
                             fontsize=self.config.fontsize["axis"] - 4,
                             fontweight="bold",
                         )
@@ -168,7 +173,7 @@ class HexagonalVisualizer(BaseVisualizer):
         colorbar_label: str,
         filename: str,
         save_path: Optional[Union[str, Path]] = None,
-        cmap: Optional[str] = None,
+        cmap: Optional[Union[str, Colormap]] = None,
         show_values: bool = False,
         value_format: str = ".2f",
         **kwargs: Any,  # For compatibility with base interface (ignores is_component_plane etc) # noqa: ARG002
@@ -186,11 +191,12 @@ class HexagonalVisualizer(BaseVisualizer):
             value_format (str): Format string for displayed values
             **kwargs: Additional arguments for compatibility (ignored)
         """
-        # Create masked map (convert 0 to NaN for visualization)
+        # Optionally mask zeros to NaN for some plots. For cluster maps we keep zeros (noise label).
         masked_map = map.clone()
-        if isinstance(masked_map, torch.Tensor):
-            mask = masked_map == 0
-            masked_map[mask] = float("nan")
+        mask_zeros = kwargs.get("mask_zeros", True)
+        if isinstance(masked_map, torch.Tensor) and mask_zeros:
+            zero_mask = masked_map == 0
+            masked_map[zero_mask] = float("nan")
 
         # Create the hexagonal plot
         fig, ax = self._create_hexagonal_plot(
@@ -200,6 +206,9 @@ class HexagonalVisualizer(BaseVisualizer):
             cmap=cmap,
             show_values=show_values,
             value_format=value_format,
+            norm=kwargs.get("norm"),
+            ticks=kwargs.get("ticks"),
+            tick_labels=kwargs.get("tick_labels"),
         )
 
         # Save or show the plot

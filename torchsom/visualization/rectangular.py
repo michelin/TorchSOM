@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from matplotlib.axes import Axes
+from matplotlib.colors import Colormap
 from matplotlib.image import AxesImage
 
 from torchsom.core.som import SOM
@@ -31,6 +32,8 @@ class RectangularVisualizer(BaseVisualizer):
         title: str,
         colorbar_label: str,
         mappable_item: Optional[AxesImage] = None,
+        ticks: Optional[np.ndarray[int, Any]] = None,
+        tick_labels: Optional[list[str]] = None,
     ) -> None:
         """Customize rectangular plot with proper styling.
 
@@ -39,6 +42,8 @@ class RectangularVisualizer(BaseVisualizer):
             title (str): Title of the figure to plot
             colorbar_label (str): Label for the colorbar
             mappable_item (Optional[AxesImage]): Item to plot, to adjust the colorbar values
+            ticks (Optional[np.ndarray]): Ticks to plot
+            tick_labels (Optional[list[str]]): Tick labels to plot
         """
         # Adjust title and axis labels
         ax.set_title(
@@ -66,6 +71,10 @@ class RectangularVisualizer(BaseVisualizer):
                 fontsize=self.config.fontsize["axis"],
                 fontweight=self.config.fontweight["axis"],
             )
+            if ticks is not None:
+                cb.set_ticks(ticks)
+            if tick_labels is not None:
+                cb.set_ticklabels(tick_labels)
             cb.ax.tick_params(labelsize=self.config.fontsize["axis"] - 2)
 
         # Create tick positions every 10 steps
@@ -96,7 +105,7 @@ class RectangularVisualizer(BaseVisualizer):
         colorbar_label: str,
         filename: str,
         save_path: Optional[Union[str, Path]] = None,
-        cmap: Optional[str] = None,
+        cmap: Optional[Union[str, Colormap]] = None,
         show_values: bool = False,
         value_format: str = ".2f",
         is_component_plane: bool = False,
@@ -118,15 +127,22 @@ class RectangularVisualizer(BaseVisualizer):
         """
         fig, ax = plt.subplots(figsize=self.config.figsize)
 
-        # Create a copy of the map and convert 0 to NaN for visualization
+        # Create a copy of the map and optionally convert 0 to NaN for visualization
         masked_map = map.clone()
+        mask_zeros = kwargs.get("mask_zeros", True)
         if isinstance(masked_map, torch.Tensor):
-            mask = masked_map == 0
-            masked_map[mask] = float("nan")
+            if mask_zeros:
+                zero_mask = masked_map == 0
+                masked_map[zero_mask] = float("nan")
             masked_map = masked_map.cpu().numpy()
 
         # Adjust the color map by setting NaN values to white
-        cmap_obj = plt.cm.get_cmap(cmap or self.config.cmap).copy()
+        cmap_to_use = cmap or self.config.cmap
+        cmap_obj = (
+            plt.cm.get_cmap(cmap_to_use).copy()
+            if isinstance(cmap_to_use, str)
+            else cmap_to_use.copy()
+        )
         cmap_obj.set_bad(color="white")
 
         # Flip the data along y-axis for component planes
@@ -134,15 +150,24 @@ class RectangularVisualizer(BaseVisualizer):
             masked_map = np.flipud(masked_map)
 
         # Create the image plot
+        norm = kwargs.get("norm")  # Optional discrete/continuous norm
         im = ax.imshow(
             masked_map,
             cmap=cmap_obj,
+            norm=norm,
             aspect="auto",
             origin="upper",  # Reverse y axis
         )
 
         # Customize the plot
-        self._customize_plot(ax, title, colorbar_label, mappable_item=im)
+        self._customize_plot(
+            ax,
+            title,
+            colorbar_label,
+            mappable_item=im,
+            ticks=kwargs.get("ticks"),
+            tick_labels=kwargs.get("tick_labels"),
+        )
 
         # Add value annotations if requested
         if show_values:

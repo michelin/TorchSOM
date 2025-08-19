@@ -1,11 +1,13 @@
 """Utility functions for hexagonal grid visualization."""
 
 import math
+from typing import Union
 
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+from matplotlib.colors import Colormap, Normalize
 from matplotlib.patches import RegularPolygon
 
 # NOTE: Coordinate conversion and distance functions moved to torchsom.utils.hexagonal_coordinates to eliminate duplication.
@@ -106,7 +108,8 @@ def create_hexagon_patch(
 def create_hexagonal_grid_patches(
     map_data: torch.Tensor,
     hex_radius: float = 0.4,
-    cmap_name: str = "viridis",
+    cmap: Union[Colormap, None] = None,
+    norm: Union[Normalize, None] = None,
     edgecolor: str = "white",
     linewidth: float = 0.5,
 ) -> tuple[list[RegularPolygon], float, float, float, float]:
@@ -130,16 +133,17 @@ def create_hexagonal_grid_patches(
     patches = []
 
     # Get colormap
-    cmap = plt.cm.get_cmap(cmap_name)
+    cmap = cmap or plt.cm.get_cmap("viridis")
 
     # Normalize data for colormap (handle NaN values)
     valid_mask = ~np.isnan(map_data)
-    if valid_mask.any():
-        vmin = np.nanmin(map_data)
-        vmax = np.nanmax(map_data)
-        norm = mcolors.Normalize(vmin=vmin, vmax=vmax)
-    else:
-        norm = mcolors.Normalize(vmin=0, vmax=1)
+    if norm is None:
+        if valid_mask.any():
+            vmin = np.nanmin(map_data)
+            vmax = np.nanmax(map_data)
+            norm = mcolors.Normalize(vmin=vmin, vmax=vmax)
+        else:
+            norm = mcolors.Normalize(vmin=0, vmax=1)
 
     # Create hexagon for each grid cell
     for row in range(rows):
@@ -166,62 +170,3 @@ def create_hexagonal_grid_patches(
     x_min, x_max, y_min, y_max = calculate_hex_dimensions(rows, cols, hex_radius)
 
     return patches, x_min, x_max, y_min, y_max
-
-
-# def axial_to_offset_coords(
-#     q: float,
-#     r: float,
-# ) -> tuple[int, int]:
-#     """Convert axial coordinates to offset coordinates (even-r).
-
-#     Args:
-#         q (float): Axial q coordinate
-#         r (float): Axial r coordinate
-
-#     Returns:
-#         Tuple[int, int]: (row, col) in offset coordinates
-#     """
-#     row = int(r)
-#     col = int(q + (r - (r & 1)) // 2)
-#     return row, col
-
-
-# def offset_to_axial_coords(
-#     row: int,
-#     col: int,
-# ) -> tuple[float, float]:
-#     """Convert offset coordinates to axial coordinates.
-
-#     Args:
-#         row (int): Grid row coordinate
-#         col (int): Grid column coordinate
-
-#     Returns:
-#         Tuple[float, float]: (q, r) in axial coordinates
-#     """
-#     q = col - (row - (row & 1)) / 2
-#     r = row
-#     return q, r
-
-
-# def hexagonal_distance(
-#     row1: int,
-#     col1: int,
-#     row2: int,
-#     col2: int,
-# ) -> int:
-#     """Calculate distance between two hexagons in grid coordinates.
-
-#     Args:
-#         row1, col1: First hexagon coordinates
-#         row2, col2: Second hexagon coordinates
-
-#     Returns:
-#         int: Distance in hex steps
-#     """
-#     # Convert to axial coordinates
-#     q1, r1 = offset_to_axial_coords(row1, col1)
-#     q2, r2 = offset_to_axial_coords(row2, col2)
-
-#     # Calculate distance in axial coordinates
-#     return int((abs(q1 - q2) + abs(q1 + r1 - q2 - r2) + abs(r1 - r2)) / 2)
