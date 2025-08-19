@@ -11,6 +11,8 @@ from sklearn.metrics import silhouette_samples
 
 from torchsom.core.som import SOM
 from torchsom.visualization.config import VisualizationConfig
+from torchsom.visualization.hexagonal import HexagonalVisualizer
+from torchsom.visualization.rectangular import RectangularVisualizer
 
 
 class ClusteringVisualizer:
@@ -115,11 +117,9 @@ class ClusteringVisualizer:
 
         # Import visualization modules to avoid circular imports
         if self.som.topology == "hexagonal":
-            from torchsom.visualization.hexagonal import HexagonalVisualizer
 
             visualizer = HexagonalVisualizer(self.som, self.config)
         else:
-            from torchsom.visualization.rectangular import RectangularVisualizer
 
             visualizer = RectangularVisualizer(self.som, self.config)
 
@@ -212,6 +212,56 @@ class ClusteringVisualizer:
 
         if save_path:
             self._save_plot(save_path, "silhouette_analysis")
+        else:
+            plt.show()
+
+    def plot_elbow_analysis(
+        self,
+        max_k: int = 10,
+        feature_space: str = "weights",
+        save_path: Optional[Union[str, Path]] = None,
+    ) -> None:
+        """Plot elbow analysis for optimal K selection in K-means."""
+        data = self.som._extract_clustering_features(feature_space)
+        n_samples = data.shape[0]
+        max_k = min(max_k, n_samples - 1)
+
+        if max_k < 2:
+            print("Not enough neurons for elbow analysis")
+            return
+
+        k_range = range(2, max_k + 1)
+        inertias = []
+
+        # Run K-means for different K values
+        for k in k_range:
+            result = self.som.cluster(
+                method="kmeans", n_clusters=k, feature_space=feature_space
+            )
+            inertias.append(result.get("inertia", 0))
+
+        # Create elbow plot
+        fig, ax = plt.subplots(figsize=self.config.figsize)
+
+        ax.plot(k_range, inertias, "bo-", linewidth=2, markersize=8)
+        ax.set_xlabel("Number of Clusters (k)")
+        ax.set_ylabel("Within-Cluster Sum of Squares (WCSS)")
+        ax.set_title(f"Elbow Analysis for K-means ({feature_space} space)")
+        ax.grid(True, alpha=0.3)
+
+        # Annotate points
+        for k, inertia in zip(k_range, inertias):
+            ax.annotate(
+                f"k={k}\n{inertia:.2f}",
+                (k, inertia),
+                textcoords="offset points",
+                xytext=(0, 10),
+                ha="center",
+                fontsize=9,
+            )
+
+        if save_path:
+            self._save_plot(save_path, "elbow_analysis")
         else:
             plt.show()
 
@@ -328,125 +378,5 @@ class ClusteringVisualizer:
 
         if save_path:
             self._save_plot(save_path, "clustering_metrics_comparison")
-        else:
-            plt.show()
-
-    def plot_clustering_comparison_grid(
-        self,
-        methods: list[str] = None,
-        feature_spaces: list[str] = None,
-        save_path: Optional[Union[str, Path]] = None,
-        **kwargs: Any,
-    ) -> None:
-        """Plot a grid comparing different clustering methods and feature spaces."""
-        if methods is None:
-            methods = ["kmeans", "gmm", "hdbscan"]
-        if feature_spaces is None:
-            feature_spaces = ["weights", "positions", "combined"]
-
-        n_methods = len(methods)
-        n_spaces = len(feature_spaces)
-
-        fig, axes = plt.subplots(
-            n_methods, n_spaces, figsize=(5 * n_spaces, 4 * n_methods)
-        )
-        if n_methods == 1:
-            axes = axes.reshape(1, -1)
-        if n_spaces == 1:
-            axes = axes.reshape(-1, 1)
-
-        for i, method in enumerate(methods):
-            for j, feature_space in enumerate(feature_spaces):
-                ax = (
-                    axes[i, j]
-                    if n_methods > 1 and n_spaces > 1
-                    else axes[j] if n_methods == 1 else axes[i]
-                )
-
-                try:
-                    result = self.som.cluster(
-                        method=method, feature_space=feature_space, **kwargs
-                    )
-
-                    labels = result["labels"].view(self.som.x, self.som.y)
-                    n_clusters = result["n_clusters"]
-
-                    unique_labels = torch.unique(labels)
-                    cmap = self._create_cluster_colormap(len(unique_labels))
-
-                    ax.imshow(labels.cpu().numpy(), cmap=cmap, aspect="auto")
-                    ax.set_title(
-                        f"{method.upper()}\n{feature_space}\n({n_clusters} clusters)"
-                    )
-                    ax.set_xticks([])
-                    ax.set_yticks([])
-
-                except Exception as e:
-                    ax.text(
-                        0.5,
-                        0.5,
-                        f"Error:\n{str(e)}",
-                        ha="center",
-                        va="center",
-                        transform=ax.transAxes,
-                    )
-                    ax.set_title(f"{method.upper()}\n{feature_space}\nFailed")
-                    ax.set_xticks([])
-                    ax.set_yticks([])
-
-        plt.tight_layout()
-
-        if save_path:
-            self._save_plot(save_path, "clustering_methods_comparison")
-        else:
-            plt.show()
-
-    def plot_elbow_analysis(
-        self,
-        max_k: int = 10,
-        feature_space: str = "weights",
-        save_path: Optional[Union[str, Path]] = None,
-    ) -> None:
-        """Plot elbow analysis for optimal K selection in K-means."""
-        data = self.som._extract_clustering_features(feature_space)
-        n_samples = data.shape[0]
-        max_k = min(max_k, n_samples - 1)
-
-        if max_k < 2:
-            print("Not enough neurons for elbow analysis")
-            return
-
-        k_range = range(2, max_k + 1)
-        inertias = []
-
-        # Run K-means for different K values
-        for k in k_range:
-            result = self.som.cluster(
-                method="kmeans", n_clusters=k, feature_space=feature_space
-            )
-            inertias.append(result.get("inertia", 0))
-
-        # Create elbow plot
-        fig, ax = plt.subplots(figsize=self.config.figsize)
-
-        ax.plot(k_range, inertias, "bo-", linewidth=2, markersize=8)
-        ax.set_xlabel("Number of Clusters (k)")
-        ax.set_ylabel("Within-Cluster Sum of Squares (WCSS)")
-        ax.set_title(f"Elbow Analysis for K-means ({feature_space} space)")
-        ax.grid(True, alpha=0.3)
-
-        # Annotate points
-        for k, inertia in zip(k_range, inertias):
-            ax.annotate(
-                f"k={k}\n{inertia:.2f}",
-                (k, inertia),
-                textcoords="offset points",
-                xytext=(0, 10),
-                ha="center",
-                fontsize=9,
-            )
-
-        if save_path:
-            self._save_plot(save_path, "elbow_analysis")
         else:
             plt.show()

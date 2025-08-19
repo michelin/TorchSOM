@@ -44,6 +44,9 @@ def cluster_kmeans(
     )
     labels = kmeans.fit_predict(data_np)
 
+    # Convert to 1-indexed labeling (1 to n instead of 0 to n-1)
+    labels = labels + 1
+
     # Convert back to tensors on original device
     labels_tensor = torch.tensor(labels, dtype=torch.long, device=data.device)
     centers_tensor = torch.tensor(
@@ -91,10 +94,16 @@ def cluster_gmm(
 
     # Apply GMM
     gmm = GaussianMixture(
-        n_components=n_components, random_state=random_state, **kwargs
+        n_components=n_components,
+        random_state=random_state,
+        init_params="k-means++",
+        **kwargs,
     )
     gmm.fit(data_np)
     labels = gmm.predict(data_np)
+
+    # Convert to 1-indexed labeling (1 to n instead of 0 to n-1)
+    labels = labels + 1
 
     # Convert back to tensors on original device
     labels_tensor = torch.tensor(labels, dtype=torch.long, device=data.device)
@@ -134,7 +143,11 @@ def cluster_hdbscan(
         min_cluster_size = max(5, n_samples // 20)
 
     # Apply HDBSCAN
-    clusterer = HDBSCAN(min_cluster_size=min_cluster_size, **kwargs)
+    clusterer = HDBSCAN(
+        min_cluster_size=min_cluster_size,
+        # prediction_data=True,
+        **kwargs,
+    )
     labels = clusterer.fit_predict(data_np)
 
     # Calculate cluster centers (excluding noise points)
@@ -146,10 +159,26 @@ def cluster_hdbscan(
         warnings.warn(
             "HDBSCAN found no clusters. All points classified as noise.", stacklevel=2
         )
-        # Create a single cluster with all points
-        labels = np.zeros_like(labels)
+        # Create a single cluster with all points (1-indexed)
+        labels = np.ones_like(labels)
         n_clusters = 1
-        valid_labels = [0]
+        valid_labels = [1]
+    else:
+        # Convert non-noise labels to contiguous 1-indexed labels
+        # Keep noise points as -1, but remap clusters to 1, 2, 3, ... (contiguous)
+        labels_1indexed = labels.copy()
+
+        # Create mapping from old labels to new contiguous labels starting from 1
+        label_mapping = {}
+        for i, old_label in enumerate(sorted(valid_labels)):
+            label_mapping[old_label] = i + 1
+
+        # Apply mapping to all non-noise points
+        for old_label, new_label in label_mapping.items():
+            labels_1indexed[labels == old_label] = new_label
+
+        labels = labels_1indexed
+        valid_labels = list(range(1, len(valid_labels) + 1))  # [1, 2, 3, ...]
 
     # Calculate centers for non-noise clusters
     centers_list = []
@@ -235,7 +264,11 @@ def _determine_optimal_components_bic(
 
     for n_comp in component_range:
         try:
-            gmm = GaussianMixture(n_components=n_comp, random_state=random_state)
+            gmm = GaussianMixture(
+                n_components=n_comp,
+                random_state=random_state,
+                init_params="k-means++",
+            )
             gmm.fit(data_np)
             bic_scores.append(gmm.bic(data_np))
         except Exception:
