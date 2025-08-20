@@ -133,17 +133,17 @@ Explore our comprehensive collection of Jupyter notebooks:
       <td align="center">
         <b>🗺️ D-Matrix Visualization</b><br>
         <p>Michelin production line (regression)</p>
-        <img src="assets/michelin_dmatrix.png" alt="U-Matrix" width="280"/>
+        <img src="assets/michelin_dmatrix.png" alt="U-Matrix" width="220"/>
       </td>
       <td align="center">
         <b>📍 Hit Map Visualization</b><br>
         <p>Michelin production line (regression)</p>
-        <img src="assets/michelin_hitmap.png" alt="Hit Map" width="280"/>
+        <img src="assets/michelin_hitmap.png" alt="Hit Map" width="220"/>
       </td>
       <td align="center">
         <b>📊 Mean Map Visualization</b><br>
         <p>Michelin production line (regression)</p>
-        <img src="assets/michelin_meanmap.png" alt="Mean Map" width="280"/>
+        <img src="assets/michelin_meanmap.png" alt="Mean Map" width="220"/>
       </td>
     </tr>
     <tr>
@@ -153,10 +153,10 @@ Explore our comprehensive collection of Jupyter notebooks:
         <table>
           <tr>
             <td align="center">
-              <img src="assets/michelin_cp12.png" alt="Component Plane 1" width="280"/>
+              <img src="assets/michelin_cp12.png" alt="Component Plane 1" width="220"/>
             </td>
             <td align="center">
-              <img src="assets/michelin_cp21.png" alt="Component Plane 2" width="280"/>
+              <img src="assets/michelin_cp21.png" alt="Component Plane 2" width="220"/>
             </td>
           </tr>
         </table>
@@ -164,24 +164,24 @@ Explore our comprehensive collection of Jupyter notebooks:
       <td align="center">
         <b>🏷️ Classification Map</b><br>
         <p>Wine dataset (multi-classification)</p>
-        <img src="assets/wine_classificationmap.png" alt="Classification Map" width="280"/>
+        <img src="assets/wine_classificationmap.png" alt="Classification Map" width="220"/>
       </td>
     </tr>
     <tr>
       <td align="center">
         <b>📊 Cluster Metrics</b><br>
         <p>Clustering analysis</p>
-        <img src="assets/cluster_metrics.png" alt="Cluster Metrics" width="320"/>
+        <img src="assets/cluster_metrics.png" alt="Cluster Metrics" width="220"/>
       </td>
       <td align="center">
         <b>📈 K-Means Elbow</b><br>
         <p>Optimal cluster selection</p>
-        <img src="assets/kmeans_elbow.png" alt="K-Means Elbow" width="300"/>
+        <img src="assets/kmeans_elbow.png" alt="K-Means Elbow" width="220"/>
       </td>
       <td align="center">
         <b>🎯 HDBSCAN Cluster Map</b><br>
         <p>Cluster visualization</p>
-        <img src="assets/hdbscan_cluster_map.png" alt="HDBSCAN Cluster Map" width="260"/>
+        <img src="assets/hdbscan_cluster_map.png" alt="HDBSCAN Cluster Map" width="220"/>
       </td>
     </tr>
   </table>
