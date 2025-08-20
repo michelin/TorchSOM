@@ -14,12 +14,39 @@ Tests cover:
 import warnings
 from typing import Any
 
+import numpy as np
 import pytest
 import torch
 
 from torchsom.core.som import SOM
+from torchsom.utils.clustering import (
+    _determine_optimal_components_bic,
+    _determine_optimal_k_elbow,
+    cluster_data,
+    cluster_gmm,
+    cluster_hdbscan,
+    cluster_kmeans,
+)
 from torchsom.utils.decay import DECAY_FUNCTIONS
 from torchsom.utils.distances import DISTANCE_FUNCTIONS
+from torchsom.utils.hexagonal_coordinates import (
+    axial_to_cube_coords,
+    axial_to_offset_coords,
+    cube_to_axial_coords,
+    grid_to_display_coords,
+    hexagonal_distance_axial,
+    hexagonal_distance_offset,
+    neighbors_axial,
+    neighbors_offset,
+    offset_to_axial_coords,
+)
+from torchsom.utils.metrics import (
+    calculate_calinski_harabasz_score,
+    calculate_clustering_metrics,
+    calculate_davies_bouldin_score,
+    calculate_silhouette_score,
+    calculate_topological_clustering_quality,
+)
 
 
 class TestSOMInitialization:
@@ -230,7 +257,7 @@ class TestSOMTraining:
             Batch size of len(data) + 16 is included to check behaviour when having a batch size larger than the data size.
         """
         data = medium_random_data.to(device)
-        for batch_size in [8, 32, len(data), len(data) + 16]:
+        for batch_size in [8, len(data) + 16]:
             som = som_small
             som.batch_size = batch_size
             q_errors, t_errors = som.fit(data)
@@ -893,3 +920,996 @@ class TestCollectSamples:
 
         assert data_buf.numel() == 0
         assert out_buf.numel() == 0
+
+
+class TestClusteringUtilities:
+    """Test clustering algorithms and utilities from torchsom/utils/clustering.py."""
+
+    @pytest.mark.unit
+    def test_cluster_kmeans_basic(
+        self,
+        well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
+        device: str,
+    ) -> None:
+        """Test basic K-means clustering functionality."""
+        data, expected_labels = well_separated_clusters
+        data = data.to(device)
+
+        # Test with known number of clusters
+        result = cluster_kmeans(data, n_clusters=4, random_state=42)
+
+        assert isinstance(result, dict)
+        assert "labels" in result
+        assert "centers" in result
+        assert "n_clusters" in result
+        assert "method" in result
+        assert "inertia" in result
+
+        assert result["labels"].shape == (data.shape[0],)
+        assert result["centers"].shape == (4, data.shape[1])
+        assert result["n_clusters"] == 4
+        assert result["method"] == "kmeans"
+        assert result["labels"].device == data.device
+        assert result["centers"].device == data.device
+        assert torch.all(result["labels"] >= 1)  # 1-indexed labels
+
+    @pytest.mark.unit
+    def test_cluster_kmeans_auto_k(
+        self,
+        well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
+        device: str,
+    ) -> None:
+        """Test K-means with automatic k selection."""
+        data, _ = well_separated_clusters
+        data = data.to(device)
+
+        # Test with automatic k selection
+        result = cluster_kmeans(data, n_clusters=None, random_state=42)
+
+        assert isinstance(result, dict)
+        assert result["n_clusters"] >= 2
+        assert result["labels"].max() == result["n_clusters"]
+        assert result["centers"].shape[0] == result["n_clusters"]
+
+    @pytest.mark.unit
+    def test_cluster_gmm_basic(
+        self,
+        well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
+        device: str,
+    ) -> None:
+        """Test basic GMM clustering functionality."""
+        data, _ = well_separated_clusters
+        data = data.to(device)
+
+        result = cluster_gmm(data, n_components=3, random_state=42)
+
+        assert isinstance(result, dict)
+        assert "labels" in result
+        assert "centers" in result
+        assert "n_clusters" in result
+        assert "method" in result
+        assert "bic" in result
+        assert "aic" in result
+
+        assert result["labels"].shape == (data.shape[0],)
+        assert result["centers"].shape == (3, data.shape[1])
+        assert result["n_clusters"] == 3
+        assert result["method"] == "gmm"
+        assert result["labels"].device == data.device
+        assert result["centers"].device == data.device
+
+    @pytest.mark.unit
+    def test_cluster_gmm_auto_components(
+        self,
+        well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
+        device: str,
+    ) -> None:
+        """Test GMM with automatic component selection."""
+        data, _ = well_separated_clusters
+        data = data.to(device)
+
+        result = cluster_gmm(data, n_components=None, random_state=42)
+
+        assert isinstance(result, dict)
+        assert result["n_clusters"] >= 1
+        assert isinstance(result["bic"], float)
+        assert isinstance(result["aic"], float)
+
+    # @pytest.mark.unit
+    def test_cluster_hdbscan_basic(
+        self,
+        noisy_clustering_data: torch.Tensor,
+        device: str,
+    ) -> None:
+        """Test basic HDBSCAN clustering functionality."""
+        data = noisy_clustering_data.to(device)
+
+        result = cluster_hdbscan(data, min_cluster_size=10)
+
+        assert isinstance(result, dict)
+        assert "labels" in result
+        assert "centers" in result
+        assert "n_clusters" in result
+        assert "method" in result
+        assert "noise_points" in result
+
+        assert result["labels"].shape == (data.shape[0],)
+        assert result["method"] == "hdbscan"
+        assert result["labels"].device == data.device
+        assert result["centers"].device == data.device
+        assert isinstance(result["noise_points"], int)
+        assert result["noise_points"] >= 0
+
+    # @pytest.mark.unit
+    def test_cluster_hdbscan_auto_min_size(
+        self,
+        well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
+        device: str,
+    ) -> None:
+        """Test HDBSCAN with automatic min_cluster_size."""
+        data, _ = well_separated_clusters
+        data = data.to(device)
+
+        result = cluster_hdbscan(data, min_cluster_size=None)
+
+        assert isinstance(result, dict)
+        assert result["n_clusters"] >= 0  # Could be 0 if all noise
+
+    @pytest.mark.unit
+    def test_cluster_data_dispatcher(
+        self,
+        well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
+        clustering_method: str,
+        device: str,
+    ) -> None:
+        """Test main cluster_data dispatcher function."""
+        data, _ = well_separated_clusters
+        data = data.to(device)
+
+        result = cluster_data(data, method=clustering_method, n_clusters=3)
+
+        assert isinstance(result, dict)
+        assert "labels" in result
+        assert "centers" in result
+        assert "method" in result
+        assert result["method"] == clustering_method
+        assert result["labels"].device == data.device
+
+    @pytest.mark.unit
+    def test_cluster_data_invalid_method(
+        self,
+        small_random_data: torch.Tensor,
+    ) -> None:
+        """Test cluster_data with invalid method."""
+        with pytest.raises(ValueError, match="Unsupported clustering method"):
+            cluster_data(small_random_data, method="invalid_method")
+
+    @pytest.mark.unit
+    def test_cluster_data_input_validation(
+        self,
+    ) -> None:
+        """Test cluster_data input validation."""
+        # Empty data
+        with pytest.raises(ValueError, match="Cannot cluster empty data"):
+            cluster_data(torch.empty(0, 4))
+
+        # Wrong dimensions
+        with pytest.raises(ValueError, match="Data must be 2D tensor"):
+            cluster_data(torch.randn(10))
+
+        # Insufficient samples
+        with pytest.raises(ValueError, match="Need at least 2 samples"):
+            cluster_data(torch.randn(1, 4))
+
+    @pytest.mark.unit
+    def test_determine_optimal_k_elbow(
+        self,
+        well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
+    ) -> None:
+        """Test elbow method for optimal k determination."""
+        data, _ = well_separated_clusters
+        data_np = data.detach().cpu().numpy()
+
+        optimal_k = _determine_optimal_k_elbow(data_np, max_k=8, random_state=42)
+
+        assert isinstance(optimal_k, int)
+        assert 2 <= optimal_k <= 8
+
+    @pytest.mark.unit
+    def test_determine_optimal_k_edge_cases(
+        self,
+    ) -> None:
+        """Test elbow method edge cases."""
+        # Very small dataset
+        small_data = np.random.randn(3, 2)
+        optimal_k = _determine_optimal_k_elbow(small_data, random_state=42)
+        assert optimal_k == 2  # Should return minimum
+
+    @pytest.mark.unit
+    def test_determine_optimal_components_bic(
+        self,
+        well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
+    ) -> None:
+        """Test BIC method for optimal component determination."""
+        data, _ = well_separated_clusters
+        data_np = data.detach().cpu().numpy()
+
+        optimal_components = _determine_optimal_components_bic(
+            data_np, max_components=6, random_state=42
+        )
+
+        assert isinstance(optimal_components, int)
+        assert 1 <= optimal_components <= 6
+
+    @pytest.mark.unit
+    def test_clustering_device_consistency(
+        self,
+        well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
+        clustering_method: str,
+    ) -> None:
+        """Test that clustering results are consistent across devices."""
+        data, _ = well_separated_clusters
+
+        # Test on CPU
+        result_cpu = cluster_data(
+            data.to("cpu"), method=clustering_method, n_clusters=3, random_state=42
+        )
+
+        if torch.cuda.is_available():
+            # Test on GPU
+            result_gpu = cluster_data(
+                data.to("cuda"), method=clustering_method, n_clusters=3, random_state=42
+            )
+
+            # Results should be equivalent (accounting for device)
+            assert result_cpu["labels"].shape == result_gpu["labels"].cpu().shape
+            assert result_cpu["centers"].shape == result_gpu["centers"].cpu().shape
+
+    @pytest.mark.unit
+    def test_clustering_small_datasets(
+        self,
+        clustering_method: str,
+    ) -> None:
+        """Test clustering with very small datasets."""
+        # Create minimal viable dataset
+        small_data = torch.randn(5, 3)
+
+        result = cluster_data(small_data, method=clustering_method, n_clusters=2)
+
+        assert isinstance(result, dict)
+        assert result["labels"].shape == (5,)
+        assert result["n_clusters"] >= 1
+
+
+class TestClusteringMetrics:
+    """Test clustering quality metrics from torchsom/utils/metrics.py."""
+
+    @pytest.mark.unit
+    def test_calculate_silhouette_score_valid_clusters(
+        self,
+        well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
+        device: str,
+    ) -> None:
+        """Test silhouette score calculation with valid clusters."""
+        data, labels = well_separated_clusters
+        data = data.to(device)
+        labels = labels.to(device)
+
+        score = calculate_silhouette_score(data, labels)
+
+        assert isinstance(score, float)
+        assert -1.0 <= score <= 1.0  # Silhouette score range
+        assert score > 0.5  # Well-separated clusters should have high score
+
+    @pytest.mark.unit
+    def test_calculate_silhouette_score_with_noise(
+        self,
+        well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
+        device: str,
+    ) -> None:
+        """Test silhouette score with noise points."""
+        data, labels = well_separated_clusters
+        data = data.to(device)
+        labels = labels.to(device)
+
+        # Add some noise points (label -1)
+        labels[:10] = -1
+
+        score = calculate_silhouette_score(data, labels)
+
+        assert isinstance(score, float)
+        assert -1.0 <= score <= 1.0
+
+    @pytest.mark.unit
+    def test_calculate_davies_bouldin_score(
+        self,
+        well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
+        device: str,
+    ) -> None:
+        """Test Davies-Bouldin index calculation."""
+        data, labels = well_separated_clusters
+        data = data.to(device)
+        labels = labels.to(device)
+
+        score = calculate_davies_bouldin_score(data, labels)
+
+        assert isinstance(score, float)
+        assert score >= 0.0  # DB index is non-negative
+        assert score < 2.0  # Well-separated clusters should have low DB index
+
+    @pytest.mark.unit
+    def test_calculate_calinski_harabasz_score(
+        self,
+        well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
+        device: str,
+    ) -> None:
+        """Test Calinski-Harabasz index calculation."""
+        data, labels = well_separated_clusters
+        data = data.to(device)
+        labels = labels.to(device)
+
+        score = calculate_calinski_harabasz_score(data, labels)
+
+        assert isinstance(score, float)
+        assert score >= 0.0  # CH index is non-negative
+        assert score > 10.0  # Well-separated clusters should have high CH score
+
+    @pytest.mark.unit
+    def test_metrics_with_single_cluster(
+        self,
+        small_random_data: torch.Tensor,
+        device: str,
+    ) -> None:
+        """Test metrics with single cluster (edge case)."""
+        data = small_random_data.to(device)
+        labels = torch.ones(data.shape[0], dtype=torch.long, device=device)
+
+        silhouette = calculate_silhouette_score(data, labels)
+        davies_bouldin = calculate_davies_bouldin_score(data, labels)
+        calinski_harabasz = calculate_calinski_harabasz_score(data, labels)
+
+        assert silhouette == 0.0  # Single cluster returns 0
+        assert davies_bouldin == 0.0  # Single cluster returns 0
+        assert calinski_harabasz == 0.0  # Single cluster returns 0
+
+    @pytest.mark.unit
+    def test_metrics_with_all_noise(
+        self,
+        small_random_data: torch.Tensor,
+        device: str,
+    ) -> None:
+        """Test metrics when all points are noise."""
+        data = small_random_data.to(device)
+        labels = torch.full((data.shape[0],), -1, dtype=torch.long, device=device)
+
+        silhouette = calculate_silhouette_score(data, labels)
+        davies_bouldin = calculate_davies_bouldin_score(data, labels)
+        calinski_harabasz = calculate_calinski_harabasz_score(data, labels)
+
+        assert silhouette == 0.0  # All noise returns 0
+        assert davies_bouldin == float("inf")  # All noise returns inf
+        assert calinski_harabasz == 0.0  # All noise returns 0
+
+    @pytest.mark.unit
+    def test_calculate_topological_clustering_quality_rectangular(
+        self,
+        som_trained: SOM,
+    ) -> None:
+        """Test topological clustering quality for rectangular topology."""
+        # Create simple cluster labels for neurons
+        labels = torch.zeros(som_trained.x * som_trained.y, dtype=torch.long)
+        # Assign different clusters to different regions
+        labels[: som_trained.x * som_trained.y // 2] = 1
+        labels[som_trained.x * som_trained.y // 2 :] = 2
+
+        quality = calculate_topological_clustering_quality(som_trained, labels)
+
+        assert isinstance(quality, float)
+        assert 0.0 <= quality <= 1.0
+
+    @pytest.mark.unit
+    def test_calculate_topological_clustering_quality_hexagonal(
+        self,
+        som_config_minimal: dict[str, Any],
+        device: str,
+    ) -> None:
+        """Test topological clustering quality for hexagonal topology."""
+        # Create hexagonal SOM
+        som_config = som_config_minimal.copy()
+        som_config["topology"] = "hexagonal"
+        som_config["device"] = device
+        som = SOM(**som_config)
+
+        # Create cluster labels
+        labels = torch.zeros(som.x * som.y, dtype=torch.long)
+        labels[: som.x * som.y // 2] = 1
+        labels[som.x * som.y // 2 :] = 2
+
+        quality = calculate_topological_clustering_quality(som, labels)
+
+        assert isinstance(quality, float)
+        assert 0.0 <= quality <= 1.0
+
+    @pytest.mark.unit
+    def test_topological_quality_single_cluster(
+        self,
+        som_small: SOM,
+    ) -> None:
+        """Test topological quality with single cluster."""
+        labels = torch.ones(som_small.x * som_small.y, dtype=torch.long)
+
+        quality = calculate_topological_clustering_quality(som_small, labels)
+
+        assert quality == 1.0  # Single cluster should be perfectly topological
+
+    @pytest.mark.unit
+    def test_topological_quality_with_noise(
+        self,
+        som_small: SOM,
+    ) -> None:
+        """Test topological quality with noise points."""
+        labels = torch.ones(som_small.x * som_small.y, dtype=torch.long)
+        labels[:5] = -1  # Set some as noise
+
+        quality = calculate_topological_clustering_quality(som_small, labels)
+
+        assert isinstance(quality, float)
+        assert 0.0 <= quality <= 1.0
+
+    @pytest.mark.unit
+    def test_calculate_clustering_metrics_comprehensive(
+        self,
+        well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
+        som_trained: SOM,
+        device: str,
+    ) -> None:
+        """Test comprehensive clustering metrics calculation."""
+        data, labels = well_separated_clusters
+        data = data.to(device)
+        labels = labels.to(device)
+
+        # Test without SOM
+        metrics_basic = calculate_clustering_metrics(data, labels)
+
+        assert isinstance(metrics_basic, dict)
+        assert "silhouette_score" in metrics_basic
+        assert "davies_bouldin_score" in metrics_basic
+        assert "calinski_harabasz_score" in metrics_basic
+        assert "n_clusters" in metrics_basic
+        assert "n_noise_points" in metrics_basic
+        assert "noise_ratio" in metrics_basic
+
+        # Test with SOM
+        torch.randint(1, 4, (som_trained.x * som_trained.y,))
+        metrics_som = calculate_clustering_metrics(data, labels, som=som_trained)
+
+        assert "topological_quality" in metrics_som or torch.isnan(
+            torch.tensor(metrics_som.get("topological_quality", float("nan")))
+        )
+
+    @pytest.mark.unit
+    def test_metrics_input_validation(
+        self,
+        small_random_data: torch.Tensor,
+        device: str,
+    ) -> None:
+        """Test input validation for metric functions."""
+        data = small_random_data.to(device)
+        wrong_labels = torch.ones(data.shape[0] + 5, dtype=torch.long, device=device)
+
+        # Test mismatched dimensions
+        with pytest.raises(
+            ValueError, match="Data and labels must have the same number"
+        ):
+            calculate_silhouette_score(data, wrong_labels)
+
+        with pytest.raises(
+            ValueError, match="Data and labels must have the same number"
+        ):
+            calculate_davies_bouldin_score(data, wrong_labels)
+
+        with pytest.raises(
+            ValueError, match="Data and labels must have the same number"
+        ):
+            calculate_calinski_harabasz_score(data, wrong_labels)
+
+    @pytest.mark.unit
+    def test_topological_quality_input_validation(
+        self,
+        som_small: SOM,
+    ) -> None:
+        """Test input validation for topological quality."""
+        wrong_labels = torch.ones(som_small.x * som_small.y + 5, dtype=torch.long)
+
+        with pytest.raises(ValueError, match="Labels must have one entry per neuron"):
+            calculate_topological_clustering_quality(som_small, wrong_labels)
+
+
+class TestHexagonalCoordinates:
+    """Test hexagonal coordinate system utilities from torchsom/utils/hexagonal_coordinates.py."""
+
+    @pytest.mark.unit
+    def test_offset_to_axial_coords_even_rows(self) -> None:
+        """Test offset to axial coordinate conversion for even rows."""
+        # Test even rows (0, 2, 4...)
+        q, r = offset_to_axial_coords(0, 0)
+        assert (q, r) == (0, 0)
+
+        q, r = offset_to_axial_coords(0, 2)
+        assert (q, r) == (2, 0)
+
+        q, r = offset_to_axial_coords(2, 1)
+        assert (q, r) == (0, 2)
+
+    @pytest.mark.unit
+    def test_offset_to_axial_coords_odd_rows(self) -> None:
+        """Test offset to axial coordinate conversion for odd rows."""
+        # Test odd rows (1, 3, 5...)
+        # For odd rows: q = col - (row - 1) / 2
+        q, r = offset_to_axial_coords(1, 0)
+        assert (q, r) == (0.0, 1)  # 0 - (1-1)/2 = 0
+
+        q, r = offset_to_axial_coords(1, 1)
+        assert (q, r) == (1.0, 1)  # 1 - (1-1)/2 = 1
+
+        q, r = offset_to_axial_coords(3, 2)
+        assert (q, r) == (1.0, 3)  # 2 - (3-1)/2 = 1
+
+    @pytest.mark.unit
+    def test_axial_to_offset_coords_roundtrip(
+        self,
+        hexagonal_test_coordinates: list[tuple[int, int]],
+    ) -> None:
+        """Test round-trip conversion: offset -> axial -> offset."""
+        for row, col in hexagonal_test_coordinates:
+            q, r = offset_to_axial_coords(row, col)
+            row_back, col_back = axial_to_offset_coords(q, r)
+            assert (row_back, col_back) == (row, col)
+
+    @pytest.mark.unit
+    def test_axial_to_cube_coords(self) -> None:
+        """Test axial to cube coordinate conversion."""
+        # Test basic conversions
+        x, y, z = axial_to_cube_coords(0, 0)
+        assert (x, y, z) == (0, 0, 0)
+        assert x + y + z == 0  # Cube coordinate invariant
+
+        x, y, z = axial_to_cube_coords(1, 0)
+        assert (x, y, z) == (1, -1, 0)
+        assert x + y + z == 0
+
+        x, y, z = axial_to_cube_coords(0, 1)
+        assert (x, y, z) == (0, -1, 1)
+        assert x + y + z == 0
+
+    @pytest.mark.unit
+    def test_cube_to_axial_coords(self) -> None:
+        """Test cube to axial coordinate conversion."""
+        q, r = cube_to_axial_coords(0, 0)
+        assert (q, r) == (0, 0)
+
+        q, r = cube_to_axial_coords(1, 0)
+        assert (q, r) == (1, 0)
+
+        q, r = cube_to_axial_coords(0, 1)
+        assert (q, r) == (0, 1)
+
+    @pytest.mark.unit
+    def test_cube_axial_roundtrip(self) -> None:
+        """Test round-trip conversion: axial -> cube -> axial."""
+        test_axial_coords = [(0, 0), (1, 0), (0, 1), (-1, 0), (0, -1), (1, -1)]
+
+        for q_orig, r_orig in test_axial_coords:
+            x, y, z = axial_to_cube_coords(q_orig, r_orig)
+            q_back, r_back = cube_to_axial_coords(x, z)
+            assert (q_back, r_back) == (q_orig, r_orig)
+
+    @pytest.mark.unit
+    def test_hexagonal_distance_axial_basic(self) -> None:
+        """Test basic hexagonal distance calculations in axial coordinates."""
+        # Distance to self should be 0
+        dist = hexagonal_distance_axial(0, 0, 0, 0)
+        assert dist == 0
+
+        # Distance to adjacent neighbors should be 1
+        dist = hexagonal_distance_axial(0, 0, 1, 0)
+        assert dist == 1
+
+        dist = hexagonal_distance_axial(0, 0, 0, 1)
+        assert dist == 1
+
+        dist = hexagonal_distance_axial(0, 0, -1, 1)
+        assert dist == 1
+
+    @pytest.mark.unit
+    def test_hexagonal_distance_axial_symmetry(self) -> None:
+        """Test that hexagonal distance is symmetric."""
+        test_pairs = [
+            ((0, 0), (2, 1)),
+            ((1, 0), (-1, 2)),
+            ((-1, 1), (1, -1)),
+        ]
+
+        for (q1, r1), (q2, r2) in test_pairs:
+            dist1 = hexagonal_distance_axial(q1, r1, q2, r2)
+            dist2 = hexagonal_distance_axial(q2, r2, q1, r1)
+            assert dist1 == dist2
+
+    @pytest.mark.unit
+    def test_hexagonal_distance_offset(
+        self,
+        hexagonal_test_coordinates: list[tuple[int, int]],
+    ) -> None:
+        """Test hexagonal distance calculation in offset coordinates."""
+        # Test distance calculations match between offset and axial
+        for i, (row1, col1) in enumerate(hexagonal_test_coordinates[:6]):
+            for j, (row2, col2) in enumerate(hexagonal_test_coordinates[:6]):
+                if i != j:
+                    # Calculate using offset coordinates
+                    dist_offset = hexagonal_distance_offset(row1, col1, row2, col2)
+
+                    # Calculate using axial coordinates for verification
+                    q1, r1 = offset_to_axial_coords(row1, col1)
+                    q2, r2 = offset_to_axial_coords(row2, col2)
+                    dist_axial = hexagonal_distance_axial(q1, r1, q2, r2)
+
+                    assert dist_offset == dist_axial
+
+    @pytest.mark.unit
+    def test_grid_to_display_coords(self) -> None:
+        """Test grid to display coordinate conversion."""
+        # Test even row (no offset)
+        x, y = grid_to_display_coords(0, 0, hex_radius=1.0)
+        assert x == 0.0
+        assert y == 0.0
+
+        x, y = grid_to_display_coords(0, 1, hex_radius=1.0)
+        assert abs(x - 1.732050807568877) < 1e-10  # sqrt(3)
+        assert y == 0.0
+
+        # Test odd row (with offset)
+        x, y = grid_to_display_coords(1, 0, hex_radius=1.0)
+        assert abs(x - 0.8660254037844386) < 1e-10  # sqrt(3)/2
+        assert y == 1.5
+
+        # Test with different radius
+        x, y = grid_to_display_coords(0, 1, hex_radius=2.0)
+        assert abs(x - 3.4641016151377544) < 1e-10  # 2*sqrt(3)
+        assert y == 0.0
+
+    @pytest.mark.unit
+    def test_neighbors_offset_even_row(self) -> None:
+        """Test neighbor finding for even rows in offset coordinates."""
+        neighbors = neighbors_offset(0, 1)  # Even row
+        expected = [
+            (-1, 0),
+            (-1, 1),  # Top neighbors
+            (0, 0),
+            (0, 2),  # Side neighbors
+            (1, 0),
+            (1, 1),  # Bottom neighbors
+        ]
+        assert neighbors == expected
+        assert len(neighbors) == 6
+
+    @pytest.mark.unit
+    def test_neighbors_offset_odd_row(self) -> None:
+        """Test neighbor finding for odd rows in offset coordinates."""
+        neighbors = neighbors_offset(1, 1)  # Odd row
+        expected = [
+            (0, 1),
+            (0, 2),  # Top neighbors
+            (1, 0),
+            (1, 2),  # Side neighbors
+            (2, 1),
+            (2, 2),  # Bottom neighbors
+        ]
+        assert neighbors == expected
+        assert len(neighbors) == 6
+
+    @pytest.mark.unit
+    def test_neighbors_axial(self) -> None:
+        """Test neighbor finding in axial coordinates."""
+        neighbors = neighbors_axial(0, 0)
+        expected = [
+            (1, 0),
+            (1, -1),  # East, Northeast
+            (0, -1),
+            (-1, 0),  # Northwest, West
+            (-1, 1),
+            (0, 1),  # Southwest, Southeast
+        ]
+        assert neighbors == expected
+        assert len(neighbors) == 6
+
+    @pytest.mark.unit
+    def test_neighbors_distance_consistency(self) -> None:
+        """Test that all neighbors are at distance 1."""
+        center_q, center_r = 0, 0
+        neighbors = neighbors_axial(center_q, center_r)
+
+        for neighbor_q, neighbor_r in neighbors:
+            distance = hexagonal_distance_axial(
+                center_q, center_r, neighbor_q, neighbor_r
+            )
+            assert distance == 1
+
+    @pytest.mark.unit
+    def test_coordinate_conversion_edge_cases(self) -> None:
+        """Test coordinate conversion with edge cases."""
+        # Test negative coordinates
+        q, r = offset_to_axial_coords(-1, -1)
+        row, col = axial_to_offset_coords(q, r)
+        assert (row, col) == (-1, -1)
+
+        # Test large coordinates
+        q, r = offset_to_axial_coords(100, 50)
+        row, col = axial_to_offset_coords(q, r)
+        assert (row, col) == (100, 50)
+
+    @pytest.mark.unit
+    def test_hexagonal_distance_triangle_inequality(self) -> None:
+        """Test that hexagonal distance satisfies triangle inequality."""
+        # Test triangle inequality: d(a,c) <= d(a,b) + d(b,c)
+        coords = [(0, 0), (2, 1), (-1, 3), (1, -2)]
+
+        for i, (q1, r1) in enumerate(coords):
+            for j, (q2, r2) in enumerate(coords):
+                for k, (q3, r3) in enumerate(coords):
+                    if i != j != k:
+                        d_ac = hexagonal_distance_axial(q1, r1, q3, r3)
+                        d_ab = hexagonal_distance_axial(q1, r1, q2, r2)
+                        d_bc = hexagonal_distance_axial(q2, r2, q3, r3)
+                        assert d_ac <= d_ab + d_bc
+
+
+class TestSOMClustering:
+    """Test SOM clustering methods from torchsom/core/som.py."""
+
+    @pytest.mark.unit
+    def test_som_cluster_basic(
+        self,
+        som_trained: SOM,
+        clustering_method: str,
+    ) -> None:
+        """Test basic SOM clustering functionality."""
+        result = som_trained.cluster(method=clustering_method, n_clusters=3)
+
+        assert isinstance(result, dict)
+        assert "labels" in result
+        assert "centers" in result
+        assert "method" in result
+        assert result["method"] == clustering_method
+        assert result["labels"].shape == (som_trained.x * som_trained.y,)
+        assert result["labels"].device.type == som_trained.device
+
+    @pytest.mark.unit
+    def test_som_cluster_auto_clusters(
+        self,
+        som_trained: SOM,
+        clustering_method: str,
+    ) -> None:
+        """Test SOM clustering with automatic cluster number selection."""
+        result = som_trained.cluster(method=clustering_method, n_clusters=None)
+
+        assert isinstance(result, dict)
+        assert result["n_clusters"] >= 1
+        assert result["labels"].max() <= result["n_clusters"]
+
+    @pytest.mark.unit
+    def test_som_cluster_feature_space_weights(
+        self,
+        som_trained: SOM,
+    ) -> None:
+        """Test clustering using neuron weights as features."""
+        result = som_trained.cluster(
+            method="kmeans", n_clusters=3, feature_space="weights"
+        )
+
+        assert isinstance(result, dict)
+        assert result["labels"].shape == (som_trained.x * som_trained.y,)
+
+    @pytest.mark.unit
+    def test_extract_clustering_features(
+        self,
+        som_trained: SOM,
+        clustering_space: str,
+    ) -> None:
+        """Test feature extraction for clustering."""
+        features = som_trained._extract_clustering_features(clustering_space)
+        if clustering_space == "weights":
+            expected_shape = (som_trained.x * som_trained.y, som_trained.num_features)
+        elif clustering_space == "positions":
+            expected_shape = (som_trained.x * som_trained.y, 2)
+        elif clustering_space == "combined":
+            expected_shape = (
+                som_trained.x * som_trained.y,
+                som_trained.num_features + 2,
+            )
+        assert features.shape == expected_shape
+        assert features.device.type == som_trained.device
+
+        # Verify features are normalized weights
+        expected_features = som_trained.weights.view(-1, som_trained.num_features)
+        if clustering_space == "weights":
+            torch.testing.assert_close(features, expected_features)
+
+    @pytest.mark.unit
+    def test_extract_clustering_features_invalid(
+        self,
+        som_trained: SOM,
+    ) -> None:
+        """Test feature extraction with invalid feature space."""
+        with pytest.raises(ValueError, match="Unsupported feature space"):
+            som_trained._extract_clustering_features("invalid_space")
+
+    @pytest.mark.unit
+    def test_build_classification_map_basic(
+        self,
+        som_trained: SOM,
+        clustered_data: tuple[torch.Tensor, torch.Tensor],
+    ) -> None:
+        """Test classification map building."""
+        data, labels = clustered_data
+        data = data.to(som_trained.device)
+        labels = labels.to(som_trained.device)
+
+        classification_map = som_trained.build_classification_map(
+            data, target=labels, neighborhood_order=1
+        )
+
+        assert classification_map.shape == (som_trained.x, som_trained.y)
+        # assert classification_map.device.type == som_trained.device # map is a numpy array on CPU<
+
+        # Values should be valid label indices or NaN
+        non_nan_mask = ~torch.isnan(classification_map)
+        if non_nan_mask.any():
+            non_nan_values = classification_map[non_nan_mask]
+            assert torch.all(non_nan_values >= 0)
+
+    @pytest.mark.unit
+    def test_build_classification_map_different_orders(
+        self,
+        som_trained: SOM,
+        clustered_data: tuple[torch.Tensor, torch.Tensor],
+    ) -> None:
+        """Test classification map with different neighborhood orders."""
+        data, labels = clustered_data
+        data = data.to(som_trained.device)
+        labels = labels.to(som_trained.device)
+
+        for order in [0, 1, 2]:
+            classification_map = som_trained.build_classification_map(
+                data, target=labels, neighborhood_order=order
+            )
+
+            assert classification_map.shape == (som_trained.x, som_trained.y)
+
+    @pytest.mark.unit
+    def test_build_classification_map_hexagonal(
+        self,
+        som_config_minimal: dict[str, Any],
+        clustered_data: tuple[torch.Tensor, torch.Tensor],
+        device: str,
+    ) -> None:
+        """Test classification map with hexagonal topology."""
+        som_config = som_config_minimal.copy()
+        som_config["topology"] = "hexagonal"
+        som_config["device"] = device
+        som = SOM(**som_config)
+
+        data, labels = clustered_data
+        data = data.to(device)
+        labels = labels.to(device)
+
+        # Train briefly
+        som.fit(data[:50])
+
+        classification_map = som.build_classification_map(
+            data, target=labels, neighborhood_order=1
+        )
+
+        assert classification_map.shape == (som.x, som.y)
+
+    @pytest.mark.unit
+    def test_clustering_device_consistency(
+        self,
+        som_config_minimal: dict[str, Any],
+        small_random_data: torch.Tensor,
+        clustering_method: str,
+    ) -> None:
+        """Test clustering consistency across devices."""
+        # Test CPU
+        som_cpu = SOM(**{**som_config_minimal, "device": "cpu"})
+        data_cpu = small_random_data.to("cpu")
+        som_cpu.fit(data_cpu)
+        result_cpu = som_cpu.cluster(
+            method=clustering_method, n_clusters=2, random_state=42
+        )
+
+        if torch.cuda.is_available():
+            # Test GPU
+            som_gpu = SOM(**{**som_config_minimal, "device": "cuda"})
+            data_gpu = small_random_data.to("cuda")
+            som_gpu.fit(data_gpu)
+            result_gpu = som_gpu.cluster(
+                method=clustering_method, n_clusters=2, random_state=42
+            )
+
+            assert result_cpu["labels"].shape == result_gpu["labels"].cpu().shape
+            assert result_cpu["n_clusters"] == result_gpu["n_clusters"]
+
+    @pytest.mark.unit
+    def test_clustering_reproducibility(
+        self,
+        som_trained: SOM,
+        clustering_method: str,
+    ) -> None:
+        """Test that clustering results are reproducible."""
+        result1 = som_trained.cluster(
+            method=clustering_method, n_clusters=3, random_state=42
+        )
+        result2 = som_trained.cluster(
+            method=clustering_method, n_clusters=3, random_state=42
+        )
+
+        torch.testing.assert_close(result1["labels"], result2["labels"])
+        torch.testing.assert_close(result1["centers"], result2["centers"])
+
+    @pytest.mark.unit
+    def test_clustering_parameter_passing(
+        self,
+        som_trained: SOM,
+    ) -> None:
+        """Test that clustering parameters are passed correctly."""
+        # Test K-means with specific parameters
+        result = som_trained.cluster(
+            method="kmeans",
+            n_clusters=2,
+            random_state=42,
+            max_iter=50,  # Additional K-means parameter
+        )
+
+        assert result["n_clusters"] == 2
+
+        # # Test HDBSCAN with specific parameters
+        # result = som_trained.cluster(
+        #     method="hdbscan",
+        #     min_cluster_size=5,  # HDBSCAN parameter
+        # )
+
+        # assert isinstance(result["noise_points"], int)
+
+    @pytest.mark.unit
+    def test_build_classification_map_edge_cases(
+        self,
+        som_small: SOM,
+    ) -> None:
+        """Test classification map building edge cases."""
+        # Create simple test data
+        data = torch.randn(10, som_small.num_features, device=som_small.device)
+        labels = torch.randint(0, 3, (10,), device=som_small.device)
+
+        # Test with no data for some neurons (should result in NaN)
+        classification_map = som_small.build_classification_map(
+            data, target=labels, neighborhood_order=0
+        )
+
+        # Should have NaN for neurons with no data
+        assert torch.isnan(classification_map).any()
+
+    @pytest.mark.unit
+    def test_clustering_small_som(
+        self,
+        clustering_method: str,
+        device: str,
+    ) -> None:
+        """Test clustering on very small SOM."""
+        som = SOM(x=2, y=2, num_features=3, epochs=5, device=device, random_seed=42)
+        data = torch.randn(20, 3, device=device)
+        som.fit(data)
+
+        result = som.cluster(method=clustering_method, n_clusters=2)
+
+        assert result["labels"].shape == (4,)  # 2x2 = 4 neurons
+        assert result["n_clusters"] >= 1

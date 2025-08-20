@@ -1,4 +1,4 @@
-# TorchSOM: The Reference PyTorch Library for Self-Organizing Maps
+# `torchsom`: The Reference PyTorch Library for Self-Organizing Maps
 
 <div align="center">
 
@@ -21,6 +21,7 @@
 [![Tests](https://github.com/michelin/TorchSOM/workflows/Tests/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/test.yml)
 [![Code Quality](https://github.com/michelin/TorchSOM/workflows/Code%20Quality/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/code-quality.yml)
 [![Downloads](https://static.pepy.tech/badge/torchsom)](https://pepy.tech/project/torchsom)
+[![GitHub stars](https://img.shields.io/github/stars/michelin/TorchSOM.svg?style=social&label=Star)](https://github.com/michelin/TorchSOM)
 <!-- [![Security](https://github.com/michelin/TorchSOM/workflows/Security%20Scanning/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/security.yml) -->
 
 <!-- Code Style and Tools -->
@@ -34,10 +35,11 @@
 
 **The most comprehensive, scalable, and PyTorch-native implementation of Self-Organizing Maps**
 
-[📚 Documentation](https://michelin.github.io/TorchSOM/)
+[📚 Documentation](https://opensource.michelin.io/TorchSOM/)
 | [🚀 Quick Start](#-quick-start)
 | [📊 Examples](notebooks/)
 | [🤝 Contributing](CONTRIBUTING.md)
+<!-- | [📄 Paper (PDF)](assets/torchsom_jmlr.pdf) -->
 
 **⭐ If you find [`torchsom`](https://github.com/michelin/TorchSOM) valuable, please consider starring this repository ⭐**
 
@@ -45,34 +47,38 @@
 
 ---
 
-## 🎯 Why TorchSOM?
+## 🎯 Why `torchsom`?
 
-**TorchSOM** is the reference PyTorch library for Self-Organizing Maps (SOMs), purpose-built for seamless integration with modern deep learning and scientific workflows.
-Unlike legacy SOM packages, TorchSOM is engineered from the ground up to fully leverage PyTorch’s ecosystem—offering native GPU acceleration, scalable performance, and compatibility with neural network pipelines.
-Whether you are a researcher or practitioner, TorchSOM empowers you to efficiently incorporate SOMs into your machine learning projects, from exploratory data analysis to advanced model architectures.
+**`torchsom`** is the reference PyTorch library for Self-Organizing Maps (SOMs), purpose-built for seamless integration with modern deep learning and scientific workflows.
+Unlike legacy SOM packages, `torchsom` is engineered from the ground up to fully leverage PyTorch’s ecosystem—offering native GPU acceleration, scalable performance, and compatibility with neural network pipelines.
+Whether you are a researcher or practitioner, `torchsom` empowers you to efficiently incorporate SOMs into your machine learning projects, from exploratory data analysis to advanced model architectures.
 
-TorchSOM is the official implementation accompanying the paper: [TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps](update_link), presented at @CONFERENCE, @DATE.
+`torchsom` is the official implementation accompanying the paper: [`torchsom`: The Reference PyTorch Library for Self-Organizing Maps](assets/torchsom_jmlr.pdf).
+If you use `torchsom` in academic or industrial work, please cite the paper and the software (see [`CITATION`](CITATION.cff)).
+
+> **Note**: Check the table below for a comprehensive comparison of how `torchsom` differs from existing SOM libraries, and explore our [Visualization Gallery](#-visualization-gallery) for examples of the rich visual outputs available.
 
 ### ⚡ Key Advantages
 
-| Feature | [TorchSOM](https://github.com/michelin/TorchSOM) | [MiniSom](https://github.com/JustGlowing/minisom) | [SOMPY](https://github.com/sevamoo/SOMPY) | [SOMToolbox](https://github.com/ilarinieminen/SOM-Toolbox) |
-|---------|---------|---------|---------|---------|
-| 🖥️ **Code Compatibility** | Python | Python | Python | MATLAB |
-| 🚀 **GPU Acceleration** | ✅ | ❌ | ❌ | ❌ |
-| 🔥 **PyTorch Integration** | ✅ | ❌ | ❌ | ❌ |
-| 📈 **Scalability** | ✅ | ⚠️ Limited | ⚠️ Limited | Unknown |
-| 🧩 **Deep Learning Compatible** | ✅ | ❌ | ❌ | ❌ |
-| 🌱 **Growing SOM** | 🚧 Building | ❌ | ❌ | ✅ |
-| 🏗️ **Hierarchical SOM** | 🚧 Building | ❌ | ❌ | ✅ |
-| 📊 **Rich Visualizations** | ✅ | ❌ | ✅ | ✅ |
-| 🔬 **Active Development** | ✅ | ⚠️ (small updates) | ❌ | ❌ |
+| Aspect | [torchsom](https://github.com/michelin/TorchSOM) | [MiniSom](https://github.com/JustGlowing/minisom) | [SimpSOM](https://github.com/fcomitani/simpsom) | [SOMPY](https://github.com/sevamoo/SOMPY) | [somoclu](https://github.com/peterwittek/somoclu) | [som-pbc](https://github.com/alexarnimueller/som) |
+|---|---|---|---|---|---|---|
+| Framework | PyTorch | NumPy | NumPy | NumPy | C++/CUDA | NumPy |
+| GPU Acceleration |  CUDA | ❌ | CuPy/CUML | ❌ | CUDA | ❌ |
+| API Design | scikit-learn | Custom | Custom | MATLAB | Custom | custom |
+| Maintenance | Active | Active | Minimal | Minimal | Minimal | ❌ |
+| Documentation | Rich | ❌ | Basic | ❌ | Basic | Basic |
+| Test Coverage | ~86% | ❌ | ~53% | ❌ | Minimal | ❌ |
+| PyPI Distribution | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ |
+| SOM Variants | Multiple | ❌ | PBC | ❌ | PBC | PBC (only) |
+| Visualization | Advanced | ❌ | Moderate | Moderate | Basic | Basic |
+| Extensibility | High | Moderate | Low | Low | Low | Low |
 
 ---
 
 ## 📑 Table of Contents
 
 - [Quick Start](#-quick-start)
-- [Examples](#-examples)
+- [Tutorials](#-tutorials)
 - [Installation](#-installation)
 - [Documentation](#-documentation)
 - [Citation](#-citation)
@@ -80,18 +86,19 @@ TorchSOM is the official implementation accompanying the paper: [TorchSOM: A Sca
 - [Acknowledgments](#-acknowledgments)
 - [License](#-license)
 - [References](#-references)
+<!-- - [Reproducibility](#-reproducibility) -->
 <!-- - [Performance Benchmarks](#-performance-benchmarks) -->
 
 ---
 
 ## 🚀 Quick Start
 
-Get started with TorchSOM in just a few lines of code:
+Get started with `torchsom` in just a few lines of code:
 
 ```python
 import torch
 from torchsom.core import SOM
-from torchsom.visualization import SOMVisualizer,
+from torchsom.visualization import SOMVisualizer
 
 # Create a 10x10 map for 3D input
 som = SOM(x=10, y=10, num_features=3, epochs=50)
@@ -108,7 +115,7 @@ visualizer.plot_distance_map(save_path=None)
 visualizer.plot_hit_map(data=X, save_path=None)
 ```
 
-## 📓 Examples
+## 📓 Tutorials
 
 Explore our comprehensive collection of Jupyter notebooks:
 
@@ -116,8 +123,9 @@ Explore our comprehensive collection of Jupyter notebooks:
 - 🍷 [`wine.ipynb`](notebooks/wine.ipynb): Multiclass classification
 - 🏠 [`boston_housing.ipynb`](notebooks/boston_housing.ipynb): Regression
 - ⚡ [`energy_efficiency.ipynb`](notebooks/energy_efficiency.ipynb): Multi-output regression
+- 🎯 [`clustering.ipynb`](notebooks/clustering.ipynb): SOM-based clustering analysis
 
-### 🎨 Some visualizations
+### 🎨 Visualization Gallery
 
 <p align="center">
   <table>
@@ -125,30 +133,30 @@ Explore our comprehensive collection of Jupyter notebooks:
       <td align="center">
         <b>🗺️ D-Matrix Visualization</b><br>
         <p>Michelin production line (regression)</p>
-        <img src="assets/michelin_dmatrix.png" alt="U-Matrix" width="220"/>
+        <img src="assets/michelin_dmatrix.png" alt="U-Matrix" width="280"/>
       </td>
       <td align="center">
         <b>📍 Hit Map Visualization</b><br>
         <p>Michelin production line (regression)</p>
-        <img src="assets/michelin_hitmap.png" alt="Hit Map" width="220"/>
+        <img src="assets/michelin_hitmap.png" alt="Hit Map" width="280"/>
       </td>
       <td align="center">
         <b>📊 Mean Map Visualization</b><br>
         <p>Michelin production line (regression)</p>
-        <img src="assets/michelin_meanmap.png" alt="Mean Map" width="220"/>
+        <img src="assets/michelin_meanmap.png" alt="Mean Map" width="280"/>
       </td>
     </tr>
     <tr>
       <td align="center" colspan="2">
-        <b>🎯 Component Planes Visualization</b><br>
+        <b>🗺️ Component Planes Visualization</b><br>
         <p>Another Michelin line (regression)</p>
         <table>
           <tr>
             <td align="center">
-              <img src="assets/michelin_cp12.png" alt="Component Plane 1" width="220"/>
+              <img src="assets/michelin_cp12.png" alt="Component Plane 1" width="280"/>
             </td>
             <td align="center">
-              <img src="assets/michelin_cp21.png" alt="Component Plane 2" width="220"/>
+              <img src="assets/michelin_cp21.png" alt="Component Plane 2" width="280"/>
             </td>
           </tr>
         </table>
@@ -156,7 +164,24 @@ Explore our comprehensive collection of Jupyter notebooks:
       <td align="center">
         <b>🏷️ Classification Map</b><br>
         <p>Wine dataset (multi-classification)</p>
-        <img src="assets/wine_classificationmap.png" alt="Classification Map" width="220"/>
+        <img src="assets/wine_classificationmap.png" alt="Classification Map" width="280"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <b>📊 Cluster Metrics</b><br>
+        <p>Clustering analysis</p>
+        <img src="assets/cluster_metrics.png" alt="Cluster Metrics" width="320"/>
+      </td>
+      <td align="center">
+        <b>📈 K-Means Elbow</b><br>
+        <p>Optimal cluster selection</p>
+        <img src="assets/kmeans_elbow.png" alt="K-Means Elbow" width="300"/>
+      </td>
+      <td align="center">
+        <b>🎯 HDBSCAN Cluster Map</b><br>
+        <p>Cluster visualization</p>
+        <img src="assets/hdbscan_cluster_map.png" alt="HDBSCAN Cluster Map" width="260"/>
       </td>
     </tr>
   </table>
@@ -166,7 +191,7 @@ Explore our comprehensive collection of Jupyter notebooks:
 
 ## 💾 Installation
 
-### 📦 PyPI (not yet available)
+### 📦 PyPI
 
 ```bash
 pip install torchsom
@@ -186,17 +211,17 @@ pip install -e ".[dev]"
 
 ## 📚 Documentation
 
-Comprehensive documentation is available at [michelin.github.io/TorchSOM](https://michelin.github.io/TorchSOM/)
+Comprehensive documentation is available at [opensource.michelin.io/TorchSOM](https://opensource.michelin.io/TorchSOM/)
 
 ---
 
 ## 📝 Citation
 
-If you use TorchSOM in your research, please cite both the paper and software:
+If you use `torchsom` in your research, please cite both the paper and software:
 
 ```bibtex
 @inproceedings{Berthier2025TorchSOM,
-    title={TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},
+    title={torchsom: The Reference PyTorch Library for Self-Organizing Maps},
     author={Berthier, Louis},
     booktitle={Conference Name},
     year={2025}
@@ -204,14 +229,14 @@ If you use TorchSOM in your research, please cite both the paper and software:
 
 @software{Berthier_TorchSOM_The_Reference_2025,
     author={Berthier, Louis},
-    title={TorchSOM: The Reference PyTorch Library for Self-Organizing Maps},
+    title={torchsom: The Reference PyTorch Library for Self-Organizing Maps},
     url={https://github.com/michelin/TorchSOM},
     version={1.0.0},
     year={2025}
 }
 ```
 
-For more details, please refer to the [CITATION.cff](CITATION.cff) file.
+For more details, please refer to the [CITATION](CITATION.cff) file.
 
 ---
 
@@ -236,7 +261,7 @@ We welcome contributions from the community! See our [Contributing Guide](CONTRI
 
 ## 📄 License
 
-TorchSOM is licensed under the [Apache License 2.0](LICENSE). See the [LICENSE](LICENSE) file for details.
+`torchsom` is licensed under the [Apache License 2.0](LICENSE). See the [LICENSE](LICENSE) file for details.
 
 ---
 
@@ -249,16 +274,13 @@ TorchSOM is licensed under the [Apache License 2.0](LICENSE). See the [LICENSE](
 ### 🔗 Related Projects
 
 - [MiniSom](https://github.com/JustGlowing/minisom): Minimalistic Python SOM
+- [SimpSOM](https://github.com/fcomitani/simpsom):Simple Self-Organizing Maps
 - [SOMPY](https://github.com/sevamoo/SOMPY): Python SOM library
+- [somoclu](https://github.com/peterwittek/somoclu): Massively Parallel Self-Organizing Maps
+- [som-pbc](https://github.com/alexarnimueller/som): A simple self-organizing map implementation in Python with periodic boundary conditions
 - [SOM Toolbox](http://www.cis.hut.fi/projects/somtoolbox/): MATLAB implementation
 
 ---
-
-<div align="center">
-
-**If you find TorchSOM useful, please ⭐ star this repository!**
-
-</div>
 
 <!-- ### 🎨 Core Capabilities
 

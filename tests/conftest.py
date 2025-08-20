@@ -12,7 +12,18 @@ from torchsom.core.som import SOM
 # ==================== SOM Initialization Fixtures ====================
 
 
-@pytest.fixture(params=["cpu", "cuda"])
+@pytest.fixture
+def fixed_seed() -> int:
+    """Fixed random seed for reproducible tests."""
+    return 42
+
+
+@pytest.fixture(
+    params=[
+        "cpu",
+        "cuda",
+    ]
+)
 def device(
     request: pytest.FixtureRequest,
 ) -> str:
@@ -23,13 +34,12 @@ def device(
     return device_name
 
 
-@pytest.fixture
-def fixed_seed() -> int:
-    """Fixed random seed for reproducible tests."""
-    return 42
-
-
-@pytest.fixture(params=["rectangular", "hexagonal"])
+@pytest.fixture(
+    params=[
+        "rectangular",
+        "hexagonal",
+    ]
+)
 def topology(
     request: pytest.FixtureRequest,
 ) -> str:
@@ -37,7 +47,14 @@ def topology(
     return request.param
 
 
-@pytest.fixture(params=["euclidean", "cosine", "manhattan", "chebyshev"])
+@pytest.fixture(
+    params=[
+        "euclidean",
+        "cosine",
+        "manhattan",
+        "chebyshev",
+    ]
+)
 def distance_function(
     request: pytest.FixtureRequest,
 ) -> str:
@@ -45,7 +62,14 @@ def distance_function(
     return request.param
 
 
-@pytest.fixture(params=["gaussian", "bubble", "triangle", "mexican_hat"])
+@pytest.fixture(
+    params=[
+        "gaussian",
+        "bubble",
+        "triangle",
+        "mexican_hat",
+    ]
+)
 def neighborhood_function(
     request: pytest.FixtureRequest,
 ) -> str:
@@ -54,7 +78,11 @@ def neighborhood_function(
 
 
 @pytest.fixture(
-    params=["lr_inverse_decay_to_zero", "lr_linear_decay_to_zero", "asymptotic_decay"]
+    params=[
+        "lr_inverse_decay_to_zero",
+        "lr_linear_decay_to_zero",
+        "asymptotic_decay",
+    ]
 )
 def lr_decay_function(
     request: pytest.FixtureRequest,
@@ -64,7 +92,11 @@ def lr_decay_function(
 
 
 @pytest.fixture(
-    params=["sig_inverse_decay_to_one", "sig_linear_decay_to_one", "asymptotic_decay"]
+    params=[
+        "sig_inverse_decay_to_one",
+        "sig_linear_decay_to_one",
+        "asymptotic_decay",
+    ]
 )
 def sigma_decay_function(
     request: pytest.FixtureRequest,
@@ -73,7 +105,12 @@ def sigma_decay_function(
     return request.param
 
 
-@pytest.fixture(params=["random", "pca"])
+@pytest.fixture(
+    params=[
+        "random",
+        "pca",
+    ]
+)
 def initialization_mode(
     request: pytest.FixtureRequest,
 ) -> str:
@@ -81,7 +118,12 @@ def initialization_mode(
     return request.param
 
 
-@pytest.fixture(params=["mean", "std"])
+@pytest.fixture(
+    params=[
+        "mean",
+        "std",
+    ]
+)
 def reduction_parameter(
     request: pytest.FixtureRequest,
 ) -> str:
@@ -89,11 +131,44 @@ def reduction_parameter(
     return request.param
 
 
-@pytest.fixture(params=[True, False])
+@pytest.fixture(
+    params=[
+        True,
+        False,
+    ]
+)
 def return_indices(
     request: pytest.FixtureRequest,
 ) -> bool:
     """Parametrized return indices fixture."""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        "kmeans",
+        "gmm",
+        # "hdbscan",
+    ]
+)
+def clustering_method(
+    request: pytest.FixtureRequest,
+) -> str:
+    """Parametrized clustering method fixture."""
+    return request.param
+
+
+@pytest.fixture(
+    params=[
+        "weights",
+        "positions",
+        "combined",
+    ]
+)
+def clustering_space(
+    request: pytest.FixtureRequest,
+) -> str:
+    """Parametrized clustering space fixture."""
     return request.param
 
 
@@ -183,6 +258,59 @@ def regression_data() -> tuple[torch.Tensor, torch.Tensor]:
     data = torch.tensor(X, dtype=torch.float32)
     target = torch.tensor(y, dtype=torch.float32)
     return data, target
+
+
+@pytest.fixture
+def well_separated_clusters() -> tuple[torch.Tensor, torch.Tensor]:
+    """Generate well-separated clusters for clustering algorithm testing."""
+    X, y = make_blobs(
+        n_samples=300,
+        centers=4,
+        n_features=3,
+        cluster_std=0.5,
+        center_box=(-10.0, 10.0),
+        random_state=42,
+    )
+    data = torch.tensor(X, dtype=torch.float32)
+    labels = torch.tensor(y, dtype=torch.long)
+    data = (data - data.mean(dim=0)) / data.std(dim=0)
+    return data, labels
+
+
+@pytest.fixture
+def noisy_clustering_data() -> torch.Tensor:
+    """Generate noisy data for testing clustering robustness."""
+    X, _ = make_blobs(
+        n_samples=100,
+        centers=3,
+        n_features=2,
+        cluster_std=0.8,
+        random_state=42,
+    )
+    noise = np.random.RandomState(42).uniform(-5, 5, size=(50, 2))
+    X_with_noise = np.vstack([X, noise])
+    data = torch.tensor(X_with_noise, dtype=torch.float32)
+    data = (data - data.mean(dim=0)) / data.std(dim=0)
+    return data
+
+
+@pytest.fixture
+def hexagonal_test_coordinates() -> list[tuple[int, int]]:
+    """Generate coordinates for hexagonal grid testing."""
+    return [
+        (0, 0),
+        (0, 1),
+        (0, 2),
+        (1, 0),
+        (1, 1),
+        (1, 2),
+        (2, 0),
+        (2, 1),
+        (2, 2),
+        (3, 0),
+        (3, 1),
+        (3, 2),
+    ]
 
 
 # ==================== SOM Configuration Fixtures ====================

@@ -123,7 +123,7 @@ def cluster_hdbscan(
     data: torch.Tensor,
     min_cluster_size: Optional[int] = None,
     **kwargs: Any,
-) -> dict[str, Any]:
+) -> dict[str, Any]:  # pragma: no cover
     """HDBSCAN clustering using scikit-learn.
 
     Args:

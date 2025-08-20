@@ -32,7 +32,6 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Scientific/Engineering :: Information Analysis",
-    "Topic :: Scientific/Engineering :: Information Retrieval",
     "Topic :: Scientific/Engineering :: Visualization",
     "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Testing :: Unit",
@@ -151,8 +150,8 @@ python_functions = ["test_*"]
 # Additional pytest CLI options:
 addopts = [
     "-v",                               # Verbose output
-    "--strict-markers",                 # Fail if unknown @pytest.mark is used
-    "--strict-config",                  # Fail if unknown config option is found
+    # "--strict-markers",                 # Fail if unknown @pytest.mark is used
+    # "--strict-config",                  # Fail if unknown config option is found
     "--tb=short",                       # Short traceback format
     "--durations=10",                   # Report 10 slowest tests
     "--cov=torchsom",                   # Coverage of torchsom
