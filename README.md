@@ -10,10 +10,10 @@
 
 <!-- Sonar Qube badges -->
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=michelin_TorchSOM)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=coverage)](https://sonarcloud.io/summary/new_code?id=michelin_TorchSOM)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=michelin_TorchSOM)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=michelin_TorchSOM)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=michelin_TorchSOM)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=coverage)](https://sonarcloud.io/summary/new_code?id=michelin_TorchSOM)
 
 <!-- [![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=michelin_TorchSOM) -->
 

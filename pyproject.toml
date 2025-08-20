@@ -161,6 +161,7 @@ addopts = [
     "--cov-config=pyproject.toml",      # Use configuration from pyproject.toml
     "--junit-xml=junit.xml",            # Create JUnit XML file for CI compatibility
     "-m unit or gpu",                   # default marker selection
+    "--maxfail=0",                      # continue after failures: 0 means never stop on failure, 1 means stop after 1 failure and 10 means stop after 10 failures
 ]
 # Custom pytest markers with descriptions
 markers = [

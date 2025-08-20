@@ -1012,8 +1012,8 @@ class TestClusteringUtilities:
 
         assert isinstance(result, dict)
         assert result["n_clusters"] >= 1
-        assert isinstance(result["bic"], float)
-        assert isinstance(result["aic"], float)
+        assert isinstance(result["bic"], (float, np.floating))
+        assert isinstance(result["aic"], (float, np.floating))
 
     # @pytest.mark.unit
     def test_cluster_hdbscan_basic(
