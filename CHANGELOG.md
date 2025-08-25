@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## Unreleased
 
+### Feat
+
+- add changelog templates for better project documentation
+
 ## v1.0.1 (2025-08-20)
 
 ### Feat
