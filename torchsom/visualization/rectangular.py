@@ -192,7 +192,3 @@ class RectangularVisualizer(BaseVisualizer):
             self._save_plot(save_path, filename)
         else:
             plt.show()
-
-        # Clean up memory
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()

@@ -281,10 +281,6 @@ class BaseVisualizer(ABC):
                 is_component_plane=True,  # This will be ignored by hexagonal but used by rectangular
             )
 
-        # Clean up memory
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-
     def plot_training_errors(
         self,
         quantization_errors: list[float],
@@ -338,7 +334,3 @@ class BaseVisualizer(ABC):
             self._save_plot(save_path, fig_name)
         else:
             plt.show()
-
-        # Clean up memory
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
