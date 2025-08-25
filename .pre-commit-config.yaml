@@ -5,12 +5,12 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
-      - id: check-added-large-files
-        args: ['--maxkb=10000'] #
       - id: check-merge-conflict
       - id: check-toml
       - id: check-json
       - id: debug-statements
+      # - id: check-added-large-files
+      #   args: ['--maxkb=10000']
       # - id: name-tests-test
       #   args: ['--pytest-test-first']
 

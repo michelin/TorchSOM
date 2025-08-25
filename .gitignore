@@ -7,6 +7,8 @@ assets/torchsom_jmlr.pdf
 
 .github/workflows/security.yml
 
+benchmark/results/
+
 # Python
 __pycache__/
 *.py[cod]
