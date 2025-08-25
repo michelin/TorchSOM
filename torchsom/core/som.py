@@ -129,65 +129,58 @@ class SOM(BaseSOM):
 
         # Pre-compute coordinate matrices for efficient distance calculations
         self._precompute_coordinate_distances()
+        # Pre-compute decay schedules for all epochs at once
+        self.lr_schedule, self.sigma_schedule = self._precompute_decay_schedules(
+            epochs=self.epochs
+        )
+        # Pre-compute neighbor offsets for topology operations
+        self._precompute_neighbor_offsets()
 
     def _precompute_coordinate_distances(self) -> None:
         """Pre-compute coordinate distance matrices for all neuron pairs, used during neighborhood calculations."""
-        # Shape: [x*y, x*y] - distance between each pair of neurons
-        coords = torch.stack([self.xx.flatten(), self.yy.flatten()], dim=1)  # [x*y, 2]
-
-        # Calculate pairwise coordinate distances between all neurons
-        coord_diff = coords.unsqueeze(1) - coords.unsqueeze(0)  # [x*y, x*y, 2]
-
+        # Pre-compute coordinates for all neurons: [x*y, 2]
+        coords = torch.stack([self.xx.flatten(), self.yy.flatten()], dim=1)
+        # Calculate pairwise coordinate distances between all neurons: [x*y, x*y, 2]
+        coord_diff = coords.unsqueeze(1) - coords.unsqueeze(0)
         # Squared distance between each pair of neurons: [x*y, x*y]
         self.coord_distances_sq = torch.sum(coord_diff**2, dim=2)
 
-    # def _update_weights(
-    #     self,
-    #     data: torch.Tensor,
-    #     bmus: Union[tuple[int, int], torch.Tensor],
-    #     learning_rate: float,
-    #     sigma: float,
-    # ) -> None:
-    #     """Update weights using neighborhood function. Handles both single samples and batches.
+    def _precompute_neighbor_offsets(self) -> None:
+        """Precompute neighbor offsets for the SOM's topology and neighborhood order."""
+        self._neighbor_offsets = get_all_neighbors_up_to_order(
+            topology=self.topology,
+            max_order=self.neighborhood_order,
+        )
+        if self.topology == "hexagonal":
+            self._even_row_offsets = self._neighbor_offsets["even"]
+            self._odd_row_offsets = self._neighbor_offsets["odd"]
 
-    #     Args:
-    #         data (torch.Tensor): Input tensor of shape [num_features] or [batch_size, num_features]
-    #         bmus (Union[Tuple[int, int], torch.Tensor]): BMU coordinates as tuple (single) or tensor (batch)
-    #         learning_rate (float): Current learning rate
-    #         sigma (float): Current sigma value
-    #     """
-    #     # Single sample
-    #     if isinstance(bmus, tuple):
-    #         # Calculate neighborhood contributions for the BMU and reshape for broadcasting
-    #         neighborhood = self.neighborhood_fn(bmus, sigma)
-    #         neighborhood = neighborhood.view(self.x, self.y, 1)
+    def _precompute_decay_schedules(
+        self,
+        epochs: int,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        """Pre-compute decay schedules for all epochs at once.
 
-    #         # Calculate the update for the single sample
-    #         update = learning_rate * neighborhood * (data - self.weights)
+        Args:
+            epochs (int): Number of epochs
 
-    #         # Update the weights
-    #         self.weights.data += update
-
-    #     # Batch samples
-    #     else:
-    #         # Calculate neighborhood contributions for each BMU in batch
-    #         batch_size = data.shape[0]
-    #         neighborhoods = torch.stack(
-    #             [
-    #                 self.neighborhood_fn((row.item(), col.item()), sigma)
-    #                 for row, col in bmus
-    #             ]
-    #         )  # [batch_size, row_neurons, col_neurons]
-
-    #         # Reshape for broadcasting
-    #         neighborhoods = neighborhoods.view(batch_size, self.x, self.y, 1)
-    #         data_expanded = data.view(batch_size, 1, 1, self.num_features)
-
-    #         # Calculate the updates for all samples
-    #         updates = learning_rate * neighborhoods * (data_expanded - self.weights)
-
-    #         # Average updates across batch and apply to weights
-    #         self.weights.data += updates.mean(dim=0)
+        Returns:
+            tuple[torch.Tensor, torch.Tensor]: Learning rate and sigma schedules
+        """
+        epoch_indices = torch.arange(epochs, dtype=torch.float32)
+        lr_schedule = torch.tensor(
+            [
+                self.lr_decay_fn(self.learning_rate, t=epoch, max_iter=epochs)
+                for epoch in epoch_indices
+            ]
+        )
+        sigma_schedule = torch.tensor(
+            [
+                self.sigma_decay_fn(self.sigma, t=epoch, max_iter=epochs)
+                for epoch in epoch_indices
+            ]
+        )
+        return lr_schedule, sigma_schedule
 
     def _vectorized_neighborhood(
         self,
@@ -207,38 +200,6 @@ class SOM(BaseSOM):
             self.coord_distances_sq, bmu_indices_flat, sigma, self.x, self.y
         )
 
-    # ! CAN WE OPTIMIZE WITHOUT BROADCASTING?
-    # def _update_weights(
-    #     self,
-    #     data: torch.Tensor,
-    #     bmus: torch.Tensor,
-    #     learning_rate: float,
-    #     sigma: float,
-    # ) -> None:
-    #     """Update weights using vectorized neighborhood calculations."""
-    #     # Single sample [x, y] to convert to batch [batch_size, x, y]
-    #     if bmus.dim() == 1:
-    #         bmus = bmus.unsqueeze(0)
-    #         data = data.unsqueeze(0)
-
-    #     batch_size = data.shape[0]
-
-    #     # Convert BMU coordinates to flat indices for efficient lookup
-    #     bmu_indices_flat = bmus[:, 0] * self.y + bmus[:, 1]  # [batch_size]
-
-    #     # Compute neighborhood weights efficiently using vectorized functions
-    #     neighborhoods = self._vectorized_neighborhood(bmu_indices_flat, sigma)
-    #     # Reshape for broadcasting
-    #     neighborhoods = neighborhoods.view(batch_size, self.x, self.y, 1)
-    #     data_expanded = data.view(batch_size, 1, 1, self.num_features)
-
-    #     # Calculate updates efficiently
-    #     weight_diff = data_expanded - self.weights  # Broadcasting
-    #     updates = learning_rate * neighborhoods * weight_diff
-
-    #     # Apply averaged updates
-    #     self.weights.data += updates.mean(dim=0)
-
     def _update_weights(
         self,
         data: torch.Tensor,  # [batch, features]
@@ -246,154 +207,82 @@ class SOM(BaseSOM):
         learning_rate: float,
         sigma: float,
     ) -> None:
-        if bmus.dim() == 1:
-            bmus = bmus.unsqueeze(0)
-            data = data.unsqueeze(0)
+        """Update weights using vectorized neighborhood calculations.
 
+        Args:
+            data (torch.Tensor): Input tensor of shape [batch_size, features]
+            bmus (torch.Tensor): BMU coordinates as tensor [batch_size, 2]
+            learning_rate (float): Current learning rate
+            sigma (float): Current sigma value
+        """
         batch_size = data.shape[0]
-        bmu_indices_flat = bmus[:, 0] * self.y + bmus[:, 1]  # [batch]
-        # [batch, x, y]
+        # Convert BMU coordinates to flat indices for efficient lookup: [batch]
+        bmu_indices_flat = bmus[:, 0] * self.y + bmus[:, 1]
+        # Compute neighborhood weights efficiently using vectorized functions: [batch, x, y]
         neighborhoods = self._vectorized_neighborhood(bmu_indices_flat, sigma)
-
-        # # [batch, x, y, features]: diffs between data and weights
-        # weight_diffs = data[:, None, None, :] - self.weights[None, :, :, :]
-
-        # # Weighted sum over batch
-        # updates = torch.einsum("bxy,bxyf->xyf", neighborhoods, weight_diffs)
-
-        # # Apply averaged update
-        # self.weights.data += (learning_rate / batch_size) * updates
-
-        # Einsum for the heavy lifting
-
-        weighted_data = torch.einsum("bxy,bf->xyf", neighborhoods, data)
+        # Compute neighborhood sum: [x, y]
         neighborhood_sum = neighborhoods.sum(dim=0)
-
-        # Simple element-wise operations
+        # Compute weighted data: [x, y, features]
+        weighted_data = torch.einsum("bxy,bf->xyf", neighborhoods, data)
+        # Compute updates: [x, y, features]
         updates = (weighted_data - neighborhood_sum.unsqueeze(-1) * self.weights) * (
             learning_rate / batch_size
         )
+        # Update weights: [x, y, features]
         self.weights.data += updates
-
-    # def _calculate_distances_to_neurons(
-    #     self,
-    #     data: torch.Tensor,
-    # ) -> torch.Tensor:
-    #     """Calculate distances between input data and all neurons' weights. Handles both single samples and batches.
-
-    #     Args:
-    #         data: Input tensor of shape [num_features] if single or [batch_size, num_features] if batch
-
-    #     Returns:
-    #         Distances tensor of shape [row_neurons, col_neurons] or [batch_size, row_neurons, col_neurons]
-    #     """
-    #     # Ensure device and batch compatibility
-    #     data = data.to(self.device)
-    #     if data.dim() == 1:
-    #         data = data.unsqueeze(0)
-    #     data_batch_size = data.shape[0]
-
-    #     # Reshape both data and weights for broadcasting when calculating the distance
-    #     data_expanded = data.view(
-    #         data_batch_size, 1, 1, self.num_features
-    #     )  # From [batch_size, num_features] to [batch_size, 1, 1, num_features]
-    #     weights_expanded = self.weights.unsqueeze(
-    #         0
-    #     )  # [1, row_neurons, col_neurons, num_features]
-
-    #     # Compute distances for the whole batch [batch_size, row_neurons, col_neurons]
-    #     distances = self.distance_fn(data_expanded, weights_expanded)
-
-    #     # Single sample case - remove batch dimension
-    #     if data_batch_size == 1:
-    #         distances = distances.squeeze(0)
-
-    #     return distances
 
     def _calculate_distances_to_neurons(
         self,
         data: torch.Tensor,
     ) -> torch.Tensor:
-        """Calculate distances between input data and all neurons efficiently.
+        """Calculate distances between input data and all neurons.
 
         Args:
             data (torch.Tensor): Input tensor of shape [num_features] if single or [batch_size, num_features] if batch
 
         Returns:
-            torch.Tensor: Distances tensor of shape [row_neurons, col_neurons] or [batch_size, row_neurons, col_neurons]
+            torch.Tensor: Distances tensor of shape [x, y] or [batch_size, x, y]
         """
         data = data.to(self.device)
         if data.dim() == 1:
             data = data.unsqueeze(0)
-
-        # Use the optimized distance function from DISTANCE_FUNCTIONS
+        # Compute distances between data and all neurons: [batch_size, x, y]
         distances = self.distance_fn(data, self.weights)
-
-        # Handle single sample case
+        # Handle single sample case: [x, y]
         if distances.shape[0] == 1 and data.shape[0] == 1:
             distances = distances.squeeze(0)
-
         return distances
-
-    # def identify_bmus(
-    #     self,
-    #     data: torch.Tensor,
-    # ) -> torch.Tensor:
-    #     """Find BMUs for input data.  Handles both single samples and batches.
-
-    #     It requires a data on the GPU if available for calculations with SOM's weights on GPU's too.
-
-    #     Args:
-    #         data (torch.Tensor): Input tensor of shape [num_features] or [batch_size, num_features]
-
-    #     Returns:
-    #         torch.Tensor: For single sample: Tensor of shape [2] with [row, col].
-    #                     For batch: Tensor of shape [batch_size, 2] with [row, col] pairs
-    #     """
-    #     distances = self._calculate_distances_to_neurons(data)
-
-    #     # Unique sample [row_neurons, col_neurons]
-    #     if distances.dim() == 2:
-    #         index = torch.argmin(
-    #             distances.view(-1)
-    #         )  # From 2D tensor [m,n] to 1D tensor [m*n] then retrieve the index of the bmu with the smallest distance
-    #         row, col = torch.unravel_index(
-    #             index,
-    #             (self.x, self.y),
-    #         )  # Convert the index to 2D coordinates
-    #         coords = torch.stack([row, col], dim=0).to(data.device)
-    #         return coords
-
-    #     # Batch samples [batch_size, row_neurons, col_neurons]
-    #     else:
-    #         indices = torch.argmin(
-    #             distances.view(distances.shape[0], -1), dim=1
-    #         )  # From 3D tensor [batch_size, m, n] to 2D tensor [batch_size, m*n] then retrieve the index of the bmu with the smallest distance for all samples
-    #         return torch.stack(
-    #             [torch.div(indices, self.y, rounding_mode="floor"), indices % self.y],
-    #             dim=1,
-    #         )
 
     def identify_bmus(
         self,
         data: torch.Tensor,
     ) -> torch.Tensor:
-        """Find BMUs for input data using vectorized operations."""
+        """Find BMUs for input data.
+
+        Args:
+            data (torch.Tensor): Input tensor of shape [batch_size, features]
+
+        Returns:
+            torch.Tensor: BMU coordinates as tensor [batch_size, 2]
+        """
+        # Compute distances between data and all neurons: [batch_size, x, y]
         distances = self._calculate_distances_to_neurons(data)
 
-        # Single sample: [x, y]
+        # Handle single sample case: [x, y]
         if distances.dim() == 2:
+            # Find the index of the minimum distance: [1]
             index = torch.argmin(distances.view(-1))
+            # Convert flat index to 2D coordinates: [1, 2]
             row, col = torch.unravel_index(index, (self.x, self.y))
             return torch.stack([row, col], dim=0).to(data.device)
-
         # Batch samples: [batch_size, x, y]
         else:
             batch_size = distances.shape[0]
+            # Flatten distances: [batch_size, x*y]
             distances_flat = distances.view(batch_size, -1)
+            # Find the index of the minimum distance for each sample: [batch_size]
             indices = torch.argmin(distances_flat, dim=1)
-
-            # Convert flat indices to 2D coordinates efficiently
+            # Convert flat indices to 2D coordinates: [batch_size, 2]
             rows = torch.div(indices, self.y, rounding_mode="floor")
             cols = indices % self.y
             return torch.stack([rows, cols], dim=1)
@@ -410,15 +299,9 @@ class SOM(BaseSOM):
         Returns:
             float: Average quantization error value
         """
-        # Ensure device and batch compatibility
         data = data.to(self.device)
         if data.dim() == 1:
             data = data.unsqueeze(0)
-
-        # print(data.shape)
-        # print(self.weights.shape)
-
-        # Use the utility function for calculation
         return calculate_quantization_error(data, self.weights, self.distance_fn)
 
     def topographic_error(
@@ -433,11 +316,9 @@ class SOM(BaseSOM):
         Returns:
             float: Topographic error ratio
         """
-        # Ensure device and batch compatibility
         data = data.to(self.device)
         if data.dim() == 1:
             data = data.unsqueeze(0)
-
         return calculate_topographic_error(
             data, self.weights, self.distance_fn, self.topology
         )
@@ -470,76 +351,67 @@ class SOM(BaseSOM):
             raise ValueError(
                 f"Input data dimension ({data.shape[1]}) and weights dimension ({self.num_features}) don't match"
             )
-
         if mode is None:
             mode = self.initialization_mode
-
-        # Use utility function for initialization
         new_weights = initialize_weights(
-            self.weights.data, data, mode, self.topology, self.device
+            weights=self.weights.data,
+            data=data,
+            mode=mode,
+            topology=self.topology,
+            device=self.device,
         )
         self.weights.data = new_weights
-
-        # Recompute coordinate distances if needed
-        self._precompute_coordinate_distances()
 
     def fit(
         self,
         data: torch.Tensor,
+        verbose: bool = True,
     ) -> tuple[list[float], list[float]]:
         """Train the SOM using batches and track errors.
 
         Args:
             data (torch.Tensor): input data tensor [batch_size, num_features]
+            verbose (bool, optional): Whether to print progress. Defaults to True.
 
         Returns:
             Tuple[List[float], List[float]]: Quantization and topographic errors [epoch]
         """
-        # data = data.to(self.device)
         dataset = TensorDataset(data)
         dataloader = DataLoader(
             dataset,
             batch_size=self.batch_size,
             shuffle=True,
-            pin_memory=False,  # ! Previously false but now True to avoid memory issues: double check, not necessarily a good idea
-            num_workers=0,  # ! Already 0, but set it explicitly to keep data on GPU
+            pin_memory=False,
+            num_workers=0,
         )
 
-        q_errors = []
-        t_errors = []
-
+        epoch_q_errors = []
+        epoch_t_errors = []
         for epoch in tqdm(
             range(self.epochs),
             desc="Training SOM",
             unit="epoch",
-            disable=False,
+            disable=not verbose,
         ):
-            # Update learning parameters through decay function (schedulers)
-            lr = self.lr_decay_fn(self.learning_rate, t=epoch, max_iter=self.epochs)
-            sigma = self.sigma_decay_fn(self.sigma, t=epoch, max_iter=self.epochs)
-
-            epoch_q_errors = []
-            epoch_t_errors = []
-
+            # Update learning parameters thanks to decay functions (schedulers)
+            lr = self.lr_schedule[epoch]
+            sigma = self.sigma_schedule[epoch]
+            batch_q_errors = []
+            batch_t_errors = []
             for batch in dataloader:
-                # batch_data = batch[0].to(self.device)
-                batch_data = batch[0].to(self.device, non_blocking=True)
-
-                # Get BMUs for all data points at once [batch_size, 2]
+                batch_data = batch[0].to(self.device)
+                # Rerieve the BMUs [batch_size, 2]
                 bmus = self.identify_bmus(batch_data)
-
-                # Update the weights of each neuron
+                # Update the weights
                 self._update_weights(batch_data, bmus, lr, sigma)
+                # Calculate batch errors
+                batch_q_errors.append(self.quantization_error(batch_data))
+                batch_t_errors.append(self.topographic_error(batch_data))
+            # Calculate average epoch errors
+            epoch_q_errors.append(torch.tensor(batch_q_errors).mean().item())
+            epoch_t_errors.append(100 * torch.tensor(batch_t_errors).mean().item())
 
-                # Calculate both errors at each batch and store them
-                epoch_q_errors.append(self.quantization_error(batch_data))
-                epoch_t_errors.append(self.topographic_error(batch_data))
-
-            # Compute both average errors at each epoch and store them
-            q_errors.append(torch.tensor(epoch_q_errors).mean().item())
-            t_errors.append(100 * torch.tensor(epoch_t_errors).mean().item())
-
-        return q_errors, t_errors
+        return epoch_q_errors, epoch_t_errors
 
     def collect_samples(
         self,
@@ -576,11 +448,8 @@ class SOM(BaseSOM):
         # Keep track of the neurons used to build the historical buffers
         visited_neurons = {bmu_tuple}
 
-        # Get all neighbor offsets based on topology
-        all_offsets = get_all_neighbors_up_to_order(
-            topology=self.topology,
-            max_order=self.neighborhood_order,
-        )
+        # Use precomputed neighbor offsets
+        all_offsets = self._neighbor_offsets
 
         # Handle topology-specific offset processing
         if self.topology == "rectangular":
@@ -747,11 +616,15 @@ class SOM(BaseSOM):
                 raise ValueError(f"Unsupported distance metric: {distance_metric}")
             distance_fn = DISTANCE_FUNCTIONS[distance_metric]
 
-        # Get all neighbor offsets based on topology
-        all_offsets = get_all_neighbors_up_to_order(
-            topology=self.topology,
-            max_order=neighborhood_order,
-        )
+        # Use precomputed offsets when neighborhood_order matches instance order
+        if neighborhood_order == self.neighborhood_order:
+            all_offsets = self._neighbor_offsets
+        # Compute offsets dynamically for different neighborhood orders
+        else:
+            all_offsets = get_all_neighbors_up_to_order(
+                topology=self.topology,
+                max_order=neighborhood_order,
+            )
         # Calculate maximum possible neighbors for tensor initialization
         if self.topology == "hexagonal":
             # For hexagonal, we need to handle even/odd rows separately
@@ -1085,10 +958,15 @@ class SOM(BaseSOM):
         """
         bmus_map = self.build_bmus_data_map(data, return_indices=True)
         classification_map = torch.full((self.x, self.y), float("nan"))
-        neighborhood_offsets = get_all_neighbors_up_to_order(
-            topology=self.topology,
-            max_order=neighborhood_order,
-        )
+        # Use precomputed offsets when neighborhood_order matches instance order
+        if neighborhood_order == self.neighborhood_order:
+            neighborhood_offsets = self._neighbor_offsets
+        # Compute offsets dynamically for different neighborhood orders
+        else:
+            neighborhood_offsets = get_all_neighbors_up_to_order(
+                topology=self.topology,
+                max_order=neighborhood_order,
+            )
 
         # Iterate through each activated neuron
         for bmu_pos, sample_indices in bmus_map.items():
@@ -1242,7 +1120,10 @@ class SOM(BaseSOM):
 
         return cluster_result
 
-    def _extract_clustering_features(self, feature_space: str) -> torch.Tensor:
+    def _extract_clustering_features(
+        self,
+        feature_space: str,
+    ) -> torch.Tensor:
         """Extract features for clustering based on feature space specification.
 
         Args:
