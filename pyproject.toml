@@ -102,6 +102,7 @@ dev = [
     "typing_extensions",
     "build",
     "twine",
+    "commitizen",
 ]
 
 tests = [
@@ -398,3 +399,15 @@ ignore-module = true
 fail-under = 80
 path = ["torchsom"]
 # exclude = ["tests", "docs"]
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "1.0.1"
+tag_format = "v$version"
+bump_map = { "feat" = "minor", "fix" = "patch", "chore" = "patch", "refactor" = "patch", "docs" = "patch" }
+update_changelog_on_bump = true
+changelog_file = "CHANGELOG.md"
+changelog_incremental = true
+changelog_template = ".changelog_template.md"
+github_url = "https://github.com/michelin/TorchSOM"
+version_scheme = "semver"
+changelog_start_rev = "v1.0.0"

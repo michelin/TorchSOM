@@ -64,6 +64,9 @@ install-precommit:  ## Install pre-commit dependencies
 	pip install pre-commit
 	pre-commit install
 
+install-cz:  ## Install Commitizen
+	pip install commitizen
+
 install-all:  ## Install all dependencies
 	@echo "📦 Installing all dependencies..."
 	$(MAKE) install-dev
@@ -247,6 +250,25 @@ dependencies:  ## Check for dependency conflicts: : super long with pip-compile
 	pip check
 	@echo "✅ Dependency checks completed!"
 # pip-compile pyproject.toml --dry-run --verbose
+
+# --------------------------
+# Changelog / Release Notes
+# --------------------------
+
+changelog:  ## Generate or update CHANGELOG.md based on commits
+	cz changelog
+
+bump:  ## Bump version and update changelog: should be used on the release branch (main)
+	cz bump --changelog
+# To preview the changes:
+# cz bump --dry-run
+
+# release-changelog: changelog  ## Generate changelog and commit it automatically
+# 	git config user.name "github-actions[bot]"
+# 	git config user.email "github-actions[bot]@users.noreply.github.com"
+# 	git add CHANGELOG.md
+# 	git commit -m "chore: update changelog for $(shell git describe --tags --abbrev=0)" || echo "No changes to commit"
+
 
 # --------------------------
 # CI / Full Pipeline
