@@ -94,7 +94,6 @@ include = ["torchsom*"]                # Include packages matching this pattern 
 [project.optional-dependencies]
 dev = [
     "pandas",
-    # "scikit-learn",
     "openpyxl",
     "black",
     "isort",
@@ -103,6 +102,8 @@ dev = [
     "build",
     "twine",
     "commitizen",
+    "notebook",
+    "pyyaml",
 ]
 
 tests = [
@@ -114,7 +115,6 @@ tests = [
 ]
 
 docs = [
-    "notebook",
     "sphinx",
     "sphinx-rtd-theme",
     "sphinx-autodoc-typehints",

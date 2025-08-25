@@ -33,7 +33,7 @@
     <img src="assets/logo.jpg" alt="TorchSOM_logo" width="400"/>
 </p>
 
-**The most comprehensive, scalable, and PyTorch-native implementation of Self-Organizing Maps**
+**A modern, comprehensive and GPU-accelerated PyTorch implementation of Self-Organizing Maps for scalable ML workflows**
 
 [📚 Documentation](https://opensource.michelin.io/TorchSOM/)
 | [🚀 Quick Start](#-quick-start)
@@ -47,31 +47,50 @@
 
 ---
 
-## 🎯 Why `torchsom`?
+## 🎯 Overview
 
-**`torchsom`** is the reference PyTorch library for Self-Organizing Maps (SOMs), purpose-built for seamless integration with modern deep learning and scientific workflows.
-Unlike legacy SOM packages, `torchsom` is engineered from the ground up to fully leverage PyTorch’s ecosystem—offering native GPU acceleration, scalable performance, and compatibility with neural network pipelines.
-Whether you are a researcher or practitioner, `torchsom` empowers you to efficiently incorporate SOMs into your machine learning projects, from exploratory data analysis to advanced model architectures.
+Self-Organizing Maps (SOMs) remain **highly relevant in modern machine learning** (ML) due to their **interpretability**, **topology preservation**, and **computational efficiency**. They excel and are widely used in domains such as energy systems, biology, internet of things (IoT), environmental science, and industrial applications.
 
-`torchsom` is the official implementation accompanying the paper: [`torchsom`: The Reference PyTorch Library for Self-Organizing Maps](assets/torchsom_jmlr.pdf).
-If you use `torchsom` in academic or industrial work, please cite the paper and the software (see [`CITATION`](CITATION.cff)).
+Despite their utility, the SOM ecosystem is fragmented. Existing implementations are often **outdated**, **unmaintained**, and **lack GPU acceleration or modern deep learning** (DL) **framework integration**, limiting adoption and scalability.
 
-> **Note**: Check the table below for a comprehensive comparison of how `torchsom` differs from existing SOM libraries, and explore our [Visualization Gallery](#-visualization-gallery) for examples of the rich visual outputs available.
+**`torchsom`** addresses these gaps as a **reference PyTorch library** for SOMs. It provides:
 
-### ⚡ Key Advantages
+- **GPU-accelerated training**
+- **Advanced clustering capabilities**
+- A **scikit-learn-style API** for ease of use
+- **Rich visualization tools**
+- **Robust software engineering practices**
 
-| Aspect | [torchsom](https://github.com/michelin/TorchSOM) | [MiniSom](https://github.com/JustGlowing/minisom) | [SimpSOM](https://github.com/fcomitani/simpsom) | [SOMPY](https://github.com/sevamoo/SOMPY) | [somoclu](https://github.com/peterwittek/somoclu) | [som-pbc](https://github.com/alexarnimueller/som) |
+`torchsom` enables researchers and practitioners to integrate SOMs seamlessly into workflows, from exploratory data analysis to advanced model architectures.
+
+This library accompanies the paper: [`torchsom`: The Reference PyTorch Library for Self-Organizing Maps](assets/torchsom_jmlr.pdf). If you use `torchsom` in academic or industrial work, please cite both the paper and the software (see [`CITATION`](CITATION.cff)).
+
+> **Note**: See the comparison table below to understand how `torchsom` differs from other SOM libraries, and explore our [Visualization Gallery](#-visualization-gallery) for example outputs.
+
+## ⚡ Why `torchsom`?
+
+Unlike legacy implementations, `torchsom` is engineered from the ground up for modern ML workflows:
+
+|  | [torchsom](https://github.com/michelin/TorchSOM) | [MiniSom](https://github.com/JustGlowing/minisom) | [SimpSOM](https://github.com/fcomitani/simpsom) | [SOMPY](https://github.com/sevamoo/SOMPY) | [somoclu](https://github.com/peterwittek/somoclu) | [som-pbc](https://github.com/alexarnimueller/som) |
 |---|---|---|---|---|---|---|
+| **Architecture Section** |  |  |  |  |  |  |
 | Framework | PyTorch | NumPy | NumPy | NumPy | C++/CUDA | NumPy |
-| GPU Acceleration |  CUDA | ❌ | CuPy/CUML | ❌ | CUDA | ❌ |
+| GPU Acceleration |  ✅ CUDA | ❌ | ✅ CuPy/CUML | ❌ | ✅ CUDA | ❌ |
 | API Design | scikit-learn | Custom | Custom | MATLAB | Custom | custom |
-| Maintenance | Active | Active | Minimal | Minimal | Minimal | ❌ |
-| Documentation | Rich | ❌ | Basic | ❌ | Basic | Basic |
-| Test Coverage | ~86% | ❌ | ~53% | ❌ | Minimal | ❌ |
+| **Development Quality Section** |  |  |  |  |  |  |
+| Maintenance | ✅ Active | ✅ Active | ⚠️ Minimal | ⚠️ Minimal | ⚠️ Minimal | ❌ |
+| Documentation | ✅ Rich | ❌ | ⚠️ Basic | ❌ | ⚠️ Basic | ⚠️ Basic |
+| Test Coverage | ✅ ~86% | ❌ | 🟠 ~53% | ❌ | ⚠️ Minimal | ❌ |
 | PyPI Distribution | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ |
-| SOM Variants | Multiple | ❌ | PBC | ❌ | PBC | PBC (only) |
-| Visualization | Advanced | ❌ | Moderate | Moderate | Basic | Basic |
-| Extensibility | High | Moderate | Low | Low | Low | Low |
+| **Functionality Section** |  |  |  |  |  |  |
+| Visualization | ✅ Advanced | ❌ | 🟠 Moderate | 🟠 Moderate | ⚠️ Basic | ⚠️ Basic |
+| Clustering | ✅ Advanced | ❌ | ❌ | ❌ | ❌ | ❌ |
+| JITL support | ✅ Built-in | ❌ | ❌ | ❌ | ❌ | ❌ |
+| SOM Variants | 🚧 In development | ❌ | 🟠 PBC | ❌ | 🟠 PBC | ⚠️ PBC (only) |
+| Extensibility | ✅ High | 🟠 Moderate | ⚠️ Low | ⚠️ Low | ⚠️ Low | ⚠️ Low |
+
+> **Note**: `torchsom` supports **Just-In-Time Learning (JITL)**.
+> Given an online query, JITL collects relevant datapoints to form a local buffer (selected first by topology, then by distance). A lightweight local model is then trained on this buffer, enabling efficient supervised learning (regression or classification).
 
 ---
 
@@ -85,7 +104,7 @@ If you use `torchsom` in academic or industrial work, please cite the paper and 
 - [Contributing](#-contributing)
 - [Acknowledgments](#-acknowledgments)
 - [License](#-license)
-- [References](#-references)
+- [Related Work and References](#-related-work-and-references)
 <!-- - [Reproducibility](#-reproducibility) -->
 <!-- - [Performance Benchmarks](#-performance-benchmarks) -->
 
@@ -217,7 +236,7 @@ Comprehensive documentation is available at [opensource.michelin.io/TorchSOM](ht
 
 ## 📝 Citation
 
-If you use `torchsom` in your research, please cite both the paper and software:
+If you use `torchsom` in your academic, research or industrial work, please cite both the paper and software:
 
 ```bibtex
 @inproceedings{Berthier2025TorchSOM,
@@ -265,13 +284,13 @@ We welcome contributions from the community! See our [Contributing Guide](CONTRI
 
 ---
 
-## 📚 References
+## 📚 Related Work and References
 
-### 📖 Core Papers
+### 📖 Foundational Literature Papers
 
 - Kohonen, T. (2001). [Self-Organizing Maps](https://link.springer.com/book/10.1007/978-3-642-56927-2). Springer.
 
-### 🔗 Related Projects
+### 🔗 Related Softwares
 
 - [MiniSom](https://github.com/JustGlowing/minisom): Minimalistic Python SOM
 - [SimpSOM](https://github.com/fcomitani/simpsom):Simple Self-Organizing Maps
@@ -281,71 +300,3 @@ We welcome contributions from the community! See our [Contributing Guide](CONTRI
 - [SOM Toolbox](http://www.cis.hut.fi/projects/somtoolbox/): MATLAB implementation
 
 ---
-
-<!-- ### 🎨 Core Capabilities
-
-- **🏗️ Multiple SOM Variants**: Batch SOM, Growing SOM, Hierarchical SOM, and other variants
-- **⚡ GPU Acceleration**: Full CUDA support with automatic device management
-- **🔄 PyTorch Native**: Seamless integration with existing PyTorch workflows
-- **📊 Rich Visualizations**: 10+ visualization types including U-Matrix, Component Planes, Hit Maps
-- **🎯 Flexible Training**: Online and batch learning modes with customizable schedules
-
-### 🧪 Advanced Features
-
-- **🌐 Deep Learning Integration**: Use SOMs as layers, with autograd support
-- **📈 Scalable Architecture**: Handle millions of samples efficiently
-- **🔧 Customizable Components**: Plug-in architecture for neighborhoods, learning rates, distances
-- **📱 Multi-GPU Support**: Distributed training for large-scale applications
-- **🎮 Interactive Visualizations**: Real-time training monitoring and exploration
-
-### 🛠️ Technical Specifications
-
-- **✅ Type Safety**: Full type hints and runtime validation with Pydantic
-- **📝 Comprehensive Docs**: Detailed API documentation with examples
-- **🧪 Thoroughly Tested**: 95%+ test coverage with CI/CD
-- **🔍 Reproducible**: Deterministic training with seed management -->
-
-<!-- ---
-
-## ⚡ Performance Benchmarks
-
-### Training & Memory Performance
-
-| Case | Samples | Features | Map Size | TorchSOM<br>CPU Time (s) | TorchSOM<br>CPU RAM (GB) | TorchSOM<br>GPU Time (s) | TorchSOM<br>GPU RAM (GB) | MiniSom<br>CPU Time (s) | MiniSom<br>CPU RAM (GB) |
-|------|---------|----------|----------|--------------------------|--------------------------|--------------------------|--------------------------|-------------------------|-------------------------|
-| 1    | 1,000   | 30       | 15×15    | 0.7 ± 0.1                | 0.6 ± 0.1                | 0.09 ± 0.01              | 0.09 ± 0.01              | 2.1 ± 0.2               | 0.7 ± 0.1               |
-| 2    | 2,500   | 40       | 20×20    | 1.5 ± 0.2                | 0.8 ± 0.1                | 0.15 ± 0.01              | 0.12 ± 0.01              | 4.8 ± 0.3               | 1.0 ± 0.1               |
-| 3    | 5,000   | 50       | 25×25    | 3.2 ± 0.3                | 1.2 ± 0.1                | 0.28 ± 0.02              | 0.18 ± 0.01              | 10.2 ± 0.5              | 1.6 ± 0.2               |
-| 4    | 10,000  | 60       | 30×30    | 6.8 ± 0.5                | 1.8 ± 0.2                | 0.55 ± 0.03              | 0.25 ± 0.02              | 22.5 ± 1.0              | 2.5 ± 0.2               |
-| 5    | 20,000  | 80       | 40×40    | 14.7 ± 0.8               | 2.9 ± 0.2                | 1.1 ± 0.05               | 0.42 ± 0.03              | 48.9 ± 2.0              | 4.2 ± 0.3               |
-| 6    | 35,000  | 100      | 50×50    | 28.3 ± 1.2               | 4.5 ± 0.3                | 2.0 ± 0.08               | 0.65 ± 0.04              | 98.7 ± 3.5              | 7.0 ± 0.5               |
-| 7    | 50,000  | 120      | 60×60    | 44.2 ± 1.8               | 6.2 ± 0.4                | 3.1 ± 0.10               | 0.92 ± 0.05              | 152.3 ± 5.0             | 9.8 ± 0.7               |
-| 8    | 65,000  | 150      | 75×75    | 62.8 ± 2.5               | 8.7 ± 0.6                | 4.5 ± 0.15               | 1.3 ± 0.07               | 210.5 ± 7.0             | 13.5 ± 1.0              |
-| 9    | 80,000  | 200      | 100×100  | 85.6 ± 3.0               | 12.1 ± 0.8               | 6.2 ± 0.20               | 1.8 ± 0.09               | 295.0 ± 10.0            | 18.7 ± 1.2              |
-| 10   | 100,000 | 300      | 125×125  | 120.3 ± 4.0              | 18.5 ± 1.2               | 8.9 ± 0.25               | 2.7 ± 0.12               | 410.2 ± 15.0            | 27.5 ± 2.0              |
-
-*RAM values are in GB. Times are in seconds. "OOM" = (out of memory).
-Benchmarks performed on NVIDIA RTX 3090 (GPU), AMD Ryzen 9 5900X (CPU).*
-
-### Training & Memory Speedup
-
-| Case | TorchSOM CPU Speedup | TorchSOM GPU Speedup | TorchSOM CPU RAM Saving | TorchSOM GPU RAM Saving |
-|------|------------------------|-------------------------|----------------------------|----------------------------|
-| 1    | 3.0×                   | 23.3×                   | 1.2×                       | 7.8×                       |
-| 2    | 3.2×                   | 32.0×                   | 1.3×                       | 8.3×                       |
-| 3    | 3.2×                   | 36.4×                   | 1.3×                       | 8.9×                       |
-| 4    | 3.3×                   | 40.9×                   | 1.4×                       | 10.0×                      |
-| 5    | 3.3×                   | 44.5×                   | 1.4×                       | 10.0×                      |
-| 6    | 3.5×                   | 49.4×                   | 1.6×                       | 10.8×                      |
-| 7    | 3.4×                   | 49.2×                   | 1.6×                       | 10.7×                      |
-| 8    | 3.4×                   | 46.8×                   | 1.6×                       | 10.4×                      |
-| 9    | 3.4×                   | 47.6×                   | 1.5×                       | 10.4×                      |
-| 10   | 3.4×                   | 46.1×                   | 1.5×                       | 10.2×                      |
-
-*Speedup = (MiniSom CPU Time / TorchSOM Time) for each mode.*
-
-**Summary:**
-
-- TorchSOM (GPU) achieves up to ~Z× speedup and ~Z× lower memory usage compared to MiniSom (CPU) on large datasets.
-- TorchSOM (CPU) is consistently Y–Z× faster and more memory efficient than MiniSom (CPU).
-- All benchmarks use identical data and map initialization for fair comparison. -->
