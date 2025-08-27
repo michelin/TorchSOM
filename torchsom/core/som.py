@@ -1,9 +1,9 @@
 """PyTorch implementation of classic Self Organizing Maps using batch learning."""
 
-import heapq
-import random
+# import random
 import warnings
-from collections import Counter, defaultdict
+
+# from collections import Counter, defaultdict
 from typing import Any, Callable, Optional
 
 import torch
@@ -12,11 +12,12 @@ from torch.utils.data import DataLoader, TensorDataset
 from tqdm import tqdm
 
 from torchsom.core.base_som import BaseSOM
-from torchsom.utils.clustering import cluster_data
+from torchsom.utils.clustering import cluster_data, extract_clustering_features
 from torchsom.utils.decay import DECAY_FUNCTIONS
 from torchsom.utils.distances import DISTANCE_FUNCTIONS
 from torchsom.utils.grid import adjust_meshgrid_topology, create_mesh_grid
 from torchsom.utils.initialization import initialize_weights
+from torchsom.utils.maps import MAP_FUNCTIONS
 from torchsom.utils.metrics import (
     calculate_clustering_metrics,
     calculate_quantization_error,
@@ -127,14 +128,17 @@ class SOM(BaseSOM):
         normalized_weights = weights / torch.norm(weights, dim=-1, keepdim=True)
         self.weights = nn.Parameter(normalized_weights, requires_grad=False)
 
-        # Pre-compute coordinate matrices for efficient distance calculations
+        """
+        Pre-compute:
+            1. Coordinate distance matrices for efficient distance calculations
+            2. Neighbor offsets for topology operations
+            3. Decay schedules for all epochs at once
+        """
         self._precompute_coordinate_distances()
-        # Pre-compute decay schedules for all epochs at once
+        self._precompute_neighbor_offsets()
         self.lr_schedule, self.sigma_schedule = self._precompute_decay_schedules(
             epochs=self.epochs
         )
-        # Pre-compute neighbor offsets for topology operations
-        self._precompute_neighbor_offsets()
 
     def _precompute_coordinate_distances(self) -> None:
         """Pre-compute coordinate distance matrices for all neuron pairs, used during neighborhood calculations."""
@@ -418,652 +422,232 @@ class SOM(BaseSOM):
         query_sample: torch.Tensor,
         historical_samples: torch.Tensor,
         historical_outputs: torch.Tensor,
-        bmus_idx_map: Optional[dict[tuple[int, int], list[int]]],
+        bmus_idx_map: dict[tuple[int, int], list[int]],
         min_buffer_threshold: int = 50,
     ) -> tuple[torch.Tensor, torch.Tensor]:
-        """Collect historical samples similar to the query sample using SOM projection.
-
-        Args:
-            query_sample (torch.Tensor): The query data point [num_features]
-            historical_samples (torch.Tensor): Historical input data [num_samples, num_features]
-            historical_outputs (torch.Tensor): Historical output values [num_samples]
-            min_buffer_threshold (int, optional): Minimum number of samples to collect. Defaults to 50.
-
-        Returns:
-            Tuple[torch.Tensor, torch.Tensor]: (historical_data_buffer, historical_output_buffer)
-        """
-        # Ensure device compatibility
+        """Collect historical samples similar to the query sample using SOM projection."""
+        # Identify BMU for the query sample
         query_sample = query_sample.to(self.device)
-
-        # Find BMU for the query sample
         bmu_pos = self.identify_bmus(query_sample)
-        bmu_tuple = (int(bmu_pos[0].item()), int(bmu_pos[1].item()))
-
-        # Collect samples indices from the query's BMU if any exist
-        # ! DUE TO CHANGES IN TORCHSOM, bmus_idx_map is on cpu now even with gpus
-        sample_indices = []
-        if bmu_tuple in bmus_idx_map and len(bmus_idx_map[bmu_tuple]) > 0:
-            sample_indices.extend(bmus_idx_map[bmu_tuple])
-
-        # Keep track of the neurons used to build the historical buffers
-        visited_neurons = {bmu_tuple}
-
-        # Use precomputed neighbor offsets
-        all_offsets = self._neighbor_offsets
-
-        # Handle topology-specific offset processing
+        bmu_row, bmu_col = int(bmu_pos[0].item()), int(bmu_pos[1].item())
+        bmu_tuple = (bmu_row, bmu_col)
         if self.topology == "rectangular":
-            for dx, dy in all_offsets:
-                neighbor_pos = (
-                    int(bmu_pos[0].item() + dx),
-                    int(bmu_pos[1].item() + dy),
-                )
-                if neighbor_pos in visited_neurons:
-                    continue
-
-                visited_neurons.add(neighbor_pos)
-                # Check if the neighbor is 1) within SOM bounds, and 2) activated
-                if (
-                    0 <= neighbor_pos[0] < self.x
-                    and 0 <= neighbor_pos[1] < self.y
-                    and neighbor_pos in bmus_idx_map
-                ):
-                    sample_indices.extend(bmus_idx_map[neighbor_pos])
-
-        elif self.topology == "hexagonal":
-            bmu_row = int(bmu_pos[0].item())
+            offsets = self._neighbor_offsets
+        else:
             row_type = "even" if bmu_row % 2 == 0 else "odd"
-            for dx, dy in all_offsets[row_type]:
-                neighbor_pos = (
-                    int(bmu_pos[0].item() + dx),
-                    int(bmu_pos[1].item() + dy),
-                )
-                if neighbor_pos in visited_neurons:
-                    continue
+            offsets = self._neighbor_offsets[row_type]
 
-                visited_neurons.add(neighbor_pos)
-                # Check if the neighbor is 1) within SOM bounds, and 2) activated
-                if (
-                    0 <= neighbor_pos[0] < self.x
-                    and 0 <= neighbor_pos[1] < self.y
-                    and neighbor_pos in bmus_idx_map
-                ):
-                    sample_indices.extend(bmus_idx_map[neighbor_pos])
+        # Identify available neighbor positions
+        neighbor_positions = torch.tensor(
+            [(bmu_row + dx, bmu_col + dy) for dx, dy in offsets],
+            device="cpu",  # bmus_idx_map keys are on CPU due to dict implementation storing lists
+            dtype=torch.long,
+        )
+        valid_mask = (
+            (neighbor_positions[:, 0] >= 0)
+            & (neighbor_positions[:, 0] < self.x)
+            & (neighbor_positions[:, 1] >= 0)
+            & (neighbor_positions[:, 1] < self.y)
+        )
+        neighbor_positions = neighbor_positions[valid_mask]
 
-        """
-        Secondly, ensure we have enough training samples.
-        This time, explore neighbors that are close in terms of distance in the weights space.
-        """
-        if len(sample_indices) <= min_buffer_threshold:
-            # Calculate distances from BMU weights to all neurons
-            neurons_distance_map = self._calculate_distances_to_neurons(
-                data=self.weights.data[bmu_pos[0], bmu_pos[1]]
+        # Perform topological collection
+        collected_sample_indices = list(bmus_idx_map.get(bmu_tuple, []))
+        visited_neurons = {bmu_tuple}
+        for nr, nc in neighbor_positions.tolist():
+            pos = (nr, nc)
+            if pos not in visited_neurons and pos in bmus_idx_map:
+                collected_sample_indices.extend(bmus_idx_map[pos])
+                visited_neurons.add(pos)
+
+        # Expand collection using weight-space distances if insufficient
+        if len(collected_sample_indices) <= min_buffer_threshold:
+            # Compute distances [x, y] from BMU weights [num_features] to all neurons [x, y, num_features]
+            bmu_weights = self.weights[bmu_row, bmu_col]
+            distances = self._calculate_distances_to_neurons(bmu_weights)
+
+            # Mask for (i) visited neurons, (ii) neurons with samples to collect
+            visited_mask = torch.zeros_like(
+                distances, dtype=torch.bool, device=self.device
             )
+            for r, c in visited_neurons:
+                visited_mask[r, c] = True
+            distances[visited_mask] = float("inf")
+            has_samples_mask = torch.zeros_like(
+                distances, dtype=torch.bool, device=self.device
+            )
+            for r, c in bmus_idx_map:
+                has_samples_mask[r, c] = True
+            valid_mask = ~visited_mask & has_samples_mask
 
-            # Build min heap of (distance, position) for unvisited neurons with samples
-            distance_min_heap = []
-            for row in range(self.x):
-                for col in range(self.y):
-                    neuron_pos = (row, col)
-                    if neuron_pos in visited_neurons:
-                        continue
-                    if neuron_pos in bmus_idx_map and len(bmus_idx_map[neuron_pos]) > 0:
-                        distance = neurons_distance_map[row, col].item()
-                        heapq.heappush(distance_min_heap, (distance, neuron_pos))
+            # Flatten distances [x*y] and positions [n_valid, 2] and sort by distance
+            flat_distances = distances[valid_mask]
+            flat_positions = torch.nonzero(valid_mask, as_tuple=False)
+            sorted_idx = torch.argsort(flat_distances)
 
-            # Add samples until threshold is reached
-            while distance_min_heap and len(sample_indices) <= min_buffer_threshold:
-                _, closest_neuron = heapq.heappop(distance_min_heap)
-                visited_neurons.add(closest_neuron)
-                if closest_neuron in bmus_idx_map:
-                    sample_indices.extend(bmus_idx_map[closest_neuron])
+            # Collect samples until threshold is reached
+            for idx in sorted_idx.tolist():
+                r, c = flat_positions[idx]
+                collected_sample_indices.extend(bmus_idx_map[r, c])
+                visited_neurons.add((r.item(), c.item()))
+                if len(collected_sample_indices) > min_buffer_threshold:
+                    break
 
-        historical_data_buffer = historical_samples[sample_indices]
-        historical_output_buffer = historical_outputs[sample_indices].view(-1, 1)
+        # Build buffers
+        collected_sample_indices = torch.tensor(
+            collected_sample_indices, device=historical_samples.device, dtype=torch.long
+        )
+        historical_data_buffer = historical_samples[collected_sample_indices]
+        historical_output_buffer = historical_outputs[collected_sample_indices].view(
+            -1, 1
+        )
         return historical_data_buffer, historical_output_buffer
 
-    def build_hit_map(
+    def build_map(
         self,
-        data: torch.Tensor,
-        batch_size: int = 1024,
+        map_type: str,
+        data: Optional[torch.Tensor] = None,
+        target: Optional[torch.Tensor] = None,
+        bmus_data_map: Optional[dict[tuple[int, int], list[int]]] = None,
+        **kwargs: Any,
     ) -> torch.Tensor:
-        """Returns a matrix where element i,j is the number of times that neuron i,j has been the winner.
-
-        It processes the data in batches to save memory.
-        The hit map is built on CPU, but the calculations are done on GPU if available.
+        """Unified method to build various types of maps.
 
         Args:
-            data (torch.Tensor): input data tensor [batch_size, num_features]
-            batch_size (int, optional): Size of batches to process. Defaults to 1024.
+            map_type (str): Type of map to build. Options:
+                - "hit": Hit map showing neuron activation frequencies
+                - "distance": Distance map showing neuron-to-neighbor distances
+                - "bmus_data": Mapping of BMUs to their corresponding data points
+                - "metric": Metric map based on target values (requires target)
+                - "score": Score map combining standard error with distribution penalty (requires target)
+                - "rank": Rank map based on neuron standard deviations (requires target)
+                - "classification": Classification map with most frequent labels (requires target)
+            data (Optional[torch.Tensor]): Input data tensor [batch_size, num_features].
+                Required if bmus_data_map is not provided.
+            target (Optional[torch.Tensor]): Target values/labels (required for some map types)
+            bmus_data_map (Optional[dict]): Pre-computed BMU to data indices mapping.
+                If provided, avoids recomputing BMUs for dependent maps.
+            **kwargs: Additional arguments specific to each map type:
+                - batch_size (int): Batch processing size (default: 1024)
+                - distance_metric (str): Distance function for distance maps
+                - neighborhood_order (int): Neighborhood order for distance/classification maps
+                - scaling (str): 'sum' or 'mean' for distance maps
+                - reduction_parameter (str): 'mean' or 'std' for metric maps
+                - return_indices (bool): Return indices instead of data for bmus_data maps
 
         Returns:
-            torch.Tensor: Matrix indicating the number of times each neuron has been identified as bmu.
-        """
-        # Ensure batch compatibility
-        if data.dim() == 1:
-            data = data.unsqueeze(0)
-
-        # Initialize hit map on CPU
-        hit_map = torch.zeros((self.x, self.y))
-
-        # Process data in batches to save GPU memory
-        num_samples = data.shape[0]
-        num_batches = (num_samples + batch_size - 1) // batch_size
-        for batch_idx in range(num_batches):
-            # Retrieve corresponding batches and move them to device
-            start_idx = batch_idx * batch_size
-            end_idx = min((batch_idx + 1) * batch_size, num_samples)
-            current_batch_size = end_idx - start_idx
-            batch_data = data[start_idx:end_idx].to(self.device)
-
-            # Get BMUs for this batch
-            batch_bmus = self.identify_bmus(batch_data)
-
-            # Handle special case when batch has only one sample
-            if current_batch_size == 1:
-                # If only one sample, ensure batch_bmus is properly shaped
-                if batch_bmus.dim() == 1:
-                    batch_bmus = batch_bmus.unsqueeze(0)
-                row, col = batch_bmus[0]
-                hit_map[row.item(), col.item()] += 1
-            # Otherwise, process multiple samples normally
-            else:
-                # Update and store hit map on CPU
-                for row, col in batch_bmus:
-                    hit_map[row.item(), col.item()] += 1
-
-        return hit_map
-
-    def build_distance_map(
-        self,
-        distance_metric: Optional[str] = None,
-        neighborhood_order: Optional[int] = None,
-        scaling: str = "sum",
-    ) -> torch.Tensor:
-        """Computes the distance map of each neuron with its neighbors.
-
-        The distance map represents the normalized sum or mean of distances
-        between a neuron's weight vector and its neighboring neurons.
-
-        Args:
-            scaling (str, optional): Defaults to "sum".
-                If 'mean', each cell is normalized by the average neighbor distance.
-                If 'sum', normalization is done by the sum of distances.
-            distance_metric (str, optional): Name of the method to calculate the distance. Defaults to None.
-            neighborhood_order (int, optional): Indicate the neighbors to consider for the distance calculation. Defaults to None.
+            torch.Tensor or Dict: Map result (type depends on map_type)
 
         Raises:
-            ValueError: If an invalid scaling option is provided.
-            ValueError: If an invalid distance metric is provided.
-
-        Returns:
-            torch.Tensor: Normalized distance map [row_neurons, col_neurons]
+            ValueError: If invalid map_type is specified
+            ValueError: If target is required but not provided
+            ValueError: If neither data nor bmus_data_map is provided
         """
-        if scaling not in ["sum", "mean"]:
+        bmus_dependent_maps = {"metric", "score", "rank", "classification"}
+        data_dependent_maps = {"hit", "distance", "bmus_data"}
+        target_required_maps = {"metric", "score", "rank", "classification"}
+        if map_type not in MAP_FUNCTIONS:
+            available_types = ", ".join(MAP_FUNCTIONS.keys())
             raise ValueError(
-                f'scaling should be either "sum" or "mean" ({scaling} is not valid)'
+                f"Invalid map_type '{map_type}'. Available types: {available_types}"
             )
-
-        # Use instance neighborhood_order if not specified
-        if neighborhood_order is None:
-            neighborhood_order = self.neighborhood_order
-
-        # Indicate the distance function to use
-        if distance_metric is None:
-            distance_fn = self.distance_fn
-        else:
-            if distance_metric not in DISTANCE_FUNCTIONS:
-                raise ValueError(f"Unsupported distance metric: {distance_metric}")
-            distance_fn = DISTANCE_FUNCTIONS[distance_metric]
-
-        # Use precomputed offsets when neighborhood_order matches instance order
-        if neighborhood_order == self.neighborhood_order:
-            all_offsets = self._neighbor_offsets
-        # Compute offsets dynamically for different neighborhood orders
-        else:
-            all_offsets = get_all_neighbors_up_to_order(
-                topology=self.topology,
-                max_order=neighborhood_order,
-            )
-        # Calculate maximum possible neighbors for tensor initialization
-        if self.topology == "hexagonal":
-            # For hexagonal, we need to handle even/odd rows separately
-            max_neighbors = max(len(all_offsets["even"]), len(all_offsets["odd"]))
-        else:
-            # For rectangular topology
-            max_neighbors = len(all_offsets)
-
-        # Initialize distance map
-        distance_matrix = torch.full(
-            (self.weights.shape[0], self.weights.shape[1], max_neighbors),
-            float("nan"),
-            device=self.device,
-        )
-
-        # Compute distances for each neuron
-        for row in range(self.weights.shape[0]):
-            for col in range(self.weights.shape[1]):
-                current_neuron = self.weights[row, col]
-                neighbor_idx = 0
-
-                # Handle topology-specific neighbor processing
-                if self.topology == "hexagonal":
-                    # Use appropriate offsets based on row parity (even/odd)
-                    row_offsets = (
-                        all_offsets["even"] if row % 2 == 0 else all_offsets["odd"]
-                    )
-
-                    for row_offset, col_offset in row_offsets:
-                        neighbor_row = row + row_offset
-                        neighbor_col = col + col_offset
-
-                        # Ensure neighbor is within bounds to compute the distance
-                        if (
-                            0 <= neighbor_row < self.weights.shape[0]
-                            and 0 <= neighbor_col < self.weights.shape[1]
-                        ):
-                            neighbor_neuron = self.weights[neighbor_row, neighbor_col]
-
-                            """
-                            Reshape weights to ensure batch compatibility with distance function => shape [a,b] becomes [1,a,b] after unsqueeze(0)
-                            Each neuron has a shape of [num_features] so they become [1,num_features] and then [1,1,num_features]
-                            Finally, distance function need to be squeezed because it returns [batch_size, 1] but there is only one sample, so let's just retrieve the scalar
-                            """
-                            solo_batch_current_neuron = current_neuron.unsqueeze(
-                                0
-                            ).unsqueeze(0)
-                            solo_batch_neighbor_neuron = neighbor_neuron.unsqueeze(
-                                0
-                            ).unsqueeze(0)
-
-                            # Calculate and store the distance
-                            distance_matrix[row, col, neighbor_idx] = distance_fn(
-                                solo_batch_current_neuron,
-                                solo_batch_neighbor_neuron,
-                            ).squeeze()
-
-                        neighbor_idx += 1
-                else:
-                    # Rectangular topology - process all offsets directly
-                    for row_offset, col_offset in all_offsets:
-                        neighbor_row = row + row_offset
-                        neighbor_col = col + col_offset
-
-                        # Ensure neighbor is within bounds to compute the distance
-                        if (
-                            0 <= neighbor_row < self.weights.shape[0]
-                            and 0 <= neighbor_col < self.weights.shape[1]
-                        ):
-                            neighbor_neuron = self.weights[neighbor_row, neighbor_col]
-
-                            """
-                            Reshape weights to ensure batch compatibility with distance function => shape [a,b] becomes [1,a,b] after unsqueeze(0)
-                            Each neuron has a shape of [num_features] so they become [1,num_features] and then [1,1,num_features]
-                            Finally, distance function need to be squeezed because it returns [batch_size, 1] but there is only one sample, so let's just retrieve the scalar
-                            """
-                            solo_batch_current_neuron = current_neuron.unsqueeze(
-                                0
-                            ).unsqueeze(0)
-                            solo_batch_neighbor_neuron = neighbor_neuron.unsqueeze(
-                                0
-                            ).unsqueeze(0)
-
-                            # Calculate and store the distance
-                            distance_matrix[row, col, neighbor_idx] = distance_fn(
-                                solo_batch_current_neuron,
-                                solo_batch_neighbor_neuron,
-                            ).squeeze()
-
-                        neighbor_idx += 1
-
-        """
-        Aggregate distances (either sum or mean). Each neuron has approximately k distances based on the topology (and bounds).
-        Compute the aggregation on the last dimension where all the ,neighbor distances are computed.
-        Both torch methods ignore NaNs.
-        """
-        if scaling == "mean":
-            distance_matrix = torch.nanmean(distance_matrix, dim=2)
-        else:
-            distance_matrix = torch.nansum(distance_matrix, dim=2)
-
-        # Normalize the distance map
-        max_distance = torch.max(
-            distance_matrix.masked_fill(torch.isnan(distance_matrix), float("-inf"))
-        )  # Replace NaNs with -inf to be ignored by max()
-        return distance_matrix / max_distance if max_distance > 0 else distance_matrix
-
-    def build_bmus_data_map(
-        self,
-        data: torch.Tensor,
-        return_indices: bool = False,
-        batch_size: int = 1024,
-    ) -> dict[tuple[int, int], Any]:
-        """Create a mapping of winning neurons to their corresponding data points.
-
-        It processes the data in batches to save memory.
-        The hit map is built on CPU, but the calculations are done on GPU if available.
-
-        Args:
-            data (torch.Tensor): input data tensor [num_samples, num_features] or [num_features]
-            return_indices (bool, optional): If True, return indices instead of data points. Defaults to False.
-            batch_size (int, optional): Size of batches to process. Defaults to 1024.
-
-        Returns:
-            Dict[Tuple[int, int], Any]: Dictionary mapping bmus to data samples or indices
-        """
-        # Ensure batch compatibility
-        if data.dim() == 1:
-            data = data.unsqueeze(0)
-
-        # Initialize the map on CPU
-        bmus_data_map = defaultdict(list)
-
-        # Process data in batches to save GPU memory
-        num_samples = data.shape[0]
-        num_batches = (num_samples + batch_size - 1) // batch_size
-        for batch_idx in range(num_batches):
-            # Retrieve corresponding batches and move them to device
-            start_idx = batch_idx * batch_size
-            end_idx = min((batch_idx + 1) * batch_size, num_samples)
-            current_batch_size = end_idx - start_idx
-            batch_data = data[start_idx:end_idx].to(self.device)
-
-            # Get BMUs for this batch
-            batch_bmus = self.identify_bmus(batch_data)
-
-            # Handle special case when batch has only one sample
-            if current_batch_size == 1:
-                # If only one sample, ensure batch_bmus is properly shaped
-                if batch_bmus.dim() == 1:
-                    batch_bmus = batch_bmus.unsqueeze(0)
-                row, col = batch_bmus[0]
-                bmu_pos = (int(row.item()), int(col.item()))
-                if return_indices:
-                    bmus_data_map[bmu_pos].append(start_idx)
-                else:
-                    bmus_data_map[bmu_pos].append(batch_data[0].cpu())
-            # Otherwise, process multiple samples normally
-            else:
-                # Add the BMUs to the map
-                for i, (row, col) in enumerate(batch_bmus):
-                    # Convert BMU coordinates to integer tuple for dictionary key
-                    bmu_pos = (int(row.item()), int(col.item()))
-                    # Global index for this data point
-                    global_idx = start_idx + i
-                    # Add to map based on return_indices flag
-                    if return_indices:
-                        bmus_data_map[bmu_pos].append(global_idx)
-                    else:
-                        # Store the data on CPU to save GPU memory
-                        bmus_data_map[bmu_pos].append(batch_data[i].cpu())
-
-        # Convert lists to tensors if returning data points
-        if not return_indices:
-            for bmu in bmus_data_map:
-                bmus_data_map[bmu] = torch.stack(bmus_data_map[bmu])
-
-        return bmus_data_map
-
-    def build_metric_map(
-        self,
-        data: torch.Tensor,
-        target: torch.Tensor,
-        reduction_parameter: str,
-    ) -> torch.Tensor:
-        """Calculate neurons' metrics based on target values.
-
-        Args:
-            data (torch.Tensor): Input data tensor [batch_size, num_features]
-            target (torch.Tensor): Labels tensor for data points [batch_size]
-            reduction_parameter (str): Decide the calculation to apply to each neuron, 'mean' or 'std'.
-
-        Returns:
-            torch.Tensor: Metric map based on the reduction parameter.
-        """
-        epsilon = 1e-8
-        bmus_map = self.build_bmus_data_map(data, return_indices=True)
-        metric_map = torch.full((self.x, self.y), float("nan"))
-
-        # For each activated neuron, calculate the corresponding target metric
-        for bmu_pos, samples_indices in bmus_map.items():
-            if len(samples_indices) > 0:
-                if reduction_parameter == "mean":
-                    metric_map[bmu_pos] = torch.mean(target[samples_indices])
-                elif reduction_parameter == "std":
-                    if len(samples_indices) > 1:
-                        metric_map[bmu_pos] = torch.std(
-                            target[samples_indices], unbiased=True
-                        )
-                    else:
-                        metric_map[bmu_pos] = (
-                            epsilon  # Ensure visualization with a non-zero value
-                        )
-
-        return metric_map
-
-    def build_score_map(
-        self,
-        data: torch.Tensor,
-        target: torch.Tensor,
-    ) -> torch.Tensor:
-        """Calculate neurons' score based on target values.
-
-        Args:
-            data (torch.Tensor): Input data tensor [batch_size, num_features]
-            target (torch.Tensor): Labels tensor for data points [batch_size]
-
-        Returns:
-            torch.Tensor: Score map based on a chosen score function: std_neuron / sqrt(n_neuron) * log(N_data/n_neuron).
-            The score combines the standard error with a term penalizing uneven sample distribution across neurons. Lower scores indicate better neuron representativeness.
-        """
-        epsilon = 1e-8
-        bmus_map = self.build_bmus_data_map(data, return_indices=True)
-        score_map = torch.full((self.x, self.y), float("nan"))
-
-        # For each activated neurons, calculate the corresponding target metric
-        for bmu_pos, samples_indices in bmus_map.items():
-            if len(samples_indices) > 0:
-
-                # Consider neuron with multiple elements
-                if len(samples_indices) > 1:
-                    std = torch.std(target[samples_indices], unbiased=True)
-                    n_samples = torch.tensor(len(samples_indices), dtype=torch.float32)
-                    total_samples = torch.tensor(len(data), dtype=torch.float32)
-                    neuron_score = (std / torch.sqrt(n_samples)) * torch.log(
-                        total_samples / n_samples
-                    )
-
-                # Consider neuron with a unique element
-                else:
-                    # Tensor to initialize tensor from scalars and ensure visualization with a non-zero value
-                    neuron_score = torch.tensor(epsilon, dtype=torch.float32)
-
-                score_map[bmu_pos] = (
-                    round(neuron_score.item(), 2) if neuron_score > epsilon else epsilon
+        if map_type in target_required_maps and target is None:
+            raise ValueError(f"Map type '{map_type}' requires target parameter")
+        if map_type in data_dependent_maps and data is None:
+            raise ValueError(f"Map type '{map_type}' requires data parameter")
+        if map_type in bmus_dependent_maps:
+            if bmus_data_map is None and data is None:
+                raise ValueError(
+                    f"Map type '{map_type}' requires either data or bmus_data_map parameter"
                 )
-        return score_map
 
-    def build_rank_map(
-        self,
-        data: torch.Tensor,
-        target: torch.Tensor,
-    ) -> torch.Tensor:
-        """Build a map of neuron ranks based on their target value standard deviations.
+        map_function = MAP_FUNCTIONS[map_type]
+        if map_type in data_dependent_maps:
+            if map_type in target_required_maps:
+                return map_function(self, data, target, **kwargs)
+            else:
+                return map_function(self, data, **kwargs)
 
-        Args:
-            data (torch.Tensor): Input data tensor [batch_size, num_features]
-            target (torch.Tensor): Labels tensor for data points [batch_size]
-
-        Returns:
-            torch.Tensor: Rank map where each neuron's value is its rank (1 = lowest std = best)
-        """
-        bmus_map = self.build_bmus_data_map(data, return_indices=True)
-        neuron_stds = torch.full((self.x, self.y), float("nan"))
-
-        # Calculate standard deviation for each neuron
-        active_neurons = 0
-        for bmu_pos, sample_indices in bmus_map.items():
-            if len(sample_indices) > 0:
-                active_neurons += 1
-
-                # Consider neuron with multiple elements
-                if len(sample_indices) > 1:
-                    neuron_stds[bmu_pos] = torch.std(
-                        target[sample_indices], unbiased=True
-                    ).item()  # Use unbiased estimator for better small sample handling
-
-                # Consider neuron with a unique element
+        elif map_type in bmus_dependent_maps:
+            if bmus_data_map is None:
+                bmus_data_map = MAP_FUNCTIONS["bmus_data"](
+                    self, data, return_indices=True
+                )
+            if map_type == "score":
+                if data is not None:
+                    total_samples = len(data)
                 else:
-                    neuron_stds[bmu_pos] = 0.0
+                    total_samples = sum(
+                        len(indices) for indices in bmus_data_map.values()
+                    )
+                return map_function(
+                    self, bmus_data_map, target, total_samples, **kwargs
+                )
+            else:
+                return map_function(self, bmus_data_map, target, **kwargs)
 
-        # rank_map = torch.full((self.x, self.y), float("nan"), device=self.device)
-        rank_map = torch.full((self.x, self.y), float("nan"))
+        else:
+            raise ValueError(f"Unknown map type handling for: {map_type}")
 
-        # Get mask to retrieve indices of non-NaN values
-        valid_mask = ~torch.isnan(neuron_stds)
-        valid_stds = neuron_stds[valid_mask]
-
-        if len(valid_stds) > 0:
-            # Sort stds in descending order and get ranks (+ 1 to make ranks 1-based)
-            ranks = torch.argsort(valid_stds, descending=True).argsort() + 1
-
-            # Ensure there are as many ranks as activated neurons
-            assert (
-                len(ranks) == active_neurons
-            ), f"Rank count ({len(ranks)}) doesn't match active neurons ({active_neurons})"
-
-            # Place ranks back in the map
-            rank_map[valid_mask] = ranks.float()
-
-        return rank_map
-
-    def build_classification_map(
+    def build_multiple_maps(
         self,
+        map_configs: list[dict[str, Any]],
         data: torch.Tensor,
-        target: torch.Tensor,
-        neighborhood_order: int = 1,
-    ) -> torch.Tensor:
-        """Build a classification map where each neuron is assigned the most frequent label.
-
-        In case of a tie, consider labels from neighboring neurons.
-        If there are no neighboring neurons or a second tie, then randomly select one of the top label.
+        target: Optional[torch.Tensor] = None,
+        batch_size: int = 1024,
+    ) -> dict[str, torch.Tensor]:
+        """Efficiently build multiple maps by reusing BMUs computation.
 
         Args:
-            data (torch.Tensor): Input data tensor [batch_size, num_features]
-            target (torch.Tensor): Labels tensor for data points [batch_size]. They are assumed to be encoded with value > 1 for decent visualization.
-            neighborhood_order (int, optional): Neighborhood order to consider for tie-breaking. Defaults to 1.
+            map_configs (list[dict]): List of map configurations
+            data (torch.Tensor): Input data tensor
+            target (Optional[torch.Tensor]): Target values (if needed by any map)
+            batch_size (int): Batch size for BMUs computation
 
         Returns:
-            torch.Tensor: Classification map with the most frequent label for each neuron
+            dict[str, torch.Tensor]: Dictionary mapping map names to their results
+
+        Example:
+            configs = [
+                {'type': 'hit'},
+                {'type': 'metric', 'kwargs': {'reduction_parameter': 'std'}},
+                {'type': 'rank'},
+                {'type': 'classification', 'kwargs': {'neighborhood_order': 2}}
+            ]
+            results = som.build_multiple_maps(configs, data, target)
         """
-        bmus_map = self.build_bmus_data_map(data, return_indices=True)
-        classification_map = torch.full((self.x, self.y), float("nan"))
-        # Use precomputed offsets when neighborhood_order matches instance order
-        if neighborhood_order == self.neighborhood_order:
-            neighborhood_offsets = self._neighbor_offsets
-        # Compute offsets dynamically for different neighborhood orders
-        else:
-            neighborhood_offsets = get_all_neighbors_up_to_order(
-                topology=self.topology,
-                max_order=neighborhood_order,
+        data_dependent_maps = {"hit", "distance", "bmus_data"}
+        bmus_dependent_maps = {"metric", "score", "rank", "classification"}
+        need_bmus_map = any(
+            config["type"] in bmus_dependent_maps for config in map_configs
+        )
+        results = {}
+        bmus_data_map = None
+        if need_bmus_map:
+            bmus_data_map = self.build_map(
+                "bmus_data", data=data, return_indices=True, batch_size=batch_size
             )
 
-        # Iterate through each activated neuron
-        for bmu_pos, sample_indices in bmus_map.items():
-            if len(sample_indices) > 0:
+        for config in map_configs:
+            map_type = config["type"]
+            map_kwargs = config.get("kwargs", {})
+            # Essential to separate maps with the same method but different parameters: metric_std vs metric_mean
+            if map_kwargs:
+                key = f"{map_type}_{hash(str(sorted(map_kwargs.items())))}"
+            else:
+                key = map_type
+            if map_type in data_dependent_maps:
+                results[key] = self.build_map(
+                    map_type, data=data, target=target, **map_kwargs
+                )
+            elif map_type in bmus_dependent_maps:
+                results[key] = self.build_map(
+                    map_type, target=target, bmus_data_map=bmus_data_map, **map_kwargs
+                )
+            else:
+                raise ValueError(f"Unknown map type: {map_type}")
 
-                """
-                Retrieve the labels of all samples attached to current neuron
-                Find the most common one
-                Check if there is a tie with another label
-                """
-                neuron_labels = target[sample_indices].cpu().numpy()
-                label_counts = Counter(neuron_labels)
-                max_count = max(label_counts.values())
-                top_labels = [
-                    label for label, count in label_counts.items() if count == max_count
-                ]
-
-                """
-                If there is not tie, assign the most common label to the neuron.
-                In case of a tie, consider labels from neighboring neurons to break it.
-                """
-                if len(top_labels) == 1:
-                    classification_map[bmu_pos] = torch.tensor(
-                        top_labels[0], dtype=classification_map.dtype
-                    )  # Convert NumPy value to tensor scalar
-                else:
-                    neighbor_labels = []
-                    row, col = bmu_pos
-
-                    # Handle topology-specific neighborhood processing
-                    if self.topology == "hexagonal":
-                        # Use appropriate offsets based on row parity (even/odd)
-                        row_offsets = (
-                            neighborhood_offsets["even"]
-                            if row % 2 == 0
-                            else neighborhood_offsets["odd"]
-                        )
-                        for dx, dy in row_offsets:
-                            neighbor_row = row + dx
-                            neighbor_col = col + dy
-                            if (
-                                0 <= neighbor_row < self.x
-                                and 0 <= neighbor_col < self.y
-                                and (neighbor_row, neighbor_col) in bmus_map
-                            ):
-                                neighbor_samples_indices = bmus_map[
-                                    (neighbor_row, neighbor_col)
-                                ]
-                                neighbor_labels.extend(
-                                    target[neighbor_samples_indices].cpu().numpy()
-                                )
-                    else:
-                        # Rectangular topology - process all offsets directly
-                        for dx, dy in neighborhood_offsets:
-                            neighbor_row = row + dx
-                            neighbor_col = col + dy
-                            if (
-                                0 <= neighbor_row < self.x
-                                and 0 <= neighbor_col < self.y
-                                and (neighbor_row, neighbor_col) in bmus_map
-                            ):
-                                neighbor_samples_indices = bmus_map[
-                                    (neighbor_row, neighbor_col)
-                                ]
-                                neighbor_labels.extend(
-                                    target[neighbor_samples_indices].cpu().numpy()
-                                )
-
-                    # After collecting all neighbor labels, recompute label counts with neighborhood labels.
-                    if neighbor_labels:
-                        expanded_label_counts = Counter(neighbor_labels)
-                        max_neighbor_count = max(expanded_label_counts.values())
-                        top_neighbor_labels = [
-                            label
-                            for label, count in expanded_label_counts.items()
-                            if count == max_neighbor_count
-                        ]
-                        # If there is a tie with neighbor labels, choose randomly between top labels (including neighbors).
-                        if len(top_neighbor_labels) == 1:
-                            classification_map[bmu_pos] = torch.tensor(
-                                top_neighbor_labels[0], dtype=classification_map.dtype
-                            )
-                        else:
-                            # Choose randomly and convert to tensor
-                            chosen_label = random.choice(top_neighbor_labels)
-                            classification_map[bmu_pos] = torch.tensor(
-                                chosen_label, dtype=classification_map.dtype
-                            )
-                    # If there are no neighbor labels, choose randomly between previous top labels.
-                    else:
-                        # Choose randomly and convert to tensor
-                        chosen_label = random.choice(top_labels)
-                        classification_map[bmu_pos] = torch.tensor(
-                            chosen_label, dtype=classification_map.dtype
-                        )
-
-        return classification_map
+        return results
 
     def cluster(
         self,
@@ -1098,58 +682,16 @@ class SOM(BaseSOM):
         """
         if method not in ["kmeans", "gmm", "hdbscan"]:
             raise ValueError(f"Unsupported clustering method: {method}")
-
         if feature_space not in ["weights", "positions", "combined"]:
             raise ValueError(f"Unsupported feature space: {feature_space}")
 
-        # Extract features based on feature_space parameter
-        data = self._extract_clustering_features(feature_space)
-
-        # Perform clustering
+        data = extract_clustering_features(som=self, feature_space=feature_space)
         cluster_result = cluster_data(
             data=data, method=method, n_clusters=n_clusters, **kwargs
         )
 
-        # Calculate clustering quality metrics
         metrics = calculate_clustering_metrics(data, cluster_result["labels"], som=self)
         cluster_result["metrics"] = metrics
-
-        # Store additional information
         cluster_result["feature_space"] = feature_space
         cluster_result["original_data"] = data
-
         return cluster_result
-
-    def _extract_clustering_features(
-        self,
-        feature_space: str,
-    ) -> torch.Tensor:
-        """Extract features for clustering based on feature space specification.
-
-        Args:
-            feature_space (str): Type of features to extract
-
-        Returns:
-            torch.Tensor: Features for clustering [n_neurons, n_features]
-        """
-        if feature_space == "weights":
-            # Use neuron weight vectors (already normalized)
-            data = self.weights.view(-1, self.num_features)  # [n_neurons, n_features]
-
-        elif feature_space == "positions":
-            # Use 2D neuron coordinates (topology-adjusted)
-            positions = torch.stack([self.xx.flatten(), self.yy.flatten()], dim=1)
-            data = positions  # [n_neurons, 2]
-
-        elif feature_space == "combined":
-            # Combine weights and positions without normalization
-            # (weights are already normalized, positions are in consistent scale)
-            weights_flat = self.weights.view(-1, self.num_features)
-            positions = torch.stack([self.xx.flatten(), self.yy.flatten()], dim=1)
-
-            data = torch.cat([weights_flat, positions], dim=1)
-
-        else:
-            raise ValueError(f"Unsupported feature space: {feature_space}")
-
-        return data

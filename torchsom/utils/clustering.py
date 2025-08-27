@@ -1,13 +1,16 @@
 """Clustering algorithms for SOM analysis using scikit-learn."""
 
 import warnings
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 import numpy as np
 import torch
 from hdbscan import HDBSCAN, prediction
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
+
+if TYPE_CHECKING:
+    from torchsom.core.base_som import BaseSOM
 
 
 def cluster_kmeans(
@@ -279,6 +282,34 @@ def _determine_optimal_components_bic(
     # Select component with lowest BIC
     optimal_components = component_range[np.argmin(bic_scores)]
     return optimal_components
+
+
+def extract_clustering_features(
+    som: "BaseSOM",
+    feature_space: str,
+) -> torch.Tensor:
+    """Extract features for clustering based on feature space specification.
+
+    Args:
+        som (SOM): SOM instance
+        feature_space (str): "weights", "positions", or "combined"
+
+    Returns:
+        torch.Tensor: Features [n_neurons, n_features]
+    """
+    if feature_space == "weights":
+        return som.weights.view(-1, som.num_features)
+
+    elif feature_space == "positions":
+        return torch.stack([som.xx.flatten(), som.yy.flatten()], dim=1)
+
+    elif feature_space == "combined":
+        weights_flat = som.weights.view(-1, som.num_features)
+        positions = torch.stack([som.xx.flatten(), som.yy.flatten()], dim=1)
+        return torch.cat([weights_flat, positions], dim=1)
+
+    else:
+        raise ValueError(f"Unsupported feature space: {feature_space}")
 
 
 def cluster_data(
