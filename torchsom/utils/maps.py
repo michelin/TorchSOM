@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any, Optional
 
 import torch
 
-from torchsom.utils.distances import DISTANCE_FUNCTIONS
+from torchsom.utils.distances import PAIRWISE_DISTANCE_FUNCTIONS
 from torchsom.utils.topology import get_all_neighbors_up_to_order
 
 if TYPE_CHECKING:
@@ -22,13 +22,13 @@ def build_bmus_data_map(
     """Build mapping of BMUs to their corresponding data points.
 
     Args:
-        som_instance: SOM instance
-        data: Input data tensor
-        return_indices: Return indices instead of data points
-        batch_size: Batch processing size
+        som_instance (BaseSOM): SOM instance
+        data (torch.Tensor): Input data tensor
+        return_indices (bool): Return indices instead of data points
+        batch_size (int): Batch processing size
 
     Returns:
-        Dictionary mapping BMU coordinates to data/indices
+        dict[tuple[int, int], Any]: Dictionary mapping BMU coordinates to data/indices
     """
     bmus_data_map = defaultdict(list)
     num_samples = data.shape[0]
@@ -63,12 +63,12 @@ def build_hit_map(
     """Build hit map showing neuron activation frequencies.
 
     Args:
-        som_instance: SOM instance
-        data: Input data tensor [batch_size, num_features]
-        batch_size: Batch processing size
+        som_instance (BaseSOM): SOM instance
+        data (torch.Tensor): Input data tensor [batch_size, num_features]
+        batch_size (int): Batch processing size
 
     Returns:
-        Hit map tensor [x, y]
+        torch.Tensor: Hit map tensor [x, y]
     """
     hit_map = torch.zeros((som_instance.x, som_instance.y), device=som_instance.device)
     num_samples = data.shape[0]
@@ -95,13 +95,13 @@ def build_distance_map(
     """Build distance map showing neuron-to-neighbor distances.
 
     Args:
-        som_instance: SOM instance
-        distance_metric: Distance function name
-        neighborhood_order: Neighbor order to consider
-        scaling: 'sum' or 'mean' aggregation
+        som_instance (BaseSOM): SOM instance
+        distance_metric (str): Distance function name
+        neighborhood_order (int): Neighbor order to consider
+        scaling (str): 'sum' or 'mean' aggregation
 
     Returns:
-        Distance map tensor [x, y]
+        torch.Tensor: Distance map tensor [x, y]
     """
     if scaling not in ["sum", "mean"]:
         raise ValueError(
@@ -110,11 +110,11 @@ def build_distance_map(
     if neighborhood_order is None:
         neighborhood_order = som_instance.neighborhood_order
     if distance_metric is None:
-        distance_fn = som_instance.distance_fn
-    else:
-        if distance_metric not in DISTANCE_FUNCTIONS:
-            raise ValueError(f"Unsupported distance metric: {distance_metric}")
-        distance_fn = DISTANCE_FUNCTIONS[distance_metric]
+        distance_metric = som_instance.distance_fn_name
+
+    if distance_metric not in PAIRWISE_DISTANCE_FUNCTIONS:
+        raise ValueError(f"Unsupported distance metric: {distance_metric}")
+    pairwise_distance_fn = PAIRWISE_DISTANCE_FUNCTIONS[distance_metric]
 
     if neighborhood_order == som_instance.neighborhood_order:
         all_offsets = som_instance._neighbor_offsets
@@ -160,9 +160,7 @@ def build_distance_map(
                     # Compute distances
                     current_weights = weights_flat[valid_current]
                     neighbor_weights = weights_flat[valid_neighbors]
-                    distances = distance_fn(
-                        current_weights.unsqueeze(1), neighbor_weights.unsqueeze(1)
-                    ).squeeze()
+                    distances = pairwise_distance_fn(current_weights, neighbor_weights)
                     # Add to distance map
                     valid_positions = torch.stack(
                         [
@@ -195,9 +193,7 @@ def build_distance_map(
                 # Compute distances
                 current_weights = weights_flat[current_flat]
                 neighbor_weights = weights_flat[neighbor_flat]
-                distances = distance_fn(
-                    current_weights.unsqueeze(1), neighbor_weights.unsqueeze(1)
-                ).squeeze()
+                distances = pairwise_distance_fn(current_weights, neighbor_weights)
                 # Add to distance map using advanced indexing
                 valid_positions = torch.nonzero(valid_mask, as_tuple=False)
                 distance_map[valid_positions[:, 0], valid_positions[:, 1]] += distances
@@ -220,13 +216,13 @@ def build_metric_map(
     """Build metric map based on target values using pre-computed BMUs map.
 
     Args:
-        som_instance: SOM instance
-        bmus_data_map: Pre-computed BMU to data indices mapping
-        target: Target values tensor
-        reduction_parameter: 'mean' or 'std'
+        som_instance (BaseSOM): SOM instance
+        bmus_data_map (dict[tuple[int, int], Any]): Pre-computed BMU to data indices mapping
+        target (torch.Tensor): Target values tensor
+        reduction_parameter (str): 'mean' or 'std'
 
     Returns:
-        Metric map tensor [x, y]
+        torch.Tensor: Metric map tensor [x, y]
     """
     device = som_instance.device
     target = target.to(device)
@@ -263,13 +259,13 @@ def build_score_map(
     """Build score map combining standard error with distribution penalty using pre-computed BMUs map.
 
     Args:
-        som_instance: SOM instance
-        bmus_data_map: Pre-computed BMU to data indices mapping
-        target: Target values tensor
-        total_samples: Total number of data samples
+        som_instance (BaseSOM): SOM instance
+        bmus_data_map (dict[tuple[int, int], Any]): Pre-computed BMU to data indices mapping
+        target (torch.Tensor): Target values tensor
+        total_samples (int): Total number of data samples
 
     Returns:
-        Score map tensor [x, y]
+        torch.Tensor: Score map tensor [x, y]
     """
     device = som_instance.device
     target = target.to(device)
@@ -315,8 +311,8 @@ def build_rank_map(
     """Build rank map based on neuron standard deviations using pre-computed BMUs map.
 
     Args:
-        som_instance (SOM): SOM instance
-        bmus_data_map (Dict[Tuple[int, int], Any]): Pre-computed BMU to data indices mapping
+        som_instance (BaseSOM): SOM instance
+        bmus_data_map (dict[tuple[int, int], Any]): Pre-computed BMU to data indices mapping
         target (torch.Tensor): Target values tensor
 
     Returns:
@@ -365,13 +361,13 @@ def build_classification_map(
     """Build classification map with most frequent labels per neuron using pre-computed BMUs map.
 
     Args:
-        som_instance: SOM instance
-        bmus_data_map: Pre-computed BMU to data indices mapping
-        target: Target labels tensor
-        neighborhood_order: Neighborhood order for tie-breaking
+        som_instance (BaseSOM): SOM instance
+        bmus_data_map (dict[tuple[int, int], Any]): Pre-computed BMU to data indices mapping
+        target (torch.Tensor): Target labels tensor
+        neighborhood_order (int): Neighborhood order for tie-breaking
 
     Returns:
-        Classification map tensor [x, y]
+        torch.Tensor: Classification map tensor [x, y]
     """
     device = som_instance.device
     target = target.to(device)

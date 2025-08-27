@@ -101,9 +101,86 @@ def _chebyshev_distance(
     return distances.view(batch_size, x, y)
 
 
+def _pairwise_euclidean_distance(
+    tensor1: torch.Tensor,
+    tensor2: torch.Tensor,
+) -> torch.Tensor:
+    """Compute pairwise Euclidean distance between two tensors.
+
+    Args:
+        tensor1 (torch.Tensor): [N, num_features] tensor
+        tensor2 (torch.Tensor): [N, num_features] tensor
+
+    Returns:
+        torch.Tensor: [N] tensor of pairwise distances
+    """
+    return torch.norm(tensor1 - tensor2, p=2, dim=-1)
+
+
+def _pairwise_cosine_distance(
+    tensor1: torch.Tensor,
+    tensor2: torch.Tensor,
+) -> torch.Tensor:
+    """Compute pairwise cosine distance between two tensors.
+
+    Args:
+        tensor1 (torch.Tensor): [N, num_features] tensor
+        tensor2 (torch.Tensor): [N, num_features] tensor
+
+    Returns:
+        torch.Tensor: [N] tensor of pairwise distances
+    """
+    # Normalize tensors
+    tensor1_norm = F.normalize(tensor1, dim=-1)
+    tensor2_norm = F.normalize(tensor2, dim=-1)
+    # Compute cosine similarity
+    cos_sim = (tensor1_norm * tensor2_norm).sum(dim=-1)
+    # Convert to distance
+    return torch.clamp(1 - cos_sim, 0.0, 1.0)
+
+
+def _pairwise_manhattan_distance(
+    tensor1: torch.Tensor,
+    tensor2: torch.Tensor,
+) -> torch.Tensor:
+    """Compute pairwise Manhattan distance between two tensors.
+
+    Args:
+        tensor1 (torch.Tensor): [N, num_features] tensor
+        tensor2 (torch.Tensor): [N, num_features] tensor
+
+    Returns:
+        torch.Tensor: [N] tensor of pairwise distances
+    """
+    return torch.norm(tensor1 - tensor2, p=1, dim=-1)
+
+
+def _pairwise_chebyshev_distance(
+    tensor1: torch.Tensor,
+    tensor2: torch.Tensor,
+) -> torch.Tensor:
+    """Compute pairwise Chebyshev distance between two tensors.
+
+    Args:
+        tensor1 (torch.Tensor): [N, num_features] tensor
+        tensor2 (torch.Tensor): [N, num_features] tensor
+
+    Returns:
+        torch.Tensor: [N] tensor of pairwise distances
+    """
+    return torch.max(torch.abs(tensor1 - tensor2), dim=-1).values
+
+
 DISTANCE_FUNCTIONS = {
     "euclidean": _euclidean_distance,
     "cosine": _cosine_distance,
     "manhattan": _manhattan_distance,
     "chebyshev": _chebyshev_distance,
+}
+
+PAIRWISE_DISTANCE_FUNCTIONS = {
+    "euclidean": _pairwise_euclidean_distance,
+    "cosine": _pairwise_cosine_distance,
+    "manhattan": _pairwise_manhattan_distance,
+    "chebyshev": _pairwise_chebyshev_distance,
 }

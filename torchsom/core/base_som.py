@@ -84,33 +84,3 @@ class BaseSOM(nn.Module, ABC):
             mode (str, optional): Weight initialization method. Defaults to None.
         """
         pass
-
-    @abstractmethod
-    def build_hit_map(
-        self,
-        data: torch.Tensor,
-    ) -> torch.Tensor:
-        """Build a hit map showing neuron activation frequencies.
-
-        Args:
-            data (torch.Tensor): Input data tensor [batch_size, num_features] or [num_features]
-
-        Returns:
-            torch.Tensor: Hit map [row_neurons, col_neurons]
-        """
-        pass
-
-    @abstractmethod
-    def build_distance_map(
-        self,
-        scaling: str = "sum",
-    ) -> torch.Tensor:
-        """Build a distance map (U-matrix) showing neuron similarities.
-
-        Args:
-            scaling (str, optional): Scaling method for distances. Defaults to "sum".
-
-        Returns:
-            torch.Tensor: Distance map [row_neurons, col_neurons]
-        """
-        pass

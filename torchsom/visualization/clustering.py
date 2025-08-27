@@ -10,6 +10,7 @@ from matplotlib.colors import BoundaryNorm, ListedColormap
 from sklearn.metrics import silhouette_samples
 
 from torchsom.core.som import SOM
+from torchsom.utils.clustering import extract_clustering_features
 from torchsom.visualization.config import VisualizationConfig
 from torchsom.visualization.hexagonal import HexagonalVisualizer
 from torchsom.visualization.rectangular import RectangularVisualizer
@@ -34,12 +35,16 @@ class ClusteringVisualizer:
 
     def _prepare_save_path(
         self,
-        save_path: Union[
-            str,
-            Path,
-        ],
+        save_path: Union[str, Path],
     ) -> Path:
-        """Prepare directory for saving visualizations."""
+        """Prepare directory for saving visualizations.
+
+        Args:
+            save_path (Union[str, Path]): Path to save the visualizations
+
+        Returns:
+            Path: Path to the saved visualizations
+        """
         save_path = Path(save_path)
         save_path.mkdir(parents=True, exist_ok=True)
         return save_path
@@ -49,7 +54,12 @@ class ClusteringVisualizer:
         save_path: Union[str, Path],
         name: str,
     ) -> None:
-        """Save plot with specified configuration."""
+        """Save plot with specified configuration.
+
+        Args:
+            save_path (Union[str, Path]): Path to save the visualizations
+            name (str): Name of the plot
+        """
         save_path = self._prepare_save_path(save_path=save_path)
         plt.savefig(
             save_path / f"{name}.{self.config.save_format}",
@@ -68,10 +78,14 @@ class ClusteringVisualizer:
     ) -> ListedColormap:
         """Create a discrete colormap for cluster visualization.
 
-        If include_noise is True, the first color is reserved for noise (gray).
+        Args:
+            n_colors (int): Number of colors in the colormap
+            include_noise (bool): Whether to include noise (gray)
+
+        Returns:
+            ListedColormap: Colormap with specified number of colors
         """
         effective_clusters = n_colors - 1 if include_noise else n_colors
-
         if effective_clusters <= 10:
             base_colors = plt.cm.tab10(np.linspace(0, 1, 10))
         elif effective_clusters <= 20:
@@ -80,7 +94,6 @@ class ClusteringVisualizer:
             base_colors = plt.cm.viridis(np.linspace(0, 1, effective_clusters))
 
         colors = base_colors[:effective_clusters]
-
         if include_noise:
             noise_color = np.array([[0.7, 0.7, 0.7, 1.0]])
             colors = np.vstack([noise_color, colors])
@@ -95,16 +108,22 @@ class ClusteringVisualizer:
         show_values: bool = False,
         **kwargs: Any,
     ) -> None:
-        """Plot clustering results overlaid on SOM grid."""
-        labels = cluster_result["labels"]
+        """Plot clustering results overlaid on SOM grid.
+
+        Args:
+            cluster_result (dict[str, Any]): Clustering result
+            title (Optional[str]): Title of the plot
+            save_path (Optional[Union[str, Path]]): Path to save the plot
+            show_values (bool): Whether to show values on the plot
+            **kwargs: Additional arguments for the plot
+        """
         method = cluster_result["method"]
         n_clusters = cluster_result["n_clusters"]
         feature_space = cluster_result.get("feature_space", "unknown")
+        labels = cluster_result["labels"]
 
         # Reshape labels to grid
         labels_grid = labels.view(self.som.x, self.som.y)
-
-        # Create discrete colormap and mapping for clusters
         unique_labels = torch.unique(labels)
         has_noise = -1 in unique_labels
 
@@ -127,7 +146,6 @@ class ClusteringVisualizer:
         boundaries = np.arange(-0.5, n_bins + 0.5, 1)
         norm = BoundaryNorm(boundaries, ncolors=cmap.N)
 
-        # Colorbar ticks and labels
         ticks = np.arange(n_bins)
         if has_noise:
             non_noise_labels = [
@@ -137,19 +155,12 @@ class ClusteringVisualizer:
         else:
             tick_labels = [str(int(v.item())) for v in unique_labels]
 
-        # Generate title
         if title is None:
             title = f"{method.upper()} Clustering ({feature_space} space)\n{n_clusters} clusters"
-
-        # Import visualization modules to avoid circular imports
         if self.som.topology == "hexagonal":
-
             visualizer = HexagonalVisualizer(self.som, self.config)
         else:
-
             visualizer = RectangularVisualizer(self.som, self.config)
-
-        # Plot using appropriate visualizer
         visualizer.plot_grid(
             map=labels_for_plotting.float(),
             title=title,
@@ -171,7 +182,12 @@ class ClusteringVisualizer:
         cluster_result: dict[str, Any],
         save_path: Optional[Union[str, Path]] = None,
     ) -> None:
-        """Plot silhouette analysis for clustering results."""
+        """Plot silhouette analysis for clustering results.
+
+        Args:
+            cluster_result (dict[str, Any]): Clustering result
+            save_path (Optional[Union[str, Path]]): Path to save the plot
+        """
         data = cluster_result["original_data"]
         labels = cluster_result["labels"]
         method = cluster_result["method"]
@@ -193,25 +209,18 @@ class ClusteringVisualizer:
         else:
             data_clean = data_np
             labels_clean = labels_np
-
         if len(np.unique(labels_clean)) <= 1:
             print("Cannot plot silhouette analysis: only one cluster")
             return
-
-        # Calculate silhouette scores
+        unique_labels = np.unique(labels_clean)
         sample_silhouette_values = silhouette_samples(data_clean, labels_clean)
 
-        # Create the plot
         fig, ax = plt.subplots(figsize=self.config.figsize)
 
-        # Sort by cluster labels and plot
-        unique_labels = np.unique(labels_clean)
         y_lower = 10
-
         for label in sorted(unique_labels):
             cluster_silhouette_values = sample_silhouette_values[labels_clean == label]
             cluster_silhouette_values.sort()
-
             size_cluster = len(cluster_silhouette_values)
             y_upper = y_lower + size_cluster
 
@@ -224,22 +233,17 @@ class ClusteringVisualizer:
                 edgecolor=color,
                 alpha=0.7,
             )
-
             ax.text(-0.05, y_lower + 0.5 * size_cluster, str(label))
             y_lower = y_upper + 10
 
-        # Add average silhouette score line
         avg_score = sample_silhouette_values.mean()
         ax.axvline(x=avg_score, color="red", linestyle="--", linewidth=2)
-
-        # Formatting
         ax.set_xlabel("Silhouette Coefficient Values")
         ax.set_ylabel("Cluster Label")
         ax.set_title(
             f"Silhouette Analysis ({method.upper()}, {feature_space} space)\n"
             f"Average Score: {avg_score:.3f}"
         )
-
         if save_path:
             self._save_plot(save_path, "silhouette_analysis")
         else:
@@ -251,35 +255,34 @@ class ClusteringVisualizer:
         feature_space: str = "weights",
         save_path: Optional[Union[str, Path]] = None,
     ) -> None:
-        """Plot elbow analysis for optimal K selection in K-means."""
-        data = self.som._extract_clustering_features(feature_space)
+        """Plot elbow analysis for optimal K selection in K-means.
+
+        Args:
+            max_k (int): Maximum number of clusters to consider
+            feature_space (str): Feature space to use for clustering
+            save_path (Optional[Union[str, Path]]): Path to save the plot
+        """
+        data = extract_clustering_features(self.som, feature_space)
         n_samples = data.shape[0]
         max_k = min(max_k, n_samples - 1)
-
         if max_k < 2:
             print("Not enough neurons for elbow analysis")
             return
 
         k_range = range(2, max_k + 1)
         inertias = []
-
-        # Run K-means for different K values
         for k in k_range:
             result = self.som.cluster(
                 method="kmeans", n_clusters=k, feature_space=feature_space
             )
             inertias.append(result.get("inertia", 0))
 
-        # Create elbow plot
         fig, ax = plt.subplots(figsize=self.config.figsize)
-
         ax.plot(k_range, inertias, "bo-", linewidth=2, markersize=8)
         ax.set_xlabel("Number of Clusters (k)")
         ax.set_ylabel("Within-Cluster Sum of Squares (WCSS)")
         ax.set_title(f"Elbow Analysis for K-means ({feature_space} space)")
         ax.grid(True, alpha=0.3)
-
-        # Annotate points
         for k, inertia in zip(k_range, inertias):
             ax.annotate(
                 f"k={k}\n{inertia:.2f}",
@@ -289,7 +292,6 @@ class ClusteringVisualizer:
                 ha="center",
                 fontsize=9,
             )
-
         if save_path:
             self._save_plot(save_path, "elbow_analysis")
         else:
@@ -300,12 +302,16 @@ class ClusteringVisualizer:
         results_list: list[dict[str, Any]],
         save_path: Optional[Union[str, Path]] = None,
     ) -> None:
-        """Compare clustering quality metrics across different methods."""
+        """Compare clustering quality metrics across different methods.
+
+        Args:
+            results_list (list[dict[str, Any]]): List of clustering results
+            save_path (Optional[Union[str, Path]]): Path to save the plot
+        """
         if not results_list:
             print("No clustering results to compare")
             return
 
-        # Extract metrics from results
         methods = []
         silhouette_scores = []
         davies_bouldin_scores = []
@@ -323,9 +329,7 @@ class ClusteringVisualizer:
             calinski_harabasz_scores.append(metrics.get("calinski_harabasz_score", 0))
             n_clusters_list.append(result.get("n_clusters", 0))
 
-        # Create comparison plot
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 10))
-
         x_pos = np.arange(len(methods))
 
         # Silhouette Score (higher is better)
@@ -335,7 +339,6 @@ class ClusteringVisualizer:
         ax1.set_xticks(x_pos)
         ax1.set_xticklabels(methods, rotation=45, ha="right")
         ax1.grid(True, alpha=0.3)
-
         for bar, score in zip(bars1, silhouette_scores):
             height = bar.get_height()
             ax1.text(
@@ -354,7 +357,6 @@ class ClusteringVisualizer:
         ax2.set_xticks(x_pos)
         ax2.set_xticklabels(methods, rotation=45, ha="right")
         ax2.grid(True, alpha=0.3)
-
         for bar, score in zip(bars2, davies_bouldin_scores):
             height = bar.get_height()
             ax2.text(
@@ -373,7 +375,6 @@ class ClusteringVisualizer:
         ax3.set_xticks(x_pos)
         ax3.set_xticklabels(methods, rotation=45, ha="right")
         ax3.grid(True, alpha=0.3)
-
         for bar, score in zip(bars3, calinski_harabasz_scores):
             height = bar.get_height()
             ax3.text(
@@ -392,7 +393,6 @@ class ClusteringVisualizer:
         ax4.set_xticks(x_pos)
         ax4.set_xticklabels(methods, rotation=45, ha="right")
         ax4.grid(True, alpha=0.3)
-
         for bar, count in zip(bars4, n_clusters_list):
             height = bar.get_height()
             ax4.text(
@@ -405,7 +405,6 @@ class ClusteringVisualizer:
             )
 
         plt.tight_layout()
-
         if save_path:
             self._save_plot(save_path, "clustering_metrics_comparison")
         else:

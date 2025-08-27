@@ -1,9 +1,6 @@
 """PyTorch implementation of classic Self Organizing Maps using batch learning."""
 
-# import random
 import warnings
-
-# from collections import Counter, defaultdict
 from typing import Any, Callable, Optional
 
 import torch
@@ -77,8 +74,6 @@ class SOM(BaseSOM):
             ValueError: Ensure valid topology
         """
         super().__init__()
-
-        # Validate parameters
         if sigma > torch.sqrt(torch.tensor(float(x * x + y * y))):
             warnings.warn(
                 "Warning: sigma might be too high for the dimension of the map.",
@@ -95,7 +90,6 @@ class SOM(BaseSOM):
         if neighborhood_function not in NEIGHBORHOOD_FUNCTIONS:
             raise ValueError("Invalid neighborhood function")
 
-        # Input parameters
         self.x = x
         self.y = y
         self.num_features = num_features
@@ -116,14 +110,11 @@ class SOM(BaseSOM):
         self.lr_decay_fn = DECAY_FUNCTIONS[lr_decay_function]
         self.sigma_decay_fn = DECAY_FUNCTIONS[sigma_decay_function]
 
-        # Set up x and y mesh grids, adjust them based on the topology
         x_meshgrid, y_meshgrid = create_mesh_grid(x, y, device)
         self.xx, self.yy = adjust_meshgrid_topology(x_meshgrid, y_meshgrid, topology)
 
-        # Ensure reproducibility
         torch.manual_seed(random_seed)
 
-        # Initialize & normalize weights
         weights = 2 * torch.randn(x, y, num_features, device=device) - 1
         normalized_weights = weights / torch.norm(weights, dim=-1, keepdim=True)
         self.weights = nn.Parameter(normalized_weights, requires_grad=False)
@@ -425,8 +416,15 @@ class SOM(BaseSOM):
         bmus_idx_map: dict[tuple[int, int], list[int]],
         min_buffer_threshold: int = 50,
     ) -> tuple[torch.Tensor, torch.Tensor]:
-        """Collect historical samples similar to the query sample using SOM projection."""
-        # Identify BMU for the query sample
+        """Collect historical samples similar to the query sample using SOM projection.
+
+        Args:
+            query_sample (torch.Tensor): Query sample tensor [num_features]
+            historical_samples (torch.Tensor): Historical samples tensor [num_samples, num_features]
+            historical_outputs (torch.Tensor): Historical outputs tensor [num_samples]
+            bmus_idx_map (dict[tuple[int, int], list[int]]): BMU to data indices mapping
+            min_buffer_threshold (int): Minimum buffer threshold
+        """
         query_sample = query_sample.to(self.device)
         bmu_pos = self.identify_bmus(query_sample)
         bmu_row, bmu_col = int(bmu_pos[0].item()), int(bmu_pos[1].item())
@@ -437,70 +435,45 @@ class SOM(BaseSOM):
             row_type = "even" if bmu_row % 2 == 0 else "odd"
             offsets = self._neighbor_offsets[row_type]
 
-        # Identify available neighbor positions
-        neighbor_positions = torch.tensor(
-            [(bmu_row + dx, bmu_col + dy) for dx, dy in offsets],
-            device="cpu",  # bmus_idx_map keys are on CPU due to dict implementation storing lists
-            dtype=torch.long,
-        )
-        valid_mask = (
-            (neighbor_positions[:, 0] >= 0)
-            & (neighbor_positions[:, 0] < self.x)
-            & (neighbor_positions[:, 1] >= 0)
-            & (neighbor_positions[:, 1] < self.y)
-        )
-        neighbor_positions = neighbor_positions[valid_mask]
-
-        # Perform topological collection
+        # Collect samples from BMU and its topological neighbors
         collected_sample_indices = list(bmus_idx_map.get(bmu_tuple, []))
         visited_neurons = {bmu_tuple}
-        for nr, nc in neighbor_positions.tolist():
-            pos = (nr, nc)
-            if pos not in visited_neurons and pos in bmus_idx_map:
-                collected_sample_indices.extend(bmus_idx_map[pos])
-                visited_neurons.add(pos)
+        for dx, dy in offsets:
+            nr, nc = bmu_row + dx, bmu_col + dy
+            if 0 <= nr < self.x and 0 <= nc < self.y:
+                pos = (nr, nc)
+                if pos not in visited_neurons and pos in bmus_idx_map:
+                    collected_sample_indices.extend(bmus_idx_map[pos])
+                    visited_neurons.add(pos)
 
-        # Expand collection using weight-space distances if insufficient
+        # If we need more samples, use distance-based collection
         if len(collected_sample_indices) <= min_buffer_threshold:
-            # Compute distances [x, y] from BMU weights [num_features] to all neurons [x, y, num_features]
             bmu_weights = self.weights[bmu_row, bmu_col]
             distances = self._calculate_distances_to_neurons(bmu_weights)
 
-            # Mask for (i) visited neurons, (ii) neurons with samples to collect
-            visited_mask = torch.zeros_like(
-                distances, dtype=torch.bool, device=self.device
-            )
-            for r, c in visited_neurons:
-                visited_mask[r, c] = True
-            distances[visited_mask] = float("inf")
-            has_samples_mask = torch.zeros_like(
-                distances, dtype=torch.bool, device=self.device
-            )
-            for r, c in bmus_idx_map:
-                has_samples_mask[r, c] = True
-            valid_mask = ~visited_mask & has_samples_mask
+            # Identify all unvisited neurons with samples, sorted by distance
+            candidate_neurons = []
+            for (r, c), samples in bmus_idx_map.items():
+                if (r, c) not in visited_neurons and samples:
+                    dist = distances[r, c].item()
+                    candidate_neurons.append((dist, r, c))
+            candidate_neurons.sort(key=lambda x: x[0])
 
-            # Flatten distances [x*y] and positions [n_valid, 2] and sort by distance
-            flat_distances = distances[valid_mask]
-            flat_positions = torch.nonzero(valid_mask, as_tuple=False)
-            sorted_idx = torch.argsort(flat_distances)
-
-            # Collect samples until threshold is reached
-            for idx in sorted_idx.tolist():
-                r, c = flat_positions[idx]
-                collected_sample_indices.extend(bmus_idx_map[r, c])
-                visited_neurons.add((r.item(), c.item()))
+            # Collect samples from candidate unvisitedneurons
+            for _, r, c in candidate_neurons:
+                collected_sample_indices.extend(bmus_idx_map[(r, c)])
+                visited_neurons.add((r, c))
                 if len(collected_sample_indices) > min_buffer_threshold:
                     break
 
         # Build buffers
-        collected_sample_indices = torch.tensor(
-            collected_sample_indices, device=historical_samples.device, dtype=torch.long
+        indices_tensor = torch.tensor(
+            collected_sample_indices,
+            device=historical_samples.device,
+            dtype=torch.long,
         )
-        historical_data_buffer = historical_samples[collected_sample_indices]
-        historical_output_buffer = historical_outputs[collected_sample_indices].view(
-            -1, 1
-        )
+        historical_data_buffer = historical_samples[indices_tensor]
+        historical_output_buffer = historical_outputs[indices_tensor].view(-1, 1)
         return historical_data_buffer, historical_output_buffer
 
     def build_map(
@@ -525,7 +498,7 @@ class SOM(BaseSOM):
             data (Optional[torch.Tensor]): Input data tensor [batch_size, num_features].
                 Required if bmus_data_map is not provided.
             target (Optional[torch.Tensor]): Target values/labels (required for some map types)
-            bmus_data_map (Optional[dict]): Pre-computed BMU to data indices mapping.
+            bmus_data_map (Optional[dict[tuple[int, int], list[int]]]): Pre-computed BMU to data indices mapping.
                 If provided, avoids recomputing BMUs for dependent maps.
             **kwargs: Additional arguments specific to each map type:
                 - batch_size (int): Batch processing size (default: 1024)
@@ -544,7 +517,7 @@ class SOM(BaseSOM):
             ValueError: If neither data nor bmus_data_map is provided
         """
         bmus_dependent_maps = {"metric", "score", "rank", "classification"}
-        data_dependent_maps = {"hit", "distance", "bmus_data"}
+        data_dependent_maps = {"hit", "bmus_data"}
         target_required_maps = {"metric", "score", "rank", "classification"}
         if map_type not in MAP_FUNCTIONS:
             available_types = ", ".join(MAP_FUNCTIONS.keys())
@@ -574,17 +547,20 @@ class SOM(BaseSOM):
                     self, data, return_indices=True
                 )
             if map_type == "score":
-                if data is not None:
-                    total_samples = len(data)
-                else:
-                    total_samples = sum(
-                        len(indices) for indices in bmus_data_map.values()
-                    )
-                return map_function(
-                    self, bmus_data_map, target, total_samples, **kwargs
-                )
+                if "total_samples" not in kwargs:
+                    if data is not None:
+                        total_samples = len(data)
+                    else:
+                        total_samples = sum(
+                            len(indices) for indices in bmus_data_map.values()
+                        )
+                    kwargs["total_samples"] = total_samples
+                return map_function(self, bmus_data_map, target, **kwargs)
             else:
                 return map_function(self, bmus_data_map, target, **kwargs)
+
+        elif map_type == "distance":
+            return map_function(self, **kwargs)
 
         else:
             raise ValueError(f"Unknown map type handling for: {map_type}")
@@ -616,7 +592,7 @@ class SOM(BaseSOM):
             ]
             results = som.build_multiple_maps(configs, data, target)
         """
-        data_dependent_maps = {"hit", "distance", "bmus_data"}
+        data_dependent_maps = {"hit", "bmus_data"}
         bmus_dependent_maps = {"metric", "score", "rank", "classification"}
         need_bmus_map = any(
             config["type"] in bmus_dependent_maps for config in map_configs

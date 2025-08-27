@@ -29,8 +29,6 @@ class BaseVisualizer(ABC):
         """
         self.som = som
         self.config = config or VisualizationConfig()
-
-        # Validate topology if specified
         if expected_topology and self.som.topology != expected_topology:
             raise ValueError(
                 f"{self.__class__.__name__} requires SOM with {expected_topology} topology"
@@ -106,20 +104,29 @@ class BaseVisualizer(ABC):
         self,
         fig_name: str = "distance_map",
         save_path: Optional[Union[str, Path]] = None,
+        distance_metric: Optional[str] = None,
+        neighborhood_order: Optional[int] = None,
+        scaling: str = "sum",
     ) -> None:
-        """Plot the distance map (D-Matrix).
+        """Plot the distance map (U-Matrix).
 
         Args:
             fig_name (str): The name of the file to save
             save_path (Optional[Union[str, Path]]): Path to save the visualization
+            distance_metric (Optional[str]): Distance function name
+            neighborhood_order (Optional[int]): Neighbor order to consider
+            scaling (str): 'sum' or 'mean' aggregation
         """
-        distance_map = self.som.build_distance_map(
-            neighborhood_order=self.som.neighborhood_order
+        distance_map = self.som.build_map(
+            "distance",
+            distance_metric=distance_metric,
+            neighborhood_order=neighborhood_order or self.som.neighborhood_order,
+            scaling=scaling,
         )
         self.plot_grid(
             map=distance_map,
-            title=f"D-Matrix (Distance Map) - Order {self.som.neighborhood_order}",
-            colorbar_label=f"{self.som.distance_fn_name} distance",
+            title=f"U-Matrix (Distance Map) - Order {neighborhood_order or self.som.neighborhood_order}",
+            colorbar_label=f"{distance_metric or self.som.distance_fn_name} distance",
             filename=fig_name,
             save_path=save_path,
         )
@@ -129,6 +136,7 @@ class BaseVisualizer(ABC):
         data: torch.Tensor,
         fig_name: str = "hit_map",
         save_path: Optional[Union[str, Path]] = None,
+        batch_size: int = 1024,
     ) -> None:
         """Plot hit map.
 
@@ -136,8 +144,9 @@ class BaseVisualizer(ABC):
             data (torch.Tensor): Input data tensor [batch_size, n_features]
             fig_name (str): The name of the file to save
             save_path (Optional[Union[str, Path]]): Path to save the visualization
+            batch_size (int): Batch processing size
         """
-        hit_map = self.som.build_hit_map(data)
+        hit_map = self.som.build_map("hit", data=data, batch_size=batch_size)
         self.plot_grid(
             map=hit_map,
             title="Hit Map",
@@ -148,21 +157,29 @@ class BaseVisualizer(ABC):
 
     def plot_classification_map(
         self,
+        bmus_data_map: dict[tuple[int, int], list[int]],
         data: torch.Tensor,
         target: torch.Tensor,
         fig_name: str = "classification_map",
         save_path: Optional[Union[str, Path]] = None,
+        neighborhood_order: Optional[int] = None,
     ) -> None:
         """Plot classification map.
 
         Args:
+            bmus_data_map (dict[tuple[int, int], list[int]]): Pre-computed BMU to data indices mapping
             data (torch.Tensor): Input data tensor [batch_size, n_features]
             target (torch.Tensor): Labels tensor for data points [batch_size]
             fig_name (str): The name of the file to save
             save_path (Optional[Union[str, Path]]): Path to save the visualization
+            neighborhood_order (Optional[int]): Neighborhood order for tie-breaking
         """
-        classification_map = self.som.build_classification_map(
-            data, target, neighborhood_order=self.som.neighborhood_order
+        classification_map = self.som.build_map(
+            "classification",
+            data=data,
+            target=target,
+            neighborhood_order=neighborhood_order or self.som.neighborhood_order,
+            bmus_data_map=bmus_data_map,
         )
         self.plot_grid(
             map=classification_map,
@@ -174,6 +191,7 @@ class BaseVisualizer(ABC):
 
     def plot_metric_map(
         self,
+        bmus_data_map: dict[tuple[int, int], list[int]],
         data: torch.Tensor,
         target: torch.Tensor,
         reduction_parameter: str = "mean",
@@ -183,13 +201,20 @@ class BaseVisualizer(ABC):
         """Plot target metric map.
 
         Args:
+            bmus_data_map (dict[tuple[int, int], list[int]]): Pre-computed BMU to data indices mapping
             data (torch.Tensor): Input data tensor [batch_size, n_features]
             target (torch.Tensor): Labels tensor for data points [batch_size]
             reduction_parameter (str): Calculation to apply ('mean' or 'std')
             fig_name (Optional[str]): The name of the file to save
             save_path (Optional[Union[str, Path]]): Path to save the visualization
         """
-        metric_map = self.som.build_metric_map(data, target, reduction_parameter)
+        metric_map = self.som.build_map(
+            "metric",
+            data=data,
+            target=target,
+            reduction_parameter=reduction_parameter,
+            bmus_data_map=bmus_data_map,
+        )
         title = (
             "Map of Mean Target Value"
             if reduction_parameter == "mean"
@@ -206,20 +231,27 @@ class BaseVisualizer(ABC):
 
     def plot_score_map(
         self,
-        data: torch.Tensor,
+        bmus_data_map: dict[tuple[int, int], list[int]],
         target: torch.Tensor,
+        total_samples: int,
         fig_name: str = "score_map",
         save_path: Optional[Union[str, Path]] = None,
     ) -> None:
         """Plot neuron representativeness score map.
 
         Args:
-            data (torch.Tensor): Input data tensor [batch_size, n_features]
+            bmus_data_map (dict[tuple[int, int], list[int]]): Pre-computed BMU to data indices mapping
             target (torch.Tensor): Labels tensor for data points [batch_size]
+            total_samples (int): Total number of samples
             fig_name (str): The name of the file to save
             save_path (Optional[Union[str, Path]]): Path to save the visualization
         """
-        score_map = self.som.build_score_map(data, target)
+        score_map = self.som.build_map(
+            "score",
+            bmus_data_map=bmus_data_map,
+            target=target,
+            total_samples=total_samples,
+        )
         self.plot_grid(
             map=score_map,
             title="Neuron Representativeness Map",
@@ -230,7 +262,7 @@ class BaseVisualizer(ABC):
 
     def plot_rank_map(
         self,
-        data: torch.Tensor,
+        bmus_data_map: dict[tuple[int, int], list[int]],
         target: torch.Tensor,
         fig_name: str = "rank_map",
         save_path: Optional[Union[str, Path]] = None,
@@ -238,12 +270,16 @@ class BaseVisualizer(ABC):
         """Plot ranked neurons map.
 
         Args:
-            data (torch.Tensor): Input data tensor [batch_size, n_features]
+            bmus_data_map (dict[tuple[int, int], list[int]]): Pre-computed BMU to data indices mapping
             target (torch.Tensor): Labels tensor for data points [batch_size]
             fig_name (str): The name of the file to save
             save_path (Optional[Union[str, Path]]): Path to save the visualization
         """
-        rank_map = self.som.build_rank_map(data=data, target=target)
+        rank_map = self.som.build_map(
+            "rank",
+            target=target,
+            bmus_data_map=bmus_data_map,
+        )
         self.plot_grid(
             map=rank_map,
             title="Neuron Map Ranked by Output Std",
@@ -269,7 +305,6 @@ class BaseVisualizer(ABC):
         component_names = component_names or [
             f"Component_{i+1}" for i in range(n_components)
         ]
-
         for i, name in enumerate(component_names):
             component_weights = self.som.weights[:, :, i].cpu()
             self.plot_grid(
