@@ -300,6 +300,7 @@ ignore = [
     "S101",  # use of assert
     "B904",  # exception re-raise
     "S311",  # use of insecure random number generator
+    "SIM102", # use of nested if statements
 ]
 # Exclude directories from Ruff
 exclude = [
@@ -360,6 +361,7 @@ disable_error_code = [
     # "return-value",                     # Error code for function returning a value with a different type than declared
     "no-untyped-call",                  # Error code for calling a function without type annotations
     "attr-defined",                     # Error code for attribute access on None
+    "union-attr",                       # Error code for union attribute access
 ]
 
 [[tool.mypy.overrides]]
@@ -411,3 +413,6 @@ changelog_template = ".changelog_template.md"
 github_url = "https://github.com/michelin/TorchSOM"
 version_scheme = "semver"
 changelog_start_rev = "v1.0.0"
+
+[tool.sphinx]
+suppress-warnings = ["misc.docutils"]

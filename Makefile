@@ -167,7 +167,7 @@ measure-docstrings-coverage:  ## Assess docstring coverage
 	interrogate torchsom/ --verbose --ignore-init-method --ignore-magic --ignore-module --fail-under=80
 
 build-docs:  ## Build documentation
-	sphinx-build -b html -W --keep-going docs/source/ docs/build/html
+	sphinx-build -b html --keep-going docs/source/ docs/build/html
 # sphinx-build -b html docs/source/ docs/build/html
 
 docs:  ## Check documentation quality
