@@ -8,6 +8,10 @@ assets/torchsom_jmlr.pdf
 .github/workflows/security.yml
 
 benchmark/results/
+benchmark/blobfuse/
+benchmark/environments/
+benchmark/jobs/
+benchmark/.amlignore
 
 # Python
 __pycache__/

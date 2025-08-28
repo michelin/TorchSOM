@@ -1,0 +1,24 @@
+general:
+  random_seed: 42
+  data_name: blobs_300_4 # 300 5000 20000 and 4 50 300
+  n_iter: 10
+  mode: azure # local or azure
+  output_dir: results
+  device: cuda # cpu or cuda
+  use_torchsom: true
+  use_minisom: true
+  train_ratio: 0.8
+  save_plots: true
+  save_format: pdf
+
+som:
+  x_size: 25
+  y_size: 15
+  sigma: 1.45
+  learning_rate: 0.95
+  epochs: 100
+  topology: rectangular
+  initialization_mode: pca
+  neighborhood_order: 3
+  # batch_size: 4000  # if omitted, uses full train set per epoch as in notebook
+  verbose: true
