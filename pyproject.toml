@@ -374,6 +374,7 @@ module = [
     "numpy.*",
     "pydantic.*",
     "pytest.*",
+    "yaml.*",
 ]
 # Ignore missing imports
 ignore_missing_imports = true
