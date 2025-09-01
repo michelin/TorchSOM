@@ -44,7 +44,12 @@ jobs:
         pip install build twine commitizen pygithub
 
     - name: Generate CHANGELOG
-      run: cz changelog
+      run: |
+        if git log $(git describe --tags --abbrev=0)..HEAD --oneline | grep -q .; then
+          cz changelog
+        else
+          echo "No new commits"
+        fi
 
     - name: Commit updated CHANGELOG.md
       run: |
