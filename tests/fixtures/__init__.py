@@ -1,1 +1,1 @@
-"""Fixtures for testing."""
+"""Pytest fixtures package for TorchSOM tests."""
