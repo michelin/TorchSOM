@@ -13,8 +13,8 @@ benchmark/environments/
 benchmark/jobs/
 benchmark/.amlignore
 
-# Too large for GitHub
-data/benchmark/blobs_20000_300.csv
+# # Too large for GitHub
+# data/benchmark/blobs_20000_300.csv
 
 # Python
 __pycache__/
