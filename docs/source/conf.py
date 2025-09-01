@@ -1,5 +1,30 @@
 """Configuration for Sphinx documentation."""
 
+import shutil
+from contextlib import suppress
+from pathlib import Path
+
+from sphinx.application import Sphinx
+
+
+def _copy_repo_assets_to_static() -> None:
+    """Copy repo-level assets/ into docs/_static/assets for reliable access."""
+    print("Copying repo-level assets/ into docs/_static/assets for reliable access.")
+    repo_root = Path(__file__).resolve().parents[2]
+    src = repo_root / "assets"
+    dst = Path(__file__).parent / "_static" / "assets"
+    if src.exists():
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(src, dst, dirs_exist_ok=True)
+        with suppress(Exception):
+            shutil.copytree(src, dst, dirs_exist_ok=True)
+
+
+def setup(app: Sphinx) -> None:  # noqa: ARG001
+    """Setup the Sphinx application."""
+    _copy_repo_assets_to_static()
+
+
 # Configuration file for the Sphinx documentation builder.
 #
 # For the full list of built-in configuration values, see the documentation:
@@ -64,5 +89,5 @@ html_context = {
     "conf_py_path": "/docs/source/",
 }
 html_static_path = ["_static"]
-html_logo = "../../assets/logo.jpg"
+html_logo = "_static/assets/logo.png"
 # html_favicon = "../../favicon.ico" # Icon shown in the browser tab

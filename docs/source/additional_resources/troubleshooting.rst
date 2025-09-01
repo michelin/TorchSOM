@@ -34,8 +34,8 @@ Package Issues
 
    .. code-block:: python
 
-      import torchsom
-      print(torchsom.__version__)
+      from torchsom.version import __version__
+      print(__version__)
 
 CUDA/GPU Issues
 ~~~~~~~~~~~~~~~
@@ -118,18 +118,6 @@ Training doesn't converge
 
 **Symptoms**: Quantization error doesn't decrease or fluctuates wildly.
 
-**Diagnostic**:
-
-.. code-block:: python
-
-   # Monitor training progress
-   q_errors, t_errors = som.fit(data)
-
-   import matplotlib.pyplot as plt
-   plt.plot(q_errors)
-   plt.title('Quantization Error')
-   plt.show()
-
 **Common causes and solutions**:
 
 1. **Learning rate too high**:
@@ -206,16 +194,6 @@ NaN values in results
 ~~~~~~~~~~~~~~~~~~~~~
 
 **Problem**: Getting NaN values in errors or visualizations.
-
-**Diagnostic**:
-
-.. code-block:: python
-
-   # Check for NaN in data
-   print(f"NaN in data: {torch.isnan(data).any()}")
-
-   # Check SOM weights
-   print(f"NaN in weights: {torch.isnan(som.weights).any()}")
 
 **Solutions**:
 
@@ -334,79 +312,6 @@ Poor visualization quality
       config = VisualizationConfig(cmap="plasma")
       viz = SOMVisualizer(som, config=config)
 
-Data Issues
------------
-
-Poor clustering results
-~~~~~~~~~~~~~~~~~~~~~~~
-
-**Problem**: SOM doesn't find meaningful clusters.
-
-**Diagnostic steps**:
-
-1. **Visualize raw data**:
-
-   .. code-block:: python
-
-      from sklearn.decomposition import PCA
-      from sklearn.manifold import TSNE
-
-      # PCA visualization
-      pca = PCA(n_components=2)
-      data_pca = pca.fit_transform(data.numpy())
-      plt.scatter(data_pca[:, 0], data_pca[:, 1])
-      plt.title('Data in PCA space')
-      plt.show()
-
-2. **Check data distribution**:
-
-   .. code-block:: python
-
-      print(f"Data shape: {data.shape}")
-      print(f"Data mean: {data.mean(dim=0)}")
-      print(f"Data std: {data.std(dim=0)}")
-
-3. **Compare with K-means**:
-
-   .. code-block:: python
-
-      from sklearn.cluster import KMeans
-      kmeans = KMeans(n_clusters=3)
-      kmeans_labels = kmeans.fit_predict(data.numpy())
-
-**Solutions**:
-
-1. **Better preprocessing**:
-
-   .. code-block:: python
-
-      # Remove outliers
-      from sklearn.preprocessing import RobustScaler
-      scaler = RobustScaler()
-      data_scaled = scaler.fit_transform(data.numpy())
-
-2. **Feature selection**:
-
-   .. code-block:: python
-
-      # Remove highly correlated features
-      import pandas as pd
-      df = pd.DataFrame(data.numpy())
-      corr_matrix = df.corr().abs()
-      # Remove features with correlation > 0.95
-
-3. **Adjust SOM parameters**:
-
-   .. code-block:: python
-
-      som = SOM(
-          x=15, y=15,  # Larger map
-          num_features=data.shape[1],
-          epochs=200,  # More training
-          learning_rate=0.2,
-          sigma=3.0  # Larger neighborhood
-      )
-
 Configuration Errors
 --------------------
 
@@ -472,6 +377,7 @@ Memory usage too high
 **Problem**: TorchSOM uses too much RAM or GPU memory.
 
 **Memory usage breakdown**:
+
 - SOM weights: ``x * y * num_features * 4 bytes`` (float32)
 - Batch data: ``batch_size * num_features * 4 bytes``
 - Distance calculations: ``batch_size * x * y * 4 bytes``
@@ -520,15 +426,7 @@ Memory leaks
       import torch
       torch.cuda.empty_cache()
 
-2. **Use context managers**:
-
-   .. code-block:: python
-
-      with torch.no_grad():
-           # Inference operations
-           bmus = som.identify_bmus(data)
-
-3. **Delete large variables**:
+2. **Delete large variables**:
 
    .. code-block:: python
 
@@ -545,13 +443,13 @@ When reporting issues, please include:
 
 .. code-block:: python
 
-   import torchsom
+   from torchsom.version import __version__
    import torch
    import sys
    import platform
 
    print("=== Diagnostic Information ===")
-   print(f"TorchSOM version: {torchsom.__version__}")
+   print(f"TorchSOM version: {__version__}")
    print(f"PyTorch version: {torch.__version__}")
    print(f"Python version: {sys.version}")
    print(f"Platform: {platform.platform()}")

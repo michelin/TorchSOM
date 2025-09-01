@@ -27,8 +27,7 @@ Available distance functions:
      - Manhattan (L1) distance
    * - ``chebyshev``
      - Chebyshev (L∞) distance
-   * - ``weighted_euclidean``
-     - Weighted Euclidean distance with feature weights
+
 
 Neighborhood Functions
 ----------------------

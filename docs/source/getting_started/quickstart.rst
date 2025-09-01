@@ -28,7 +28,7 @@ Let's create and train your first Self-Organizing Map:
 
    # Train the SOM
    som.initialize_weights(data=data, mode="pca")
-   QE, TE = som.fit(data=data)
+   q_errors, t_errors = som.fit(data=data)
 
    print("Training completed!")
    print(f"Final quantization error: {QE[-1]:.4f}")
@@ -47,18 +47,28 @@ Visualize your trained SOM:
    visualizer = SOMVisualizer(som)
 
    # Plot distance map (U-Matrix)
-   visualizer.plot_distance_map()
+   visualizer.plot_distance_map(
+      distance_metric=som.distance_fn_name,
+      neighborhood_order=som.neighborhood_order,
+      scaling="sum",
+   )
 
    # Plot hit map (activation frequency)
-   visualizer.plot_hit_map(data)
+   visualizer.plot_hit_map(
+      data=data,
+      batch_size=256,
+   )
 
    # Plot training errors
-   visualizer.plot_training_errors(quantization_errors, topographic_errors)
+   visualizer.plot_training_errors(
+      quantization_errors=q_errors,
+      topographic_errors=t_errors,
+   )
 
 Common Parameters
 -----------------
 
-Quick reference for the most important SOM parameters:
+Quick reference for the SOM parameters:
 
 .. list-table::
    :header-rows: 1
@@ -96,16 +106,16 @@ Quick reference for the most important SOM parameters:
      - Grid topology: ``"rectangular"`` or ``"hexagonal"``.
    * - ``lr_decay_function``
      - "asymptotic_decay"
-     - Learning rate decay schedule (e.g., ``"asymptotic_decay"``, ``"linear_decay"``, ``"exponential_decay"``).
+     - Learning rate decay schedule: ``"asymptotic_decay"``, ``"lr_inverse_decay_to_zero"``, ``"lr_linear_decay_to_zero"``.
    * - ``sigma_decay_function``
      - "asymptotic_decay"
-     - Sigma (neighborhood radius) decay schedule (same options as above).
+     - Sigma decay schedule: ``"asymptotic_decay"``, ``"sig_inverse_decay_to_one"``, ``"sig_linear_decay_to_one"``.
    * - ``neighborhood_function``
      - "gaussian"
-     - Function for neighborhood influence (e.g., ``"gaussian"``, ``"bubble"``, ``"mexican_hat"``).
+     - Neighborhood influence: ``"gaussian"``, ``"mexican_hat"``, ``"bubble"``, ``"triangle"``.
    * - ``distance_function``
      - "euclidean"
-     - Distance metric for BMU search (e.g., ``"euclidean"``, ``"manhattan"``, ``"cosine"``).
+     - Distance metric: ``"euclidean"``, ``"cosine"``, ``"manhattan"``, ``"chebyshev"``.
    * - ``initialization_mode``
      - "random"
      - Weight initialization method (``"random"``, ``"pca"``, or custom).
