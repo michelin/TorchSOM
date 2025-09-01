@@ -2,7 +2,7 @@ name: Build and Deploy Docs
 
 on:
   push:
-    branches: [main, dev/jmlr]
+    branches: [main, dev/jmlr, feature/gpu_fix]
 
 jobs:
   build-and-deploy:

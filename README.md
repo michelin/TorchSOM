@@ -86,7 +86,7 @@ Unlike legacy implementations, `torchsom` is engineered from the ground up for m
 | Visualization | ✅ Advanced | ❌ | 🟠 Moderate | 🟠 Moderate | ⚠️ Basic | ⚠️ Basic |
 | Clustering | ✅ Advanced | ❌ | ❌ | ❌ | ❌ | ❌ |
 | JITL support | ✅ Built-in | ❌ | ❌ | ❌ | ❌ | ❌ |
-| SOM Variants | 🚧 In development | ❌ | 🟠 PBC | ❌ | 🟠 PBC | ⚠️ PBC (only) |
+| SOM Variants | 🚧 In development | ❌ | 🟠 PBC | ❌ | 🟠 PBC | 🟠 PBC |
 | Extensibility | ✅ High | 🟠 Moderate | ⚠️ Low | ⚠️ Low | ⚠️ Low | ⚠️ Low |
 
 > **Note**: `torchsom` supports **Just-In-Time Learning (JITL)**.

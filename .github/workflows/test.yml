@@ -2,9 +2,9 @@ name: Tests
 
 on:
   push:
-    branches: [ main, dev/jmlr ]
+    branches: [ main, dev/jmlr, feature/gpu_fix ]
   pull_request:
-    branches: [ main, dev/jmlr ]
+    branches: [ main, dev/jmlr, feature/gpu_fix ]
   workflow_call:
 
 jobs:
