@@ -1,7 +1,6 @@
 name: Release
 
 on:
-  # This workflow is triggered by a tag push like v0.1.0 from any branch
   push:
     tags:
       - 'v*'
@@ -67,6 +66,13 @@ jobs:
       run: |
         twine check dist/*
 
+    - name: Extract changelog
+      id: changelog
+      run: |
+        echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+        sed -n '/## \['"$GITHUB_REF_NAME"'\]/,/^## \[/{/^## \[/b;p}' CHANGELOG.md >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+
     - name: Create Release with changelog notes
       uses: actions/create-release@v1.1.4
       env:
@@ -74,8 +80,7 @@ jobs:
       with:
         tag_name: ${{ github.ref_name }}
         release_name: Release ${{ github.ref }}
-        body: |
-          $(sed -n '/## \['"$GITHUB_REF_NAME"'\]/,/^## \[/{/^## \[/b;p}' CHANGELOG.md)
+        body: ${{ env.RELEASE_NOTES }}
         draft: false
         prerelease: false
 
