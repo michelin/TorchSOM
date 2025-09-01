@@ -83,6 +83,7 @@ Memory usage depends on:
 - **Data size**: Keep datasets in reasonable sizes
 
 For large datasets, consider:
+
 - Processing in batches
 - Using CPU instead of GPU
 - Reducing precision (float32 vs float64)
@@ -180,20 +181,20 @@ Please cite TorchSOM as:
 
 .. code-block:: bibtex
 
-    # GitHub Repository
-    @software{Berthier_TorchSOM_The_Reference_2025,
+    # Conference Paper
+    @inproceedings{Berthier2025TorchSOM,
+        title={torchsom: The Reference PyTorch Library for Self-Organizing Maps},
         author={Berthier, Louis},
-        title={TorchSOM: The Reference PyTorch Library for Self-Organizing Maps},
-        url={https://github.com/michelin/TorchSOM},
-        version={1.0.0},
+        booktitle={Conference Name},
         year={2025}
     }
 
-    # Conference Paper
-    @inproceedings{Berthier2025TorchSOM,
-        title={TorchSOM: A Scalable PyTorch-Compatible Library for Self-Organizing Maps},
+    # GitHub Repository
+    @software{Berthier_TorchSOM_The_Reference_2025,
         author={Berthier, Louis},
-        booktitle={Conference Name},
+        title={torchsom: The Reference PyTorch Library for Self-Organizing Maps},
+        url={https://github.com/michelin/TorchSOM},
+        version={1.0.0},
         year={2025}
     }
 
@@ -203,16 +204,16 @@ Getting Help
 Where can I get more help?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. **`Documentation <https://opensource.michelin.io/TorchSOM/>`_**: Check our comprehensive guides
-2. **`GitHub Issues <https://github.com/michelin/TorchSOM/issues>`_**: Report bugs and request features
-3. **`Notebooks <https://github.com/michelin/TorchSOM/tree/main/notebooks>`_**: See our tutorial notebooks.
+1. **Documentation**: Check our comprehensive guides `<https://opensource.michelin.io/TorchSOM/>`_
+2. **GitHub Issues**: Report bugs and request features `<https://github.com/michelin/TorchSOM/issues>`_
+3. **Notebooks**: See our tutorial notebooks `<https://github.com/michelin/TorchSOM/tree/main/notebooks>`_
 
 How do I report a bug?
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Please include:
 
-1. **TorchSOM version**: ``torchsom.__version__``
+1. **TorchSOM version**: ``from torchsom.version import __version__``
 2. **Python version**: ``python --version``
 3. **PyTorch version**: ``torch.__version__``
 4. **Operating system**: Linux/macOS/Windows

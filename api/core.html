@@ -36,7 +36,7 @@
           
           <a href="../index.html" class="icon icon-home">
             TorchSOM
-              <img src="../_static/logo.jpg" class="logo" alt="Logo"/>
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -63,7 +63,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#verification">Verification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#dependencies">Dependencies</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#core-dependencies">Core Dependencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#optional-dependencies">Optional Dependencies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../getting_started/installation.html#development-dependencies">Development Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../getting_started/installation.html#testing-dependencies">Testing Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../getting_started/installation.html#documentation-dependencies">Documentation Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../getting_started/installation.html#security-dependencies">Security Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../getting_started/installation.html#linting-dependencies">Linting Dependencies</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#getting-help">Getting Help</a></li>
@@ -88,7 +95,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#core-components">Core Components</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#grid-topology">1. Grid Topology</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#neighborhood-function">2. Neighborhood Function</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#learning-rate-decay">3. Learning Rate Decay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#schedule-learning-rate-and-neighborhood-radius-decay">3. Schedule Learning Rate and Neighborhood Radius Decay</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../getting_started/basic_concepts.html#learning-rate-decay">Learning Rate Decay</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../getting_started/basic_concepts.html#neighborhood-radius-decay">Neighborhood Radius Decay</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../getting_started/basic_concepts.html#asymptotic-decay">Asymptotic Decay</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#distance-functions">4. Distance Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#quality-metrics">5. Quality Metrics</a></li>
 </ul>
@@ -119,7 +131,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#visualization-types">Visualization Types</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#training-errors">Training Errors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#distance-map-d-matrix">Distance Map (D-Matrix)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#distance-map-u-matrix">Distance Map (U-Matrix)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#hit-map">Hit Map</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#component-planes">Component Planes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#supervised-maps">Supervised Maps</a><ul>
@@ -130,16 +142,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#advanced-visualizations">Advanced Visualizations</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#score-map">Score Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#rank-map">Rank Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#cluster-map">Cluster Map</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#advanced-usage-examples">Advanced Usage Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#batch-visualization-generation">Batch Visualization Generation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#custom-colormap-usage">Custom Colormap Usage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#troubleshooting">Troubleshooting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#references">References</a></li>
 </ul>
 </li>
@@ -149,8 +157,6 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Core API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-torchsom.core.base_som">Base Classes</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.core.base_som.BaseSOM"><code class="docutils literal notranslate"><span class="pre">BaseSOM</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#torchsom.core.base_som.BaseSOM.build_distance_map"><code class="docutils literal notranslate"><span class="pre">BaseSOM.build_distance_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#torchsom.core.base_som.BaseSOM.build_hit_map"><code class="docutils literal notranslate"><span class="pre">BaseSOM.build_hit_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#torchsom.core.base_som.BaseSOM.fit"><code class="docutils literal notranslate"><span class="pre">BaseSOM.fit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#torchsom.core.base_som.BaseSOM.identify_bmus"><code class="docutils literal notranslate"><span class="pre">BaseSOM.identify_bmus()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#torchsom.core.base_som.BaseSOM.initialize_weights"><code class="docutils literal notranslate"><span class="pre">BaseSOM.initialize_weights()</span></code></a></li>
@@ -162,13 +168,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-torchsom.core.som">Classical SOM Implementation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#torchsom.core.som.SOM"><code class="docutils literal notranslate"><span class="pre">SOM</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.build_bmus_data_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_bmus_data_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.build_classification_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_classification_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.build_distance_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_distance_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.build_hit_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_hit_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.build_metric_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_metric_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.build_rank_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_rank_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.build_score_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_score_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.build_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.build_multiple_maps"><code class="docutils literal notranslate"><span class="pre">SOM.build_multiple_maps()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.cluster"><code class="docutils literal notranslate"><span class="pre">SOM.cluster()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.collect_samples"><code class="docutils literal notranslate"><span class="pre">SOM.collect_samples()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.fit"><code class="docutils literal notranslate"><span class="pre">SOM.fit()</span></code></a></li>
@@ -176,13 +177,16 @@
 <li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.initialize_weights"><code class="docutils literal notranslate"><span class="pre">SOM.initialize_weights()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.quantization_error"><code class="docutils literal notranslate"><span class="pre">SOM.quantization_error()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.topographic_error"><code class="docutils literal notranslate"><span class="pre">SOM.topographic_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#torchsom.core.som.SOM.weights"><code class="docutils literal notranslate"><span class="pre">SOM.weights</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#example-usage">Example usage</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#som-variants">SOM Variants</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-torchsom.core.growing">Growing SOM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-torchsom.core.hierarchical">Hierarchical SOM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#som-variants-work-in-progress">SOM Variants (WORK IN PROGRESS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#periodic-boundary-conditioned-som">Periodic Boundary Conditioned SOM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#growing-som">Growing SOM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hierarchical-som">Hierarchical SOM</a></li>
 </ul>
 </li>
 </ul>
@@ -237,6 +241,7 @@
 <li class="toctree-l4"><a class="reference internal" href="visualization.html#torchsom.visualization.base.SOMVisualizer.plot_training_errors"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_training_errors()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="visualization.html#example">Example</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="visualization.html#module-torchsom.visualization.config">Visualization Configuration</a><ul>
@@ -257,6 +262,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="visualization.html#supported-formats">Supported Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualization.html#notes">Notes</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="configs.html">Configuration API</a><ul>
@@ -292,96 +298,92 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#how-to-contribute">How to Contribute</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#report-issues">Report Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional_resources/changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/changelog.html#how-to-contribute">How to Contribute</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/changelog.html#report-issues">Report Issues</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently Asked Questions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#general-questions">General Questions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#what-is-torchsom">What is TorchSOM?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-does-torchsom-differ-from-other-som-implementations">How does TorchSOM differ from other SOM implementations?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional_resources/faq.html">Frequently Asked Questions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#general-questions">General Questions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#what-is-torchsom">What is TorchSOM?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-does-torchsom-differ-from-other-som-implementations">How does TorchSOM differ from other SOM implementations?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#installation-and-setup">Installation and Setup</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#which-python-versions-are-supported">Which Python versions are supported?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#do-i-need-a-gpu-to-use-torchsom">Do I need a GPU to use TorchSOM?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#installation-and-setup">Installation and Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#which-python-versions-are-supported">Which Python versions are supported?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#do-i-need-a-gpu-to-use-torchsom">Do I need a GPU to use TorchSOM?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#data-preprocessing">Data Preprocessing</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#should-i-always-normalize-my-data">Should I always normalize my data?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#what-about-categorical-features">What about categorical features?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#data-preprocessing">Data Preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#should-i-always-normalize-my-data">Should I always normalize my data?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#what-about-categorical-features">What about categorical features?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#performance-and-optimization">Performance and Optimization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#my-training-is-very-slow-how-can-i-speed-it-up">My training is very slow. How can I speed it up?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-much-memory-does-torchsom-use">How much memory does TorchSOM use?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#performance-and-optimization">Performance and Optimization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#my-training-is-very-slow-how-can-i-speed-it-up">My training is very slow. How can I speed it up?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-much-memory-does-torchsom-use">How much memory does TorchSOM use?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#visualization-issues">Visualization Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#why-are-some-neurons-white-in-my-visualizations">Why are some neurons white in my visualizations?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-do-i-interpret-the-distance-map-d-matrix">How do I interpret the distance map (D-Matrix)?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#can-i-customize-the-visualization-colors">Can I customize the visualization colors?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#visualization-issues">Visualization Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#why-are-some-neurons-white-in-my-visualizations">Why are some neurons white in my visualizations?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-interpret-the-distance-map-d-matrix">How do I interpret the distance map (D-Matrix)?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-customize-the-visualization-colors">Can I customize the visualization colors?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#advanced-topics">Advanced Topics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#can-i-use-torchsom-for-time-series-data">Can I use TorchSOM for time series data?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-do-i-implement-custom-distance-functions">How do I implement custom distance functions?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#can-i-save-and-load-trained-soms">Can I save and load trained SOMs?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#advanced-topics">Advanced Topics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-use-torchsom-for-time-series-data">Can I use TorchSOM for time series data?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-implement-custom-distance-functions">How do I implement custom distance functions?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-save-and-load-trained-soms">Can I save and load trained SOMs?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#integration-questions">Integration Questions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-do-i-cite-torchsom-in-my-research">How do I cite TorchSOM in my research?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#integration-questions">Integration Questions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-cite-torchsom-in-my-research">How do I cite TorchSOM in my research?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#getting-help">Getting Help</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#where-can-i-get-more-help">Where can I get more help?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-do-i-report-a-bug">How do I report a bug?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#can-i-contribute-to-torchsom">Can I contribute to TorchSOM?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#getting-help">Getting Help</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#where-can-i-get-more-help">Where can I get more help?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-report-a-bug">How do I report a bug?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-contribute-to-torchsom">Can I contribute to TorchSOM?</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#installation-issues">Installation Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#package-issues">Package Issues</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#cuda-gpu-issues">CUDA/GPU Issues</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#cuda-not-available">CUDA not available</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional_resources/troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#installation-issues">Installation Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#package-issues">Package Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#cuda-gpu-issues">CUDA/GPU Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#cuda-not-available">CUDA not available</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#training-problems">Training Problems</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#training-doesn-t-converge">Training doesn’t converge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#very-slow-training">Very slow training</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#nan-values-in-results">NaN values in results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#training-problems">Training Problems</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#training-doesn-t-converge">Training doesn’t converge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#very-slow-training">Very slow training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#nan-values-in-results">NaN values in results</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#visualization-issues">Visualization Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#empty-or-white-visualizations">Empty or white visualizations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#figures-not-displaying">Figures not displaying</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#poor-visualization-quality">Poor visualization quality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#visualization-issues">Visualization Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#empty-or-white-visualizations">Empty or white visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#figures-not-displaying">Figures not displaying</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#poor-visualization-quality">Poor visualization quality</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#data-issues">Data Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#poor-clustering-results">Poor clustering results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#configuration-errors">Configuration Errors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#validationerror-from-pydantic">ValidationError from Pydantic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#parameter-compatibility-issues">Parameter compatibility issues</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#configuration-errors">Configuration Errors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#validationerror-from-pydantic">ValidationError from Pydantic</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#parameter-compatibility-issues">Parameter compatibility issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-issues">Memory Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-usage-too-high">Memory usage too high</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-leaks">Memory leaks</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#memory-issues">Memory Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#memory-usage-too-high">Memory usage too high</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#memory-leaks">Memory leaks</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#getting-help">Getting Help</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#diagnostic-information">Diagnostic Information</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#creating-minimal-examples">Creating Minimal Examples</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#where-to-get-help">Where to Get Help</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#debug-mode">Debug Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#getting-help">Getting Help</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#diagnostic-information">Diagnostic Information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#creating-minimal-examples">Creating Minimal Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#where-to-get-help">Where to Get Help</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#debug-mode">Debug Mode</a></li>
 </ul>
 </li>
 </ul>
@@ -428,40 +430,6 @@
 <p>Abstract base class for all SOM variants.</p>
 <dl class="field-list simple">
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="torchsom.core.base_som.BaseSOM.build_distance_map">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">build_distance_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sum'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/base_som.html#BaseSOM.build_distance_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.base_som.BaseSOM.build_distance_map" title="Link to this definition"></a></dt>
-<dd><p>Build a distance map (U-matrix) showing neuron similarities.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>scaling</strong> (<em>str</em><em>, </em><em>optional</em>) – Scaling method for distances. Defaults to “sum”.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Distance map [row_neurons, col_neurons]</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>torch.Tensor</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="torchsom.core.base_som.BaseSOM.build_hit_map">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">build_hit_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/base_som.html#BaseSOM.build_hit_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.base_som.BaseSOM.build_hit_map" title="Link to this definition"></a></dt>
-<dd><p>Build a hit map showing neuron activation frequencies.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, num_features] or [num_features]</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Hit map [row_neurons, col_neurons]</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>torch.Tensor</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="torchsom.core.base_som.BaseSOM.fit">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/base_som.html#BaseSOM.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.base_som.BaseSOM.fit" title="Link to this definition"></a></dt>
@@ -586,164 +554,80 @@
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="torchsom.core.som.SOM.build_bmus_data_map">
-<span class="sig-name descname"><span class="pre">build_bmus_data_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/som.html#SOM.build_bmus_data_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.som.SOM.build_bmus_data_map" title="Link to this definition"></a></dt>
-<dd><p>Create a mapping of winning neurons to their corresponding data points.</p>
-<p>It processes the data in batches to save memory.
-The hit map is built on CPU, but the calculations are done on GPU if available.</p>
+<dt class="sig sig-object py" id="torchsom.core.som.SOM.build_map">
+<span class="sig-name descname"><span class="pre">build_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bmus_data_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/som.html#SOM.build_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.som.SOM.build_map" title="Link to this definition"></a></dt>
+<dd><p>Unified method to build various types of maps.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>torch.Tensor</em>) – input data tensor [num_samples, num_features] or [num_features]</p></li>
-<li><p><strong>return_indices</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, return indices instead of data points. Defaults to False.</p></li>
-<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of batches to process. Defaults to 1024.</p></li>
+<li><p><strong>map_type</strong> (<em>str</em>) – Type of map to build. Options:
+- “hit”: Hit map showing neuron activation frequencies
+- “distance”: Distance map showing neuron-to-neighbor distances
+- “bmus_data”: Mapping of BMUs to their corresponding data points
+- “metric”: Metric map based on target values (requires target)
+- “score”: Score map combining standard error with distribution penalty (requires target)
+- “rank”: Rank map based on neuron standard deviations (requires target)
+- “classification”: Classification map with most frequent labels (requires target)</p></li>
+<li><p><strong>data</strong> (<em>Optional</em><em>[</em><em>torch.Tensor</em><em>]</em>) – Input data tensor [batch_size, num_features].
+Required if bmus_data_map is not provided.</p></li>
+<li><p><strong>target</strong> (<em>Optional</em><em>[</em><em>torch.Tensor</em><em>]</em>) – Target values/labels (required for some map types)</p></li>
+<li><p><strong>bmus_data_map</strong> (<em>Optional</em><em>[</em><em>dict</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>list</em><em>[</em><em>int</em><em>]</em><em>]</em><em>]</em>) – Pre-computed BMU to data indices mapping.
+If provided, avoids recomputing BMUs for dependent maps.</p></li>
+<li><p><strong>**kwargs</strong> – Additional arguments specific to each map type:
+- batch_size (int): Batch processing size (default: 1024)
+- distance_metric (str): Distance function for distance maps
+- neighborhood_order (int): Neighborhood order for distance/classification maps
+- scaling (str): ‘sum’ or ‘mean’ for distance maps
+- reduction_parameter (str): ‘mean’ or ‘std’ for metric maps
+- return_indices (bool): Return indices instead of data for bmus_data maps</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dictionary mapping bmus to data samples or indices</p>
+<dd class="field-even"><p>Map result (type depends on map_type)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[Tuple[int, int], Any]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="torchsom.core.som.SOM.build_classification_map">
-<span class="sig-name descname"><span class="pre">build_classification_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighborhood_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/som.html#SOM.build_classification_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.som.SOM.build_classification_map" title="Link to this definition"></a></dt>
-<dd><p>Build a classification map where each neuron is assigned the most frequent label.</p>
-<p>In case of a tie, consider labels from neighboring neurons.
-If there are no neighboring neurons or a second tie, then randomly select one of the top label.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, num_features]</p></li>
-<li><p><strong>target</strong> (<em>torch.Tensor</em>) – Labels tensor for data points [batch_size]. They are assumed to be encoded with value &gt; 1 for decent visualization.</p></li>
-<li><p><strong>neighborhood_order</strong> (<em>int</em><em>, </em><em>optional</em>) – Neighborhood order to consider for tie-breaking. Defaults to 1.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Classification map with the most frequent label for each neuron</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>torch.Tensor</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="torchsom.core.som.SOM.build_distance_map">
-<span class="sig-name descname"><span class="pre">build_distance_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance_metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighborhood_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sum'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/som.html#SOM.build_distance_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.som.SOM.build_distance_map" title="Link to this definition"></a></dt>
-<dd><p>Computes the distance map of each neuron with its neighbors.</p>
-<p>The distance map represents the normalized sum or mean of distances
-between a neuron’s weight vector and its neighboring neurons.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>scaling</strong> (<em>str</em><em>, </em><em>optional</em>) – Defaults to “sum”.
-If ‘mean’, each cell is normalized by the average neighbor distance.
-If ‘sum’, normalization is done by the sum of distances.</p></li>
-<li><p><strong>distance_metric</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the method to calculate the distance. Defaults to None.</p></li>
-<li><p><strong>neighborhood_order</strong> (<em>int</em><em>, </em><em>optional</em>) – Indicate the neighbors to consider for the distance calculation. Defaults to None.</p></li>
-</ul>
+<dd class="field-odd"><p>torch.Tensor or Dict</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – If an invalid scaling option is provided.</p></li>
-<li><p><strong>ValueError</strong> – If an invalid distance metric is provided.</p></li>
+<li><p><strong>ValueError</strong> – If invalid map_type is specified</p></li>
+<li><p><strong>ValueError</strong> – If target is required but not provided</p></li>
+<li><p><strong>ValueError</strong> – If neither data nor bmus_data_map is provided</p></li>
 </ul>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Normalized distance map [row_neurons, col_neurons]</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>torch.Tensor</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="torchsom.core.som.SOM.build_hit_map">
-<span class="sig-name descname"><span class="pre">build_hit_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/som.html#SOM.build_hit_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.som.SOM.build_hit_map" title="Link to this definition"></a></dt>
-<dd><p>Returns a matrix where element i,j is the number of times that neuron i,j has been the winner.</p>
-<p>It processes the data in batches to save memory.
-The hit map is built on CPU, but the calculations are done on GPU if available.</p>
+<dt class="sig sig-object py" id="torchsom.core.som.SOM.build_multiple_maps">
+<span class="sig-name descname"><span class="pre">build_multiple_maps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_configs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/som.html#SOM.build_multiple_maps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.som.SOM.build_multiple_maps" title="Link to this definition"></a></dt>
+<dd><p>Efficiently build multiple maps by reusing BMUs computation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>torch.Tensor</em>) – input data tensor [batch_size, num_features]</p></li>
-<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of batches to process. Defaults to 1024.</p></li>
+<li><p><strong>map_configs</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>) – List of map configurations</p></li>
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor</p></li>
+<li><p><strong>target</strong> (<em>Optional</em><em>[</em><em>torch.Tensor</em><em>]</em>) – Target values (if needed by any map)</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – Batch size for BMUs computation</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Matrix indicating the number of times each neuron has been identified as bmu.</p>
+<dd class="field-even"><p>Dictionary mapping map names to their results</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>torch.Tensor</p>
+<dd class="field-odd"><p>dict[str, torch.Tensor]</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="torchsom.core.som.SOM.build_metric_map">
-<span class="sig-name descname"><span class="pre">build_metric_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduction_parameter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/som.html#SOM.build_metric_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.som.SOM.build_metric_map" title="Link to this definition"></a></dt>
-<dd><p>Calculate neurons’ metrics based on target values.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, num_features]</p></li>
-<li><p><strong>target</strong> (<em>torch.Tensor</em>) – Labels tensor for data points [batch_size]</p></li>
-<li><p><strong>reduction_parameter</strong> (<em>str</em>) – Decide the calculation to apply to each neuron, ‘mean’ or ‘std’.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Metric map based on the reduction parameter.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>torch.Tensor</p>
+<p class="rubric">Example</p>
+<dl class="simple">
+<dt>configs = [</dt><dd><p>{‘type’: ‘hit’},
+{‘type’: ‘metric’, ‘kwargs’: {‘reduction_parameter’: ‘std’}},
+{‘type’: ‘rank’},
+{‘type’: ‘classification’, ‘kwargs’: {‘neighborhood_order’: 2}}</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="torchsom.core.som.SOM.build_rank_map">
-<span class="sig-name descname"><span class="pre">build_rank_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/som.html#SOM.build_rank_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.som.SOM.build_rank_map" title="Link to this definition"></a></dt>
-<dd><p>Build a map of neuron ranks based on their target value standard deviations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, num_features]</p></li>
-<li><p><strong>target</strong> (<em>torch.Tensor</em>) – Labels tensor for data points [batch_size]</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Rank map where each neuron’s value is its rank (1 = lowest std = best)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>torch.Tensor</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="torchsom.core.som.SOM.build_score_map">
-<span class="sig-name descname"><span class="pre">build_score_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/som.html#SOM.build_score_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.som.SOM.build_score_map" title="Link to this definition"></a></dt>
-<dd><p>Calculate neurons’ score based on target values.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Input data tensor [batch_size, num_features]</p></li>
-<li><p><strong>target</strong> (<em>torch.Tensor</em>) – Labels tensor for data points [batch_size]</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Score map based on a chosen score function: std_neuron / sqrt(n_neuron) * log(N_data/n_neuron).
-The score combines the standard error with a term penalizing uneven sample distribution across neurons. Lower scores indicate better neuron representativeness.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>torch.Tensor</p>
-</dd>
-</dl>
+<p>]
+results = som.build_multiple_maps(configs, data, target)</p>
 </dd></dl>
 
 <dl class="py method">
@@ -793,29 +677,29 @@ The score combines the standard error with a term penalizing uneven sample distr
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>query_sample</strong> (<em>torch.Tensor</em>) – The query data point [num_features]</p></li>
-<li><p><strong>historical_samples</strong> (<em>torch.Tensor</em>) – Historical input data [num_samples, num_features]</p></li>
-<li><p><strong>historical_outputs</strong> (<em>torch.Tensor</em>) – Historical output values [num_samples]</p></li>
-<li><p><strong>min_buffer_threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – Minimum number of samples to collect. Defaults to 50.</p></li>
-<li><p><strong>bmus_idx_map</strong> (<em>dict</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>list</em><em>[</em><em>int</em><em>]</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>query_sample</strong> (<em>torch.Tensor</em>) – Query sample tensor [num_features]</p></li>
+<li><p><strong>historical_samples</strong> (<em>torch.Tensor</em>) – Historical samples tensor [num_samples, num_features]</p></li>
+<li><p><strong>historical_outputs</strong> (<em>torch.Tensor</em>) – Historical outputs tensor [num_samples]</p></li>
+<li><p><strong>bmus_idx_map</strong> (<em>dict</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>list</em><em>[</em><em>int</em><em>]</em><em>]</em>) – BMU to data indices mapping</p></li>
+<li><p><strong>min_buffer_threshold</strong> (<em>int</em>) – Minimum buffer threshold</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(historical_data_buffer, historical_output_buffer)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Tuple[torch.Tensor, torch.Tensor]</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[<em>Tensor</em>, <em>Tensor</em>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="torchsom.core.som.SOM.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/som.html#SOM.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.som.SOM.fit" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/som.html#SOM.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.som.SOM.fit" title="Link to this definition"></a></dt>
 <dd><p>Train the SOM using batches and track errors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>torch.Tensor</em>) – input data tensor [batch_size, num_features]</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – input data tensor [batch_size, num_features]</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to print progress. Defaults to True.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Quantization and topographic errors [epoch]</p>
@@ -829,18 +713,13 @@ The score combines the standard error with a term penalizing uneven sample distr
 <dl class="py method">
 <dt class="sig sig-object py" id="torchsom.core.som.SOM.identify_bmus">
 <span class="sig-name descname"><span class="pre">identify_bmus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/som.html#SOM.identify_bmus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.som.SOM.identify_bmus" title="Link to this definition"></a></dt>
-<dd><p>Find BMUs for input data.  Handles both single samples and batches.</p>
-<p>It requires a data on the GPU if available for calculations with SOM’s weights on GPU’s too.</p>
+<dd><p>Find BMUs for input data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>torch.Tensor</em>) – Input tensor of shape [num_features] or [batch_size, num_features]</p>
+<dd class="field-odd"><p><strong>data</strong> (<em>torch.Tensor</em>) – Input tensor of shape [batch_size, features]</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>For single sample: Tensor of shape [2] with [row, col].</dt><dd><p>For batch: Tensor of shape [batch_size, 2] with [row, col] pairs</p>
-</dd>
-</dl>
-</p>
+<dd class="field-even"><p>BMU coordinates as tensor [batch_size, 2]</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>torch.Tensor</p>
@@ -915,22 +794,53 @@ The score combines the standard error with a term penalizing uneven sample distr
 </dl>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="torchsom.core.som.SOM.weights">
+<span class="sig-name descname"><span class="pre">weights</span></span><a class="headerlink" href="#torchsom.core.som.SOM.weights" title="Link to this definition"></a></dt>
+<dd><p>Pre-compute:
+1. Coordinate distance matrices for efficient distance calculations
+2. Neighbor offsets for topology operations
+3. Decay schedules for all epochs at once</p>
 </dd></dl>
 
+</dd></dl>
+
+<section id="example-usage">
+<h3>Example usage<a class="headerlink" href="#example-usage" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom</span><span class="w"> </span><span class="kn">import</span> <span class="n">SOM</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">som</span> <span class="o">=</span> <span class="n">SOM</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num_features</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">som</span><span class="o">.</span><span class="n">initialize_weights</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;pca&quot;</span><span class="p">)</span>
+<span class="n">q_errors</span><span class="p">,</span> <span class="n">t_errors</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Build maps via unified API</span>
+<span class="n">distance_map</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="s2">&quot;distance&quot;</span><span class="p">)</span>
+<span class="n">hit_map</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="s2">&quot;hit&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Efficiently build multiple maps with shared BMUs</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">build_multiple_maps</span><span class="p">(</span>
+    <span class="n">map_configs</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;hit&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;distance&quot;</span><span class="p">},</span>
+    <span class="p">],</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 </section>
-<section id="som-variants">
-<h2>SOM Variants<a class="headerlink" href="#som-variants" title="Link to this heading"></a></h2>
-<section id="module-torchsom.core.growing">
-<span id="growing-som"></span><h3>Growing SOM<a class="headerlink" href="#module-torchsom.core.growing" title="Link to this heading"></a></h3>
-<p>Growing SOM module for torchsom.</p>
-<p id="module-torchsom.core.growing.components">Components for growing SOMs.</p>
-<p id="module-torchsom.core.growing.growing_som">Growing SOM module for torchsom.</p>
 </section>
-<section id="module-torchsom.core.hierarchical">
-<span id="hierarchical-som"></span><h3>Hierarchical SOM<a class="headerlink" href="#module-torchsom.core.hierarchical" title="Link to this heading"></a></h3>
-<p>Hierarchical SOM module for torchsom.</p>
-<p id="module-torchsom.core.hierarchical.components">Components for hierarchical SOMs.</p>
-<p id="module-torchsom.core.hierarchical.hierarchical_som">Hierarchical SOM module for torchsom.</p>
+<section id="som-variants-work-in-progress">
+<h2>SOM Variants (WORK IN PROGRESS)<a class="headerlink" href="#som-variants-work-in-progress" title="Link to this heading"></a></h2>
+<section id="periodic-boundary-conditioned-som">
+<h3>Periodic Boundary Conditioned SOM<a class="headerlink" href="#periodic-boundary-conditioned-som" title="Link to this heading"></a></h3>
+</section>
+<section id="growing-som">
+<h3>Growing SOM<a class="headerlink" href="#growing-som" title="Link to this heading"></a></h3>
+</section>
+<section id="hierarchical-som">
+<h3>Hierarchical SOM<a class="headerlink" href="#hierarchical-som" title="Link to this heading"></a></h3>
 </section>
 </section>
 </section>

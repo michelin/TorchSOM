@@ -37,7 +37,7 @@
           
           <a href="../index.html" class="icon icon-home">
             TorchSOM
-              <img src="../_static/logo.jpg" class="logo" alt="Logo"/>
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -64,7 +64,14 @@
 <li class="toctree-l2"><a class="reference internal" href="installation.html#verification">Verification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#dependencies">Dependencies</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="installation.html#core-dependencies">Core Dependencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="installation.html#optional-dependencies">Optional Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#optional-dependencies">Optional Dependencies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="installation.html#development-dependencies">Development Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="installation.html#testing-dependencies">Testing Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="installation.html#documentation-dependencies">Documentation Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="installation.html#security-dependencies">Security Dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="installation.html#linting-dependencies">Linting Dependencies</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#getting-help">Getting Help</a></li>
@@ -89,7 +96,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#core-components">Core Components</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#grid-topology">1. Grid Topology</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#neighborhood-function">2. Neighborhood Function</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#learning-rate-decay">3. Learning Rate Decay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#schedule-learning-rate-and-neighborhood-radius-decay">3. Schedule Learning Rate and Neighborhood Radius Decay</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#learning-rate-decay">Learning Rate Decay</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#neighborhood-radius-decay">Neighborhood Radius Decay</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#asymptotic-decay">Asymptotic Decay</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#distance-functions">4. Distance Functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#quality-metrics">5. Quality Metrics</a></li>
 </ul>
@@ -120,7 +132,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#visualization-types">Visualization Types</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#training-errors">Training Errors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#distance-map-d-matrix">Distance Map (D-Matrix)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#distance-map-u-matrix">Distance Map (U-Matrix)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#hit-map">Hit Map</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#component-planes">Component Planes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#supervised-maps">Supervised Maps</a><ul>
@@ -131,16 +143,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#advanced-visualizations">Advanced Visualizations</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#score-map">Score Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#rank-map">Rank Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#cluster-map">Cluster Map</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#advanced-usage-examples">Advanced Usage Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#batch-visualization-generation">Batch Visualization Generation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#custom-colormap-usage">Custom Colormap Usage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#troubleshooting">Troubleshooting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#references">References</a></li>
 </ul>
 </li>
@@ -150,8 +158,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/core.html">Core API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/core.html#module-torchsom.core.base_som">Base Classes</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM"><code class="docutils literal notranslate"><span class="pre">BaseSOM</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.build_distance_map"><code class="docutils literal notranslate"><span class="pre">BaseSOM.build_distance_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.build_hit_map"><code class="docutils literal notranslate"><span class="pre">BaseSOM.build_hit_map()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.fit"><code class="docutils literal notranslate"><span class="pre">BaseSOM.fit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.identify_bmus"><code class="docutils literal notranslate"><span class="pre">BaseSOM.identify_bmus()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.initialize_weights"><code class="docutils literal notranslate"><span class="pre">BaseSOM.initialize_weights()</span></code></a></li>
@@ -163,13 +169,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api/core.html#module-torchsom.core.som">Classical SOM Implementation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM"><code class="docutils literal notranslate"><span class="pre">SOM</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.build_bmus_data_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_bmus_data_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.build_classification_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_classification_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.build_distance_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_distance_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.build_hit_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_hit_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.build_metric_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_metric_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.build_rank_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_rank_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.build_score_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_score_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.build_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.build_multiple_maps"><code class="docutils literal notranslate"><span class="pre">SOM.build_multiple_maps()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.cluster"><code class="docutils literal notranslate"><span class="pre">SOM.cluster()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.collect_samples"><code class="docutils literal notranslate"><span class="pre">SOM.collect_samples()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.fit"><code class="docutils literal notranslate"><span class="pre">SOM.fit()</span></code></a></li>
@@ -177,13 +178,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.initialize_weights"><code class="docutils literal notranslate"><span class="pre">SOM.initialize_weights()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.quantization_error"><code class="docutils literal notranslate"><span class="pre">SOM.quantization_error()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.topographic_error"><code class="docutils literal notranslate"><span class="pre">SOM.topographic_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.weights"><code class="docutils literal notranslate"><span class="pre">SOM.weights</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api/core.html#example-usage">Example usage</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../api/core.html#som-variants">SOM Variants</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/core.html#module-torchsom.core.growing">Growing SOM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/core.html#module-torchsom.core.hierarchical">Hierarchical SOM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/core.html#som-variants-work-in-progress">SOM Variants (WORK IN PROGRESS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/core.html#periodic-boundary-conditioned-som">Periodic Boundary Conditioned SOM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/core.html#growing-som">Growing SOM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/core.html#hierarchical-som">Hierarchical SOM</a></li>
 </ul>
 </li>
 </ul>
@@ -238,6 +242,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_training_errors"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_training_errors()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#example">Example</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api/visualization.html#module-torchsom.visualization.config">Visualization Configuration</a><ul>
@@ -258,6 +263,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api/visualization.html#supported-formats">Supported Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/visualization.html#notes">Notes</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/configs.html">Configuration API</a><ul>
@@ -293,96 +299,92 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../changelog.html#how-to-contribute">How to Contribute</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#report-issues">Report Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional_resources/changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/changelog.html#how-to-contribute">How to Contribute</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/changelog.html#report-issues">Report Issues</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently Asked Questions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#general-questions">General Questions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#what-is-torchsom">What is TorchSOM?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-does-torchsom-differ-from-other-som-implementations">How does TorchSOM differ from other SOM implementations?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional_resources/faq.html">Frequently Asked Questions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#general-questions">General Questions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#what-is-torchsom">What is TorchSOM?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-does-torchsom-differ-from-other-som-implementations">How does TorchSOM differ from other SOM implementations?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#installation-and-setup">Installation and Setup</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#which-python-versions-are-supported">Which Python versions are supported?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#do-i-need-a-gpu-to-use-torchsom">Do I need a GPU to use TorchSOM?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#installation-and-setup">Installation and Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#which-python-versions-are-supported">Which Python versions are supported?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#do-i-need-a-gpu-to-use-torchsom">Do I need a GPU to use TorchSOM?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#data-preprocessing">Data Preprocessing</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#should-i-always-normalize-my-data">Should I always normalize my data?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#what-about-categorical-features">What about categorical features?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#data-preprocessing">Data Preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#should-i-always-normalize-my-data">Should I always normalize my data?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#what-about-categorical-features">What about categorical features?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#performance-and-optimization">Performance and Optimization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#my-training-is-very-slow-how-can-i-speed-it-up">My training is very slow. How can I speed it up?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-much-memory-does-torchsom-use">How much memory does TorchSOM use?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#performance-and-optimization">Performance and Optimization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#my-training-is-very-slow-how-can-i-speed-it-up">My training is very slow. How can I speed it up?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-much-memory-does-torchsom-use">How much memory does TorchSOM use?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#visualization-issues">Visualization Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#why-are-some-neurons-white-in-my-visualizations">Why are some neurons white in my visualizations?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-do-i-interpret-the-distance-map-d-matrix">How do I interpret the distance map (D-Matrix)?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#can-i-customize-the-visualization-colors">Can I customize the visualization colors?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#visualization-issues">Visualization Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#why-are-some-neurons-white-in-my-visualizations">Why are some neurons white in my visualizations?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-interpret-the-distance-map-d-matrix">How do I interpret the distance map (D-Matrix)?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-customize-the-visualization-colors">Can I customize the visualization colors?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#advanced-topics">Advanced Topics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#can-i-use-torchsom-for-time-series-data">Can I use TorchSOM for time series data?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-do-i-implement-custom-distance-functions">How do I implement custom distance functions?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#can-i-save-and-load-trained-soms">Can I save and load trained SOMs?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#advanced-topics">Advanced Topics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-use-torchsom-for-time-series-data">Can I use TorchSOM for time series data?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-implement-custom-distance-functions">How do I implement custom distance functions?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-save-and-load-trained-soms">Can I save and load trained SOMs?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#integration-questions">Integration Questions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-do-i-cite-torchsom-in-my-research">How do I cite TorchSOM in my research?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#integration-questions">Integration Questions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-cite-torchsom-in-my-research">How do I cite TorchSOM in my research?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../faq.html#getting-help">Getting Help</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#where-can-i-get-more-help">Where can I get more help?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#how-do-i-report-a-bug">How do I report a bug?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../faq.html#can-i-contribute-to-torchsom">Can I contribute to TorchSOM?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#getting-help">Getting Help</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#where-can-i-get-more-help">Where can I get more help?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-report-a-bug">How do I report a bug?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-contribute-to-torchsom">Can I contribute to TorchSOM?</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../troubleshooting.html">Troubleshooting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#installation-issues">Installation Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#package-issues">Package Issues</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#cuda-gpu-issues">CUDA/GPU Issues</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#cuda-not-available">CUDA not available</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional_resources/troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#installation-issues">Installation Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#package-issues">Package Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#cuda-gpu-issues">CUDA/GPU Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#cuda-not-available">CUDA not available</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#training-problems">Training Problems</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#training-doesn-t-converge">Training doesn’t converge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#very-slow-training">Very slow training</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#nan-values-in-results">NaN values in results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#training-problems">Training Problems</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#training-doesn-t-converge">Training doesn’t converge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#very-slow-training">Very slow training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#nan-values-in-results">NaN values in results</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#visualization-issues">Visualization Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#empty-or-white-visualizations">Empty or white visualizations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#figures-not-displaying">Figures not displaying</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#poor-visualization-quality">Poor visualization quality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#visualization-issues">Visualization Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#empty-or-white-visualizations">Empty or white visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#figures-not-displaying">Figures not displaying</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#poor-visualization-quality">Poor visualization quality</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#data-issues">Data Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#poor-clustering-results">Poor clustering results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#configuration-errors">Configuration Errors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#validationerror-from-pydantic">ValidationError from Pydantic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#parameter-compatibility-issues">Parameter compatibility issues</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#configuration-errors">Configuration Errors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#validationerror-from-pydantic">ValidationError from Pydantic</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#parameter-compatibility-issues">Parameter compatibility issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-issues">Memory Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-usage-too-high">Memory usage too high</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-leaks">Memory leaks</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#memory-issues">Memory Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#memory-usage-too-high">Memory usage too high</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#memory-leaks">Memory leaks</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../troubleshooting.html#getting-help">Getting Help</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#diagnostic-information">Diagnostic Information</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#creating-minimal-examples">Creating Minimal Examples</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#where-to-get-help">Where to Get Help</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../troubleshooting.html#debug-mode">Debug Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#getting-help">Getting Help</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#diagnostic-information">Diagnostic Information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#creating-minimal-examples">Creating Minimal Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#where-to-get-help">Where to Get Help</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#debug-mode">Debug Mode</a></li>
 </ul>
 </li>
 </ul>
@@ -435,6 +437,8 @@
 <li><p><strong>Topology preservation</strong>: Maintains neighborhood relationships</p></li>
 <li><p><strong>Dimensionality reduction</strong>: Maps N-dimensional data to 2D grid</p></li>
 </ul>
+<a class="reference internal image-reference" href="../_images/architecture.png"><img alt="Architecture of a SOM" class="align-center" src="../_images/architecture.png" style="width: 600px;" />
+</a>
 </section>
 <section id="how-soms-work">
 <h2>How SOMs Work<a class="headerlink" href="#how-soms-work" title="Link to this heading"></a></h2>
@@ -451,80 +455,166 @@
 <section id="mathematical-foundation">
 <h3>Mathematical Foundation<a class="headerlink" href="#mathematical-foundation" title="Link to this heading"></a></h3>
 <p><strong>Distance Calculation</strong>
-The similarity between input <strong>x</strong> and neuron <strong>w</strong> is typically measured using Euclidean distance:</p>
+The similarity between an input vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and a neuron’s weight vector <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> is most commonly measured using the Euclidean distance.
+Alternative distance functions are also supported; see <a class="reference internal" href="#distance-functions-section"><span class="std std-ref">4. Distance Functions</span></a> for a comprehensive list.</p>
 <div class="math notranslate nohighlight">
-\[d(x, w_i) = \sqrt{\sum_{j=1}^{n} (x_j - w_{i,j})^2}\]</div>
+\[\text{BMU} = w_{\mathrm{bmu}} = \underset{i,j}{\operatorname{argmin}}\, \| \mathbf{x} - \mathbf{w}_{ij} \|_2 = \underset{i,j}{\operatorname{argmin}}\, \sqrt{\sum_{l=1}^{k} (x_l - w_{ij,l})^2}\]</div>
 <p><strong>Weight Update Rule</strong>
-The weight update follows:</p>
+The weights of the neurons are updated according to the following rule:</p>
 <div class="math notranslate nohighlight">
-\[w_i(t+1) = w_i(t) + \alpha(t) \cdot h_{BMU,i}(t) \cdot (x(t) - w_i(t))\]</div>
-<p>Where:
-- <span class="math notranslate nohighlight">\(\alpha(t)\)</span> is the learning rate at time t
-- <span class="math notranslate nohighlight">\(h_{BMU,i}(t)\)</span> is the neighborhood function
-- <span class="math notranslate nohighlight">\(x(t)\)</span> is the input vector at time t</p>
+\[\mathbf{w}_{ij}(t+1) = \mathbf{w}_{ij}(t) + \alpha(t) \cdot h_{ij}(t) \cdot (\mathbf{x} - \mathbf{w}_{ij}(t))\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathbf{w}_{ij}(t) \in \mathbb{R}^k\)</span>: weight vector of the neuron at row <span class="math notranslate nohighlight">\(i\)</span>, column <span class="math notranslate nohighlight">\(j\)</span> at iteration <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha(t) \in \mathbb{R}\)</span>: learning rate at iteration <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(h_{ij}(t) \in \mathbb{R}\)</span>: neighborhood function value for neuron <span class="math notranslate nohighlight">\((i, j)\)</span> at iteration <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^k\)</span>: input feature vector</p></li>
+</ul>
 </section>
 </section>
 <section id="core-components">
 <h2>Core Components<a class="headerlink" href="#core-components" title="Link to this heading"></a></h2>
 <section id="grid-topology">
 <h3>1. Grid Topology<a class="headerlink" href="#grid-topology" title="Link to this heading"></a></h3>
-<p>SOMs organize neurons in a grid structure:</p>
+<p>SOMs arrange neurons in a regular grid structure, which determines the map’s topology and neighborhood relationships:</p>
 <dl class="simple">
 <dt><strong>Rectangular Grid</strong></dt><dd><ul class="simple">
-<li><p>Each neuron has up to 8 neighbors</p></li>
 <li><p>Simple, intuitive visualization</p></li>
-<li><p>Good for most applications</p></li>
+<li><p>Suitable for most applications</p></li>
 </ul>
 </dd>
 <dt><strong>Hexagonal Grid</strong></dt><dd><ul class="simple">
-<li><p>Each neuron has up to 6 neighbors</p></li>
-<li><p>More uniform neighborhood distances</p></li>
-<li><p>Better for circular/radial patterns</p></li>
+<li><p>Uniform neighborhood distances</p></li>
+<li><p>Reduces topology errors, often preferred for advanced analysis</p></li>
 </ul>
 </dd>
 </dl>
+<a class="reference internal image-reference" href="../_images/topologies.png"><img alt="Topologies with neighborhood orders" class="align-center" src="../_images/topologies.png" style="width: 600px;" />
+</a>
 </section>
 <section id="neighborhood-function">
 <h3>2. Neighborhood Function<a class="headerlink" href="#neighborhood-function" title="Link to this heading"></a></h3>
-<p>Determines how much each neuron is affected by the BMU:</p>
+<p>The neighborhood function determines how much each neuron is influenced by the BMU during weight updates:</p>
 <dl>
-<dt><strong>Gaussian</strong> (Most Common)</dt><dd><div class="math notranslate nohighlight">
-\[h_{BMU,i}(t) = \exp\left(-\frac{d_{BMU,i}^2}{2\sigma(t)^2}\right)\]</div>
+<dt><strong>Gaussian</strong> (most common):</dt><dd><div class="math notranslate nohighlight">
+\[h_{ij}^{\mathrm{Gaussian}}(t) = \exp\left(-\frac{d_{ij}^2}{2\,\sigma(t)^2}\right)\]</div>
 </dd>
-<dt><strong>Bubble</strong></dt><dd><p>Step function - neurons within radius are updated equally</p>
+<dt><strong>Mexican Hat</strong>:</dt><dd><div class="math notranslate nohighlight">
+\[h_{ij}^{\mathrm{Mexican}}(t) = \frac{1}{\pi\,\sigma(t)^4} \left(1 - \frac{d_{ij}^2}{2\,\sigma(t)^2}\right) \exp\left(-\frac{d_{ij}^2}{2\,\sigma(t)^2}\right)\]</div>
 </dd>
-<dt><strong>Triangle</strong></dt><dd><p>Linear decay from BMU to neighborhood boundary</p>
+<dt><strong>Bubble</strong>:</dt><dd><div class="math notranslate nohighlight">
+\[\begin{split}h_{ij}^{\mathrm{Bubble}}(t) = \begin{cases}
+   1, &amp; \text{if } d_{ij} \leq \sigma(t) \\
+   0, &amp; \text{otherwise}
+\end{cases}\end{split}\]</div>
+</dd>
+<dt><strong>Triangle</strong>:</dt><dd><div class="math notranslate nohighlight">
+\[h_{ij}^{\mathrm{Triangle}}(t) = \max\left(0,\, 1 - \frac{d_{ij}}{\sigma(t)}\right)\]</div>
 </dd>
 </dl>
+<p>When updating neuron weights, the distance <span class="math notranslate nohighlight">\(d_{ij}\)</span> is computed in the grid (map) space, not in the input feature space:</p>
+<div class="math notranslate nohighlight">
+\[d_{ij} = \sqrt{(i - c_x)^2 + (j - c_y)^2}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\((c_x, c_y)\)</span>: coordinates of the BMU in the grid</p></li>
+<li><p><span class="math notranslate nohighlight">\((i, j)\)</span>: coordinates of neuron <span class="math notranslate nohighlight">\(w_{ij}\)</span></p></li>
+</ul>
 </section>
+<section id="schedule-learning-rate-and-neighborhood-radius-decay">
+<h3>3. Schedule Learning Rate and Neighborhood Radius Decay<a class="headerlink" href="#schedule-learning-rate-and-neighborhood-radius-decay" title="Link to this heading"></a></h3>
 <section id="learning-rate-decay">
-<h3>3. Learning Rate Decay<a class="headerlink" href="#learning-rate-decay" title="Link to this heading"></a></h3>
-<p>Controls how much weights change during training:</p>
+<h4>Learning Rate Decay<a class="headerlink" href="#learning-rate-decay" title="Link to this heading"></a></h4>
+<p>The learning rate <span class="math notranslate nohighlight">\(\alpha(t)\)</span> controls the magnitude of weight vector updates during training, directly influencing convergence speed and final map quality.</p>
 <dl>
-<dt><strong>Asymptotic Decay</strong></dt><dd><div class="math notranslate nohighlight">
-\[\alpha(t) = \frac{\alpha_0}{1 + t/T}\]</div>
+<dt><strong>Inverse Decay</strong>:</dt><dd><div class="math notranslate nohighlight">
+\[\alpha(t+1) = \alpha(t) \cdot \frac{\gamma}{\gamma + t} % , \quad \text{where } \gamma = \frac{T}{100}\]</div>
 </dd>
-<dt><strong>Linear Decay</strong></dt><dd><div class="math notranslate nohighlight">
-\[\alpha(t) = \alpha_0 \cdot (1 - t/T)\]</div>
+<dt><strong>Linear Decay</strong>:</dt><dd><div class="math notranslate nohighlight">
+\[\alpha(t+1) = \alpha(t) \cdot \left( 1 - \frac{t}{T} \right)\]</div>
 </dd>
 </dl>
+<p>These schedulers guarantee convergence to <span class="math notranslate nohighlight">\(\alpha(T) = 0\)</span>, corresponding to zero weight updates in the final training phase, which is essential for achieving precise local weight adjustments.</p>
+</section>
+<section id="neighborhood-radius-decay">
+<h4>Neighborhood Radius Decay<a class="headerlink" href="#neighborhood-radius-decay" title="Link to this heading"></a></h4>
+<p>The neighborhood radius controls the size of the neighborhood of the BMU during weight updates.</p>
+<dl>
+<dt><strong>Inverse Decay</strong>:</dt><dd><div class="math notranslate nohighlight">
+\[\sigma(t+1) = \frac{\sigma(t)}{1 + t \cdot \frac{\sigma(t) - 1}{T}}\]</div>
+</dd>
+<dt><strong>Linear Decay</strong>:</dt><dd><div class="math notranslate nohighlight">
+\[\sigma(t+1) = \sigma(t) + t \cdot \frac{1 - \sigma(t)}{T}\]</div>
+</dd>
+</dl>
+<p>These schedulers guarantee convergence to <span class="math notranslate nohighlight">\(\sigma(T) = 1\)</span>, corresponding to single-neuron updates in the final training phase, which is essential for achieving precise local weight adjustments.</p>
+</section>
+<section id="asymptotic-decay">
+<h4>Asymptotic Decay<a class="headerlink" href="#asymptotic-decay" title="Link to this heading"></a></h4>
+<p>For arbitrary dynamic parameters requiring exponential-like decay characteristics, TorchSOM implements a general asymptotic decay scheduler:</p>
+<div class="math notranslate nohighlight">
+\[\theta(t+1) = \frac{\theta(t)}{1 + \frac{t}{T/2}}\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\alpha(t) \in \mathbb{R}^+\)</span>: learning rate at iteration <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\sigma(t) \in \mathbb{R}^+\)</span>: neighborhood function width at iteration <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\theta(t) \in \mathbb{R}^+\)</span>: general dynamic parameter at iteration <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(T \in \mathbb{N}\)</span>: total number of training iterations</p></li>
+<li><p><span class="math notranslate nohighlight">\(t \in \{0, 1, \ldots, T\}\)</span>: current iteration index</p></li>
+<li><p><span class="math notranslate nohighlight">\(\gamma \in \mathbb{R}^+\)</span>: inverse decay rate parameter, typically <span class="math notranslate nohighlight">\(\gamma = T/100\)</span></p></li>
+</ul>
+</section>
 </section>
 <section id="distance-functions">
-<h3>4. Distance Functions<a class="headerlink" href="#distance-functions" title="Link to this heading"></a></h3>
+<span id="distance-functions-section"></span><h3>4. Distance Functions<a class="headerlink" href="#distance-functions" title="Link to this heading"></a></h3>
 <p>Different ways to measure similarity:</p>
-<ul class="simple">
-<li><p><strong>Euclidean</strong>: Standard geometric distance</p></li>
-<li><p><strong>Cosine</strong>: Measures angle between vectors</p></li>
-<li><p><strong>Manhattan</strong>: Sum of absolute differences</p></li>
-<li><p><strong>Chebyshev</strong>: Maximum absolute difference</p></li>
+<dl>
+<dt><strong>Euclidean</strong>:</dt><dd><div class="math notranslate nohighlight">
+\[d_{\text{Euclidean}}(x, w_{ij}) = \sqrt{\sum_{l=1}^k {(x_l - w_{ij,l})}^2}\]</div>
+</dd>
+<dt><strong>Cosine</strong>:</dt><dd><div class="math notranslate nohighlight">
+\[d_{\text{cosine}}(x, w_{ij}) = 1 - \frac{x \cdot w_{ij}}{\|x\| \|w_{ij}\|}\]</div>
+</dd>
+<dt><strong>Manhattan</strong>:</dt><dd><div class="math notranslate nohighlight">
+\[d_{\text{Manhattan}}(x, w_{ij}) = \sum_{l=1}^k |x_l - w_{ij,l}|\]</div>
+</dd>
+<dt><strong>Chebyshev</strong>:</dt><dd><div class="math notranslate nohighlight">
+\[d_{\text{Chebyshev}}(x, w_{ij}) = \max_{l} |x_l - w_{ij,l}|\]</div>
+</dd>
+<dt>where:</dt><dd><ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(x \in \mathbb{R}^k\)</span>: input feature vector</p></li>
+<li><p><span class="math notranslate nohighlight">\(w_{ij} \in \mathbb{R}^k\)</span>: weight vector of the neuron at row <span class="math notranslate nohighlight">\(i\)</span>, column <span class="math notranslate nohighlight">\(j\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(k \in \mathbb{N}\)</span>: number of features</p></li>
+<li><p><span class="math notranslate nohighlight">\(l \in \{1, \ldots, k\}\)</span>: feature index</p></li>
 </ul>
+</dd>
+</dl>
 </section>
 <section id="quality-metrics">
 <h3>5. Quality Metrics<a class="headerlink" href="#quality-metrics" title="Link to this heading"></a></h3>
-<ul class="simple">
-<li><p><strong>Quantization Error</strong>: Average distance between data points and their BMUs. Lower is better, measures how well the map represents the data.</p></li>
-<li><p><strong>Topographic Error</strong>: Percentage of data points whose BMU and second-BMU are not neighbors. Lower is better, measures topology preservation.</p></li>
+<p><strong>Quantization Error</strong>
+Average distance between data points and their BMUs. Lower is better, measures how well the map represents the data.</p>
+<p><strong>Quantization Error</strong></p>
+<p>Average distance between data points and their BMUs. Lower is better; measures how well the map represents the data.</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{QE} = \frac{1}{N} \sum_{i=1}^{N} \left\| x_i - w_{\mathrm{BMU}}(x_i) \right\|_2\]</div>
+<p><strong>Topographic Error</strong></p>
+<p>Percentage of data points whose BMU and second-BMU are not neighbors. Lower is better; measures topology preservation.</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{TE} = \frac{1}{N} \sum_{i=1}^{N} \mathbb{I} \left( d_{\mathrm{grid}} \left( w_{\mathrm{BMU}}(x_i),\ w_{\mathrm{2nd\text{-}BMU}}(x_i) \right) &gt; d_{\mathrm{th}} \right )\]</div>
+<p>where:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(N \in \mathbb{N}\)</span>: Number of training samples</p></li>
+<li><p><span class="math notranslate nohighlight">\(x_i \in \mathbb{R}^k\)</span>: The <span class="math notranslate nohighlight">\(i\)</span>-th input training sample</p></li>
+<li><p><span class="math notranslate nohighlight">\(w_{\text{BMU}}(x_i) \in \mathbb{R}^k\)</span>: Weight vector of the Best Matching Unit (BMU) for input <span class="math notranslate nohighlight">\(x_i\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(w_{\text{2nd-BMU}}(x_i) \in \mathbb{R}^k\)</span>: Weight vector of the second BMU for input <span class="math notranslate nohighlight">\(x_i\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(d_{\text{th}} \in \mathbb{R}^+\)</span>: Threshold distance for topological adjacency (typically <span class="math notranslate nohighlight">\(d_{\text{th}} = 1\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbb{I}(\cdot) \in \{0, 1\}\)</span>: Indicator function</p></li>
+<li><p><span class="math notranslate nohighlight">\(\| \cdot \|_2\)</span>: Euclidean norm in feature space</p></li>
+<li><p><span class="math notranslate nohighlight">\(d_{\text{grid}}(\cdot, \cdot)\)</span>: Grid space distance between BMUs of input <span class="math notranslate nohighlight">\(x_i\)</span></p></li>
 </ul>
+</div></blockquote>
 </section>
 </section>
 <section id="strengths-and-weaknesses">
@@ -541,8 +631,8 @@ The weight update follows:</p>
 <section id="limitations">
 <h3>Limitations<a class="headerlink" href="#limitations" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p><strong>Computationally expensive</strong> for large datasets</p></li>
-<li><p><strong>Parameter sensitive</strong> - requires tuning</p></li>
+<li><p><strong>Calculations can be expensive</strong> for large datasets</p></li>
+<li><p><strong>Parameter selection is important</strong> - requires tuning</p></li>
 <li><p><strong>Interpretation challenges</strong> for very high dimensions</p></li>
 </ul>
 </section>

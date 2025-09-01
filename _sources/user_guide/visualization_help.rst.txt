@@ -91,28 +91,33 @@ Monitors SOM learning progress by plotting quantization and topographic errors o
 - **Topographic Error**: Measures topology preservation (lower percentage is better)
 - **Convergence**: Both errors should generally decrease and stabilize during training
 
-.. image:: ../../../assets/michelin_training_errors.png
-   :width: 400px
+.. image:: ../_static/assets/michelin_training_errors.png
+   :width: 600px
    :align: center
    :alt: Training Errors Example
 
-Distance Map (D-Matrix)
+Distance Map (U-Matrix)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 The unified distance matrix shows the distance between each neuron and its neighbors, revealing cluster boundaries.
 
 .. code-block:: python
 
-   visualizer.plot_distance_map(save_path="results")
+   visualizer.plot_distance_map(
+       save_path=save_path
+       distance_metric=som.distance_fn_name,
+       neighborhood_order=som.neighborhood_order,
+       scaling="sum",
+   )
 
 **Interpretation:**
 
-- **Dark Regions**: Large distances between neighboring neurons (cluster boundaries)
-- **Light Regions**: Small distances between neighboring neurons (within clusters)
+- **Dark Regions**: Small distances between neighboring neurons (cluster boundaries)
+- **Light Regions**: Large distances between neighboring neurons (within clusters)
 - **Topology**: Works with both rectangular and hexagonal grids
 
-.. image:: ../../../assets/michelin_dmatrix.png
-   :width: 400px
+.. image:: ../_static/assets/michelin_dmatrix.png
+   :width: 600px
    :align: center
    :alt: Distance Matrix Example
 
@@ -123,15 +128,20 @@ Shows the frequency of neuron activation, indicating how often each neuron was s
 
 .. code-block:: python
 
-   visualizer.plot_hit_map(data=data, save_path="results")
+   visualizer.plot_hit_map(
+       data=train_features,
+       save_path=save_path,
+       batch_size=train_features.shape[0],
+   )
 
 **Interpretation:**
+
 - **Bright Areas**: Frequently activated neurons (high data density)
 - **Dark Areas**: Rarely activated neurons (low data density or dead neurons)
 - **Usage**: Identifies data distribution patterns and potential dead neurons
 
-.. image:: ../../../assets/michelin_hitmap.png
-   :width: 400px
+.. image:: ../_static/assets/michelin_hitmap.png
+   :width: 600px
    :align: center
    :alt: Hit Map Example
 
@@ -142,20 +152,18 @@ Individual visualizations for each input feature dimension, showing how feature 
 
 .. code-block:: python
 
-   # Plot all component planes
-   feature_names = ["Temperature", "Pressure", "Flow_Rate", "Quality"]
    visualizer.plot_component_planes(
        component_names=feature_names,
-       save_path="results"
+       save_path=save_path
    )
 
 **Interpretation:**
-- **One Plane per Feature**: Shows weight values for each input dimension
-- **Pattern Analysis**: Reveals feature importance in different map regions
-- **Correlation Detection**: Similar patterns indicate correlated features
 
-.. image:: ../../../assets/michelin_cp12.png
-   :width: 400px
+- **One Plane per Feature**: Shows weight values for each input dimension
+- **Pattern Analysis**: Reveals feature level in different map regions
+
+.. image:: ../_static/assets/michelin_cp12.png
+   :width: 600px
    :align: center
    :alt: Component Plane of feature 12
 
@@ -171,12 +179,12 @@ Displays the most frequent class label assigned to each neuron, providing insigh
 
 .. code-block:: python
 
-   # Example: Visualizing class assignments (labels must be > 0)
-   labels = torch.randint(1, 4, (1000,))
    visualizer.plot_classification_map(
-       data=data,
-       target=labels,
-       save_path="results"
+       data=train_features,
+       target=train_targets,
+       save_path=save_path,
+       bmus_data_map=bmus_map,
+       neighborhood_order=som.neighborhood_order,
    )
 
 **Interpretation:**
@@ -185,8 +193,8 @@ Displays the most frequent class label assigned to each neuron, providing insigh
 - **Cluster Identification**: Reveals spatial organization of classes on the map.
 - **Decision Boundaries**: Boundaries between colors indicate class separation.
 
-.. image:: ../../../assets/wine_classificationmap.png
-   :width: 400px
+.. image:: ../_static/assets/wine_classificationmap.png
+   :width: 600px
    :align: center
    :alt: Classification Map Example
 
@@ -202,13 +210,12 @@ Shows the average target value for samples mapped to each neuron.
 
 .. code-block:: python
 
-   # Example: Visualizing mean target values
-   target_values = torch.randn(1000) * 10 + 50
    visualizer.plot_metric_map(
-       data=data,
-       target=target_values,
+       data=train_features,
+       target=train_targets,
        reduction_parameter="mean",
-       save_path="results"
+       save_path=save_path,
+       bmus_data_map=bmus_map,
    )
 
 **Interpretation:**
@@ -217,8 +224,8 @@ Shows the average target value for samples mapped to each neuron.
 - **Smooth Transitions**: Suggest good topology preservation.
 - **Hot Spots**: Highlight neurons with extreme target values.
 
-.. image:: ../../../assets/michelin_meanmap.png
-   :width: 400px
+.. image:: ../_static/assets/michelin_meanmap.png
+   :width: 600px
    :align: center
    :alt: Mean Map Example
 
@@ -230,10 +237,11 @@ Shows the variability of target values for each neuron, useful for assessing pre
 .. code-block:: python
 
    visualizer.plot_metric_map(
-       data=data,
-       target=target_values,
+       data=train_features,
+       target=train_targets,
        reduction_parameter="std",
-       save_path="results"
+       save_path=save_path,
+       bmus_data_map=bmus_map,
    )
 
 **Interpretation:**
@@ -241,6 +249,11 @@ Shows the variability of target values for each neuron, useful for assessing pre
 - **Low Values**: Neurons with consistent (low-variance) target values—good for prediction.
 - **High Values**: Neurons with variable (high-variance) target values—less reliable.
 - **Quality Assessment**: Helps identify the most reliable neurons for regression tasks.
+
+.. .. image:: ../_static/assets/michelin_stdmap.png
+..    :width: 600px
+..    :align: center
+..    :alt: Standard Deviation Map Example
 
 Advanced Visualizations
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -253,16 +266,31 @@ Evaluates neuron representativeness using a composite score combining standard e
 .. code-block:: python
 
    visualizer.plot_score_map(
-       data=data,
-       target=target_values,
-       save_path="results"
+       bmus_data_map=bmus_map,
+       target=train_targets,
+       total_samples=train_features.shape[0],
+       save_path=save_path,
    )
+
+.. math::
+       S_{ij} = \frac{\sigma_{ij}}{\sqrt{n_{ij}}} \cdot \log\left(\frac{N}{n_{ij}}\right)
+
+where:
+
+   - :math:`S_{ij} \in \mathbb{R}^+`: Reliability score of neuron at position :math:`(i, j)`
+   - :math:`\sigma_{ij} \in \mathbb{R}^+`: Standard deviation of target values assigned to neuron at position :math:`(i, j)`
+   - :math:`n_{ij} \in \mathbb{N}`: Number of samples assigned to neuron at position :math:`(i, j)`
+   - :math:`N \in \mathbb{N}`: Total number of samples in the latent space
 
 **Interpretation:**
 
 - **Lower Scores**: Better neuron representativeness
-- **Formula**: ``std_neuron / sqrt(n_neuron) * log(N_data/n_neuron)``
 - **Usage**: Identifies most reliable neurons for analysis
+
+.. .. image:: ../_static/assets/michelin_scoremap.png
+..    :width: 600px
+..    :align: center
+..    :alt: Score Map Example
 
 Rank Map
 ^^^^^^^^
@@ -272,9 +300,9 @@ Ranks neurons based on their target value standard deviations.
 .. code-block:: python
 
    visualizer.plot_rank_map(
-       data=data,
-       target=target_values,
-       save_path="results"
+       bmus_data_map=bmus_map,
+       target=train_targets,
+       save_path=save_path,
    )
 
 **Interpretation:**
@@ -283,49 +311,36 @@ Ranks neurons based on their target value standard deviations.
 - **Higher Ranks**: Increasing standard deviation
 - **Selection**: Use top-ranked neurons for reliable predictions
 
-Advanced Usage Examples
------------------------
+.. .. image:: ../_static/assets/michelin_rankmap.png
+..    :width: 600px
+..    :align: center
+..    :alt: Rank Map Example
 
-Batch Visualization Generation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Cluster Map
+^^^^^^^^^^^
 
-.. code-block:: python
-
-   # Generate all visualizations with selective control
-   visualizer.plot_all(
-       quantization_errors=q_errors,
-       topographic_errors=t_errors,
-       data=data,
-       target=target_values,
-       component_names=["Feature_1", "Feature_2", "Feature_3", "Feature_4"],
-       save_path="complete_analysis",
-       training_errors=True,
-       distance_map=True,
-       hit_map=True,
-       score_map=True,
-       rank_map=True,
-       metric_map=True,
-       component_planes=True
-   )
-
-Custom Colormap Usage
-~~~~~~~~~~~~~~~~~~~~~
+Clusters neurons based on algorithms like HDBSCAN, KMeans, or GMMs.
 
 .. code-block:: python
 
-   # Using custom colormaps for specific visualizations
-   visualizer.plot_grid(
-       map=som.build_distance_map(),
-       title="Custom Distance Map",
-       colorbar_label="Distance",
-       filename="custom_dmatrix",
-       save_path="results",
-       cmap="RdYlBu_r",  # Red-Yellow-Blue reversed
-       log_scale=False
+   cluster = som.cluster(
+      method="hdbscan", # hdbscan, kmeans, gmm
+      n_clusters=n_clusters,
+      feature_space="weights",
    )
+
+   visualizer.plot_cluster_map(
+       cluster_result=cluster,
+       save_path=save_path,
+   )
+
+.. image:: ../_static/assets/hdbscan_cluster_map.png
+   :width: 600px
+   :align: center
+   :alt: Cluster Map Example
 
 Troubleshooting
-~~~~~~~~~~~~~~~
+---------------
 
 **White Cells in Visualizations**:
     - Indicates neurons with zero values or NaN

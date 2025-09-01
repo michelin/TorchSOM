@@ -6,7 +6,7 @@
 TorchSOM Documentation
 ======================
 
-.. .. image:: ../../assets/logo.jpg
+.. .. image:: _static/assets/logo.png
 ..    :alt: TorchSOM Logo
 ..    :width: 200px
 ..    :align: center
@@ -57,8 +57,8 @@ Basic usage:
 .. code-block:: python
 
    import torch
-   from torchsom.core import SOM
-   from torchsom.visualization import SOMVisualizer,
+   from torchsom import SOM
+   from torchsom.visualization import SOMVisualizer
 
    # Create a 10x10 map for 3D input
    som = SOM(x=10, y=10, num_features=3, epochs=50)
@@ -66,11 +66,11 @@ Basic usage:
    # Train SOM for 50 epochs on 1000 samples
    X = torch.randn(1000, 3)
    som.initialize_weights(data=X, mode="pca")
-   QE, TE = som.fit(data=X)
+   q_errors, t_errors = som.fit(data=X)
 
    # Visualize results
    visualizer = SOMVisualizer(som=som, config=None)
-   visualizer.plot_training_errors(quantization_errors=QE, topographic_errors=TE, save_path=None)
+   visualizer.plot_training_errors(quantization_errors=q_errors, topographic_errors=t_errors, save_path=None)
    visualizer.plot_distance_map(save_path=None)
    visualizer.plot_hit_map(data=X, save_path=None)
 
@@ -101,12 +101,12 @@ Documentation Structure
    api/configs
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Additional Resources
 
-   changelog
-   faq
-   troubleshooting
+   additional_resources/changelog
+   additional_resources/faq
+   additional_resources/troubleshooting
 
 Support & Community
 -------------------

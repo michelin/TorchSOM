@@ -3,9 +3,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Overview: module code &mdash; TorchSOM 0.0.1 documentation</title>
+  <title>Frequently Asked Questions &mdash; TorchSOM 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -20,7 +21,9 @@
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Troubleshooting" href="troubleshooting.html" />
+    <link rel="prev" title="Changelog" href="changelog.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -294,93 +297,93 @@
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../additional_resources/changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/changelog.html#how-to-contribute">How to Contribute</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/changelog.html#report-issues">Report Issues</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#how-to-contribute">How to Contribute</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#report-issues">Report Issues</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../additional_resources/faq.html">Frequently Asked Questions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#general-questions">General Questions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#what-is-torchsom">What is TorchSOM?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-does-torchsom-differ-from-other-som-implementations">How does TorchSOM differ from other SOM implementations?</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Frequently Asked Questions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#general-questions">General Questions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-is-torchsom">What is TorchSOM?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-does-torchsom-differ-from-other-som-implementations">How does TorchSOM differ from other SOM implementations?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#installation-and-setup">Installation and Setup</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#which-python-versions-are-supported">Which Python versions are supported?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#do-i-need-a-gpu-to-use-torchsom">Do I need a GPU to use TorchSOM?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-and-setup">Installation and Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#which-python-versions-are-supported">Which Python versions are supported?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#do-i-need-a-gpu-to-use-torchsom">Do I need a GPU to use TorchSOM?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#data-preprocessing">Data Preprocessing</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#should-i-always-normalize-my-data">Should I always normalize my data?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#what-about-categorical-features">What about categorical features?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-preprocessing">Data Preprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#should-i-always-normalize-my-data">Should I always normalize my data?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-about-categorical-features">What about categorical features?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#performance-and-optimization">Performance and Optimization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#my-training-is-very-slow-how-can-i-speed-it-up">My training is very slow. How can I speed it up?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-much-memory-does-torchsom-use">How much memory does TorchSOM use?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-and-optimization">Performance and Optimization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#my-training-is-very-slow-how-can-i-speed-it-up">My training is very slow. How can I speed it up?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-much-memory-does-torchsom-use">How much memory does TorchSOM use?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#visualization-issues">Visualization Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#why-are-some-neurons-white-in-my-visualizations">Why are some neurons white in my visualizations?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-interpret-the-distance-map-d-matrix">How do I interpret the distance map (D-Matrix)?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-customize-the-visualization-colors">Can I customize the visualization colors?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#visualization-issues">Visualization Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#why-are-some-neurons-white-in-my-visualizations">Why are some neurons white in my visualizations?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-do-i-interpret-the-distance-map-d-matrix">How do I interpret the distance map (D-Matrix)?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#can-i-customize-the-visualization-colors">Can I customize the visualization colors?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#advanced-topics">Advanced Topics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-use-torchsom-for-time-series-data">Can I use TorchSOM for time series data?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-implement-custom-distance-functions">How do I implement custom distance functions?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-save-and-load-trained-soms">Can I save and load trained SOMs?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-topics">Advanced Topics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#can-i-use-torchsom-for-time-series-data">Can I use TorchSOM for time series data?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-do-i-implement-custom-distance-functions">How do I implement custom distance functions?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#can-i-save-and-load-trained-soms">Can I save and load trained SOMs?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#integration-questions">Integration Questions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-cite-torchsom-in-my-research">How do I cite TorchSOM in my research?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#integration-questions">Integration Questions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-do-i-cite-torchsom-in-my-research">How do I cite TorchSOM in my research?</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#getting-help">Getting Help</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#where-can-i-get-more-help">Where can I get more help?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-report-a-bug">How do I report a bug?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-contribute-to-torchsom">Can I contribute to TorchSOM?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-help">Getting Help</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#where-can-i-get-more-help">Where can I get more help?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-do-i-report-a-bug">How do I report a bug?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#can-i-contribute-to-torchsom">Can I contribute to TorchSOM?</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../additional_resources/troubleshooting.html">Troubleshooting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#installation-issues">Installation Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#package-issues">Package Issues</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#cuda-gpu-issues">CUDA/GPU Issues</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#cuda-not-available">CUDA not available</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#installation-issues">Installation Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#package-issues">Package Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#cuda-gpu-issues">CUDA/GPU Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#cuda-not-available">CUDA not available</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#training-problems">Training Problems</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#training-doesn-t-converge">Training doesn’t converge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#very-slow-training">Very slow training</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#nan-values-in-results">NaN values in results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#training-problems">Training Problems</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#training-doesn-t-converge">Training doesn’t converge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#very-slow-training">Very slow training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#nan-values-in-results">NaN values in results</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#visualization-issues">Visualization Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#empty-or-white-visualizations">Empty or white visualizations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#figures-not-displaying">Figures not displaying</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#poor-visualization-quality">Poor visualization quality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#visualization-issues">Visualization Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#empty-or-white-visualizations">Empty or white visualizations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#figures-not-displaying">Figures not displaying</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#poor-visualization-quality">Poor visualization quality</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#configuration-errors">Configuration Errors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#validationerror-from-pydantic">ValidationError from Pydantic</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#parameter-compatibility-issues">Parameter compatibility issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#configuration-errors">Configuration Errors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#validationerror-from-pydantic">ValidationError from Pydantic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#parameter-compatibility-issues">Parameter compatibility issues</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-issues">Memory Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-usage-too-high">Memory usage too high</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-leaks">Memory leaks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#memory-issues">Memory Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#memory-usage-too-high">Memory usage too high</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#memory-leaks">Memory leaks</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#getting-help">Getting Help</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#diagnostic-information">Diagnostic Information</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#creating-minimal-examples">Creating Minimal Examples</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#where-to-get-help">Where to Get Help</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#debug-mode">Debug Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#getting-help">Getting Help</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#diagnostic-information">Diagnostic Information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#creating-minimal-examples">Creating Minimal Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#where-to-get-help">Where to Get Help</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#debug-mode">Debug Mode</a></li>
 </ul>
 </li>
 </ul>
@@ -401,30 +404,246 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Overview: module code</li>
+      <li class="breadcrumb-item active">Frequently Asked Questions</li>
       <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/LouisTier/TorchSOM/blob/dev_org/docs/source/additional_resources/faq.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
-  </ul>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="changelog.html" class="btn btn-neutral float-left" title="Changelog" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="troubleshooting.html" class="btn btn-neutral float-right" title="Troubleshooting" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="torchsom/configs/som_config.html">torchsom.configs.som_config</a></li>
-<li><a href="torchsom/core/base_som.html">torchsom.core.base_som</a></li>
-<li><a href="torchsom/core/som.html">torchsom.core.som</a></li>
-<li><a href="torchsom/utils/grid.html">torchsom.utils.grid</a></li>
-<li><a href="torchsom/utils/initialization.html">torchsom.utils.initialization</a></li>
-<li><a href="torchsom/utils/metrics.html">torchsom.utils.metrics</a></li>
-<li><a href="torchsom/utils/topology.html">torchsom.utils.topology</a></li>
-<li><a href="torchsom/visualization/base.html">torchsom.visualization.base</a></li>
-<li><a href="torchsom/visualization/config.html">torchsom.visualization.config</a></li>
+  <section id="frequently-asked-questions">
+<h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Link to this heading"></a></h1>
+<section id="general-questions">
+<h2>General Questions<a class="headerlink" href="#general-questions" title="Link to this heading"></a></h2>
+<section id="what-is-torchsom">
+<h3>What is TorchSOM?<a class="headerlink" href="#what-is-torchsom" title="Link to this heading"></a></h3>
+<p>TorchSOM is a modern PyTorch-based implementation of Self-Organizing Maps (SOMs), designed for efficient training and comprehensive visualization of high-dimensional data clustering and analysis.</p>
+</section>
+<section id="how-does-torchsom-differ-from-other-som-implementations">
+<h3>How does TorchSOM differ from other SOM implementations?<a class="headerlink" href="#how-does-torchsom-differ-from-other-som-implementations" title="Link to this heading"></a></h3>
+<p>TorchSOM offers several advantages:</p>
+<ul class="simple">
+<li><p><strong>GPU acceleration</strong> through PyTorch</p></li>
+<li><p><strong>Modern Python practices</strong> with type hints and Pydantic validation</p></li>
+<li><p><strong>Comprehensive visualization suite</strong> with matplotlib integration</p></li>
+<li><p><strong>Flexible architecture</strong> supporting multiple SOM variants</p></li>
 </ul>
+</section>
+</section>
+<section id="installation-and-setup">
+<h2>Installation and Setup<a class="headerlink" href="#installation-and-setup" title="Link to this heading"></a></h2>
+<section id="which-python-versions-are-supported">
+<h3>Which Python versions are supported?<a class="headerlink" href="#which-python-versions-are-supported" title="Link to this heading"></a></h3>
+<p>We recommend using Python 3.9+.</p>
+</section>
+<section id="do-i-need-a-gpu-to-use-torchsom">
+<h3>Do I need a GPU to use TorchSOM?<a class="headerlink" href="#do-i-need-a-gpu-to-use-torchsom" title="Link to this heading"></a></h3>
+<p>No, TorchSOM works on both CPU and GPU.
+However, GPU acceleration significantly improves training speed for large datasets and maps.
+We recommend using a GPU for training.</p>
+</section>
+</section>
+<section id="data-preprocessing">
+<h2>Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Link to this heading"></a></h2>
+<section id="should-i-always-normalize-my-data">
+<h3>Should I always normalize my data?<a class="headerlink" href="#should-i-always-normalize-my-data" title="Link to this heading"></a></h3>
+<p>Yes, normalization is crucial because:</p>
+<ul class="simple">
+<li><p>Features with larger scales dominate the distance calculation</p></li>
+<li><p>SOM learning is sensitive to feature magnitudes</p></li>
+<li><p>StandardScaler or MinMaxScaler from scikit-learn  both work well</p></li>
+</ul>
+</section>
+<section id="what-about-categorical-features">
+<h3>What about categorical features?<a class="headerlink" href="#what-about-categorical-features" title="Link to this heading"></a></h3>
+<p>SOMs operate exclusively on numerical data. Therefore, it is essential to convert any categorical features into a numerical format before using them with TorchSOM. Common strategies include:</p>
+<ol class="arabic simple">
+<li><p><strong>One-hot encoding</strong> for nominal (unordered) categories</p></li>
+<li><p><strong>Ordinal encoding</strong> for ordered categories</p></li>
+<li><p><strong>Target or frequency encoding</strong> for high-cardinality categories</p></li>
+</ol>
+<p>If your dataset contains a mix of numerical and categorical features, ensure all features are numerically encoded prior to training.</p>
+<p>Similarly, when visualizing classification or label maps, assign numerical levels to each class or category to enable proper mapping and interpretation in the visualization outputs.</p>
+</section>
+</section>
+<section id="performance-and-optimization">
+<h2>Performance and Optimization<a class="headerlink" href="#performance-and-optimization" title="Link to this heading"></a></h2>
+<section id="my-training-is-very-slow-how-can-i-speed-it-up">
+<h3>My training is very slow. How can I speed it up?<a class="headerlink" href="#my-training-is-very-slow-how-can-i-speed-it-up" title="Link to this heading"></a></h3>
+<p>Try these optimizations:</p>
+<ol class="arabic simple">
+<li><p><strong>Enable GPU</strong>: Use <code class="docutils literal notranslate"><span class="pre">device=&quot;cuda&quot;</span></code> if available</p></li>
+<li><p><strong>Increase batch size</strong>: Try 64, 128, or 256</p></li>
+<li><p><strong>Reduce map size</strong>: Start smaller and scale up</p></li>
+<li><p><strong>Use PCA initialization</strong>: <code class="docutils literal notranslate"><span class="pre">initialization_mode=&quot;pca&quot;</span></code></p></li>
+<li><p><strong>Reduce epochs</strong>: Monitor convergence and stop early</p></li>
+</ol>
+</section>
+<section id="how-much-memory-does-torchsom-use">
+<h3>How much memory does TorchSOM use?<a class="headerlink" href="#how-much-memory-does-torchsom-use" title="Link to this heading"></a></h3>
+<p>Memory usage depends on:</p>
+<ul class="simple">
+<li><p><strong>Map size</strong>: O(x × y × num_features)</p></li>
+<li><p><strong>Batch size</strong>: Larger batches use more memory</p></li>
+<li><p><strong>Data size</strong>: Keep datasets in reasonable sizes</p></li>
+</ul>
+<p>For large datasets, consider:</p>
+<ul class="simple">
+<li><p>Processing in batches</p></li>
+<li><p>Using CPU instead of GPU</p></li>
+<li><p>Reducing precision (float32 vs float64)</p></li>
+</ul>
+</section>
+</section>
+<section id="visualization-issues">
+<h2>Visualization Issues<a class="headerlink" href="#visualization-issues" title="Link to this heading"></a></h2>
+<section id="why-are-some-neurons-white-in-my-visualizations">
+<h3>Why are some neurons white in my visualizations?<a class="headerlink" href="#why-are-some-neurons-white-in-my-visualizations" title="Link to this heading"></a></h3>
+<p>White neurons typically indicate:</p>
+<ul class="simple">
+<li><p><strong>Unactivated neurons</strong>: No data points assigned as BMU</p></li>
+<li><p><strong>Zero values</strong>: In some visualizations, zero values appear white</p></li>
+<li><p><strong>NaN values</strong>: Missing or invalid calculations</p></li>
+</ul>
+<p>This is normal for sparse data or oversized maps.</p>
+</section>
+<section id="how-do-i-interpret-the-distance-map-d-matrix">
+<h3>How do I interpret the distance map (D-Matrix)?<a class="headerlink" href="#how-do-i-interpret-the-distance-map-d-matrix" title="Link to this heading"></a></h3>
+<p>In the D-Matrix:</p>
+<ul class="simple">
+<li><p><strong>Light areas</strong>: High distances between neighboring neurons (cluster boundaries)</p></li>
+<li><p><strong>Dark areas</strong>: Low distances (within clusters)</p></li>
+<li><p><strong>Patterns</strong>: Reveal cluster structure and boundaries</p></li>
+</ul>
+</section>
+<section id="can-i-customize-the-visualization-colors">
+<h3>Can I customize the visualization colors?<a class="headerlink" href="#can-i-customize-the-visualization-colors" title="Link to this heading"></a></h3>
+<p>Yes! Use the VisualizationConfig:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchsom.visualization.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">VisualizationConfig</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">VisualizationConfig</span><span class="p">(</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;plasma&quot;</span><span class="p">,</span>        <span class="c1"># Use a different colormap</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>     <span class="c1"># Set larger figure size</span>
+    <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span>               <span class="c1"># Set higher resolution</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="advanced-topics">
+<h2>Advanced Topics<a class="headerlink" href="#advanced-topics" title="Link to this heading"></a></h2>
+<section id="can-i-use-torchsom-for-time-series-data">
+<h3>Can I use TorchSOM for time series data?<a class="headerlink" href="#can-i-use-torchsom-for-time-series-data" title="Link to this heading"></a></h3>
+<p>TorchSOM is designed to work with tabular data, meaning any data type—such as time series, images, or text—can be used as long as it is represented in a tabular (2D array) format.
+This typically means that each sample should be a fixed-length feature vector.</p>
+<p>For time series or other complex data types, you can preprocess your data to obtain such representations.
+Common approaches include extracting statistical features, flattening fixed-length windows, or generating embeddings (e.g., using autoencoders or other neural networks) before projecting them onto the SOM map.
+As long as your data can be converted into a matrix of shape <cite>[n_samples, n_features]</cite>, it can be used with TorchSOM.</p>
+</section>
+<section id="how-do-i-implement-custom-distance-functions">
+<h3>How do I implement custom distance functions?<a class="headerlink" href="#how-do-i-implement-custom-distance-functions" title="Link to this heading"></a></h3>
+<p>Create a function following the signature:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">custom_distance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        data: [batch_size, 1, 1, n_features]</span>
+<span class="sd">        weights: [1, row_neurons, col_neurons, n_features]</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        distances: [batch_size, row_neurons, col_neurons]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Your custom distance calculation</span>
+    <span class="k">return</span> <span class="n">distances</span>
+</pre></div>
+</div>
+</section>
+<section id="can-i-save-and-load-trained-soms">
+<h3>Can I save and load trained SOMs?<a class="headerlink" href="#can-i-save-and-load-trained-soms" title="Link to this heading"></a></h3>
+<p>Yes, use PyTorch’s standard mechanisms:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">som</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="s1">&#39;som_weights.pth&#39;</span><span class="p">)</span>
+
+<span class="c1"># Load</span>
+<span class="n">som</span> <span class="o">=</span> <span class="n">SOM</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num_features</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">som</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;som_weights.pth&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="integration-questions">
+<h2>Integration Questions<a class="headerlink" href="#integration-questions" title="Link to this heading"></a></h2>
+<section id="how-do-i-cite-torchsom-in-my-research">
+<h3>How do I cite TorchSOM in my research?<a class="headerlink" href="#how-do-i-cite-torchsom-in-my-research" title="Link to this heading"></a></h3>
+<p>Please cite TorchSOM as:</p>
+<div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="c"># Conference Paper</span>
+<span class="nc">@inproceedings</span><span class="p">{</span><span class="nl">Berthier2025TorchSOM</span><span class="p">,</span>
+<span class="w">    </span><span class="na">title</span><span class="p">=</span><span class="s">{torchsom: The Reference PyTorch Library for Self-Organizing Maps}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">author</span><span class="p">=</span><span class="s">{Berthier, Louis}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">booktitle</span><span class="p">=</span><span class="s">{Conference Name}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">year</span><span class="p">=</span><span class="s">{2025}</span>
+<span class="p">}</span>
+
+<span class="c"># GitHub Repository</span>
+<span class="nc">@software</span><span class="p">{</span><span class="nl">Berthier_TorchSOM_The_Reference_2025</span><span class="p">,</span>
+<span class="w">    </span><span class="na">author</span><span class="p">=</span><span class="s">{Berthier, Louis}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">title</span><span class="p">=</span><span class="s">{torchsom: The Reference PyTorch Library for Self-Organizing Maps}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">url</span><span class="p">=</span><span class="s">{https://github.com/michelin/TorchSOM}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">version</span><span class="p">=</span><span class="s">{1.0.0}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">year</span><span class="p">=</span><span class="s">{2025}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="getting-help">
+<h2>Getting Help<a class="headerlink" href="#getting-help" title="Link to this heading"></a></h2>
+<section id="where-can-i-get-more-help">
+<h3>Where can I get more help?<a class="headerlink" href="#where-can-i-get-more-help" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Documentation</strong>: Check our comprehensive guides <a class="reference external" href="https://opensource.michelin.io/TorchSOM/">https://opensource.michelin.io/TorchSOM/</a></p></li>
+<li><p><strong>GitHub Issues</strong>: Report bugs and request features <a class="reference external" href="https://github.com/michelin/TorchSOM/issues">https://github.com/michelin/TorchSOM/issues</a></p></li>
+<li><p><strong>Notebooks</strong>: See our tutorial notebooks <a class="reference external" href="https://github.com/michelin/TorchSOM/tree/main/notebooks">https://github.com/michelin/TorchSOM/tree/main/notebooks</a></p></li>
+</ol>
+</section>
+<section id="how-do-i-report-a-bug">
+<h3>How do I report a bug?<a class="headerlink" href="#how-do-i-report-a-bug" title="Link to this heading"></a></h3>
+<p>Please include:</p>
+<ol class="arabic simple">
+<li><p><strong>TorchSOM version</strong>: <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">torchsom.version</span> <span class="pre">import</span> <span class="pre">__version__</span></code></p></li>
+<li><p><strong>Python version</strong>: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">--version</span></code></p></li>
+<li><p><strong>PyTorch version</strong>: <code class="docutils literal notranslate"><span class="pre">torch.__version__</span></code></p></li>
+<li><p><strong>Operating system</strong>: Linux/macOS/Windows</p></li>
+<li><p><strong>Minimal reproduction example</strong></p></li>
+<li><p><strong>Full error traceback</strong></p></li>
+</ol>
+</section>
+<section id="can-i-contribute-to-torchsom">
+<h3>Can I contribute to TorchSOM?<a class="headerlink" href="#can-i-contribute-to-torchsom" title="Link to this heading"></a></h3>
+<p>Yes! We welcome contributions:</p>
+<ol class="arabic simple">
+<li><p><strong>Fork</strong> the repository</p></li>
+<li><p><strong>Create</strong> a feature branch</p></li>
+<li><p><strong>Add tests</strong> for new functionality</p></li>
+<li><p><strong>Submit</strong> a pull request</p></li>
+<li><p><strong>Follow</strong> our coding standards</p></li>
+</ol>
+<p>See our <a class="reference external" href="https://github.com/michelin/TorchSOM/blob/main/CONTRIBUTING.md">contributing guide</a> for details.</p>
+</section>
+</section>
+</section>
+
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="changelog.html" class="btn btn-neutral float-left" title="Changelog" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="troubleshooting.html" class="btn btn-neutral float-right" title="Troubleshooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
