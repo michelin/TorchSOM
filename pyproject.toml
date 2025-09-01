@@ -437,7 +437,7 @@ path = ["torchsom"]
 # exclude = ["tests", "docs"]
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "1.1.0"
+version = "1.1.1"
 tag_format = "v$version"
 bump_map = { "feat" = "minor", "fix" = "patch", "chore" = "patch", "refactor" = "patch", "docs" = "patch" }
 update_changelog_on_bump = true
