@@ -137,6 +137,39 @@ linting = [
     "certifi",
 ]
 
+all = [
+    "pandas",
+    "openpyxl",
+    "black",
+    "isort",
+    "rich",
+    "typing_extensions",
+    "build",
+    "twine",
+    "commitizen",
+    "notebook",
+    "pyyaml",
+    "pytest",
+    "pytest-cov",
+    "pytest-html",
+    "pytest-xdist",
+    "pytest-timeout",
+    "sphinx",
+    "sphinx-rtd-theme",
+    "sphinx-autodoc-typehints",
+    "sphinx-copybutton",
+    "pydocstyle",
+    "interrogate",
+    "bandit[toml]",
+    "safety",
+    "pip-audit",
+    "pip-tools",
+    "ruff",
+    "mypy",
+    "radon",
+    "certifi",
+]
+
 # ==================== Testing Configuration ====================
 
 [tool.pytest.ini_options]

@@ -30,7 +30,7 @@
 [![Ruff](https://img.shields.io/badge/linter-ruff-6c757d.svg?color=blue)](https://github.com/astral-sh/ruff)
 
 <p align="center">
-    <img src="assets/logo.jpg" alt="TorchSOM_logo" width="400"/>
+    <img src="assets/logo.png" alt="TorchSOM_logo" width="400"/>
 </p>
 
 **A modern, comprehensive and GPU-accelerated PyTorch implementation of Self-Organizing Maps for scalable ML workflows**
@@ -130,8 +130,13 @@ QE, TE = som.fit(data=X)
 # Visualize results
 visualizer = SOMVisualizer(som=som, config=None)
 visualizer.plot_training_errors(quantization_errors=QE, topographic_errors=TE, save_path=None)
-visualizer.plot_distance_map(save_path=None)
-visualizer.plot_hit_map(data=X, save_path=None)
+visualizer.plot_hit_map(data=X, batch_size=256, save_path=None)
+visualizer.plot_distance_map(
+  save_path=None,
+  distance_metric=som.distance_fn_name,
+  neighborhood_order=som.neighborhood_order,
+  scaling="sum"
+)
 ```
 
 ## 📓 Tutorials
@@ -223,7 +228,7 @@ git clone https://github.com/michelin/TorchSOM.git
 cd TorchSOM
 python3.9 -m venv .torchsom_env
 source .torchsom_env/bin/activate
-pip install -e ".[dev]"
+pip install -e ".[all]"
 ```
 
 ---
