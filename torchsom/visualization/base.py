@@ -148,6 +148,7 @@ class SOMVisualizer:
         self,
         quantization_errors: list[float],
         topographic_errors: list[float],
+        bmus_data_map: dict[tuple[int, int], list[int]],
         data: torch.Tensor,
         target: torch.Tensor,
         component_names: Optional[list[str]] = None,
@@ -165,6 +166,7 @@ class SOMVisualizer:
         Args:
             quantization_errors (list[float]): List of quantization errors [epochs]
             topographic_errors (list[float]): List of topographic errors [epochs]
+            bmus_data_map (dict[tuple[int, int], list[int]]): Pre-computed BMU to data indices mapping
             data (torch.Tensor): Input data tensor [batch_size, n_features]
             target (torch.Tensor): Labels tensor for data points [batch_size]
             component_names (Optional[list[str]]): Names for each component/feature
@@ -189,15 +191,30 @@ class SOMVisualizer:
             self._visualizer.plot_hit_map(data, save_path=save_path)
         if metric_map:
             self._visualizer.plot_metric_map(
-                data, target, reduction_parameter="mean", save_path=save_path
+                bmus_data_map=bmus_data_map,
+                data=data,
+                target=target,
+                reduction_parameter="mean",
+                save_path=save_path,
             )
             self._visualizer.plot_metric_map(
-                data, target, reduction_parameter="std", save_path=save_path
+                bmus_data_map=bmus_data_map,
+                data=data,
+                target=target,
+                reduction_parameter="std",
+                save_path=save_path,
             )
         if score_map:
-            self._visualizer.plot_score_map(data, target, save_path=save_path)
+            self._visualizer.plot_score_map(
+                bmus_data_map=bmus_data_map,
+                target=target,
+                total_samples=data.shape[0],
+                save_path=save_path,
+            )
         if rank_map:
-            self._visualizer.plot_rank_map(data, target, save_path=save_path)
+            self._visualizer.plot_rank_map(
+                bmus_data_map=bmus_data_map, target=target, save_path=save_path
+            )
         if component_planes:
             self._visualizer.plot_component_planes(
                 component_names=component_names, save_path=save_path
