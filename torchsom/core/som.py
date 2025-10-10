@@ -1,7 +1,7 @@
 """PyTorch implementation of classic Self Organizing Maps using batch learning."""
 
 import warnings
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, Union
 
 import torch
 import torch.nn as nn
@@ -415,7 +415,11 @@ class SOM(BaseSOM):
         historical_outputs: torch.Tensor,
         bmus_idx_map: dict[tuple[int, int], list[int]],
         min_buffer_threshold: int = 50,
-    ) -> tuple[torch.Tensor, torch.Tensor]:
+        return_indices: bool = False,
+    ) -> Union[
+        tuple[torch.Tensor, torch.Tensor],
+        tuple[torch.Tensor, torch.Tensor, torch.Tensor],
+    ]:
         """Collect historical samples similar to the query sample using SOM projection.
 
         Args:
@@ -424,6 +428,11 @@ class SOM(BaseSOM):
             historical_outputs (torch.Tensor): Historical outputs tensor [num_samples]
             bmus_idx_map (dict[tuple[int, int], list[int]]): BMU to data indices mapping
             min_buffer_threshold (int): Minimum buffer threshold
+            return_indices (bool): If True, also return the indices of collected samples
+
+        Returns:
+            If return_indices is False: (historical_data_buffer, historical_output_buffer)
+            If return_indices is True: (historical_data_buffer, historical_output_buffer, indices_tensor)
         """
         query_sample = query_sample.to(self.device)
         bmu_pos = self.identify_bmus(query_sample)
@@ -474,6 +483,8 @@ class SOM(BaseSOM):
         )
         historical_data_buffer = historical_samples[indices_tensor]
         historical_output_buffer = historical_outputs[indices_tensor].view(-1, 1)
+        if return_indices:
+            return historical_data_buffer, historical_output_buffer, indices_tensor
         return historical_data_buffer, historical_output_buffer
 
     def build_map(
