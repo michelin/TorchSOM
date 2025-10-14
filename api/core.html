@@ -672,7 +672,7 @@ results = som.build_multiple_maps(configs, data, target)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="torchsom.core.som.SOM.collect_samples">
-<span class="sig-name descname"><span class="pre">collect_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">historical_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">historical_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bmus_idx_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_buffer_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/som.html#SOM.collect_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.som.SOM.collect_samples" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">collect_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_sample</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">historical_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">historical_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bmus_idx_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_buffer_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/torchsom/core/som.html#SOM.collect_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#torchsom.core.som.SOM.collect_samples" title="Link to this definition"></a></dt>
 <dd><p>Collect historical samples similar to the query sample using SOM projection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -682,10 +682,15 @@ results = som.build_multiple_maps(configs, data, target)</p>
 <li><p><strong>historical_outputs</strong> (<em>torch.Tensor</em>) – Historical outputs tensor [num_samples]</p></li>
 <li><p><strong>bmus_idx_map</strong> (<em>dict</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>, </em><em>list</em><em>[</em><em>int</em><em>]</em><em>]</em>) – BMU to data indices mapping</p></li>
 <li><p><strong>min_buffer_threshold</strong> (<em>int</em>) – Minimum buffer threshold</p></li>
+<li><p><strong>return_indices</strong> (<em>bool</em>) – If True, also return the indices of collected samples</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple[<em>Tensor</em>, <em>Tensor</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(historical_data_buffer, historical_output_buffer)
+If return_indices is True: (historical_data_buffer, historical_output_buffer, indices_tensor)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If return_indices is False</p>
 </dd>
 </dl>
 </dd></dl>

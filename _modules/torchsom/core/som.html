@@ -415,7 +415,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;PyTorch implementation of classic Self Organizing Maps using batch learning.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
@@ -848,7 +848,11 @@
         <span class="n">historical_outputs</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">bmus_idx_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
         <span class="n">min_buffer_threshold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="n">return_indices</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span>
+        <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+        <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+    <span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Collect historical samples similar to the query sample using SOM projection.</span>
 
 <span class="sd">        Args:</span>
@@ -857,6 +861,11 @@
 <span class="sd">            historical_outputs (torch.Tensor): Historical outputs tensor [num_samples]</span>
 <span class="sd">            bmus_idx_map (dict[tuple[int, int], list[int]]): BMU to data indices mapping</span>
 <span class="sd">            min_buffer_threshold (int): Minimum buffer threshold</span>
+<span class="sd">            return_indices (bool): If True, also return the indices of collected samples</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            If return_indices is False: (historical_data_buffer, historical_output_buffer)</span>
+<span class="sd">            If return_indices is True: (historical_data_buffer, historical_output_buffer, indices_tensor)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">query_sample</span> <span class="o">=</span> <span class="n">query_sample</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
         <span class="n">bmu_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">identify_bmus</span><span class="p">(</span><span class="n">query_sample</span><span class="p">)</span>
@@ -907,6 +916,8 @@
         <span class="p">)</span>
         <span class="n">historical_data_buffer</span> <span class="o">=</span> <span class="n">historical_samples</span><span class="p">[</span><span class="n">indices_tensor</span><span class="p">]</span>
         <span class="n">historical_output_buffer</span> <span class="o">=</span> <span class="n">historical_outputs</span><span class="p">[</span><span class="n">indices_tensor</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">return_indices</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">historical_data_buffer</span><span class="p">,</span> <span class="n">historical_output_buffer</span><span class="p">,</span> <span class="n">indices_tensor</span>
         <span class="k">return</span> <span class="n">historical_data_buffer</span><span class="p">,</span> <span class="n">historical_output_buffer</span></div>
 
 
