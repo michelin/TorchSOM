@@ -259,7 +259,7 @@ If you use `torchsom` in your academic, research or industrial work, please cite
     year={2025},
     version={1.1.1},
     url={https://github.com/michelin/TorchSOM},
-    note = {Documentation available at \url{https://michelin.github.io/TorchSOM/}}
+    note = {Documentation available at \url{https://opensource.michelin.io/TorchSOM/}}
 }
 ```
 
