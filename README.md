@@ -35,11 +35,11 @@
 
 **A modern, comprehensive and GPU-accelerated PyTorch implementation of Self-Organizing Maps for scalable ML workflows**
 
-[📚 Documentation](https://opensource.michelin.io/TorchSOM/)
+[📄 Paper](https://arxiv.org/abs/2510.11147)
+| [📚 Documentation](https://opensource.michelin.io/TorchSOM/)
 | [🚀 Quick Start](#-quick-start)
 | [📊 Examples](notebooks/)
 | [🤝 Contributing](CONTRIBUTING.md)
-<!-- | [📄 Paper (PDF)](assets/torchsom_jmlr.pdf) -->
 
 **⭐ If you find [`torchsom`](https://github.com/michelin/TorchSOM) valuable, please consider starring this repository ⭐**
 
@@ -63,7 +63,7 @@ Despite their utility, the SOM ecosystem is fragmented. Existing implementations
 
 `torchsom` enables researchers and practitioners to integrate SOMs seamlessly into workflows, from exploratory data analysis to advanced model architectures.
 
-This library accompanies the paper: [`torchsom`: The Reference PyTorch Library for Self-Organizing Maps](assets/torchsom_jmlr.pdf). If you use `torchsom` in academic or industrial work, please cite both the paper and the software (see [`CITATION`](CITATION.cff)).
+This library accompanies the paper: [`torchsom`: The Reference PyTorch Library for Self-Organizing Maps](https://arxiv.org/abs/2510.11147). If you use `torchsom` in academic or industrial work, please cite both the paper and the software (see [`CITATION`](CITATION.cff)).
 
 > **Note**: See the comparison table below to understand how `torchsom` differs from other SOM libraries, and explore our [Visualization Gallery](#-visualization-gallery) for example outputs.
 
@@ -80,7 +80,7 @@ Unlike legacy implementations, `torchsom` is engineered from the ground up for m
 | **Development Quality Section** |  |  |  |  |  |  |
 | Maintenance | ✅ Active | ✅ Active | ⚠️ Minimal | ⚠️ Minimal | ⚠️ Minimal | ❌ |
 | Documentation | ✅ Rich | ❌ | ⚠️ Basic | ❌ | ⚠️ Basic | ⚠️ Basic |
-| Test Coverage | ✅ ~86% | ❌ | 🟠 ~53% | ❌ | ⚠️ Minimal | ❌ |
+| Test Coverage | ✅ 90% | ❌ | 🟠 ~53% | ❌ | ⚠️ Minimal | ❌ |
 | PyPI Distribution | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ |
 | **Functionality Section** |  |  |  |  |  |  |
 | Visualization | ✅ Advanced | ❌ | 🟠 Moderate | 🟠 Moderate | ⚠️ Basic | ⚠️ Basic |
@@ -90,7 +90,7 @@ Unlike legacy implementations, `torchsom` is engineered from the ground up for m
 | Extensibility | ✅ High | 🟠 Moderate | ⚠️ Low | ⚠️ Low | ⚠️ Low | ⚠️ Low |
 
 > **Note**: `torchsom` supports **Just-In-Time Learning (JITL)**.
-> Given an online query, JITL collects relevant datapoints to form a local buffer (selected first by topology, then by distance). A lightweight local model is then trained on this buffer, enabling efficient supervised learning (regression or classification).
+> Given an online query, JITL collects relevant datapoints to form a local buffer (selected first by topology, then by distance). A lightweight local model can then be trained on this buffer, enabling efficient supervised learning (regression or classification).
 
 ---
 
@@ -105,8 +105,6 @@ Unlike legacy implementations, `torchsom` is engineered from the ground up for m
 - [Acknowledgments](#-acknowledgments)
 - [License](#-license)
 - [Related Work and References](#-related-work-and-references)
-<!-- - [Reproducibility](#-reproducibility) -->
-<!-- - [Performance Benchmarks](#-performance-benchmarks) -->
 
 ---
 
@@ -244,21 +242,39 @@ Comprehensive documentation is available at [opensource.michelin.io/TorchSOM](ht
 If you use `torchsom` in your academic, research or industrial work, please cite both the paper and software:
 
 ```bibtex
-@inproceedings{Berthier2025TorchSOM,
+@misc{berthier2025torchsom,
     title={torchsom: The Reference PyTorch Library for Self-Organizing Maps},
-    author={Berthier, Louis},
-    booktitle={Conference Name},
-    year={2025}
+    author = {Berthier, Louis and Shokry, Ahmed and Moreaud, Maxime and Ramelet, Guillaume and Moulines, Eric},
+    year={2025},
+    eprint={2510.11147},
+    archivePrefix={arXiv},
+    primaryClass={stat.ML},
+    note={Preprint submitted to Journal of Machine Learning Research},
+    url={https://arxiv.org/abs/2510.11147}
 }
 
-@software{Berthier_TorchSOM_The_Reference_2025,
+@software{berthier2025torchsom_software,
     author={Berthier, Louis},
     title={torchsom: The Reference PyTorch Library for Self-Organizing Maps},
+    year={2025},
+    version={1.1.1},
     url={https://github.com/michelin/TorchSOM},
-    version={1.0.0},
-    year={2025}
+    note = {Documentation available at \url{https://michelin.github.io/TorchSOM/}}
 }
 ```
+
+<!-- % If accepted by JMLR
+@article{berthier2025torchsom,
+    title={torchsom: The Reference PyTorch Library for Self-Organizing Maps},
+    author={Louis Berthier and Ahmed Shokry and Maxime Moreaud and Guillaume Ramelet and Eric Moulines},
+    journal={Journal of Machine Learning Research},
+    year={2025},
+    volume={26},
+    number={123},
+    pages={1--15},
+    url={https://www.jmlr.org/papers/v26/25-11147.html},
+    arxiv={2510.11147}
+} -->
 
 For more details, please refer to the [CITATION](CITATION.cff) file.
 

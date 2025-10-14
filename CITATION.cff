@@ -3,8 +3,7 @@
 
 cff-version: 1.2.0
 title: >-
-  TorchSOM: A Scalable PyTorch-Compatible Library for
-  Self-Organizing Maps
+  torchsom: The Reference PyTorch Library for Self-Organizing Maps
 message: 'If you use this software, please cite both the article and the software itself.'
 type: software
 authors:
@@ -17,20 +16,18 @@ authors:
 repository-code: 'https://github.com/michelin/TorchSOM'
 url: 'https://opensource.michelin.io/TorchSOM'
 abstract: >-
-  TorchSOM is a PyTorch-based library for training
-  Self-Organizing Maps (SOMs), a type of unsupervised
-  learning algorithm used for dimensionality reduction,
-  visualization, and just-in-time learning (JITL). Designed
-  for scalability and ease of use, this implementation is
-  optimized for large-scale data.
+  TorchSOM is a PyTorch-based library for training Self-Organizing Maps (SOMs),
+  a model trained in an unsupervised manner, that can be used for clustering,
+  dimensionality reduction and data visualization.
+  It is designed to be scalable and user-friendly.
 keywords:
-  - Self-Organizing Map (SOM)
+  - Self-Organizing Maps
   - PyTorch
-  - Machine Learning
   - Unsupervised Learning
   - Dimensionality Reduction
-  - Just-in-Time Learning (JITL)
+  - Clustering
+  - Machine Learning
   - Data Visualization
 license: Apache-2.0
-version: 0.1.0
-date-released: '2025-05-20'
+version: 1.1.1
+date-released: '2025-09-01'
