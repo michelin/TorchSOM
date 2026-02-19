@@ -37,9 +37,9 @@ new_code?id=michelin_TorchSOM) -->
 | [Examples](notebooks/)
 | [Contributing](CONTRIBUTING.md)
 
-</div>
-
 **⭐ If you find [`torchsom`](https://github.com/michelin/TorchSOM) valuable, please consider starring this repository ⭐**
+
+</div>
 
 ---
 
