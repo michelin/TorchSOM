@@ -31,8 +31,8 @@ Let's create and train your first Self-Organizing Map:
    q_errors, t_errors = som.fit(data=data)
 
    print("Training completed!")
-   print(f"Final quantization error: {QE[-1]:.4f}")
-   print(f"Final topographic error: {TE[-1]:.4f}")
+   print(f"Final quantization error: {q_errors[-1]:.4f}")
+   print(f"Final topographic error: {t_errors[-1]:.4f}")
 
 Basic Visualization
 -------------------
