@@ -12,7 +12,7 @@ import datetime
 import random
 import time
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -63,7 +63,7 @@ def ensure_dir(
 
 
 def compute_errors(
-    som: Union[SOM, MiniSom],
+    som: SOM | MiniSom,
     train_features: torch.Tensor,
     test_features: torch.Tensor,
 ) -> tuple[float, float, float, float]:
@@ -92,10 +92,10 @@ def run_benchmark(
         readable=True,
         help="Path to YAML configuration file.",
     ),
-    data_path: Optional[Path] = typer.Option(
+    data_path: Path | None = typer.Option(
         None, help="Override dataset CSV path (takes precedence over config)."
     ),
-    output_dir: Optional[Path] = typer.Option(
+    output_dir: Path | None = typer.Option(
         None,
         help="Override output directory root (ignored on Azure if outputs env is set).",
     ),
