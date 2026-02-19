@@ -1,10 +1,11 @@
 """Rectangular-specific visualization methods for Self-Organizing Maps."""
 
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 import torch
 from matplotlib.axes import Axes
 from matplotlib.colors import Colormap
@@ -21,7 +22,7 @@ class RectangularVisualizer(BaseVisualizer):
     def __init__(
         self,
         som: SOM,
-        config: Optional[VisualizationConfig] = None,
+        config: VisualizationConfig | None = None,
     ) -> None:
         """Initialize the rectangular visualizer."""
         super().__init__(som, config, expected_topology="rectangular")
@@ -31,9 +32,9 @@ class RectangularVisualizer(BaseVisualizer):
         ax: Axes,
         title: str,
         colorbar_label: str,
-        mappable_item: Optional[AxesImage] = None,
-        ticks: Optional[np.ndarray[int, Any]] = None,
-        tick_labels: Optional[list[str]] = None,
+        mappable_item: AxesImage | None = None,
+        ticks: npt.NDArray[Any] | None = None,
+        tick_labels: list[str] | None = None,
     ) -> None:
         """Customize rectangular plot with proper styling.
 
@@ -104,12 +105,12 @@ class RectangularVisualizer(BaseVisualizer):
         title: str,
         colorbar_label: str,
         filename: str,
-        save_path: Optional[Union[str, Path]] = None,
-        cmap: Optional[Union[str, Colormap]] = None,
+        save_path: str | Path | None = None,
+        cmap: str | Colormap | None = None,
         show_values: bool = False,
         value_format: str = ".2f",
         is_component_plane: bool = False,
-        **kwargs: Any,  # For compatibility with base interface # noqa: ARG002
+        **kwargs: Any,  # For compatibility with base interface
     ) -> None:
         """Plot rectangular grid visualization.
 
@@ -125,7 +126,7 @@ class RectangularVisualizer(BaseVisualizer):
             is_component_plane (bool): Whether this is a component plane plot
             **kwargs: Additional arguments for compatibility
         """
-        fig, ax = plt.subplots(figsize=self.config.figsize)
+        _fig, ax = plt.subplots(figsize=self.config.figsize)
 
         # Create a copy of the map and optionally convert 0 to NaN for visualization
         masked_map = map.clone()

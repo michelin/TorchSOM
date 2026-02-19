@@ -101,8 +101,10 @@ def hexagonal_distance_axial(
     """Calculate distance between two hexagons using axial coordinates.
 
     Args:
-        q1, r1: First hexagon's axial coordinates
-        q2, r2: Second hexagon's axial coordinates
+        q1 (float): First hexagon's q axial coordinate.
+        r1 (float): First hexagon's r axial coordinate.
+        q2 (float): Second hexagon's q axial coordinate.
+        r2 (float): Second hexagon's r axial coordinate.
 
     Returns:
         int: Distance in hex steps
@@ -124,8 +126,10 @@ def hexagonal_distance_offset(
     """Calculate distance between two hexagons using offset coordinates.
 
     Args:
-        row1, col1: First hexagon's offset coordinates
-        row2, col2: Second hexagon's offset coordinates
+        row1 (int): First hexagon's row offset coordinate.
+        col1 (int): First hexagon's column offset coordinate.
+        row2 (int): Second hexagon's row offset coordinate.
+        col2 (int): Second hexagon's column offset coordinate.
 
     Returns:
         int: Distance in hex steps

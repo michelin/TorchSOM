@@ -1,11 +1,12 @@
 """Hexagonal-specific visualization methods for Self-Organizing Maps."""
 
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 import torch
 from matplotlib.axes import Axes
 from matplotlib.colors import Colormap, Normalize
@@ -26,7 +27,7 @@ class HexagonalVisualizer(BaseVisualizer):
     def __init__(
         self,
         som: SOM,
-        config: Optional[VisualizationConfig] = None,
+        config: VisualizationConfig | None = None,
     ) -> None:
         """Initialize the hexagonal visualizer."""
         super().__init__(som, config, expected_topology="hexagonal")
@@ -36,12 +37,12 @@ class HexagonalVisualizer(BaseVisualizer):
         map_data: torch.Tensor,
         title: str,
         colorbar_label: str,
-        cmap: Optional[Union[str, Colormap]] = None,
+        cmap: str | Colormap | None = None,
         show_values: bool = False,
         value_format: str = ".2f",
-        norm: Optional[Normalize] = None,
-        ticks: Optional[np.ndarray[int, Any]] = None,
-        tick_labels: Optional[list[str]] = None,
+        norm: Normalize | None = None,
+        ticks: npt.NDArray[Any] | None = None,
+        tick_labels: list[str] | None = None,
     ) -> tuple[Figure, Axes]:
         """Create a hexagonal plot with proper hexagonal patches.
 
@@ -172,11 +173,11 @@ class HexagonalVisualizer(BaseVisualizer):
         title: str,
         colorbar_label: str,
         filename: str,
-        save_path: Optional[Union[str, Path]] = None,
-        cmap: Optional[Union[str, Colormap]] = None,
+        save_path: str | Path | None = None,
+        cmap: str | Colormap | None = None,
         show_values: bool = False,
         value_format: str = ".2f",
-        **kwargs: Any,  # For compatibility with base interface (ignores is_component_plane etc) # noqa: ARG002
+        **kwargs: Any,  # For compatibility with base interface (ignores is_component_plane etc)
     ) -> None:
         """Plot hexagonal grid visualization.
 
@@ -199,7 +200,7 @@ class HexagonalVisualizer(BaseVisualizer):
             masked_map[zero_mask] = float("nan")
 
         # Create the hexagonal plot
-        fig, ax = self._create_hexagonal_plot(
+        _fig, _ax = self._create_hexagonal_plot(
             masked_map,
             title,
             colorbar_label,

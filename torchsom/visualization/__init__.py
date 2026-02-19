@@ -8,10 +8,10 @@ from torchsom.visualization.hexagonal import HexagonalVisualizer
 from torchsom.visualization.rectangular import RectangularVisualizer
 
 __all__ = [
-    "VisualizationConfig",
-    "SOMVisualizer",
     "BaseVisualizer",
+    "ClusteringVisualizer",
     "HexagonalVisualizer",
     "RectangularVisualizer",
-    "ClusteringVisualizer",
+    "SOMVisualizer",
+    "VisualizationConfig",
 ]

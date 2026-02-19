@@ -1,7 +1,7 @@
 """Clustering algorithms for SOM analysis using scikit-learn."""
 
 import warnings
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import torch
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 def cluster_kmeans(
     data: torch.Tensor,
-    n_clusters: Optional[int] = None,
+    n_clusters: int | None = None,
     random_state: int = 42,
     **kwargs: Any,
 ) -> dict[str, Any]:
@@ -67,7 +67,7 @@ def cluster_kmeans(
 
 def cluster_gmm(
     data: torch.Tensor,
-    n_components: Optional[int] = None,
+    n_components: int | None = None,
     random_state: int = 42,
     **kwargs: Any,
 ) -> dict[str, Any]:
@@ -124,7 +124,7 @@ def cluster_gmm(
 
 def cluster_hdbscan(
     data: torch.Tensor,
-    min_cluster_size: Optional[int] = None,
+    min_cluster_size: int | None = None,
     **kwargs: Any,
 ) -> dict[str, Any]:  # pragma: no cover
     """HDBSCAN clustering using scikit-learn.
@@ -153,7 +153,7 @@ def cluster_hdbscan(
     )
     # labels = clusterer.fit_predict(data_np)
     clusterer.fit(data_np)
-    labels, strengths = prediction.approximate_predict(clusterer, data_np)
+    labels, _strengths = prediction.approximate_predict(clusterer, data_np)
 
     # Calculate cluster centers (excluding noise points)
     unique_labels = np.unique(labels)
@@ -315,7 +315,7 @@ def extract_clustering_features(
 def cluster_data(
     data: torch.Tensor,
     method: str = "kmeans",
-    n_clusters: Optional[int] = None,
+    n_clusters: int | None = None,
     **kwargs: Any,
 ) -> dict[str, Any]:
     """Main clustering function that dispatches to specific algorithms.

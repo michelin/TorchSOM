@@ -37,7 +37,7 @@ def random_init(
         return sampled_weights
 
     except RuntimeError as e:
-        raise RuntimeError(f"Random initialization failed: {str(e)}")
+        raise RuntimeError(f"Random initialization failed: {e!s}")
 
 
 def pca_init(
@@ -82,7 +82,7 @@ def pca_init(
 
         # Try SVD first (more stable than eigendecomposition)
         try:
-            U, S, V = torch.linalg.svd(
+            _U, _S, V = torch.linalg.svd(
                 cov,
                 driver=None,  # Default is None, but also: "gesvd" (small), "gesvdj" (medium), and "gesvda" (large)
                 full_matrices=True,  # Default is True
@@ -124,7 +124,7 @@ def pca_init(
 
     except Exception as e:
         warnings.warn(
-            f"PCA initialization failed: {str(e)}. Falling back to random initialization",
+            f"PCA initialization failed: {e!s}. Falling back to random initialization",
             stacklevel=2,
         )
         return random_init(weights, data, device)

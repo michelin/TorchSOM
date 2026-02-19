@@ -2,7 +2,8 @@
 
 import math
 import warnings
-from typing import Any, Callable, Optional, Union
+from collections.abc import Callable
+from typing import Any
 
 import torch
 import torch.nn as nn
@@ -122,6 +123,7 @@ class SOM(BaseSOM):
             backend=search_backend,
             distance_fn=self.distance_fn,
             distance_fn_name=distance_function,
+            n_neurons=x * y,
             device=device,
         )
 
@@ -154,12 +156,8 @@ class SOM(BaseSOM):
             grid_size_y = float(self.y)
             if self.topology == "hexagonal":
                 grid_size_y *= math.sqrt(3) / 2
-            grid_size = torch.tensor(
-                [grid_size_x, grid_size_y], device=coords.device
-            )
-            coord_diff = coord_diff - grid_size * torch.round(
-                coord_diff / grid_size
-            )
+            grid_size = torch.tensor([grid_size_x, grid_size_y], device=coords.device)
+            coord_diff = coord_diff - grid_size * torch.round(coord_diff / grid_size)
 
         self.coord_distances_sq = torch.sum(coord_diff**2, dim=2)
 
@@ -340,7 +338,7 @@ class SOM(BaseSOM):
     def initialize_weights(
         self,
         data: torch.Tensor,
-        mode: Optional[str] = None,
+        mode: str | None = None,
     ) -> None:
         """Data should be normalized before initialization.
 
@@ -435,10 +433,10 @@ class SOM(BaseSOM):
         bmus_idx_map: dict[tuple[int, int], list[int]],
         min_buffer_threshold: int = 50,
         return_indices: bool = False,
-    ) -> Union[
-        tuple[torch.Tensor, torch.Tensor],
-        tuple[torch.Tensor, torch.Tensor, torch.Tensor],
-    ]:
+    ) -> (
+        tuple[torch.Tensor, torch.Tensor]
+        | tuple[torch.Tensor, torch.Tensor, torch.Tensor]
+    ):
         """Collect historical samples similar to the query sample using SOM projection.
 
         Args:
@@ -511,9 +509,9 @@ class SOM(BaseSOM):
     def build_map(
         self,
         map_type: str,
-        data: Optional[torch.Tensor] = None,
-        target: Optional[torch.Tensor] = None,
-        bmus_data_map: Optional[dict[tuple[int, int], list[int]]] = None,
+        data: torch.Tensor | None = None,
+        target: torch.Tensor | None = None,
+        bmus_data_map: dict[tuple[int, int], list[int]] | None = None,
         **kwargs: Any,
     ) -> torch.Tensor:
         """Unified method to build various types of maps.
@@ -601,7 +599,7 @@ class SOM(BaseSOM):
         self,
         map_configs: list[dict[str, Any]],
         data: torch.Tensor,
-        target: Optional[torch.Tensor] = None,
+        target: torch.Tensor | None = None,
         batch_size: int = 1024,
     ) -> dict[str, torch.Tensor]:
         """Efficiently build multiple maps by reusing BMUs computation.
@@ -660,7 +658,7 @@ class SOM(BaseSOM):
     def cluster(
         self,
         method: str = "kmeans",
-        n_clusters: Optional[int] = None,
+        n_clusters: int | None = None,
         feature_space: str = "weights",
         **kwargs: Any,
     ) -> dict[str, Any]:

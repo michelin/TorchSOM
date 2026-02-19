@@ -26,8 +26,9 @@ def create_mesh_grid(
     Returns:
         Tuple[torch.Tensor, torch.Tensor]: Two tensors (xx, yy) of shape (x, y), representing the x and y coordinates of the mesh grid.
     """
-    x_tensor, y_tensor = torch.arange(x, device=device), torch.arange(
-        y, device=device
+    x_tensor, y_tensor = (
+        torch.arange(x, device=device),
+        torch.arange(y, device=device),
     )  # Shape: (x) and (y)
     x_meshgrid, y_meshgrid = torch.meshgrid(
         x_tensor, y_tensor, indexing="ij"

@@ -1,7 +1,8 @@
 """Utility functions for metrics."""
 
 import warnings
-from typing import TYPE_CHECKING, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 import torch
 from sklearn.metrics import (
@@ -351,7 +352,8 @@ def calculate_topological_clustering_quality(
             avg_distance = pairwise_distances[mask].mean().item()
 
             # Normalize by maximum possible distance on grid
-            max_distance = max(som.x, som.y)
+            # max_distance = max(som.x, som.y)
+            max_distance = max(int(som.x), int(som.y))
             normalized_distance = avg_distance / max_distance
 
             # Convert to coherence (inverse of distance)
