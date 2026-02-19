@@ -13,6 +13,8 @@ benchmark/environments/
 benchmark/jobs/
 benchmark/.amlignore
 
+arXiv-2510.11147v1/
+
 # # Too large for GitHub
 # data/benchmark/blobs_20000_300.csv
 
