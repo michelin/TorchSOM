@@ -27,6 +27,13 @@ from torchsom.utils.metrics import (
     calculate_topological_clustering_quality,
 )
 from torchsom.utils.neighborhood import NEIGHBORHOOD_FUNCTIONS
+from torchsom.utils.search import (
+    FAISS_AVAILABLE,
+    BMUSearchStrategy,
+    FAISSSearch,
+    TorchBruteForceSearch,
+    create_search_strategy,
+)
 from torchsom.utils.topology import (
     get_all_neighbors_up_to_order,
     get_hexagonal_offsets,
@@ -61,4 +68,9 @@ __all__ = [
     "get_hexagonal_offsets",
     "get_rectangular_offsets",
     "get_all_neighbors_up_to_order",
+    "FAISS_AVAILABLE",
+    "BMUSearchStrategy",
+    "TorchBruteForceSearch",
+    "FAISSSearch",
+    "create_search_strategy",
 ]
