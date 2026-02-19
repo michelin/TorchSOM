@@ -70,6 +70,7 @@ class TestPBCHexagonal:
     """PBC tests specific to hexagonal topology."""
 
     def test_hexagonal_pbc_corner_wrap(self) -> None:
+        """Opposite corners should be closer on a toroidal hexagonal grid."""
         som = SOM(
             x=8, y=8, num_features=4, topology="hexagonal", pbc=True, device="cpu"
         )
@@ -80,6 +81,7 @@ class TestPBCHexagonal:
         assert math.sqrt(dist_sq) < max_non_pbc
 
     def test_hexagonal_pbc_symmetric(self) -> None:
+        """PBC distance matrix should remain symmetric for hexagonal grids."""
         som = SOM(
             x=6, y=6, num_features=4, topology="hexagonal", pbc=True, device="cpu"
         )
@@ -94,8 +96,13 @@ class TestPBCNeighborhood:
         """With PBC a corner neuron should have the same neighbourhood
         influence sum as a centre neuron."""
         som = SOM(
-            x=10, y=10, num_features=4, pbc=True,
-            neighborhood_function="gaussian", sigma=2.0, device="cpu",
+            x=10,
+            y=10,
+            num_features=4,
+            pbc=True,
+            neighborhood_function="gaussian",
+            sigma=2.0,
+            device="cpu",
         )
         corner_idx = torch.tensor([0])
         center_idx = torch.tensor([5 * 10 + 5])
@@ -103,15 +110,18 @@ class TestPBCNeighborhood:
         corner_nb = som._vectorized_neighborhood(corner_idx, sigma=2.0)
         center_nb = som._vectorized_neighborhood(center_idx, sigma=2.0)
 
-        assert torch.allclose(
-            corner_nb.sum(), center_nb.sum(), atol=0.3
-        )
+        assert torch.allclose(corner_nb.sum(), center_nb.sum(), atol=0.3)
 
     def test_without_pbc_corner_has_less_influence(self) -> None:
         """Without PBC, corner neighbourhood sums should be lower than centre."""
         som = SOM(
-            x=10, y=10, num_features=4, pbc=False,
-            neighborhood_function="gaussian", sigma=2.0, device="cpu",
+            x=10,
+            y=10,
+            num_features=4,
+            pbc=False,
+            neighborhood_function="gaussian",
+            sigma=2.0,
+            device="cpu",
         )
         corner_idx = torch.tensor([0])
         center_idx = torch.tensor([5 * 10 + 5])
@@ -126,13 +136,21 @@ class TestPBCTraining:
     """Verify that PBC-enabled SOMs train successfully."""
 
     def test_fit_runs_without_error(self) -> None:
+        """PBC-enabled SOM should complete training and return epoch-level errors."""
         torch.manual_seed(42)
         data = torch.randn(100, 4)
         data = (data - data.mean(0)) / data.std(0)
 
         som = SOM(
-            x=5, y=5, num_features=4, epochs=3, batch_size=16,
-            pbc=True, device="cpu", random_seed=42,
+            x=5,
+            y=5,
+            num_features=4,
+            epochs=3,
+            batch_size=16,
+            pbc=True,
+            device="cpu",
+            random_seed=42,
+            search_backend="torch",
         )
         q_errors, t_errors = som.fit(data, verbose=False)
         assert len(q_errors) == 3
@@ -140,26 +158,43 @@ class TestPBCTraining:
         assert all(isinstance(e, float) for e in q_errors)
 
     def test_pbc_quantization_error_is_finite(self) -> None:
+        """Quantization error after PBC training should be a finite number."""
         torch.manual_seed(42)
         data = torch.randn(80, 4)
         data = (data - data.mean(0)) / data.std(0)
 
         som = SOM(
-            x=5, y=5, num_features=4, epochs=3, batch_size=16,
-            pbc=True, device="cpu", random_seed=42,
+            x=5,
+            y=5,
+            num_features=4,
+            epochs=3,
+            batch_size=16,
+            pbc=True,
+            device="cpu",
+            random_seed=42,
+            search_backend="torch",
         )
         som.fit(data, verbose=False)
         qe = som.quantization_error(data)
         assert math.isfinite(qe)
 
     def test_pbc_hexagonal_training(self) -> None:
+        """PBC training should work correctly on hexagonal topology grids."""
         torch.manual_seed(42)
         data = torch.randn(80, 4)
         data = (data - data.mean(0)) / data.std(0)
 
         som = SOM(
-            x=5, y=5, num_features=4, epochs=3, batch_size=16,
-            topology="hexagonal", pbc=True, device="cpu", random_seed=42,
+            x=5,
+            y=5,
+            num_features=4,
+            epochs=3,
+            batch_size=16,
+            topology="hexagonal",
+            pbc=True,
+            device="cpu",
+            random_seed=42,
+            search_backend="torch",
         )
         q_errors, _ = som.fit(data, verbose=False)
         assert len(q_errors) == 3
@@ -169,6 +204,7 @@ class TestPBCTopographicError:
     """Verify topographic error handles PBC wrapping."""
 
     def test_topographic_error_with_pbc(self) -> None:
+        """Topographic error with PBC enabled should be in [0, 1]."""
         torch.manual_seed(42)
         data = torch.randn(50, 4)
         weights = torch.randn(5, 5, 4)
@@ -176,8 +212,11 @@ class TestPBCTopographicError:
         from torchsom.utils.distances import DISTANCE_FUNCTIONS
 
         te = calculate_topographic_error(
-            data, weights, DISTANCE_FUNCTIONS["euclidean"],
-            topology="rectangular", pbc=True,
+            data,
+            weights,
+            DISTANCE_FUNCTIONS["euclidean"],
+            topology="rectangular",
+            pbc=True,
         )
         assert 0.0 <= te <= 1.0
 
@@ -191,12 +230,18 @@ class TestPBCTopographicError:
         from torchsom.utils.distances import DISTANCE_FUNCTIONS
 
         te_no_pbc = calculate_topographic_error(
-            data, weights, DISTANCE_FUNCTIONS["euclidean"],
-            topology="rectangular", pbc=False,
+            data,
+            weights,
+            DISTANCE_FUNCTIONS["euclidean"],
+            topology="rectangular",
+            pbc=False,
         )
         te_pbc = calculate_topographic_error(
-            data, weights, DISTANCE_FUNCTIONS["euclidean"],
-            topology="rectangular", pbc=True,
+            data,
+            weights,
+            DISTANCE_FUNCTIONS["euclidean"],
+            topology="rectangular",
+            pbc=True,
         )
         assert te_pbc <= te_no_pbc
 
@@ -205,13 +250,21 @@ class TestPBCCollectSamples:
     """Verify collect_samples wraps neighbours with PBC."""
 
     def test_collect_samples_wraps_with_pbc(self) -> None:
+        """collect_samples should return a non-empty buffer when PBC is active."""
         torch.manual_seed(42)
         data = torch.randn(100, 4)
         data = (data - data.mean(0)) / data.std(0)
 
         som = SOM(
-            x=5, y=5, num_features=4, epochs=2, batch_size=16,
-            pbc=True, device="cpu", random_seed=42,
+            x=5,
+            y=5,
+            num_features=4,
+            epochs=2,
+            batch_size=16,
+            pbc=True,
+            device="cpu",
+            random_seed=42,
+            search_backend="torch",
         )
         som.fit(data, verbose=False)
 
