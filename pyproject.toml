@@ -86,6 +86,8 @@ dev = [
     "notebook",
     "pyyaml",
     "pre-commit",
+    "typer",
+    "minisom>=2.3.6",
 ]
 tests = [
     "pytest",
@@ -230,6 +232,7 @@ ignore = [
     "SIM102", # nested if statements
     "D100",   # missing module docstring (handled by interrogate)
     "D104",   # missing public package docstring
+    "B905",   # zip without an explicit 'strict=' parameter
 ]
 
 [tool.ruff.lint.pydocstyle]
