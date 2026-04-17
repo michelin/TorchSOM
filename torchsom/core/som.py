@@ -171,6 +171,28 @@ class SOM(BaseSOM):
             self._even_row_offsets = self._neighbor_offsets["even"]
             self._odd_row_offsets = self._neighbor_offsets["odd"]
 
+    def set_neighborhood_order(
+        self,
+        neighborhood_order: int,
+    ) -> None:
+        """Update the neighborhood order and recompute neighbor offsets.
+
+        This only affects retrieval (``collect_samples``); trained weights
+        are untouched.
+
+        Args:
+            neighborhood_order (int): New neighborhood order (>= 1).
+
+        Raises:
+            ValueError: If neighborhood_order < 1.
+        """
+        if neighborhood_order < 1:
+            raise ValueError(
+                f"neighborhood_order must be >= 1, got {neighborhood_order}"
+            )
+        self.neighborhood_order = neighborhood_order
+        self._precompute_neighbor_offsets()
+
     def _precompute_decay_schedules(
         self,
         epochs: int,
@@ -425,6 +447,8 @@ class SOM(BaseSOM):
 
         return epoch_q_errors, epoch_t_errors
 
+    _VALID_RETRIEVAL_MODES = ("bmu_only", "bmu_neighborhood", "bmu_neighborhood_knn")
+
     def collect_samples(
         self,
         query_sample: torch.Tensor,
@@ -433,24 +457,45 @@ class SOM(BaseSOM):
         bmus_idx_map: dict[tuple[int, int], list[int]],
         min_buffer_threshold: int = 50,
         return_indices: bool = False,
+        retrieval_mode: str = "bmu_neighborhood_knn",
     ) -> (
         tuple[torch.Tensor, torch.Tensor]
         | tuple[torch.Tensor, torch.Tensor, torch.Tensor]
     ):
         """Collect historical samples similar to the query sample using SOM projection.
 
+        Three retrieval modes control the collection strategy:
+
+        - ``"bmu_only"``: Collect samples mapped to the query's BMU cell only.
+        - ``"bmu_neighborhood"``: Collect from BMU + topological neighbors
+          (up to ``neighborhood_order`` hops). No KNN fallback.
+        - ``"bmu_neighborhood_knn"`` (default): Same as ``bmu_neighborhood``,
+          plus KNN fallback in weight space when the buffer is below
+          ``min_buffer_threshold``.
+
         Args:
-            query_sample (torch.Tensor): Query sample tensor [num_features]
-            historical_samples (torch.Tensor): Historical samples tensor [num_samples, num_features]
-            historical_outputs (torch.Tensor): Historical outputs tensor [num_samples]
-            bmus_idx_map (dict[tuple[int, int], list[int]]): BMU to data indices mapping
-            min_buffer_threshold (int): Minimum buffer threshold
-            return_indices (bool): If True, also return the indices of collected samples
+            query_sample (torch.Tensor): Query sample tensor [num_features].
+            historical_samples (torch.Tensor): Historical samples tensor [num_samples, num_features].
+            historical_outputs (torch.Tensor): Historical outputs tensor [num_samples].
+            bmus_idx_map (dict[tuple[int, int], list[int]]): BMU to data indices mapping.
+            min_buffer_threshold (int): Minimum buffer size before KNN fallback triggers.
+                Only used when ``retrieval_mode="bmu_neighborhood_knn"``.
+            return_indices (bool): If True, also return the indices of collected samples.
+            retrieval_mode (str): Retrieval strategy. One of ``"bmu_only"``,
+                ``"bmu_neighborhood"``, or ``"bmu_neighborhood_knn"`` (default).
 
         Returns:
             If return_indices is False: (historical_data_buffer, historical_output_buffer)
             If return_indices is True: (historical_data_buffer, historical_output_buffer, indices_tensor)
+
+        Raises:
+            ValueError: If ``retrieval_mode`` is not one of the valid modes.
         """
+        if retrieval_mode not in self._VALID_RETRIEVAL_MODES:
+            raise ValueError(
+                f"retrieval_mode must be one of {self._VALID_RETRIEVAL_MODES}, "
+                f"got '{retrieval_mode}'"
+            )
         query_sample = query_sample.to(self.device)
         bmu_pos = self.identify_bmus(query_sample)
         bmu_row, bmu_col = int(bmu_pos[0].item()), int(bmu_pos[1].item())
@@ -461,21 +506,28 @@ class SOM(BaseSOM):
             row_type = "even" if bmu_row % 2 == 0 else "odd"
             offsets = self._neighbor_offsets[row_type]
 
+        # Tier 1: Always collect from BMU cell
         collected_sample_indices = list(bmus_idx_map.get(bmu_tuple, []))
         visited_neurons = {bmu_tuple}
-        for dx, dy in offsets:
-            nr, nc = bmu_row + dx, bmu_col + dy
-            if self.pbc:
-                nr, nc = nr % self.x, nc % self.y
-            elif not (0 <= nr < self.x and 0 <= nc < self.y):
-                continue
-            pos = (nr, nc)
-            if pos not in visited_neurons and pos in bmus_idx_map:
-                collected_sample_indices.extend(bmus_idx_map[pos])
-                visited_neurons.add(pos)
 
-        # If we need more samples, use distance-based collection
-        if len(collected_sample_indices) <= min_buffer_threshold:
+        # Tier 2: Neighborhood expansion (skip for bmu_only)
+        if retrieval_mode != "bmu_only":
+            for dx, dy in offsets:
+                nr, nc = bmu_row + dx, bmu_col + dy
+                if self.pbc:
+                    nr, nc = nr % self.x, nc % self.y
+                elif not (0 <= nr < self.x and 0 <= nc < self.y):
+                    continue
+                pos = (nr, nc)
+                if pos not in visited_neurons and pos in bmus_idx_map:
+                    collected_sample_indices.extend(bmus_idx_map[pos])
+                    visited_neurons.add(pos)
+
+        # Tier 3: KNN fallback in weight space (only for bmu_neighborhood_knn)
+        if (
+            retrieval_mode == "bmu_neighborhood_knn"
+            and len(collected_sample_indices) <= min_buffer_threshold
+        ):
             bmu_weights = self.weights[bmu_row, bmu_col]
             distances = self._calculate_distances_to_neurons(bmu_weights)
 
@@ -487,7 +539,7 @@ class SOM(BaseSOM):
                     candidate_neurons.append((dist, r, c))
             candidate_neurons.sort(key=lambda x: x[0])
 
-            # Collect samples from candidate unvisitedneurons
+            # Collect from nearest unvisited neurons until threshold
             for _, r, c in candidate_neurons:
                 collected_sample_indices.extend(bmus_idx_map[(r, c)])
                 visited_neurons.add((r, c))
