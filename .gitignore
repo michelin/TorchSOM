@@ -104,3 +104,4 @@ Desktop.ini
 
 # Ruff
 .ruff_cache/
+*clickhouse*

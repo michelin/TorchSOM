@@ -5,6 +5,7 @@ from typing import Any, Optional, Union
 
 import matplotlib.pyplot as plt
 import torch
+from torch.utils.data import DataLoader
 
 from torchsom.core import BaseSOM
 from torchsom.visualization.clustering import ClusteringVisualizer
@@ -148,8 +149,7 @@ class SOMVisualizer:
         self,
         quantization_errors: list[float],
         topographic_errors: list[float],
-        bmus_data_map: dict[tuple[int, int], list[int]],
-        data: torch.Tensor,
+        data: torch.Tensor | DataLoader,
         target: torch.Tensor,
         component_names: Optional[list[str]] = None,
         save_path: Optional[Union[str, Path]] = None,
@@ -166,7 +166,6 @@ class SOMVisualizer:
         Args:
             quantization_errors (list[float]): List of quantization errors [epochs]
             topographic_errors (list[float]): List of topographic errors [epochs]
-            bmus_data_map (dict[tuple[int, int], list[int]]): Pre-computed BMU to data indices mapping
             data (torch.Tensor): Input data tensor [batch_size, n_features]
             target (torch.Tensor): Labels tensor for data points [batch_size]
             component_names (Optional[list[str]]): Names for each component/feature
@@ -189,32 +188,19 @@ class SOMVisualizer:
             self._visualizer.plot_distance_map(save_path=save_path)
         if hit_map:
             self._visualizer.plot_hit_map(data, save_path=save_path)
+
+        # Pre-compute bmus_data_map once to avoid re-iterating DataLoader per map
+        bmus_data_map = None
+        if any([metric_map, score_map, rank_map]):
+            bmus_data_map = self.som.build_map("bmus_data", data=data, return_indices=True)
+
         if metric_map:
-            self._visualizer.plot_metric_map(
-                bmus_data_map=bmus_data_map,
-                data=data,
-                target=target,
-                reduction_parameter="mean",
-                save_path=save_path,
-            )
-            self._visualizer.plot_metric_map(
-                bmus_data_map=bmus_data_map,
-                data=data,
-                target=target,
-                reduction_parameter="std",
-                save_path=save_path,
-            )
+            self._visualizer.plot_metric_map(data, target, bmus_data_map=bmus_data_map, reduction_parameter="mean", save_path=save_path)
+            self._visualizer.plot_metric_map(data, target, bmus_data_map=bmus_data_map, reduction_parameter="std", save_path=save_path)
         if score_map:
-            self._visualizer.plot_score_map(
-                bmus_data_map=bmus_data_map,
-                target=target,
-                total_samples=data.shape[0],
-                save_path=save_path,
-            )
+            self._visualizer.plot_score_map(data, target, bmus_data_map=bmus_data_map, save_path=save_path)
         if rank_map:
-            self._visualizer.plot_rank_map(
-                bmus_data_map=bmus_data_map, target=target, save_path=save_path
-            )
+            self._visualizer.plot_rank_map(data, target, bmus_data_map=bmus_data_map, save_path=save_path)
         if component_planes:
             self._visualizer.plot_component_planes(
                 component_names=component_names, save_path=save_path
