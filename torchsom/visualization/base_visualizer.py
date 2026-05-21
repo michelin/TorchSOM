@@ -6,6 +6,7 @@ from typing import Any, Optional, Union
 
 import matplotlib.pyplot as plt
 import torch
+from torch.utils.data import DataLoader
 
 from torchsom.core import BaseSOM
 from torchsom.visualization.config import VisualizationConfig
@@ -133,7 +134,7 @@ class BaseVisualizer(ABC):
 
     def plot_hit_map(
         self,
-        data: torch.Tensor,
+        data: torch.Tensor | DataLoader,
         fig_name: str = "hit_map",
         save_path: Optional[Union[str, Path]] = None,
         batch_size: int = 1024,
@@ -157,9 +158,9 @@ class BaseVisualizer(ABC):
 
     def plot_classification_map(
         self,
-        bmus_data_map: dict[tuple[int, int], list[int]],
-        data: torch.Tensor,
+        data: torch.Tensor | DataLoader,
         target: torch.Tensor,
+        bmus_data_map: Optional[dict[tuple[int, int], list[int]]] = None,
         fig_name: str = "classification_map",
         save_path: Optional[Union[str, Path]] = None,
         neighborhood_order: Optional[int] = None,
@@ -167,9 +168,9 @@ class BaseVisualizer(ABC):
         """Plot classification map.
 
         Args:
-            bmus_data_map (dict[tuple[int, int], list[int]]): Pre-computed BMU to data indices mapping
-            data (torch.Tensor): Input data tensor [batch_size, n_features]
+            data (torch.Tensor | DataLoader): Input data tensor or DataLoader
             target (torch.Tensor): Labels tensor for data points [batch_size]
+            bmus_data_map (Optional[dict]): Pre-computed BMU to data indices mapping
             fig_name (str): The name of the file to save
             save_path (Optional[Union[str, Path]]): Path to save the visualization
             neighborhood_order (Optional[int]): Neighborhood order for tie-breaking
@@ -191,9 +192,9 @@ class BaseVisualizer(ABC):
 
     def plot_metric_map(
         self,
-        bmus_data_map: dict[tuple[int, int], list[int]],
-        data: torch.Tensor,
+        data: torch.Tensor | DataLoader,
         target: torch.Tensor,
+        bmus_data_map: Optional[dict[tuple[int, int], list[int]]] = None,
         reduction_parameter: str = "mean",
         fig_name: Optional[str] = None,
         save_path: Optional[Union[str, Path]] = None,
@@ -201,9 +202,9 @@ class BaseVisualizer(ABC):
         """Plot target metric map.
 
         Args:
-            bmus_data_map (dict[tuple[int, int], list[int]]): Pre-computed BMU to data indices mapping
-            data (torch.Tensor): Input data tensor [batch_size, n_features]
+            data (torch.Tensor | DataLoader): Input data tensor or DataLoader
             target (torch.Tensor): Labels tensor for data points [batch_size]
+            bmus_data_map (Optional[dict]): Pre-computed BMU to data indices mapping
             reduction_parameter (str): Calculation to apply ('mean' or 'std')
             fig_name (Optional[str]): The name of the file to save
             save_path (Optional[Union[str, Path]]): Path to save the visualization
@@ -231,26 +232,26 @@ class BaseVisualizer(ABC):
 
     def plot_score_map(
         self,
-        bmus_data_map: dict[tuple[int, int], list[int]],
+        data: torch.Tensor | DataLoader,
         target: torch.Tensor,
-        total_samples: int,
+        bmus_data_map: Optional[dict[tuple[int, int], list[int]]] = None,
         fig_name: str = "score_map",
         save_path: Optional[Union[str, Path]] = None,
     ) -> None:
         """Plot neuron representativeness score map.
 
         Args:
-            bmus_data_map (dict[tuple[int, int], list[int]]): Pre-computed BMU to data indices mapping
+            data (torch.Tensor | DataLoader): Input data tensor or DataLoader
             target (torch.Tensor): Labels tensor for data points [batch_size]
-            total_samples (int): Total number of samples
+            bmus_data_map (Optional[dict]): Pre-computed BMU to data indices mapping
             fig_name (str): The name of the file to save
             save_path (Optional[Union[str, Path]]): Path to save the visualization
         """
         score_map = self.som.build_map(
             "score",
+            data=data,
             bmus_data_map=bmus_data_map,
             target=target,
-            total_samples=total_samples,
         )
         self.plot_grid(
             map=score_map,
@@ -262,21 +263,24 @@ class BaseVisualizer(ABC):
 
     def plot_rank_map(
         self,
-        bmus_data_map: dict[tuple[int, int], list[int]],
+        data: torch.Tensor | DataLoader,
         target: torch.Tensor,
+        bmus_data_map: Optional[dict[tuple[int, int], list[int]]] = None,
         fig_name: str = "rank_map",
         save_path: Optional[Union[str, Path]] = None,
     ) -> None:
         """Plot ranked neurons map.
 
         Args:
-            bmus_data_map (dict[tuple[int, int], list[int]]): Pre-computed BMU to data indices mapping
+            data (torch.Tensor | DataLoader): Input data tensor or DataLoader
             target (torch.Tensor): Labels tensor for data points [batch_size]
+            bmus_data_map (Optional[dict]): Pre-computed BMU to data indices mapping
             fig_name (str): The name of the file to save
             save_path (Optional[Union[str, Path]]): Path to save the visualization
         """
         rank_map = self.som.build_map(
             "rank",
+            data=data,
             target=target,
             bmus_data_map=bmus_data_map,
         )
