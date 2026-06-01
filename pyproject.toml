@@ -158,6 +158,8 @@ filterwarnings = [
     "ignore::UserWarning",
     "ignore::DeprecationWarning",
     "ignore::PendingDeprecationWarning",
+    # hdbscan 0.8.41 ships invalid-escape docstrings: DeprecationWarning on Python <=3.11, SyntaxWarning on 3.12+
+    "ignore::SyntaxWarning",
 ]
 timeout = 300
 
