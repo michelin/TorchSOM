@@ -1,428 +1,293 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Package Architecture" href="../user_guide/architecture.html"><link rel="prev" title="Quick Start" href="quickstart.html">
+        <link rel="prefetch" href="../_static/logo.png" as="image">
+
+    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+        <title>Basic Concepts - TorchSOM 1.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
 
 
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
-<head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Basic Concepts &mdash; TorchSOM 0.0.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #B22222;
+  --color-brand-content: #B22222;
   
-      <script src="../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../_static/copybutton.js?v=f281be69"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script src="../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="SOM Visualization Guide" href="../user_guide/visualization_help.html" />
-    <link rel="prev" title="Quick Start Guide" href="quickstart.html" /> 
-</head>
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #E05555;
+  --color-brand-content: #E05555;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #E05555;
+  --color-brand-content: #E05555;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search"  style="background: #B22222" >
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
 
-          
-          
-          <a href="../index.html" class="icon icon-home">
-            TorchSOM
-              <img src="../_static/logo.png" class="logo" alt="Logo"/>
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">TorchSOM 1.1.1 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/logo.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">TorchSOM 1.1.1 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#requirements">Requirements</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="installation.html#systems">Systems</a></li>
-<li class="toctree-l3"><a class="reference internal" href="installation.html#gpu">GPU</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#installation-methods">Installation Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="installation.html#install-from-pypi-recommended">Install from PyPI (Recommended)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="installation.html#install-from-source">Install from Source</a></li>
-<li class="toctree-l3"><a class="reference internal" href="installation.html#ensure-gpu-support">Ensure GPU Support</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#verification">Verification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#dependencies">Dependencies</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="installation.html#core-dependencies">Core Dependencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="installation.html#optional-dependencies">Optional Dependencies</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="installation.html#development-dependencies">Development Dependencies</a></li>
-<li class="toctree-l4"><a class="reference internal" href="installation.html#testing-dependencies">Testing Dependencies</a></li>
-<li class="toctree-l4"><a class="reference internal" href="installation.html#documentation-dependencies">Documentation Dependencies</a></li>
-<li class="toctree-l4"><a class="reference internal" href="installation.html#security-dependencies">Security Dependencies</a></li>
-<li class="toctree-l4"><a class="reference internal" href="installation.html#linting-dependencies">Linting Dependencies</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#getting-help">Getting Help</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#next-steps">Next Steps</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#your-first-som">Your First SOM</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#basic-visualization">Basic Visualization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#common-parameters">Common Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#complete-example">Complete Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#what-s-next">What’s Next?</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Basic Concepts</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#what-is-a-self-organizing-map">What is a Self-Organizing Map?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-soms-work">How SOMs Work</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#the-som-algorithm">The SOM Algorithm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#mathematical-foundation">Mathematical Foundation</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#core-components">Core Components</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#grid-topology">1. Grid Topology</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#neighborhood-function">2. Neighborhood Function</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#schedule-learning-rate-and-neighborhood-radius-decay">3. Schedule Learning Rate and Neighborhood Radius Decay</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#learning-rate-decay">Learning Rate Decay</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#neighborhood-radius-decay">Neighborhood Radius Decay</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#asymptotic-decay">Asymptotic Decay</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#distance-functions">4. Distance Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#quality-metrics">5. Quality Metrics</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#strengths-and-weaknesses">Strengths and Weaknesses</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#advantages">Advantages</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#limitations">Limitations</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#data-preparation">Data Preparation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#parameter-selection">Parameter Selection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#interpretation">Interpretation</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Basic Concepts</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/visualization_help.html">SOM Visualization Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#quick-start">Quick Start</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#basic-visualization-setup">Basic Visualization Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#custom-configuration">Custom Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/architecture.html">Package Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/topologies.html">Topologies &amp; Boundary Conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/training.html">Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/jitl.html">Just-in-Time Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/visualization_help.html">Visualization Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/benchmarks.html">Benchmarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/comparison.html">Comparison with Other Libraries</a></li>
 </ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#visualization-types">Visualization Types</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#training-errors">Training Errors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#distance-map-u-matrix">Distance Map (U-Matrix)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#hit-map">Hit Map</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#component-planes">Component Planes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#supervised-maps">Supervised Maps</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#classification-case">Classification Case</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#regression-case">Regression Case</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../user_guide/visualization_help.html#advanced-visualizations">Advanced Visualizations</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#score-map">Score Map</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#rank-map">Rank Map</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../user_guide/visualization_help.html#cluster-map">Cluster Map</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#troubleshooting">Troubleshooting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/visualization_help.html#references">References</a></li>
-</ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/iris.html">Iris — Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/wine.html">Wine — Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/boston_housing.html">Boston Housing — Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/energy_efficiency.html">Energy Efficiency — Multi-target Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/clustering_walkthrough.html">Clustering — Synthetic Blobs</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../api/core.html">Core API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/core.html#module-torchsom.core.base_som">Base Classes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM"><code class="docutils literal notranslate"><span class="pre">BaseSOM</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.fit"><code class="docutils literal notranslate"><span class="pre">BaseSOM.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.identify_bmus"><code class="docutils literal notranslate"><span class="pre">BaseSOM.identify_bmus()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.initialize_weights"><code class="docutils literal notranslate"><span class="pre">BaseSOM.initialize_weights()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.quantization_error"><code class="docutils literal notranslate"><span class="pre">BaseSOM.quantization_error()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.topographic_error"><code class="docutils literal notranslate"><span class="pre">BaseSOM.topographic_error()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/core.html#module-torchsom.core.som">Classical SOM Implementation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM"><code class="docutils literal notranslate"><span class="pre">SOM</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.build_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.build_multiple_maps"><code class="docutils literal notranslate"><span class="pre">SOM.build_multiple_maps()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.cluster"><code class="docutils literal notranslate"><span class="pre">SOM.cluster()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.collect_samples"><code class="docutils literal notranslate"><span class="pre">SOM.collect_samples()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.fit"><code class="docutils literal notranslate"><span class="pre">SOM.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.identify_bmus"><code class="docutils literal notranslate"><span class="pre">SOM.identify_bmus()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.initialize_weights"><code class="docutils literal notranslate"><span class="pre">SOM.initialize_weights()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.quantization_error"><code class="docutils literal notranslate"><span class="pre">SOM.quantization_error()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.topographic_error"><code class="docutils literal notranslate"><span class="pre">SOM.topographic_error()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.weights"><code class="docutils literal notranslate"><span class="pre">SOM.weights</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/core.html#example-usage">Example usage</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/core.html#som-variants-work-in-progress">SOM Variants (WORK IN PROGRESS)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/core.html#periodic-boundary-conditioned-som">Periodic Boundary Conditioned SOM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/core.html#growing-som">Growing SOM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/core.html#hierarchical-som">Hierarchical SOM</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../api/utils.html">Utilities API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html#module-torchsom.utils.distances">Distance Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html#module-torchsom.utils.neighborhood">Neighborhood Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html#module-torchsom.utils.decay">Decay Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html#module-torchsom.utils.grid">Grid and Topology</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.grid.adjust_meshgrid_topology"><code class="docutils literal notranslate"><span class="pre">adjust_meshgrid_topology()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.grid.create_mesh_grid"><code class="docutils literal notranslate"><span class="pre">create_mesh_grid()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.topology.get_all_neighbors_up_to_order"><code class="docutils literal notranslate"><span class="pre">get_all_neighbors_up_to_order()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.topology.get_hexagonal_offsets"><code class="docutils literal notranslate"><span class="pre">get_hexagonal_offsets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.topology.get_rectangular_offsets"><code class="docutils literal notranslate"><span class="pre">get_rectangular_offsets()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html#module-torchsom.utils.initialization">Initialization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.initialization.initialize_weights"><code class="docutils literal notranslate"><span class="pre">initialize_weights()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.initialization.pca_init"><code class="docutils literal notranslate"><span class="pre">pca_init()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.initialization.random_init"><code class="docutils literal notranslate"><span class="pre">random_init()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html#module-torchsom.utils.metrics">Metrics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.metrics.calculate_calinski_harabasz_score"><code class="docutils literal notranslate"><span class="pre">calculate_calinski_harabasz_score()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.metrics.calculate_clustering_metrics"><code class="docutils literal notranslate"><span class="pre">calculate_clustering_metrics()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.metrics.calculate_davies_bouldin_score"><code class="docutils literal notranslate"><span class="pre">calculate_davies_bouldin_score()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.metrics.calculate_quantization_error"><code class="docutils literal notranslate"><span class="pre">calculate_quantization_error()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.metrics.calculate_silhouette_score"><code class="docutils literal notranslate"><span class="pre">calculate_silhouette_score()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.metrics.calculate_topographic_error"><code class="docutils literal notranslate"><span class="pre">calculate_topographic_error()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.metrics.calculate_topological_clustering_quality"><code class="docutils literal notranslate"><span class="pre">calculate_topological_clustering_quality()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../api/visualization.html">Visualization API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/visualization.html#module-torchsom.visualization.base">SOM Visualizer</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_all"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_all()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_classification_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_classification_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_cluster_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_cluster_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_cluster_quality_comparison"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_cluster_quality_comparison()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_clustering_comparison_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_clustering_comparison_grid()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_component_planes"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_component_planes()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_distance_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_distance_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_elbow_analysis"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_elbow_analysis()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_grid()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_hit_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_hit_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_metric_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_metric_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_rank_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_rank_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_score_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_score_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_silhouette_analysis"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_silhouette_analysis()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_training_errors"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_training_errors()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#example">Example</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/visualization.html#module-torchsom.visualization.config">Visualization Configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.cmap"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.cmap</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.colorbar_pad"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.colorbar_pad</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.dpi"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.dpi</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.figsize"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.figsize</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.fontsize"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontsize</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.fontweight"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontweight</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.grid_alpha"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.grid_alpha</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_color"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_border_color</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_width"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_border_width</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_radius"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_radius</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.save_format"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.save_format</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/visualization.html#supported-formats">Supported Formats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/visualization.html#notes">Notes</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../api/configs.html">Configuration API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/configs.html#module-torchsom.configs.som_config">SOM Configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig"><code class="docutils literal notranslate"><span class="pre">SOMConfig</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.batch_size"><code class="docutils literal notranslate"><span class="pre">SOMConfig.batch_size</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.device"><code class="docutils literal notranslate"><span class="pre">SOMConfig.device</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.distance_function"><code class="docutils literal notranslate"><span class="pre">SOMConfig.distance_function</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.epochs"><code class="docutils literal notranslate"><span class="pre">SOMConfig.epochs</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.initialization_mode"><code class="docutils literal notranslate"><span class="pre">SOMConfig.initialization_mode</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.learning_rate"><code class="docutils literal notranslate"><span class="pre">SOMConfig.learning_rate</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.lr_decay_function"><code class="docutils literal notranslate"><span class="pre">SOMConfig.lr_decay_function</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.model_config"><code class="docutils literal notranslate"><span class="pre">SOMConfig.model_config</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.neighborhood_function"><code class="docutils literal notranslate"><span class="pre">SOMConfig.neighborhood_function</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.neighborhood_order"><code class="docutils literal notranslate"><span class="pre">SOMConfig.neighborhood_order</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.random_seed"><code class="docutils literal notranslate"><span class="pre">SOMConfig.random_seed</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.sigma"><code class="docutils literal notranslate"><span class="pre">SOMConfig.sigma</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.sigma_decay_function"><code class="docutils literal notranslate"><span class="pre">SOMConfig.sigma_decay_function</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.topology"><code class="docutils literal notranslate"><span class="pre">SOMConfig.topology</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.x"><code class="docutils literal notranslate"><span class="pre">SOMConfig.x</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.y"><code class="docutils literal notranslate"><span class="pre">SOMConfig.y</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/configs.html#saving-configuration">Saving Configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/configs.html#loading-configuration">Loading Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/configs.html#exporting-configuration">Exporting Configuration</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/core.html">Core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/utils.html">Utilities API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/visualization.html">Visualization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/configs.html">Configuration API</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../additional_resources/changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/changelog.html#how-to-contribute">How to Contribute</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/changelog.html#report-issues">Report Issues</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../additional_resources/faq.html">Frequently Asked Questions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#general-questions">General Questions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#what-is-torchsom">What is TorchSOM?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-does-torchsom-differ-from-other-som-implementations">How does TorchSOM differ from other SOM implementations?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#installation-and-setup">Installation and Setup</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#which-python-versions-are-supported">Which Python versions are supported?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#do-i-need-a-gpu-to-use-torchsom">Do I need a GPU to use TorchSOM?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#data-preprocessing">Data Preprocessing</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#should-i-always-normalize-my-data">Should I always normalize my data?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#what-about-categorical-features">What about categorical features?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#performance-and-optimization">Performance and Optimization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#my-training-is-very-slow-how-can-i-speed-it-up">My training is very slow. How can I speed it up?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-much-memory-does-torchsom-use">How much memory does TorchSOM use?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#visualization-issues">Visualization Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#why-are-some-neurons-white-in-my-visualizations">Why are some neurons white in my visualizations?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-interpret-the-distance-map-d-matrix">How do I interpret the distance map (D-Matrix)?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-customize-the-visualization-colors">Can I customize the visualization colors?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#advanced-topics">Advanced Topics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-use-torchsom-for-time-series-data">Can I use TorchSOM for time series data?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-implement-custom-distance-functions">How do I implement custom distance functions?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-save-and-load-trained-soms">Can I save and load trained SOMs?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#integration-questions">Integration Questions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-cite-torchsom-in-my-research">How do I cite TorchSOM in my research?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#getting-help">Getting Help</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#where-can-i-get-more-help">Where can I get more help?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-report-a-bug">How do I report a bug?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-contribute-to-torchsom">Can I contribute to TorchSOM?</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../additional_resources/troubleshooting.html">Troubleshooting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#installation-issues">Installation Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#package-issues">Package Issues</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#cuda-gpu-issues">CUDA/GPU Issues</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#cuda-not-available">CUDA not available</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#training-problems">Training Problems</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#training-doesn-t-converge">Training doesn’t converge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#very-slow-training">Very slow training</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#nan-values-in-results">NaN values in results</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#visualization-issues">Visualization Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#empty-or-white-visualizations">Empty or white visualizations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#figures-not-displaying">Figures not displaying</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#poor-visualization-quality">Poor visualization quality</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#configuration-errors">Configuration Errors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#validationerror-from-pydantic">ValidationError from Pydantic</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#parameter-compatibility-issues">Parameter compatibility issues</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-issues">Memory Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-usage-too-high">Memory usage too high</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-leaks">Memory leaks</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#getting-help">Getting Help</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#diagnostic-information">Diagnostic Information</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#creating-minimal-examples">Creating Minimal Examples</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#where-to-get-help">Where to Get Help</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#debug-mode">Debug Mode</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../additional_resources/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional_resources/faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional_resources/troubleshooting.html">Troubleshooting</a></li>
 </ul>
 
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #B22222" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">TorchSOM</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Basic Concepts</li>
-      <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/LouisTier/TorchSOM/blob/dev_org/docs/source/getting_started/basic_concepts.rst" class="fa fa-github"> Edit on GitHub</a>
-      </li>
-  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
-        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quick Start Guide" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../user_guide/visualization_help.html" class="btn btn-neutral float-right" title="SOM Visualization Guide" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-  </div>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <section id="basic-concepts">
-<h1>Basic Concepts<a class="headerlink" href="#basic-concepts" title="Link to this heading"></a></h1>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/michelin/TorchSOM/blob/main/docs/source/getting_started/basic_concepts.rst?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/michelin/TorchSOM/edit/main/docs/source/getting_started/basic_concepts.rst" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="basic-concepts">
+<h1>Basic Concepts<a class="headerlink" href="#basic-concepts" title="Link to this heading">¶</a></h1>
 <p>This page introduces the fundamental concepts behind Self-Organizing Maps (SOMs) and how they work.</p>
 <section id="what-is-a-self-organizing-map">
-<h2>What is a Self-Organizing Map?<a class="headerlink" href="#what-is-a-self-organizing-map" title="Link to this heading"></a></h2>
+<h2>What is a Self-Organizing Map?<a class="headerlink" href="#what-is-a-self-organizing-map" title="Link to this heading">¶</a></h2>
 <p>A <strong>Self-Organizing Map (SOM)</strong>, also known as a Kohonen map, is an unsupervised neural network algorithm that:</p>
 <ul class="simple">
 <li><p><strong>Clusters</strong> similar data points together</p></li>
@@ -441,9 +306,9 @@
 </a>
 </section>
 <section id="how-soms-work">
-<h2>How SOMs Work<a class="headerlink" href="#how-soms-work" title="Link to this heading"></a></h2>
+<h2>How SOMs Work<a class="headerlink" href="#how-soms-work" title="Link to this heading">¶</a></h2>
 <section id="the-som-algorithm">
-<h3>The SOM Algorithm<a class="headerlink" href="#the-som-algorithm" title="Link to this heading"></a></h3>
+<h3>The SOM Algorithm<a class="headerlink" href="#the-som-algorithm" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Initialize</strong> weight vectors randomly for each neuron</p></li>
 <li><p><strong>Present</strong> input data to the network</p></li>
@@ -453,29 +318,47 @@
 </ol>
 </section>
 <section id="mathematical-foundation">
-<h3>Mathematical Foundation<a class="headerlink" href="#mathematical-foundation" title="Link to this heading"></a></h3>
-<p><strong>Distance Calculation</strong>
-The similarity between an input vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and a neuron’s weight vector <span class="math notranslate nohighlight">\(\mathbf{w}\)</span> is most commonly measured using the Euclidean distance.
-Alternative distance functions are also supported; see <a class="reference internal" href="#distance-functions-section"><span class="std std-ref">4. Distance Functions</span></a> for a comprehensive list.</p>
+<h3>Mathematical Foundation<a class="headerlink" href="#mathematical-foundation" title="Link to this heading">¶</a></h3>
+<p><strong>Setup and notation</strong>
+A SOM approximates a distribution over an input space <span class="math notranslate nohighlight">\(\mathcal{X} \subseteq \mathbb{R}^d\)</span> by a two-dimensional lattice of <span class="math notranslate nohighlight">\(I \times J\)</span> neurons.
+Each neuron at grid position <span class="math notranslate nohighlight">\((i, j)\)</span>, with <span class="math notranslate nohighlight">\(i \in \{1, \dots, I\}\)</span> and <span class="math notranslate nohighlight">\(j \in \{1, \dots, J\}\)</span>, carries a <em>codebook</em> (weight) vector <span class="math notranslate nohighlight">\(\mathbf{w}_{ij} \in \mathbb{R}^l\)</span> with <span class="math notranslate nohighlight">\(l = d\)</span>, and the full parameter set is the tensor</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[\text{BMU} = w_{\mathrm{bmu}} = \underset{i,j}{\operatorname{argmin}}\, \| \mathbf{x} - \mathbf{w}_{ij} \|_2 = \underset{i,j}{\operatorname{argmin}}\, \sqrt{\sum_{l=1}^{k} (x_l - w_{ij,l})^2}\]</div>
-<p><strong>Weight Update Rule</strong>
-The weights of the neurons are updated according to the following rule:</p>
+\[\mathbf{W} \coloneqq [\mathbf{w}_{ij}]_{i \le I,\, j \le J} \in \mathbb{R}^{I \times J \times l}\]</div>
+</div>
+<p>Training uses a data set <span class="math notranslate nohighlight">\(\{\mathbf{x}_k\}_{k=1}^{N} \subset \mathbb{R}^d\)</span> over epochs <span class="math notranslate nohighlight">\(t \in \{0, 1, \dots, T\}\)</span>.</p>
+<p><strong>Best matching unit and projection</strong>
+Similarity in feature space is measured by a distance <span class="math notranslate nohighlight">\(\delta\)</span> (see <a class="reference internal" href="#distance-functions-section"><span class="std std-ref">4. Distance Functions</span></a>).
+For an input <span class="math notranslate nohighlight">\(\mathbf{x}\)</span>, the Best Matching Unit (BMU) is the neuron whose codebook minimizes <span class="math notranslate nohighlight">\(\delta\)</span>:</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[\mathbf{w}_{ij}(t+1) = \mathbf{w}_{ij}(t) + \alpha(t) \cdot h_{ij}(t) \cdot (\mathbf{x} - \mathbf{w}_{ij}(t))\]</div>
+\[\mathrm{BMU}(\mathbf{x}) \coloneqq \operatorname*{arg\,min}_{(i,j)}\, \delta(\mathbf{x}, \mathbf{w}_{ij})\]</div>
+</div>
+<p>which induces a projection onto grid coordinates and a latent codebook retrieval:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\psi : \mathbb{R}^d \rightarrow \{1, \dots, I\} \times \{1, \dots, J\}, \qquad \psi(\mathbf{x}) \coloneqq \mathrm{BMU}(\mathbf{x}), \qquad \mathbf{z} \coloneqq \mathbf{w}_{\psi(\mathbf{x})} \in \mathbb{R}^l\]</div>
+</div>
+<p>The latent vector <span class="math notranslate nohighlight">\(\mathbf{z}\)</span> is the representation used for clustering, visualization, and just-in-time learning (JITL) retrieval.</p>
+<p><strong>Competitive update</strong>
+A SOM learns by a neighborhood-weighted competitive rule rather than gradient descent: at each step the BMU for the presented sample <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> is found, and each neuron is moved toward <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> by a step scaled by its grid proximity to the BMU:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\mathbf{w}_{ij}(t+1) \coloneqq \mathbf{w}_{ij}(t) + \alpha(t)\, h_{ij}(t)\, (\mathbf{x} - \mathbf{w}_{ij}(t))\]</div>
+</div>
 <p>where:</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(\mathbf{w}_{ij}(t) \in \mathbb{R}^k\)</span>: weight vector of the neuron at row <span class="math notranslate nohighlight">\(i\)</span>, column <span class="math notranslate nohighlight">\(j\)</span> at iteration <span class="math notranslate nohighlight">\(t\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(\alpha(t) \in \mathbb{R}\)</span>: learning rate at iteration <span class="math notranslate nohighlight">\(t\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(h_{ij}(t) \in \mathbb{R}\)</span>: neighborhood function value for neuron <span class="math notranslate nohighlight">\((i, j)\)</span> at iteration <span class="math notranslate nohighlight">\(t\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^k\)</span>: input feature vector</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{w}_{ij}(t) \in \mathbb{R}^l\)</span>: codebook vector of neuron <span class="math notranslate nohighlight">\((i, j)\)</span> at epoch <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha(t) \in \mathbb{R}^+\)</span>: learning rate at epoch <span class="math notranslate nohighlight">\(t\)</span> (see the decay schedules below)</p></li>
+<li><p><span class="math notranslate nohighlight">\(h_{ij}(t) \in \mathbb{R}\)</span>: neighborhood weight for neuron <span class="math notranslate nohighlight">\((i, j)\)</span> at epoch <span class="math notranslate nohighlight">\(t\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x} \in \mathbb{R}^d\)</span>: input feature vector</p></li>
 </ul>
 </section>
 </section>
 <section id="core-components">
-<h2>Core Components<a class="headerlink" href="#core-components" title="Link to this heading"></a></h2>
+<h2>Core Components<a class="headerlink" href="#core-components" title="Link to this heading">¶</a></h2>
 <section id="grid-topology">
-<h3>1. Grid Topology<a class="headerlink" href="#grid-topology" title="Link to this heading"></a></h3>
+<span id="grid-topology-section"></span><h3>1. Grid Topology<a class="headerlink" href="#grid-topology" title="Link to this heading">¶</a></h3>
 <p>SOMs arrange neurons in a regular grid structure, which determines the map’s topology and neighborhood relationships:</p>
 <dl class="simple">
 <dt><strong>Rectangular Grid</strong></dt><dd><ul class="simple">
@@ -488,72 +371,105 @@ The weights of the neurons are updated according to the following rule:</p>
 <li><p>Reduces topology errors, often preferred for advanced analysis</p></li>
 </ul>
 </dd>
+<dt><strong>Periodic Boundary Conditions (PBC)</strong></dt><dd><ul class="simple">
+<li><p>Available for both rectangular and hexagonal grids</p></li>
+<li><p>Opposite edges of the map are identified, eliminating boundary artifacts at the borders</p></li>
+<li><p>Useful when the input space has no natural boundary (e.g., cyclic features, angular data)
+or when uniform neuron utilization is required across the entire map</p></li>
+</ul>
+</dd>
 </dl>
+<p>Under periodic boundary conditions, grid distances follow the minimum-image convention:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[d_{\mathrm{grid}}\big((i,j),(i',j')\big) \coloneqq \min_{\mathbf{s} \in \mathcal{S}} \big\lVert \gamma(i,j) - \gamma(i',j') + \mathbf{s} \big\rVert_2\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\gamma(\cdot)\)</span> maps a grid index to its coordinates and <span class="math notranslate nohighlight">\(\mathcal{S}\)</span> enumerates translations by the grid periods (<span class="math notranslate nohighlight">\(\mathcal{S} = \{\mathbf{0}\}\)</span> without PBC), so neighborhoods wrap across boundaries and corner neurons are not penalized.</p>
 <a class="reference internal image-reference" href="../_images/topologies.png"><img alt="Topologies with neighborhood orders" class="align-center" src="../_images/topologies.png" style="width: 600px;" />
 </a>
 </section>
 <section id="neighborhood-function">
-<h3>2. Neighborhood Function<a class="headerlink" href="#neighborhood-function" title="Link to this heading"></a></h3>
-<p>The neighborhood function determines how much each neuron is influenced by the BMU during weight updates:</p>
+<h3>2. Neighborhood Function<a class="headerlink" href="#neighborhood-function" title="Link to this heading">¶</a></h3>
+<p>The neighborhood function determines how much each neuron is influenced by the BMU during weight updates.
+Let <span class="math notranslate nohighlight">\(\rho \coloneqq d_{\mathrm{grid}}\big((i, j), \mathrm{BMU}\big)\)</span> denote the <em>grid-space</em> distance from neuron <span class="math notranslate nohighlight">\((i, j)\)</span> to the BMU, induced by the lattice geometry. TorchSOM provides four neighborhood kernels of width <span class="math notranslate nohighlight">\(\sigma(t)\)</span>:</p>
 <dl>
-<dt><strong>Gaussian</strong> (most common):</dt><dd><div class="math notranslate nohighlight">
-\[h_{ij}^{\mathrm{Gaussian}}(t) = \exp\left(-\frac{d_{ij}^2}{2\,\sigma(t)^2}\right)\]</div>
+<dt><strong>Gaussian</strong> (most common):</dt><dd><div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[h_{ij}^{\mathrm{gaussian}}(t) \coloneqq \exp\left(-\frac{\rho^2}{2\,\sigma(t)^2}\right)\]</div>
+</div>
 </dd>
-<dt><strong>Mexican Hat</strong>:</dt><dd><div class="math notranslate nohighlight">
-\[h_{ij}^{\mathrm{Mexican}}(t) = \frac{1}{\pi\,\sigma(t)^4} \left(1 - \frac{d_{ij}^2}{2\,\sigma(t)^2}\right) \exp\left(-\frac{d_{ij}^2}{2\,\sigma(t)^2}\right)\]</div>
+<dt><strong>Mexican hat</strong> (the Ricker wavelet rescaled to a unit peak; it dips below zero in an outer ring, so <span class="math notranslate nohighlight">\(h_{ij}(t) \in \mathbb{R}\)</span>):</dt><dd><div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[h_{ij}^{\mathrm{mexican}}(t) \coloneqq \left(1 - \frac{\rho^2}{4\,\sigma(t)^2}\right) \exp\left(-\frac{\rho^2}{2\,\sigma(t)^2}\right)\]</div>
+</div>
 </dd>
-<dt><strong>Bubble</strong>:</dt><dd><div class="math notranslate nohighlight">
-\[\begin{split}h_{ij}^{\mathrm{Bubble}}(t) = \begin{cases}
-   1, &amp; \text{if } d_{ij} \leq \sigma(t) \\
-   0, &amp; \text{otherwise}
-\end{cases}\end{split}\]</div>
+<dt><strong>Bubble</strong>:</dt><dd><div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[h_{ij}^{\mathrm{bubble}}(t) \coloneqq \mathbb{I}\big(\rho \le \sigma(t)\big)\]</div>
+</div>
 </dd>
-<dt><strong>Triangle</strong>:</dt><dd><div class="math notranslate nohighlight">
-\[h_{ij}^{\mathrm{Triangle}}(t) = \max\left(0,\, 1 - \frac{d_{ij}}{\sigma(t)}\right)\]</div>
+<dt><strong>Triangle</strong>:</dt><dd><div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[h_{ij}^{\mathrm{triangle}}(t) \coloneqq \max\left(0,\, 1 - \frac{\rho}{\sigma(t)}\right)\]</div>
+</div>
 </dd>
 </dl>
-<p>When updating neuron weights, the distance <span class="math notranslate nohighlight">\(d_{ij}\)</span> is computed in the grid (map) space, not in the input feature space:</p>
+<p>The grid distance is computed in the map space, not the input feature space. On a rectangular grid it is Euclidean in the neuron coordinates,</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[d_{ij} = \sqrt{(i - c_x)^2 + (j - c_y)^2}\]</div>
-<p>where:</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\((c_x, c_y)\)</span>: coordinates of the BMU in the grid</p></li>
-<li><p><span class="math notranslate nohighlight">\((i, j)\)</span>: coordinates of neuron <span class="math notranslate nohighlight">\(w_{ij}\)</span></p></li>
-</ul>
+\[\rho = \sqrt{(i - c_i)^2 + (j - c_j)^2}\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\((c_i, c_j)\)</span> are the BMU coordinates and <span class="math notranslate nohighlight">\((i, j)\)</span> those of neuron <span class="math notranslate nohighlight">\(\mathbf{w}_{ij}\)</span> (periodic boundaries wrap this distance; see <a class="reference internal" href="#grid-topology-section"><span class="std std-ref">1. Grid Topology</span></a>).</p>
+<p>Discrete neighborhoods are controlled by an integer <strong>order</strong> <span class="math notranslate nohighlight">\(o \in \mathbb{N}^+\)</span>. On a rectangular grid, the order-<span class="math notranslate nohighlight">\(o\)</span> neighborhood of the BMU at <span class="math notranslate nohighlight">\((i, j)\)</span> is the Chebyshev ball</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[N_o(\mathrm{BMU}) \coloneqq \big\{ (i', j') : \max(|i' - i|,\, |j' - j|) \le o \big\}\]</div>
+</div>
+<p>a <span class="math notranslate nohighlight">\((2o + 1) \times (2o + 1)\)</span> block of neurons; the hexagonal grid uses the analogous hop-distance rings. The order <span class="math notranslate nohighlight">\(o\)</span> sets the support of the discrete weight update and the sample-retrieval neighborhoods used for JITL (the <code class="docutils literal notranslate"><span class="pre">neighborhood_order</span></code> parameter and the <code class="docutils literal notranslate"><span class="pre">collect_samples</span></code> retrieval modes).</p>
 </section>
 <section id="schedule-learning-rate-and-neighborhood-radius-decay">
-<h3>3. Schedule Learning Rate and Neighborhood Radius Decay<a class="headerlink" href="#schedule-learning-rate-and-neighborhood-radius-decay" title="Link to this heading"></a></h3>
+<h3>3. Schedule Learning Rate and Neighborhood Radius Decay<a class="headerlink" href="#schedule-learning-rate-and-neighborhood-radius-decay" title="Link to this heading">¶</a></h3>
 <section id="learning-rate-decay">
-<h4>Learning Rate Decay<a class="headerlink" href="#learning-rate-decay" title="Link to this heading"></a></h4>
+<h4>Learning Rate Decay<a class="headerlink" href="#learning-rate-decay" title="Link to this heading">¶</a></h4>
 <p>The learning rate <span class="math notranslate nohighlight">\(\alpha(t)\)</span> controls the magnitude of weight vector updates during training, directly influencing convergence speed and final map quality.</p>
 <dl>
-<dt><strong>Inverse Decay</strong>:</dt><dd><div class="math notranslate nohighlight">
-\[\alpha(t+1) = \alpha(t) \cdot \frac{\gamma}{\gamma + t} % , \quad \text{where } \gamma = \frac{T}{100}\]</div>
+<dt><strong>Inverse Decay</strong>:</dt><dd><div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\alpha(t+1) \coloneqq \alpha(t) \cdot \frac{\gamma}{\gamma + t}\]</div>
+</div>
 </dd>
-<dt><strong>Linear Decay</strong>:</dt><dd><div class="math notranslate nohighlight">
-\[\alpha(t+1) = \alpha(t) \cdot \left( 1 - \frac{t}{T} \right)\]</div>
+<dt><strong>Linear Decay</strong>:</dt><dd><div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\alpha(t+1) \coloneqq \alpha(t) \cdot \left( 1 - \frac{t}{T} \right)\]</div>
+</div>
 </dd>
 </dl>
 <p>These schedulers guarantee convergence to <span class="math notranslate nohighlight">\(\alpha(T) = 0\)</span>, corresponding to zero weight updates in the final training phase, which is essential for achieving precise local weight adjustments.</p>
 </section>
 <section id="neighborhood-radius-decay">
-<h4>Neighborhood Radius Decay<a class="headerlink" href="#neighborhood-radius-decay" title="Link to this heading"></a></h4>
+<h4>Neighborhood Radius Decay<a class="headerlink" href="#neighborhood-radius-decay" title="Link to this heading">¶</a></h4>
 <p>The neighborhood radius controls the size of the neighborhood of the BMU during weight updates.</p>
 <dl>
-<dt><strong>Inverse Decay</strong>:</dt><dd><div class="math notranslate nohighlight">
-\[\sigma(t+1) = \frac{\sigma(t)}{1 + t \cdot \frac{\sigma(t) - 1}{T}}\]</div>
+<dt><strong>Inverse Decay</strong>:</dt><dd><div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\sigma(t+1) \coloneqq \frac{\sigma(t)}{1 + t \cdot \frac{\sigma(t) - 1}{T}}\]</div>
+</div>
 </dd>
-<dt><strong>Linear Decay</strong>:</dt><dd><div class="math notranslate nohighlight">
-\[\sigma(t+1) = \sigma(t) + t \cdot \frac{1 - \sigma(t)}{T}\]</div>
+<dt><strong>Linear Decay</strong>:</dt><dd><div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\sigma(t+1) \coloneqq \sigma(t) + t \cdot \frac{1 - \sigma(t)}{T}\]</div>
+</div>
 </dd>
 </dl>
 <p>These schedulers guarantee convergence to <span class="math notranslate nohighlight">\(\sigma(T) = 1\)</span>, corresponding to single-neuron updates in the final training phase, which is essential for achieving precise local weight adjustments.</p>
 </section>
 <section id="asymptotic-decay">
-<h4>Asymptotic Decay<a class="headerlink" href="#asymptotic-decay" title="Link to this heading"></a></h4>
+<h4>Asymptotic Decay<a class="headerlink" href="#asymptotic-decay" title="Link to this heading">¶</a></h4>
 <p>For arbitrary dynamic parameters requiring exponential-like decay characteristics, TorchSOM implements a general asymptotic decay scheduler:</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[\theta(t+1) = \frac{\theta(t)}{1 + \frac{t}{T/2}}\]</div>
+\[\theta(t+1) \coloneqq \frac{\theta(t)}{1 + \frac{t}{T/2}}\]</div>
+</div>
 <p>where:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(\alpha(t) \in \mathbb{R}^+\)</span>: learning rate at iteration <span class="math notranslate nohighlight">\(t\)</span></p></li>
@@ -566,61 +482,62 @@ The weights of the neurons are updated according to the following rule:</p>
 </section>
 </section>
 <section id="distance-functions">
-<span id="distance-functions-section"></span><h3>4. Distance Functions<a class="headerlink" href="#distance-functions" title="Link to this heading"></a></h3>
-<p>Different ways to measure similarity:</p>
+<span id="distance-functions-section"></span><h3>4. Distance Functions<a class="headerlink" href="#distance-functions" title="Link to this heading">¶</a></h3>
+<p>The feature-space distance <span class="math notranslate nohighlight">\(\delta\)</span> used by the BMU search is configurable. Writing <span class="math notranslate nohighlight">\(x_a\)</span> and <span class="math notranslate nohighlight">\(w_a\)</span> for the <span class="math notranslate nohighlight">\(a\)</span>-th components:</p>
 <dl>
-<dt><strong>Euclidean</strong>:</dt><dd><div class="math notranslate nohighlight">
-\[d_{\text{Euclidean}}(x, w_{ij}) = \sqrt{\sum_{l=1}^k {(x_l - w_{ij,l})}^2}\]</div>
+<dt><strong>Euclidean</strong>:</dt><dd><div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\delta_{\mathrm{euclidean}}(\mathbf{x}, \mathbf{w}) \coloneqq \sqrt{\sum_{a=1}^{d} (x_a - w_a)^2}\]</div>
+</div>
 </dd>
-<dt><strong>Cosine</strong>:</dt><dd><div class="math notranslate nohighlight">
-\[d_{\text{cosine}}(x, w_{ij}) = 1 - \frac{x \cdot w_{ij}}{\|x\| \|w_{ij}\|}\]</div>
+<dt><strong>Manhattan</strong>:</dt><dd><div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\delta_{\mathrm{manhattan}}(\mathbf{x}, \mathbf{w}) \coloneqq \sum_{a=1}^{d} |x_a - w_a|\]</div>
+</div>
 </dd>
-<dt><strong>Manhattan</strong>:</dt><dd><div class="math notranslate nohighlight">
-\[d_{\text{Manhattan}}(x, w_{ij}) = \sum_{l=1}^k |x_l - w_{ij,l}|\]</div>
+<dt><strong>Cosine</strong>:</dt><dd><div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\delta_{\mathrm{cosine}}(\mathbf{x}, \mathbf{w}) \coloneqq 1 - \frac{\mathbf{x} \cdot \mathbf{w}}{\lVert \mathbf{x} \rVert\, \lVert \mathbf{w} \rVert}\]</div>
+</div>
 </dd>
-<dt><strong>Chebyshev</strong>:</dt><dd><div class="math notranslate nohighlight">
-\[d_{\text{Chebyshev}}(x, w_{ij}) = \max_{l} |x_l - w_{ij,l}|\]</div>
-</dd>
-<dt>where:</dt><dd><ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(x \in \mathbb{R}^k\)</span>: input feature vector</p></li>
-<li><p><span class="math notranslate nohighlight">\(w_{ij} \in \mathbb{R}^k\)</span>: weight vector of the neuron at row <span class="math notranslate nohighlight">\(i\)</span>, column <span class="math notranslate nohighlight">\(j\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(k \in \mathbb{N}\)</span>: number of features</p></li>
-<li><p><span class="math notranslate nohighlight">\(l \in \{1, \ldots, k\}\)</span>: feature index</p></li>
-</ul>
+<dt><strong>Chebyshev</strong>:</dt><dd><div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\delta_{\mathrm{chebyshev}}(\mathbf{x}, \mathbf{w}) \coloneqq \max_{a \le d} |x_a - w_a|\]</div>
+</div>
 </dd>
 </dl>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{x}, \mathbf{w} \in \mathbb{R}^d\)</span> and <span class="math notranslate nohighlight">\(d \in \mathbb{N}\)</span> is the number of features.</p>
 </section>
 <section id="quality-metrics">
-<h3>5. Quality Metrics<a class="headerlink" href="#quality-metrics" title="Link to this heading"></a></h3>
-<p><strong>Quantization Error</strong>
-Average distance between data points and their BMUs. Lower is better, measures how well the map represents the data.</p>
-<p><strong>Quantization Error</strong></p>
-<p>Average distance between data points and their BMUs. Lower is better; measures how well the map represents the data.</p>
+<h3>5. Quality Metrics<a class="headerlink" href="#quality-metrics" title="Link to this heading">¶</a></h3>
+<p><strong>Quantization Error (QE)</strong></p>
+<p>Average distance between data points and their BMUs. Lower is better; it measures how well the map represents the data.</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[\mathrm{QE} = \frac{1}{N} \sum_{i=1}^{N} \left\| x_i - w_{\mathrm{BMU}}(x_i) \right\|_2\]</div>
-<p><strong>Topographic Error</strong></p>
-<p>Percentage of data points whose BMU and second-BMU are not neighbors. Lower is better; measures topology preservation.</p>
+\[\mathrm{QE} \coloneqq \frac{1}{N} \sum_{k=1}^{N} \big\lVert \mathbf{x}_k - \mathbf{w}_{\mathrm{BMU}(\mathbf{x}_k)} \big\rVert_2\]</div>
+</div>
+<p><strong>Topographic Error (TE)</strong></p>
+<p>Fraction of data points whose BMU and second-BMU are not grid-adjacent. Lower is better; it measures topology preservation.</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[\mathrm{TE} = \frac{1}{N} \sum_{i=1}^{N} \mathbb{I} \left( d_{\mathrm{grid}} \left( w_{\mathrm{BMU}}(x_i),\ w_{\mathrm{2nd\text{-}BMU}}(x_i) \right) &gt; d_{\mathrm{th}} \right )\]</div>
+\[\mathrm{TE} \coloneqq \frac{1}{N} \sum_{k=1}^{N} \mathbb{I}\big( d_{\mathrm{grid}}(\mathrm{BMU}(\mathbf{x}_k),\, \mathrm{BMU}_2(\mathbf{x}_k)) &gt; d_{\mathrm{th}} \big)\]</div>
+</div>
 <p>where:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(N \in \mathbb{N}\)</span>: Number of training samples</p></li>
-<li><p><span class="math notranslate nohighlight">\(x_i \in \mathbb{R}^k\)</span>: The <span class="math notranslate nohighlight">\(i\)</span>-th input training sample</p></li>
-<li><p><span class="math notranslate nohighlight">\(w_{\text{BMU}}(x_i) \in \mathbb{R}^k\)</span>: Weight vector of the Best Matching Unit (BMU) for input <span class="math notranslate nohighlight">\(x_i\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(w_{\text{2nd-BMU}}(x_i) \in \mathbb{R}^k\)</span>: Weight vector of the second BMU for input <span class="math notranslate nohighlight">\(x_i\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(d_{\text{th}} \in \mathbb{R}^+\)</span>: Threshold distance for topological adjacency (typically <span class="math notranslate nohighlight">\(d_{\text{th}} = 1\)</span>)</p></li>
-<li><p><span class="math notranslate nohighlight">\(\mathbb{I}(\cdot) \in \{0, 1\}\)</span>: Indicator function</p></li>
-<li><p><span class="math notranslate nohighlight">\(\| \cdot \|_2\)</span>: Euclidean norm in feature space</p></li>
-<li><p><span class="math notranslate nohighlight">\(d_{\text{grid}}(\cdot, \cdot)\)</span>: Grid space distance between BMUs of input <span class="math notranslate nohighlight">\(x_i\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(N \in \mathbb{N}\)</span>: number of training samples</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{x}_k \in \mathbb{R}^d\)</span>: the <span class="math notranslate nohighlight">\(k\)</span>-th input sample</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathrm{BMU}_2(\mathbf{x}_k)\)</span>: the second-closest neuron in feature space</p></li>
+<li><p><span class="math notranslate nohighlight">\(d_{\mathrm{th}} \in \mathbb{R}^+\)</span>: grid-adjacency threshold (typically <span class="math notranslate nohighlight">\(d_{\mathrm{th}} = 1\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbb{I}(\cdot) \in \{0, 1\}\)</span>: indicator function</p></li>
 </ul>
 </div></blockquote>
 </section>
 </section>
 <section id="strengths-and-weaknesses">
-<h2>Strengths and Weaknesses<a class="headerlink" href="#strengths-and-weaknesses" title="Link to this heading"></a></h2>
+<h2>Strengths and Weaknesses<a class="headerlink" href="#strengths-and-weaknesses" title="Link to this heading">¶</a></h2>
 <section id="advantages">
-<h3>Advantages<a class="headerlink" href="#advantages" title="Link to this heading"></a></h3>
+<h3>Advantages<a class="headerlink" href="#advantages" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>No assumptions</strong> about data distribution</p></li>
 <li><p><strong>Topology preservation</strong> maintains relationships</p></li>
@@ -629,7 +546,7 @@ Average distance between data points and their BMUs. Lower is better, measures h
 </ul>
 </section>
 <section id="limitations">
-<h3>Limitations<a class="headerlink" href="#limitations" title="Link to this heading"></a></h3>
+<h3>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Calculations can be expensive</strong> for large datasets</p></li>
 <li><p><strong>Parameter selection is important</strong> - requires tuning</p></li>
@@ -638,9 +555,9 @@ Average distance between data points and their BMUs. Lower is better, measures h
 </section>
 </section>
 <section id="best-practices">
-<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading">¶</a></h2>
 <section id="data-preparation">
-<h3>Data Preparation<a class="headerlink" href="#data-preparation" title="Link to this heading"></a></h3>
+<h3>Data Preparation<a class="headerlink" href="#data-preparation" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Normalize features</strong> to similar scales</p></li>
 <li><p><strong>Remove highly correlated</strong> features</p></li>
@@ -649,14 +566,14 @@ Average distance between data points and their BMUs. Lower is better, measures h
 </ol>
 </section>
 <section id="parameter-selection">
-<h3>Parameter Selection<a class="headerlink" href="#parameter-selection" title="Link to this heading"></a></h3>
+<h3>Parameter Selection<a class="headerlink" href="#parameter-selection" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Experiment with different</strong> topologies and functions</p></li>
 <li><p><strong>Monitor training progress</strong> with error curves to guide parameter choice</p></li>
 </ol>
 </section>
 <section id="interpretation">
-<h3>Interpretation<a class="headerlink" href="#interpretation" title="Link to this heading"></a></h3>
+<h3>Interpretation<a class="headerlink" href="#interpretation" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Use multiple visualizations</strong> to understand the map</p></li>
 <li><p><strong>Combine with domain knowledge</strong> for meaningful insights</p></li>
@@ -666,43 +583,124 @@ Average distance between data points and their BMUs. Lower is better, measures h
 </section>
 </section>
 <section id="next-steps">
-<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Link to this heading">¶</a></h2>
 <p>Now that you understand the basics, explore:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="../user_guide/visualization_help.html"><span class="doc">SOM Visualization Guide</span></a> - Visualization techniques</p></li>
+<li><p><a class="reference internal" href="../user_guide/architecture.html"><span class="doc">Package Architecture</span></a> — How these concepts map to the package structure and APIs</p></li>
+<li><p><a class="reference internal" href="../user_guide/topologies.html"><span class="doc">Topologies &amp; Boundary Conditions</span></a> — Choosing a topology and periodic boundary conditions</p></li>
+<li><p><a class="reference internal" href="../user_guide/training.html"><span class="doc">Training</span></a> — Decay schedules and training configuration</p></li>
+<li><p><a class="reference internal" href="../user_guide/visualization_help.html"><span class="doc">Visualization Gallery</span></a> — Visualization gallery</p></li>
+<li><p><a class="reference internal" href="quickstart.html"><span class="doc">Quick Start</span></a> — A minimal end-to-end example</p></li>
 </ul>
 </section>
 </section>
 
-
-           </div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../user_guide/architecture.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Package Architecture</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="quickstart.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Quick Start</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Manufacture Française des Pneumatiques Michelin
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quick Start Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../user_guide/visualization_help.html" class="btn btn-neutral float-right" title="SOM Visualization Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
     </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Basic Concepts</a><ul>
+<li><a class="reference internal" href="#what-is-a-self-organizing-map">What is a Self-Organizing Map?</a></li>
+<li><a class="reference internal" href="#how-soms-work">How SOMs Work</a><ul>
+<li><a class="reference internal" href="#the-som-algorithm">The SOM Algorithm</a></li>
+<li><a class="reference internal" href="#mathematical-foundation">Mathematical Foundation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#core-components">Core Components</a><ul>
+<li><a class="reference internal" href="#grid-topology">1. Grid Topology</a></li>
+<li><a class="reference internal" href="#neighborhood-function">2. Neighborhood Function</a></li>
+<li><a class="reference internal" href="#schedule-learning-rate-and-neighborhood-radius-decay">3. Schedule Learning Rate and Neighborhood Radius Decay</a><ul>
+<li><a class="reference internal" href="#learning-rate-decay">Learning Rate Decay</a></li>
+<li><a class="reference internal" href="#neighborhood-radius-decay">Neighborhood Radius Decay</a></li>
+<li><a class="reference internal" href="#asymptotic-decay">Asymptotic Decay</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#distance-functions">4. Distance Functions</a></li>
+<li><a class="reference internal" href="#quality-metrics">5. Quality Metrics</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#strengths-and-weaknesses">Strengths and Weaknesses</a><ul>
+<li><a class="reference internal" href="#advantages">Advantages</a></li>
+<li><a class="reference internal" href="#limitations">Limitations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#best-practices">Best Practices</a><ul>
+<li><a class="reference internal" href="#data-preparation">Data Preparation</a></li>
+<li><a class="reference internal" href="#parameter-selection">Parameter Selection</a></li>
+<li><a class="reference internal" href="#interpretation">Interpretation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#next-steps">Next steps</a></li>
+</ul>
+</li>
+</ul>
 
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2025, Manufacture Française des Pneumatiques Michelin.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          </div>
         </div>
       </div>
-    </section>
+      
+      
+    </aside>
   </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
-
-</body>
+</div><script src="../_static/documentation_options.js?v=83302504"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>window.MathJax = {"tex": {"macros": {"coloneqq": "\\mathrel{:=}"}}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    </body>
 </html>

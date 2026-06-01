@@ -1,765 +1,808 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Benchmarks" href="benchmarks.html"><link rel="prev" title="Just-in-Time Learning" href="jitl.html">
+        <link rel="prefetch" href="../_static/logo.png" as="image">
+
+    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+        <title>Visualization Gallery - TorchSOM 1.1.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
 
 
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../">
-<head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SOM Visualization Guide &mdash; TorchSOM 0.0.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #B22222;
+  --color-brand-content: #B22222;
   
-      <script src="../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../_static/copybutton.js?v=f281be69"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script src="../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Core API" href="../api/core.html" />
-    <link rel="prev" title="Basic Concepts" href="../getting_started/basic_concepts.html" /> 
-</head>
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #E05555;
+  --color-brand-content: #E05555;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #E05555;
+  --color-brand-content: #E05555;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search"  style="background: #B22222" >
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
 
-          
-          
-          <a href="../index.html" class="icon icon-home">
-            TorchSOM
-              <img src="../_static/logo.png" class="logo" alt="Logo"/>
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">TorchSOM 1.1.1 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/logo.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">TorchSOM 1.1.1 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../getting_started/installation.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#requirements">Requirements</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#systems">Systems</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#gpu">GPU</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#installation-methods">Installation Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#install-from-pypi-recommended">Install from PyPI (Recommended)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#install-from-source">Install from Source</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#ensure-gpu-support">Ensure GPU Support</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#verification">Verification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#dependencies">Dependencies</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#core-dependencies">Core Dependencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/installation.html#optional-dependencies">Optional Dependencies</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../getting_started/installation.html#development-dependencies">Development Dependencies</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../getting_started/installation.html#testing-dependencies">Testing Dependencies</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../getting_started/installation.html#documentation-dependencies">Documentation Dependencies</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../getting_started/installation.html#security-dependencies">Security Dependencies</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../getting_started/installation.html#linting-dependencies">Linting Dependencies</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#getting-help">Getting Help</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/installation.html#next-steps">Next Steps</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quick Start Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#your-first-som">Your First SOM</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#basic-visualization">Basic Visualization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#common-parameters">Common Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#complete-example">Complete Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/quickstart.html#what-s-next">What’s Next?</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../getting_started/basic_concepts.html">Basic Concepts</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#what-is-a-self-organizing-map">What is a Self-Organizing Map?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#how-soms-work">How SOMs Work</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#the-som-algorithm">The SOM Algorithm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#mathematical-foundation">Mathematical Foundation</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#core-components">Core Components</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#grid-topology">1. Grid Topology</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#neighborhood-function">2. Neighborhood Function</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#schedule-learning-rate-and-neighborhood-radius-decay">3. Schedule Learning Rate and Neighborhood Radius Decay</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../getting_started/basic_concepts.html#learning-rate-decay">Learning Rate Decay</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../getting_started/basic_concepts.html#neighborhood-radius-decay">Neighborhood Radius Decay</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../getting_started/basic_concepts.html#asymptotic-decay">Asymptotic Decay</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#distance-functions">4. Distance Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#quality-metrics">5. Quality Metrics</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#strengths-and-weaknesses">Strengths and Weaknesses</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#advantages">Advantages</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#limitations">Limitations</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#best-practices">Best Practices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#data-preparation">Data Preparation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#parameter-selection">Parameter Selection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../getting_started/basic_concepts.html#interpretation">Interpretation</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../getting_started/basic_concepts.html#next-steps">Next Steps</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/basic_concepts.html">Basic Concepts</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">SOM Visualization Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#quick-start">Quick Start</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#basic-visualization-setup">Basic Visualization Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#custom-configuration">Custom Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Package Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topologies.html">Topologies &amp; Boundary Conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="training.html">Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clustering.html">Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jitl.html">Just-in-Time Learning</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Visualization Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="benchmarks.html">Benchmarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comparison.html">Comparison with Other Libraries</a></li>
 </ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#visualization-types">Visualization Types</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#training-errors">Training Errors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#distance-map-u-matrix">Distance Map (U-Matrix)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#hit-map">Hit Map</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#component-planes">Component Planes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#supervised-maps">Supervised Maps</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#classification-case">Classification Case</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#regression-case">Regression Case</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#advanced-visualizations">Advanced Visualizations</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#score-map">Score Map</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#rank-map">Rank Map</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cluster-map">Cluster Map</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
-</ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/iris.html">Iris — Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/wine.html">Wine — Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/boston_housing.html">Boston Housing — Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/energy_efficiency.html">Energy Efficiency — Multi-target Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/clustering_walkthrough.html">Clustering — Synthetic Blobs</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../api/core.html">Core API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/core.html#module-torchsom.core.base_som">Base Classes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM"><code class="docutils literal notranslate"><span class="pre">BaseSOM</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.fit"><code class="docutils literal notranslate"><span class="pre">BaseSOM.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.identify_bmus"><code class="docutils literal notranslate"><span class="pre">BaseSOM.identify_bmus()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.initialize_weights"><code class="docutils literal notranslate"><span class="pre">BaseSOM.initialize_weights()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.quantization_error"><code class="docutils literal notranslate"><span class="pre">BaseSOM.quantization_error()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.base_som.BaseSOM.topographic_error"><code class="docutils literal notranslate"><span class="pre">BaseSOM.topographic_error()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/core.html#module-torchsom.core.som">Classical SOM Implementation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM"><code class="docutils literal notranslate"><span class="pre">SOM</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.build_map"><code class="docutils literal notranslate"><span class="pre">SOM.build_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.build_multiple_maps"><code class="docutils literal notranslate"><span class="pre">SOM.build_multiple_maps()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.cluster"><code class="docutils literal notranslate"><span class="pre">SOM.cluster()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.collect_samples"><code class="docutils literal notranslate"><span class="pre">SOM.collect_samples()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.fit"><code class="docutils literal notranslate"><span class="pre">SOM.fit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.identify_bmus"><code class="docutils literal notranslate"><span class="pre">SOM.identify_bmus()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.initialize_weights"><code class="docutils literal notranslate"><span class="pre">SOM.initialize_weights()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.quantization_error"><code class="docutils literal notranslate"><span class="pre">SOM.quantization_error()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.topographic_error"><code class="docutils literal notranslate"><span class="pre">SOM.topographic_error()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/core.html#torchsom.core.som.SOM.weights"><code class="docutils literal notranslate"><span class="pre">SOM.weights</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/core.html#example-usage">Example usage</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/core.html#som-variants-work-in-progress">SOM Variants (WORK IN PROGRESS)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/core.html#periodic-boundary-conditioned-som">Periodic Boundary Conditioned SOM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/core.html#growing-som">Growing SOM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/core.html#hierarchical-som">Hierarchical SOM</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../api/utils.html">Utilities API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html#module-torchsom.utils.distances">Distance Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html#module-torchsom.utils.neighborhood">Neighborhood Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html#module-torchsom.utils.decay">Decay Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html#module-torchsom.utils.grid">Grid and Topology</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.grid.adjust_meshgrid_topology"><code class="docutils literal notranslate"><span class="pre">adjust_meshgrid_topology()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.grid.create_mesh_grid"><code class="docutils literal notranslate"><span class="pre">create_mesh_grid()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.topology.get_all_neighbors_up_to_order"><code class="docutils literal notranslate"><span class="pre">get_all_neighbors_up_to_order()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.topology.get_hexagonal_offsets"><code class="docutils literal notranslate"><span class="pre">get_hexagonal_offsets()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.topology.get_rectangular_offsets"><code class="docutils literal notranslate"><span class="pre">get_rectangular_offsets()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html#module-torchsom.utils.initialization">Initialization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.initialization.initialize_weights"><code class="docutils literal notranslate"><span class="pre">initialize_weights()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.initialization.pca_init"><code class="docutils literal notranslate"><span class="pre">pca_init()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.initialization.random_init"><code class="docutils literal notranslate"><span class="pre">random_init()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html#module-torchsom.utils.metrics">Metrics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.metrics.calculate_calinski_harabasz_score"><code class="docutils literal notranslate"><span class="pre">calculate_calinski_harabasz_score()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.metrics.calculate_clustering_metrics"><code class="docutils literal notranslate"><span class="pre">calculate_clustering_metrics()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.metrics.calculate_davies_bouldin_score"><code class="docutils literal notranslate"><span class="pre">calculate_davies_bouldin_score()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.metrics.calculate_quantization_error"><code class="docutils literal notranslate"><span class="pre">calculate_quantization_error()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.metrics.calculate_silhouette_score"><code class="docutils literal notranslate"><span class="pre">calculate_silhouette_score()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.metrics.calculate_topographic_error"><code class="docutils literal notranslate"><span class="pre">calculate_topographic_error()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/utils.html#torchsom.utils.metrics.calculate_topological_clustering_quality"><code class="docutils literal notranslate"><span class="pre">calculate_topological_clustering_quality()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../api/visualization.html">Visualization API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/visualization.html#module-torchsom.visualization.base">SOM Visualizer</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_all"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_all()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_classification_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_classification_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_cluster_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_cluster_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_cluster_quality_comparison"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_cluster_quality_comparison()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_clustering_comparison_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_clustering_comparison_grid()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_component_planes"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_component_planes()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_distance_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_distance_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_elbow_analysis"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_elbow_analysis()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_grid"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_grid()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_hit_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_hit_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_metric_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_metric_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_rank_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_rank_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_score_map"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_score_map()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_silhouette_analysis"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_silhouette_analysis()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.base.SOMVisualizer.plot_training_errors"><code class="docutils literal notranslate"><span class="pre">SOMVisualizer.plot_training_errors()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#example">Example</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/visualization.html#module-torchsom.visualization.config">Visualization Configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.cmap"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.cmap</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.colorbar_pad"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.colorbar_pad</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.dpi"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.dpi</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.figsize"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.figsize</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.fontsize"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontsize</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.fontweight"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.fontweight</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.grid_alpha"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.grid_alpha</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_color"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_border_color</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_border_width"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_border_width</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.hex_radius"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.hex_radius</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/visualization.html#torchsom.visualization.config.VisualizationConfig.save_format"><code class="docutils literal notranslate"><span class="pre">VisualizationConfig.save_format</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/visualization.html#supported-formats">Supported Formats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/visualization.html#notes">Notes</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../api/configs.html">Configuration API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/configs.html#module-torchsom.configs.som_config">SOM Configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig"><code class="docutils literal notranslate"><span class="pre">SOMConfig</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.batch_size"><code class="docutils literal notranslate"><span class="pre">SOMConfig.batch_size</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.device"><code class="docutils literal notranslate"><span class="pre">SOMConfig.device</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.distance_function"><code class="docutils literal notranslate"><span class="pre">SOMConfig.distance_function</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.epochs"><code class="docutils literal notranslate"><span class="pre">SOMConfig.epochs</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.initialization_mode"><code class="docutils literal notranslate"><span class="pre">SOMConfig.initialization_mode</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.learning_rate"><code class="docutils literal notranslate"><span class="pre">SOMConfig.learning_rate</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.lr_decay_function"><code class="docutils literal notranslate"><span class="pre">SOMConfig.lr_decay_function</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.model_config"><code class="docutils literal notranslate"><span class="pre">SOMConfig.model_config</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.neighborhood_function"><code class="docutils literal notranslate"><span class="pre">SOMConfig.neighborhood_function</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.neighborhood_order"><code class="docutils literal notranslate"><span class="pre">SOMConfig.neighborhood_order</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.random_seed"><code class="docutils literal notranslate"><span class="pre">SOMConfig.random_seed</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.sigma"><code class="docutils literal notranslate"><span class="pre">SOMConfig.sigma</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.sigma_decay_function"><code class="docutils literal notranslate"><span class="pre">SOMConfig.sigma_decay_function</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.topology"><code class="docutils literal notranslate"><span class="pre">SOMConfig.topology</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.x"><code class="docutils literal notranslate"><span class="pre">SOMConfig.x</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/configs.html#torchsom.configs.som_config.SOMConfig.y"><code class="docutils literal notranslate"><span class="pre">SOMConfig.y</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../api/configs.html#saving-configuration">Saving Configuration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/configs.html#loading-configuration">Loading Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/configs.html#exporting-configuration">Exporting Configuration</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/core.html">Core API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/utils.html">Utilities API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/visualization.html">Visualization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/configs.html">Configuration API</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../additional_resources/changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/changelog.html#how-to-contribute">How to Contribute</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/changelog.html#report-issues">Report Issues</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../additional_resources/faq.html">Frequently Asked Questions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#general-questions">General Questions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#what-is-torchsom">What is TorchSOM?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-does-torchsom-differ-from-other-som-implementations">How does TorchSOM differ from other SOM implementations?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#installation-and-setup">Installation and Setup</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#which-python-versions-are-supported">Which Python versions are supported?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#do-i-need-a-gpu-to-use-torchsom">Do I need a GPU to use TorchSOM?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#data-preprocessing">Data Preprocessing</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#should-i-always-normalize-my-data">Should I always normalize my data?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#what-about-categorical-features">What about categorical features?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#performance-and-optimization">Performance and Optimization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#my-training-is-very-slow-how-can-i-speed-it-up">My training is very slow. How can I speed it up?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-much-memory-does-torchsom-use">How much memory does TorchSOM use?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#visualization-issues">Visualization Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#why-are-some-neurons-white-in-my-visualizations">Why are some neurons white in my visualizations?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-interpret-the-distance-map-d-matrix">How do I interpret the distance map (D-Matrix)?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-customize-the-visualization-colors">Can I customize the visualization colors?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#advanced-topics">Advanced Topics</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-use-torchsom-for-time-series-data">Can I use TorchSOM for time series data?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-implement-custom-distance-functions">How do I implement custom distance functions?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-save-and-load-trained-soms">Can I save and load trained SOMs?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#integration-questions">Integration Questions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-cite-torchsom-in-my-research">How do I cite TorchSOM in my research?</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/faq.html#getting-help">Getting Help</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#where-can-i-get-more-help">Where can I get more help?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#how-do-i-report-a-bug">How do I report a bug?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/faq.html#can-i-contribute-to-torchsom">Can I contribute to TorchSOM?</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../additional_resources/troubleshooting.html">Troubleshooting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#installation-issues">Installation Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#package-issues">Package Issues</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#cuda-gpu-issues">CUDA/GPU Issues</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#cuda-not-available">CUDA not available</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#training-problems">Training Problems</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#training-doesn-t-converge">Training doesn’t converge</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#very-slow-training">Very slow training</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#nan-values-in-results">NaN values in results</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#visualization-issues">Visualization Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#empty-or-white-visualizations">Empty or white visualizations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#figures-not-displaying">Figures not displaying</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#poor-visualization-quality">Poor visualization quality</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#configuration-errors">Configuration Errors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#validationerror-from-pydantic">ValidationError from Pydantic</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#parameter-compatibility-issues">Parameter compatibility issues</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-issues">Memory Issues</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-usage-too-high">Memory usage too high</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#memory-leaks">Memory leaks</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../additional_resources/troubleshooting.html#getting-help">Getting Help</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#diagnostic-information">Diagnostic Information</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#creating-minimal-examples">Creating Minimal Examples</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#where-to-get-help">Where to Get Help</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../additional_resources/troubleshooting.html#debug-mode">Debug Mode</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../additional_resources/changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional_resources/faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../additional_resources/troubleshooting.html">Troubleshooting</a></li>
 </ul>
 
-        </div>
+</div>
+</div>
+
       </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #B22222" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">TorchSOM</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">SOM Visualization Guide</li>
-      <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/LouisTier/TorchSOM/blob/dev_org/docs/source/user_guide/visualization_help.rst" class="fa fa-github"> Edit on GitHub</a>
-      </li>
-  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
-        <a href="../getting_started/basic_concepts.html" class="btn btn-neutral float-left" title="Basic Concepts" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../api/core.html" class="btn btn-neutral float-right" title="Core API" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-  </div>
-  <hr/>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/michelin/TorchSOM/blob/main/docs/source/user_guide/visualization_help.rst?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/michelin/TorchSOM/edit/main/docs/source/user_guide/visualization_help.rst" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="visualization-gallery">
+<h1>Visualization Gallery<a class="headerlink" href="#visualization-gallery" title="Link to this heading">¶</a></h1>
+<p>TorchSOM ships a visualization suite that turns a trained map into figures you can
+read. Every plot is produced by the <code class="xref py py-class docutils literal notranslate"><span class="pre">SOMVisualizer</span></code>
+class and works for both rectangular and hexagonal topologies.</p>
+<p>This page is the practical companion to the paper: it walks through each
+visualization type with runnable code, an example figure, and notes on how to read it.</p>
+<section id="the-seven-visualization-types">
+<h2>The seven visualization types<a class="headerlink" href="#the-seven-visualization-types" title="Link to this heading">¶</a></h2>
+<p>TorchSOM groups its plots into seven types, spanning unsupervised structure,
+supervised target landscapes, and clustering model selection:</p>
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 5.0%" />
+<col style="width: 28.0%" />
+<col style="width: 15.0%" />
+<col style="width: 52.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>#</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Setting</p></th>
+<th class="head"><p>What it shows</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>U-matrix (distance map)</p></td>
+<td><p>Unsupervised</p></td>
+<td><p>Inter-neuron distances; reveals cluster boundaries</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>Hit map</p></td>
+<td><p>Unsupervised</p></td>
+<td><p>BMU activation frequency and data density</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>Component planes</p></td>
+<td><p>Unsupervised</p></td>
+<td><p>Per-feature weight distribution across the grid</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>Classification &amp; metric maps</p></td>
+<td><p>Supervised</p></td>
+<td><p>Dominant class, or mean/std of a target, per neuron</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>Score &amp; rank maps</p></td>
+<td><p>Supervised</p></td>
+<td><p>Per-neuron reliability for regression</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>Training curve</p></td>
+<td><p>Unsupervised</p></td>
+<td><p>QE and TE convergence during training</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>Clustering maps</p></td>
+<td><p>Unsupervised</p></td>
+<td><p>Cluster assignment plus elbow, silhouette, and comparison diagnostics</p></td>
+</tr>
+</tbody>
+</table>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <section id="som-visualization-guide">
-<h1>SOM Visualization Guide<a class="headerlink" href="#som-visualization-guide" title="Link to this heading"></a></h1>
-<p>This comprehensive guide covers all visualization capabilities available in TorchSOM for analyzing and interpreting Self-Organizing Maps effectively.</p>
-<section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
-<p>TorchSOM provides a rich set of visualization tools through the <code class="xref py py-class docutils literal notranslate"><span class="pre">SOMVisualizer</span></code> class, supporting both rectangular and hexagonal topologies. All visualizations are designed to help you understand:</p>
-<ul class="simple">
-<li><p><strong>Training Progress</strong>: How well your SOM is learning over time</p></li>
-<li><p><strong>Data Distribution</strong>: How input data maps onto the SOM grid</p></li>
-<li><p><strong>Topology Preservation</strong>: Whether neighborhood relationships are maintained</p></li>
-<li><p><strong>Feature Representation</strong>: How individual features are distributed across neurons</p></li>
-<li><p><strong>Cluster Structure</strong>: Identification of natural groupings in your data</p></li>
-</ul>
+<p>The numbered subsections below follow a natural workflow rather than this table’s
+order.</p>
 </section>
-<section id="quick-start">
-<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
-<section id="basic-visualization-setup">
-<h3>Basic Visualization Setup<a class="headerlink" href="#basic-visualization-setup" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchsom</span><span class="w"> </span><span class="kn">import</span> <span class="n">SOM</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">SOMVisualizer</span><span class="p">,</span> <span class="n">VisualizationConfig</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h2>
+<p>All examples reuse the SOM and the BMU map built here. Train once, then build the
+<code class="docutils literal notranslate"><span class="pre">bmus_data</span></code> map a single time and pass it to every supervised plot:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_iris</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
 
-<span class="c1"># Train a SOM</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<span class="n">som</span> <span class="o">=</span> <span class="n">SOM</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">num_features</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-<span class="n">som</span><span class="o">.</span><span class="n">initialize_weights</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;pca&quot;</span><span class="p">)</span>
-<span class="n">q_errors</span><span class="p">,</span> <span class="n">t_errors</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom</span><span class="w"> </span><span class="kn">import</span> <span class="n">SOM</span><span class="p">,</span> <span class="n">SOMVisualizer</span>
 
-<span class="c1"># Create visualizer with default configuration</span>
-<span class="n">visualizer</span> <span class="o">=</span> <span class="n">SOMVisualizer</span><span class="p">(</span><span class="n">som</span><span class="o">=</span><span class="n">som</span><span class="p">)</span>
+<span class="c1"># 1. Load and standardise the data</span>
+<span class="n">bunch</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
+<span class="n">features</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+    <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">bunch</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span>
+<span class="p">)</span>
+<span class="n">targets</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">bunch</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">bunch</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
 
-<span class="c1"># Generate all visualizations at once</span>
-<span class="n">visualizer</span><span class="o">.</span><span class="n">plot_all</span><span class="p">(</span>
+<span class="c1"># 2. Train a SOM</span>
+<span class="n">som</span> <span class="o">=</span> <span class="n">SOM</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">num_features</span><span class="o">=</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+    <span class="n">topology</span><span class="o">=</span><span class="s2">&quot;rectangular&quot;</span><span class="p">,</span>
+    <span class="n">initialization_mode</span><span class="o">=</span><span class="s2">&quot;pca&quot;</span><span class="p">,</span>
+    <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">som</span><span class="o">.</span><span class="n">initialize_weights</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">features</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">som</span><span class="o">.</span><span class="n">initialization_mode</span><span class="p">)</span>
+<span class="n">q_errors</span><span class="p">,</span> <span class="n">t_errors</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+
+<span class="c1"># 3. Pre-compute the BMU -&gt; sample-indices map ONCE and reuse it</span>
+<span class="n">bmus_map</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="s2">&quot;bmus_data&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+
+<span class="c1"># 4. Create a visualizer (the topology is inferred from the SOM)</span>
+<span class="n">viz</span> <span class="o">=</span> <span class="n">SOMVisualizer</span><span class="p">(</span><span class="n">som</span><span class="o">=</span><span class="n">som</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Pass <code class="docutils literal notranslate"><span class="pre">save_path=&quot;some/folder&quot;</span></code> to any <code class="docutils literal notranslate"><span class="pre">plot_*</span></code> method to write a file instead
+of opening an interactive window. The file name is taken from each method’s
+<code class="docutils literal notranslate"><span class="pre">fig_name</span></code> argument and the format from <code class="xref py py-class docutils literal notranslate"><span class="pre">VisualizationConfig.save_format</span></code>.</p>
+</div>
+</section>
+<section id="customizing-the-output">
+<h2>Customizing the output<a class="headerlink" href="#customizing-the-output" title="Link to this heading">¶</a></h2>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">VisualizationConfig</span></code> controls styling. Pass an
+instance to the visualizer:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchsom</span><span class="w"> </span><span class="kn">import</span> <span class="n">SOMVisualizer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchsom.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">VisualizationConfig</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">VisualizationConfig</span><span class="p">(</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>                       <span class="c1"># figure size in inches</span>
+    <span class="n">fontsize</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="s2">&quot;axis&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span> <span class="s2">&quot;legend&quot;</span><span class="p">:</span> <span class="mi">11</span><span class="p">},</span>
+    <span class="n">fontweight</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;bold&quot;</span><span class="p">,</span> <span class="s2">&quot;axis&quot;</span><span class="p">:</span> <span class="s2">&quot;normal&quot;</span><span class="p">,</span> <span class="s2">&quot;legend&quot;</span><span class="p">:</span> <span class="s2">&quot;normal&quot;</span><span class="p">},</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span>                        <span class="c1"># default colormap</span>
+    <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>                               <span class="c1"># resolution for saved figures</span>
+    <span class="n">grid_alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>                        <span class="c1"># grid transparency</span>
+    <span class="n">colorbar_pad</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>                     <span class="c1"># colorbar padding</span>
+    <span class="n">save_format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span>                     <span class="c1"># png, pdf, eps, or svg</span>
+    <span class="n">hex_radius</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>                        <span class="c1"># hexagon radius (hexagonal topology)</span>
+    <span class="n">hex_border_color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+    <span class="n">hex_border_width</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">viz</span> <span class="o">=</span> <span class="n">SOMVisualizer</span><span class="p">(</span><span class="n">som</span><span class="o">=</span><span class="n">som</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="training-curve">
+<h2>1. Training curve<a class="headerlink" href="#training-curve" title="Link to this heading">¶</a></h2>
+<p>Plots quantization error (QE) and topographic error (TE) per epoch. This is the
+first thing to check after training.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">viz</span><span class="o">.</span><span class="n">plot_training_errors</span><span class="p">(</span>
     <span class="n">quantization_errors</span><span class="o">=</span><span class="n">q_errors</span><span class="p">,</span>
     <span class="n">topographic_errors</span><span class="o">=</span><span class="n">t_errors</span><span class="p">,</span>
-    <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-    <span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;som_results&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="custom-configuration">
-<h3>Custom Configuration<a class="headerlink" href="#custom-configuration" title="Link to this heading"></a></h3>
-<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">VisualizationConfig</span></code> class provides comprehensive customization options:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">VisualizationConfig</span><span class="p">(</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>                    <span class="c1"># Figure size in inches</span>
-    <span class="n">fontsize</span><span class="o">=</span><span class="p">{</span>                          <span class="c1"># Font sizes for different elements</span>
-        <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-        <span class="s2">&quot;axis&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span>
-        <span class="s2">&quot;legend&quot;</span><span class="p">:</span> <span class="mi">11</span>
-    <span class="p">},</span>
-    <span class="n">fontweight</span><span class="o">=</span><span class="p">{</span>                        <span class="c1"># Font weights</span>
-        <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;bold&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;axis&quot;</span><span class="p">:</span> <span class="s2">&quot;normal&quot;</span>
-    <span class="p">},</span>
-    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span>                     <span class="c1"># Default colormap</span>
-    <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>                            <span class="c1"># Resolution for saved figures</span>
-    <span class="n">grid_alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>                     <span class="c1"># Grid transparency</span>
-    <span class="n">colorbar_pad</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>                  <span class="c1"># Colorbar padding</span>
-    <span class="n">save_format</span><span class="o">=</span><span class="s2">&quot;png&quot;</span><span class="p">,</span>                  <span class="c1"># Save format (png, pdf, eps, svg)</span>
-    <span class="n">hexgrid_size</span><span class="o">=</span><span class="kc">None</span>                   <span class="c1"># Hexagonal grid size (auto if None)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="visualization-types">
-<h2>Visualization Types<a class="headerlink" href="#visualization-types" title="Link to this heading"></a></h2>
-<section id="training-errors">
-<h3>Training Errors<a class="headerlink" href="#training-errors" title="Link to this heading"></a></h3>
-<p>Monitors SOM learning progress by plotting quantization and topographic errors over epochs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">visualizer</span><span class="o">.</span><span class="n">plot_training_errors</span><span class="p">(</span>
-    <span class="n">quantization_errors</span><span class="o">=</span><span class="n">q_errors</span><span class="p">,</span>
-    <span class="n">topographic_errors</span><span class="o">=</span><span class="n">t_errors</span><span class="p">,</span>
-    <span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;results&quot;</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>Interpretation:</strong></p>
-<ul class="simple">
-<li><p><strong>Quantization Error</strong>: Measures how well the SOM represents the input data (lower is better)</p></li>
-<li><p><strong>Topographic Error</strong>: Measures topology preservation (lower percentage is better)</p></li>
-<li><p><strong>Convergence</strong>: Both errors should generally decrease and stabilize during training</p></li>
-</ul>
-<a class="reference internal image-reference" href="../_images/michelin_training_errors.png"><img alt="Training Errors Example" class="align-center" src="../_images/michelin_training_errors.png" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/training_errors3.png"><img alt="Training curve showing QE and TE per epoch" class="align-center" src="../_images/training_errors3.png" style="width: 600px;" />
 </a>
+<p>How to read it:</p>
+<ul class="simple">
+<li><p><strong>QE</strong> measures how well neurons represent the data (lower is better).</p></li>
+<li><p><strong>TE</strong> measures topology preservation (lower is better).</p></li>
+<li><p>Both should fall and then flatten. A curve that is still dropping at the last
+epoch means training was too short.</p></li>
+</ul>
 </section>
-<section id="distance-map-u-matrix">
-<h3>Distance Map (U-Matrix)<a class="headerlink" href="#distance-map-u-matrix" title="Link to this heading"></a></h3>
-<p>The unified distance matrix shows the distance between each neuron and its neighbors, revealing cluster boundaries.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">visualizer</span><span class="o">.</span><span class="n">plot_distance_map</span><span class="p">(</span>
-    <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span>
+<section id="u-matrix-distance-map">
+<h2>2. U-matrix (distance map)<a class="headerlink" href="#u-matrix-distance-map" title="Link to this heading">¶</a></h2>
+<p>The unified distance matrix shows, for each neuron, the average distance to its
+grid neighbors. Ridges of large distance separate clusters.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">viz</span><span class="o">.</span><span class="n">plot_distance_map</span><span class="p">(</span>
     <span class="n">distance_metric</span><span class="o">=</span><span class="n">som</span><span class="o">.</span><span class="n">distance_fn_name</span><span class="p">,</span>
     <span class="n">neighborhood_order</span><span class="o">=</span><span class="n">som</span><span class="o">.</span><span class="n">neighborhood_order</span><span class="p">,</span>
     <span class="n">scaling</span><span class="o">=</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Interpretation:</strong></p>
-<ul class="simple">
-<li><p><strong>Dark Regions</strong>: Small distances between neighboring neurons (cluster boundaries)</p></li>
-<li><p><strong>Light Regions</strong>: Large distances between neighboring neurons (within clusters)</p></li>
-<li><p><strong>Topology</strong>: Works with both rectangular and hexagonal grids</p></li>
-</ul>
-<a class="reference internal image-reference" href="../_images/michelin_dmatrix.png"><img alt="Distance Matrix Example" class="align-center" src="../_images/michelin_dmatrix.png" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/distance_map3.png"><img alt="U-matrix (distance map)" class="align-center" src="../_images/distance_map3.png" style="width: 600px;" />
 </a>
+<p>How to read it:</p>
+<ul class="simple">
+<li><p><strong>Light ridges</strong> = large inter-neuron distance = cluster boundaries.</p></li>
+<li><p><strong>Dark basins</strong> = similar neighbors = the interior of a cluster.</p></li>
+<li><p>Works identically on rectangular and hexagonal grids.</p></li>
+</ul>
 </section>
 <section id="hit-map">
-<h3>Hit Map<a class="headerlink" href="#hit-map" title="Link to this heading"></a></h3>
-<p>Shows the frequency of neuron activation, indicating how often each neuron was selected as the Best Matching Unit (BMU).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">visualizer</span><span class="o">.</span><span class="n">plot_hit_map</span><span class="p">(</span>
-    <span class="n">data</span><span class="o">=</span><span class="n">train_features</span><span class="p">,</span>
-    <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
-    <span class="n">batch_size</span><span class="o">=</span><span class="n">train_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-<span class="p">)</span>
+<h2>3. Hit map<a class="headerlink" href="#hit-map" title="Link to this heading">¶</a></h2>
+<p>Counts how often each neuron is selected as the BMU, exposing where the data
+concentrates and which neurons are unused (“dead”).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">viz</span><span class="o">.</span><span class="n">plot_hit_map</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Interpretation:</strong></p>
-<ul class="simple">
-<li><p><strong>Bright Areas</strong>: Frequently activated neurons (high data density)</p></li>
-<li><p><strong>Dark Areas</strong>: Rarely activated neurons (low data density or dead neurons)</p></li>
-<li><p><strong>Usage</strong>: Identifies data distribution patterns and potential dead neurons</p></li>
-</ul>
-<a class="reference internal image-reference" href="../_images/michelin_hitmap.png"><img alt="Hit Map Example" class="align-center" src="../_images/michelin_hitmap.png" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/hit_map3.png"><img alt="Hit map of BMU activation frequency" class="align-center" src="../_images/hit_map3.png" style="width: 600px;" />
 </a>
+<p>How to read it:</p>
+<ul class="simple">
+<li><p><strong>Bright cells</strong> = frequently activated neurons = dense regions of the input space.</p></li>
+<li><p><strong>Empty cells</strong> = rarely or never activated. A large empty border often means the
+map is bigger than the data needs.</p></li>
+</ul>
 </section>
 <section id="component-planes">
-<h3>Component Planes<a class="headerlink" href="#component-planes" title="Link to this heading"></a></h3>
-<p>Individual visualizations for each input feature dimension, showing how feature weights are distributed across the map.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">visualizer</span><span class="o">.</span><span class="n">plot_component_planes</span><span class="p">(</span>
-    <span class="n">component_names</span><span class="o">=</span><span class="n">feature_names</span><span class="p">,</span>
-    <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span>
-<span class="p">)</span>
+<h2>4. Component planes<a class="headerlink" href="#component-planes" title="Link to this heading">¶</a></h2>
+<p>One heat map per input feature, showing how that feature’s weight varies across the
+grid. Comparing planes reveals correlations and gradients.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">viz</span><span class="o">.</span><span class="n">plot_component_planes</span><span class="p">(</span><span class="n">component_names</span><span class="o">=</span><span class="n">feature_names</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Interpretation:</strong></p>
-<ul class="simple">
-<li><p><strong>One Plane per Feature</strong>: Shows weight values for each input dimension</p></li>
-<li><p><strong>Pattern Analysis</strong>: Reveals feature level in different map regions</p></li>
-</ul>
-<a class="reference internal image-reference" href="../_images/michelin_cp12.png"><img alt="Component Plane of feature 12" class="align-center" src="../_images/michelin_cp12.png" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/Petal_Length.png"><img alt="Component plane for the petal-length feature" class="align-center" src="../_images/Petal_Length.png" style="width: 600px;" />
 </a>
+<p>How to read it:</p>
+<ul class="simple">
+<li><p>Each plane uses the same grid layout, so regions that are bright in two planes
+indicate features that co-vary.</p></li>
+<li><p>Smooth gradients indicate good topology preservation for that feature.</p></li>
+</ul>
 </section>
 <section id="supervised-maps">
-<h3>Supervised Maps<a class="headerlink" href="#supervised-maps" title="Link to this heading"></a></h3>
-<p>Visualizations for supervised learning tasks, including both classification and regression, help interpret how target information is distributed across the SOM map.</p>
-<section id="classification-case">
-<h4>Classification Case<a class="headerlink" href="#classification-case" title="Link to this heading"></a></h4>
-<p>Displays the most frequent class label assigned to each neuron, providing insight into class separation and cluster structure.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">visualizer</span><span class="o">.</span><span class="n">plot_classification_map</span><span class="p">(</span>
-    <span class="n">data</span><span class="o">=</span><span class="n">train_features</span><span class="p">,</span>
-    <span class="n">target</span><span class="o">=</span><span class="n">train_targets</span><span class="p">,</span>
-    <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+<h2>Supervised maps<a class="headerlink" href="#supervised-maps" title="Link to this heading">¶</a></h2>
+<p>The next two groups use a <code class="docutils literal notranslate"><span class="pre">target</span></code> vector aligned with the input data. They rely
+on the pre-computed <code class="docutils literal notranslate"><span class="pre">bmus_map</span></code> from <a class="reference internal" href="#setup">Setup</a>.</p>
+<section id="a-classification-map">
+<h3>5a. Classification map<a class="headerlink" href="#a-classification-map" title="Link to this heading">¶</a></h3>
+<p>For classification targets, shows the dominant class assigned to each neuron.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">viz</span><span class="o">.</span><span class="n">plot_classification_map</span><span class="p">(</span>
     <span class="n">bmus_data_map</span><span class="o">=</span><span class="n">bmus_map</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+    <span class="n">target</span><span class="o">=</span><span class="n">targets</span><span class="p">,</span>
     <span class="n">neighborhood_order</span><span class="o">=</span><span class="n">som</span><span class="o">.</span><span class="n">neighborhood_order</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Interpretation:</strong></p>
-<ul class="simple">
-<li><p><strong>Color Coding</strong>: Each color represents a different class label.</p></li>
-<li><p><strong>Cluster Identification</strong>: Reveals spatial organization of classes on the map.</p></li>
-<li><p><strong>Decision Boundaries</strong>: Boundaries between colors indicate class separation.</p></li>
-</ul>
-<a class="reference internal image-reference" href="../_images/wine_classificationmap.png"><img alt="Classification Map Example" class="align-center" src="../_images/wine_classificationmap.png" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/classification_map1.png"><img alt="Classification map of dominant class per neuron" class="align-center" src="../_images/classification_map1.png" style="width: 600px;" />
 </a>
+<p>How to read it:</p>
+<ul class="simple">
+<li><p>Each color is a class; contiguous regions of one color show the map has
+organized that class into a coherent territory.</p></li>
+<li><p>Boundaries between colors are decision boundaries learned without supervision.</p></li>
+</ul>
 </section>
-<section id="regression-case">
-<h4>Regression Case<a class="headerlink" href="#regression-case" title="Link to this heading"></a></h4>
-<p>Analyzes the distribution of continuous target values (e.g., for regression tasks) using statistical summaries per neuron.</p>
-<section id="mean-map">
-<h5>Mean Map<a class="headerlink" href="#mean-map" title="Link to this heading"></a></h5>
-<p>Shows the average target value for samples mapped to each neuron.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">visualizer</span><span class="o">.</span><span class="n">plot_metric_map</span><span class="p">(</span>
-    <span class="n">data</span><span class="o">=</span><span class="n">train_features</span><span class="p">,</span>
-    <span class="n">target</span><span class="o">=</span><span class="n">train_targets</span><span class="p">,</span>
+<section id="b-metric-maps-mean-std">
+<h3>5b. Metric maps (mean / std)<a class="headerlink" href="#b-metric-maps-mean-std" title="Link to this heading">¶</a></h3>
+<p>For regression targets, summarize the target values that land on each neuron.
+<code class="docutils literal notranslate"><span class="pre">reduction_parameter</span></code> selects the statistic.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Mean target value per neuron</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">plot_metric_map</span><span class="p">(</span>
+    <span class="n">bmus_data_map</span><span class="o">=</span><span class="n">bmus_map</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+    <span class="n">target</span><span class="o">=</span><span class="n">targets</span><span class="p">,</span>
     <span class="n">reduction_parameter</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span>
-    <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
-    <span class="n">bmus_data_map</span><span class="o">=</span><span class="n">bmus_map</span><span class="p">,</span>
 <span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>Interpretation:</strong></p>
-<ul class="simple">
-<li><p><strong>Color Scale</strong>: Indicates the mean target value per neuron.</p></li>
-<li><p><strong>Smooth Transitions</strong>: Suggest good topology preservation.</p></li>
-<li><p><strong>Hot Spots</strong>: Highlight neurons with extreme target values.</p></li>
-</ul>
-<a class="reference internal image-reference" href="../_images/michelin_meanmap.png"><img alt="Mean Map Example" class="align-center" src="../_images/michelin_meanmap.png" style="width: 600px;" />
-</a>
-</section>
-<section id="standard-deviation-map">
-<h5>Standard Deviation Map<a class="headerlink" href="#standard-deviation-map" title="Link to this heading"></a></h5>
-<p>Shows the variability of target values for each neuron, useful for assessing prediction reliability.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">visualizer</span><span class="o">.</span><span class="n">plot_metric_map</span><span class="p">(</span>
-    <span class="n">data</span><span class="o">=</span><span class="n">train_features</span><span class="p">,</span>
-    <span class="n">target</span><span class="o">=</span><span class="n">train_targets</span><span class="p">,</span>
+
+<span class="c1"># Spread of target values per neuron</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">plot_metric_map</span><span class="p">(</span>
+    <span class="n">bmus_data_map</span><span class="o">=</span><span class="n">bmus_map</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+    <span class="n">target</span><span class="o">=</span><span class="n">targets</span><span class="p">,</span>
     <span class="n">reduction_parameter</span><span class="o">=</span><span class="s2">&quot;std&quot;</span><span class="p">,</span>
-    <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
-    <span class="n">bmus_data_map</span><span class="o">=</span><span class="n">bmus_map</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Interpretation:</strong></p>
+<a class="reference internal image-reference" href="../_images/mean_target_map.png"><img alt="Mean target value per neuron (Boston Housing)" class="align-center" src="../_images/mean_target_map.png" style="width: 600px;" />
+</a>
+<p>How to read it:</p>
 <ul class="simple">
-<li><p><strong>Low Values</strong>: Neurons with consistent (low-variance) target values—good for prediction.</p></li>
-<li><p><strong>High Values</strong>: Neurons with variable (high-variance) target values—less reliable.</p></li>
-<li><p><strong>Quality Assessment</strong>: Helps identify the most reliable neurons for regression tasks.</p></li>
+<li><p>The <strong>mean</strong> map is a smooth regression surface over the topology; gradients show
+how the target changes across the input space.</p></li>
+<li><p>The <strong>std</strong> map flags neurons with inconsistent targets — high values mark
+unreliable regions for prediction.</p></li>
 </ul>
 </section>
 </section>
-</section>
-<section id="advanced-visualizations">
-<h3>Advanced Visualizations<a class="headerlink" href="#advanced-visualizations" title="Link to this heading"></a></h3>
+<section id="score-rank-maps">
+<h2>6. Score &amp; rank maps<a class="headerlink" href="#score-rank-maps" title="Link to this heading">¶</a></h2>
+<p>These rank neurons by how trustworthy their target estimates are, complementing the
+global QE/TE numbers with a <em>per-neuron</em> reliability view.</p>
 <section id="score-map">
-<h4>Score Map<a class="headerlink" href="#score-map" title="Link to this heading"></a></h4>
-<p>Evaluates neuron representativeness using a composite score combining standard error and sample distribution.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">visualizer</span><span class="o">.</span><span class="n">plot_score_map</span><span class="p">(</span>
+<h3>Score map<a class="headerlink" href="#score-map" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">viz</span><span class="o">.</span><span class="n">plot_score_map</span><span class="p">(</span>
     <span class="n">bmus_data_map</span><span class="o">=</span><span class="n">bmus_map</span><span class="p">,</span>
-    <span class="n">target</span><span class="o">=</span><span class="n">train_targets</span><span class="p">,</span>
-    <span class="n">total_samples</span><span class="o">=</span><span class="n">train_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-    <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+    <span class="n">target</span><span class="o">=</span><span class="n">targets</span><span class="p">,</span>
+    <span class="n">total_samples</span><span class="o">=</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
 <span class="p">)</span>
 </pre></div>
 </div>
+<a class="reference internal image-reference" href="../_images/score_map.png"><img alt="Per-neuron reliability score map" class="align-center" src="../_images/score_map.png" style="width: 600px;" />
+</a>
+<p>The score balances local spread, sample count, and statistical significance:</p>
+<div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
-\[S_{ij} = \frac{\sigma_{ij}}{\sqrt{n_{ij}}} \cdot \log\left(\frac{N}{n_{ij}}\right)\]</div>
-<p>where:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(S_{ij} \in \mathbb{R}^+\)</span>: Reliability score of neuron at position <span class="math notranslate nohighlight">\((i, j)\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(\sigma_{ij} \in \mathbb{R}^+\)</span>: Standard deviation of target values assigned to neuron at position <span class="math notranslate nohighlight">\((i, j)\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(n_{ij} \in \mathbb{N}\)</span>: Number of samples assigned to neuron at position <span class="math notranslate nohighlight">\((i, j)\)</span></p></li>
-<li><p><span class="math notranslate nohighlight">\(N \in \mathbb{N}\)</span>: Total number of samples in the latent space</p></li>
-</ul>
-</div></blockquote>
-<p><strong>Interpretation:</strong></p>
-<ul class="simple">
-<li><p><strong>Lower Scores</strong>: Better neuron representativeness</p></li>
-<li><p><strong>Usage</strong>: Identifies most reliable neurons for analysis</p></li>
-</ul>
+\[S_{ij} = \frac{\sigma_{ij}}{\sqrt{n_{ij}}} \cdot \log\!\left(\frac{N}{n_{ij}}\right)\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\sigma_{ij}\)</span> is the standard deviation of the targets assigned to
+neuron <span class="math notranslate nohighlight">\((i, j)\)</span>, <span class="math notranslate nohighlight">\(n_{ij}\)</span> the number of samples it received, and
+<span class="math notranslate nohighlight">\(N\)</span> the total sample count. <strong>Lower scores are better</strong> (stable,
+well-supported neurons).</p>
 </section>
 <section id="rank-map">
-<h4>Rank Map<a class="headerlink" href="#rank-map" title="Link to this heading"></a></h4>
-<p>Ranks neurons based on their target value standard deviations.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">visualizer</span><span class="o">.</span><span class="n">plot_rank_map</span><span class="p">(</span>
-    <span class="n">bmus_data_map</span><span class="o">=</span><span class="n">bmus_map</span><span class="p">,</span>
-    <span class="n">target</span><span class="o">=</span><span class="n">train_targets</span><span class="p">,</span>
-    <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
-<span class="p">)</span>
+<h3>Rank map<a class="headerlink" href="#rank-map" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">viz</span><span class="o">.</span><span class="n">plot_rank_map</span><span class="p">(</span><span class="n">bmus_data_map</span><span class="o">=</span><span class="n">bmus_map</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">targets</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Interpretation:</strong></p>
-<ul class="simple">
-<li><p><strong>Rank 1</strong>: Lowest standard deviation (best predictive neurons)</p></li>
-<li><p><strong>Higher Ranks</strong>: Increasing standard deviation</p></li>
-<li><p><strong>Selection</strong>: Use top-ranked neurons for reliable predictions</p></li>
-</ul>
+<a class="reference internal image-reference" href="../_images/rank_map.png"><img alt="Neurons ranked by target standard deviation" class="align-center" src="../_images/rank_map.png" style="width: 600px;" />
+</a>
+<p>Ranks neurons by target standard deviation (rank 1 = lowest spread = most reliable),
+giving a quick shortlist of neurons to trust for prediction.</p>
 </section>
+</section>
+<section id="clustering-maps-diagnostics">
+<h2>7. Clustering maps &amp; diagnostics<a class="headerlink" href="#clustering-maps-diagnostics" title="Link to this heading">¶</a></h2>
+<p>Beyond a single cluster assignment, TorchSOM ships diagnostics for model selection
+and objective algorithm comparison. Clustering is computed by
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">cluster()</span></code> and visualized by the methods below. See the
+<a class="reference internal" href="clustering.html"><span class="doc">Clustering</span></a> guide for the full workflow.</p>
 <section id="cluster-map">
-<h4>Cluster Map<a class="headerlink" href="#cluster-map" title="Link to this heading"></a></h4>
-<p>Clusters neurons based on algorithms like HDBSCAN, KMeans, or GMMs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cluster</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">cluster</span><span class="p">(</span>
-   <span class="n">method</span><span class="o">=</span><span class="s2">&quot;hdbscan&quot;</span><span class="p">,</span> <span class="c1"># hdbscan, kmeans, gmm</span>
-   <span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">,</span>
-   <span class="n">feature_space</span><span class="o">=</span><span class="s2">&quot;weights&quot;</span><span class="p">,</span>
+<h3>Cluster map<a class="headerlink" href="#cluster-map" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cluster_result</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">cluster</span><span class="p">(</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;hdbscan&quot;</span><span class="p">,</span>          <span class="c1"># &quot;kmeans&quot;, &quot;gmm&quot;, or &quot;hdbscan&quot;</span>
+    <span class="n">feature_space</span><span class="o">=</span><span class="s2">&quot;weights&quot;</span><span class="p">,</span>   <span class="c1"># &quot;weights&quot;, &quot;positions&quot;, or &quot;combined&quot;</span>
 <span class="p">)</span>
-
-<span class="n">visualizer</span><span class="o">.</span><span class="n">plot_cluster_map</span><span class="p">(</span>
-    <span class="n">cluster_result</span><span class="o">=</span><span class="n">cluster</span><span class="p">,</span>
-    <span class="n">save_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">plot_cluster_map</span><span class="p">(</span><span class="n">cluster_result</span><span class="o">=</span><span class="n">cluster_result</span><span class="p">)</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="../_images/hdbscan_cluster_map.png"><img alt="Cluster Map Example" class="align-center" src="../_images/hdbscan_cluster_map.png" style="width: 600px;" />
+<a class="reference internal image-reference" href="../_images/cluster_map.png"><img alt="Cluster assignment overlaid on the SOM grid" class="align-center" src="../_images/cluster_map.png" style="width: 600px;" />
+</a>
+</section>
+<section id="elbow-analysis">
+<h3>Elbow analysis<a class="headerlink" href="#elbow-analysis" title="Link to this heading">¶</a></h3>
+<p>Tracks within-cluster dispersion as <span class="math notranslate nohighlight">\(k\)</span> grows; the “elbow” marks the point of
+diminishing returns — a common heuristic for choosing <span class="math notranslate nohighlight">\(k\)</span> for K-Means or GMM.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">viz</span><span class="o">.</span><span class="n">plot_elbow_analysis</span><span class="p">(</span><span class="n">max_k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">feature_space</span><span class="o">=</span><span class="s2">&quot;weights&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/elbow_analysis.png"><img alt="Elbow analysis for K selection" class="align-center" src="../_images/elbow_analysis.png" style="width: 600px;" />
+</a>
+</section>
+<section id="silhouette-analysis">
+<h3>Silhouette analysis<a class="headerlink" href="#silhouette-analysis" title="Link to this heading">¶</a></h3>
+<p>Measures how well each point fits its cluster versus the nearest alternative
+(coefficient in <span class="math notranslate nohighlight">\([-1, 1]\)</span>, higher is better).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">viz</span><span class="o">.</span><span class="n">plot_silhouette_analysis</span><span class="p">(</span><span class="n">cluster_result</span><span class="o">=</span><span class="n">cluster_result</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/silhouette_analysis.png"><img alt="Silhouette analysis of a clustering result" class="align-center" src="../_images/silhouette_analysis.png" style="width: 600px;" />
+</a>
+</section>
+<section id="algorithm-comparison">
+<h3>Algorithm comparison<a class="headerlink" href="#algorithm-comparison" title="Link to this heading">¶</a></h3>
+<p>Evaluates several algorithms side by side with standardized metrics, so the choice
+of method is data-driven rather than visual.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">som</span><span class="o">.</span><span class="n">cluster</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="n">feature_space</span><span class="o">=</span><span class="s2">&quot;weights&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;kmeans&quot;</span><span class="p">,</span> <span class="s2">&quot;gmm&quot;</span><span class="p">,</span> <span class="s2">&quot;hdbscan&quot;</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">plot_cluster_quality_comparison</span><span class="p">(</span><span class="n">results_list</span><span class="o">=</span><span class="n">results</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/clustering_metrics_comparison.png"><img alt="Clustering algorithm quality comparison" class="align-center" src="../_images/clustering_metrics_comparison.png" style="width: 600px;" />
 </a>
 </section>
 </section>
+<section id="generating-everything-at-once">
+<h2>Generating everything at once<a class="headerlink" href="#generating-everything-at-once" title="Link to this heading">¶</a></h2>
+<p><code class="xref py py-meth docutils literal notranslate"><span class="pre">plot_all()</span></code> produces the full set in one
+call. It needs the pre-computed <code class="docutils literal notranslate"><span class="pre">bmus_map</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">viz</span><span class="o">.</span><span class="n">plot_all</span><span class="p">(</span>
+    <span class="n">quantization_errors</span><span class="o">=</span><span class="n">q_errors</span><span class="p">,</span>
+    <span class="n">topographic_errors</span><span class="o">=</span><span class="n">t_errors</span><span class="p">,</span>
+    <span class="n">bmus_data_map</span><span class="o">=</span><span class="n">bmus_map</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+    <span class="n">target</span><span class="o">=</span><span class="n">targets</span><span class="p">,</span>
+    <span class="n">component_names</span><span class="o">=</span><span class="n">feature_names</span><span class="p">,</span>
+    <span class="n">save_path</span><span class="o">=</span><span class="s2">&quot;som_results&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Toggle individual plots with the boolean flags (<code class="docutils literal notranslate"><span class="pre">training_errors</span></code>, <code class="docutils literal notranslate"><span class="pre">distance_map</span></code>,
+<code class="docutils literal notranslate"><span class="pre">hit_map</span></code>, <code class="docutils literal notranslate"><span class="pre">score_map</span></code>, <code class="docutils literal notranslate"><span class="pre">rank_map</span></code>, <code class="docutils literal notranslate"><span class="pre">metric_map</span></code>, <code class="docutils literal notranslate"><span class="pre">component_planes</span></code>).</p>
 </section>
-<section id="troubleshooting">
-<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt><strong>White Cells in Visualizations</strong>:</dt><dd><ul class="simple">
-<li><p>Indicates neurons with zero values or NaN</p></li>
-<li><p>Check for dead neurons in hit map</p></li>
-<li><p>Verify data preprocessing and normalization</p></li>
-</ul>
-</dd>
-<dt><strong>Memory Issues</strong>:</dt><dd><ul class="simple">
-<li><p>Reduce batch size in visualization functions</p></li>
-<li><p>Use CPU-only mode for very large SOMs</p></li>
-<li><p>Clear GPU cache with <code class="docutils literal notranslate"><span class="pre">torch.cuda.empty_cache()</span></code></p></li>
-</ul>
-</dd>
-<dt><strong>Topology Preservation</strong>:</dt><dd><ul class="simple">
-<li><p>High topographic error indicates poor topology preservation</p></li>
-<li><p>Consider adjusting learning rate, sigma, or training epochs</p></li>
-<li><p>Use PCA initialization for better convergence</p></li>
-</ul>
-</dd>
-</dl>
+<section id="hexagonal-topology">
+<h2>Hexagonal topology<a class="headerlink" href="#hexagonal-topology" title="Link to this heading">¶</a></h2>
+<p>Every plot above works unchanged on a hexagonal map — build the SOM with
+<code class="docutils literal notranslate"><span class="pre">topology=&quot;hexagonal&quot;</span></code> and the same visualizer renders hexagon cells instead of
+squares. For example, the iris U-matrix and a clustering result on a hexagonal grid:</p>
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="../_images/distance_map5.png"><img alt="Hexagonal U-matrix" src="../_images/distance_map5.png" style="width: 100%;" />
+</a>
+</td>
+<td><a class="reference internal image-reference" href="../_images/cluster_map1.png"><img alt="Hexagonal cluster map" src="../_images/cluster_map1.png" style="width: 100%;" />
+</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
-<section id="references">
-<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
-<p>For more examples and detailed usage, see:</p>
+<section id="per-neuron-reliability-in-context">
+<h2>Per-neuron reliability, in context<a class="headerlink" href="#per-neuron-reliability-in-context" title="Link to this heading">¶</a></h2>
+<p>The score and rank maps quantify <em>which</em> neurons are trustworthy, not just whether
+the map as a whole is well organized. Lower scores correspond to stable,
+well-supported neurons; higher scores flag regions with poor generalization or
+sensitivity to outliers. Together, the seven visualization types make TorchSOM a
+systematic framework for inspecting self-organizing models across supervised and
+unsupervised regimes — training diagnostics, data distribution, feature
+interpretation, supervised target landscapes, and clustering model selection.</p>
+</section>
+<section id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://github.com/michelin/TorchSOM/tree/main/notebooks">TorchSOM Examples</a></p></li>
-<li><p><a class="reference external" href="../api/visualization.html">API Documentation</a></p></li>
-<li><p><a class="reference external" href="../getting_started/quickstart.html">Getting Started Guide</a></p></li>
+<li><p><a class="reference internal" href="clustering.html"><span class="doc">Clustering</span></a> — the full clustering workflow and diagnostics</p></li>
+<li><p><a class="reference internal" href="../tutorials/index.html"><span class="doc">Tutorials</span></a> — end-to-end worked examples that produce these figures</p></li>
+<li><p><a class="reference internal" href="../api/visualization.html"><span class="doc">Visualization API</span></a> — complete visualization API reference</p></li>
+<li><p><a class="reference internal" href="../additional_resources/troubleshooting.html"><span class="doc">Troubleshooting</span></a> — fixing blank cells, memory, and topology issues</p></li>
 </ul>
 </section>
 </section>
 
-
-           </div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="benchmarks.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Benchmarks</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="jitl.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Just-in-Time Learning</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Manufacture Française des Pneumatiques Michelin
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../getting_started/basic_concepts.html" class="btn btn-neutral float-left" title="Basic Concepts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../api/core.html" class="btn btn-neutral float-right" title="Core API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
     </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Visualization Gallery</a><ul>
+<li><a class="reference internal" href="#the-seven-visualization-types">The seven visualization types</a></li>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#customizing-the-output">Customizing the output</a></li>
+<li><a class="reference internal" href="#training-curve">1. Training curve</a></li>
+<li><a class="reference internal" href="#u-matrix-distance-map">2. U-matrix (distance map)</a></li>
+<li><a class="reference internal" href="#hit-map">3. Hit map</a></li>
+<li><a class="reference internal" href="#component-planes">4. Component planes</a></li>
+<li><a class="reference internal" href="#supervised-maps">Supervised maps</a><ul>
+<li><a class="reference internal" href="#a-classification-map">5a. Classification map</a></li>
+<li><a class="reference internal" href="#b-metric-maps-mean-std">5b. Metric maps (mean / std)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#score-rank-maps">6. Score &amp; rank maps</a><ul>
+<li><a class="reference internal" href="#score-map">Score map</a></li>
+<li><a class="reference internal" href="#rank-map">Rank map</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#clustering-maps-diagnostics">7. Clustering maps &amp; diagnostics</a><ul>
+<li><a class="reference internal" href="#cluster-map">Cluster map</a></li>
+<li><a class="reference internal" href="#elbow-analysis">Elbow analysis</a></li>
+<li><a class="reference internal" href="#silhouette-analysis">Silhouette analysis</a></li>
+<li><a class="reference internal" href="#algorithm-comparison">Algorithm comparison</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#generating-everything-at-once">Generating everything at once</a></li>
+<li><a class="reference internal" href="#hexagonal-topology">Hexagonal topology</a></li>
+<li><a class="reference internal" href="#per-neuron-reliability-in-context">Per-neuron reliability, in context</a></li>
+<li><a class="reference internal" href="#next-steps">Next steps</a></li>
+</ul>
+</li>
+</ul>
 
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2025, Manufacture Française des Pneumatiques Michelin.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          </div>
         </div>
       </div>
-    </section>
+      
+      
+    </aside>
   </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
-
-</body>
+</div><script src="../_static/documentation_options.js?v=83302504"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>window.MathJax = {"tex": {"macros": {"coloneqq": "\\mathrel{:=}"}}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    </body>
 </html>
