@@ -21,14 +21,13 @@ Package Issues
 
    .. code-block:: bash
 
-      pip install torchsom
+      uv pip install torchsom
 
-2. If using conda environment, make sure it's activated:
+2. If you use a virtual environment, make sure it is active. With uv, prefix commands with ``uv run`` so the project environment is always used:
 
    .. code-block:: bash
 
-      conda activate your_environment
-      pip install torchsom
+      uv run python -c "import torchsom"
 
 3. Check installation:
 
@@ -94,7 +93,7 @@ CUDA not available
    .. code-block:: bash
 
       # For CUDA 11.8
-      pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+      uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 2. **Check CUDA installation**:
 

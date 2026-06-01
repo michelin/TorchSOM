@@ -45,44 +45,18 @@ Example usage
        data=X,
    )
 
-SOM Variants (WORK IN PROGRESS)
--------------------------------
+Periodic boundary conditions
+----------------------------
 
-Periodic Boundary Conditioned SOM
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Periodic boundary conditions are **not a separate class**. They are enabled with the
+``pbc=True`` argument of :class:`~torchsom.core.SOM`, which wraps the grid into a
+torus for both rectangular and hexagonal topologies, removing edge effects. See
+:doc:`../user_guide/topologies` for when and how to use them.
 
-Growing SOM
-~~~~~~~~~~~
+Roadmap
+-------
 
-.. .. automodule:: torchsom.core.growing
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:
-
-.. .. automodule:: torchsom.core.growing.components
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:
-
-.. .. automodule:: torchsom.core.growing.growing_som
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:
-
-Hierarchical SOM
-~~~~~~~~~~~~~~~~
-
-.. .. automodule:: torchsom.core.hierarchical
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:
-
-.. .. automodule:: torchsom.core.hierarchical.components
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:
-
-.. .. automodule:: torchsom.core.hierarchical.hierarchical_som
-..    :members:
-..    :undoc-members:
-..    :show-inheritance:
+Growing and Hierarchical SOM variants are planned (see the paper's Conclusion). They
+live under ``torchsom.core.growing`` and ``torchsom.core.hierarchical`` as
+work-in-progress modules, are not yet part of the public API, and are therefore not
+documented here. Track progress in the :doc:`../additional_resources/changelog`.

@@ -1,7 +1,7 @@
-Quick Start Guide
-=================
+Quick Start
+===========
 
-This guide will get you up and running with TorchSOM in just a few minutes!
+This guide gets you up and running with TorchSOM in a few minutes.
 
 Your First SOM
 --------------
@@ -176,19 +176,25 @@ Here's a complete example with data preprocessing and multiple visualizations:
    # Create visualizer
    viz = SOMVisualizer(som)
 
+   # Pre-compute the BMU -> sample-indices map (required by plot_all)
+   bmus_map = som.build_map("bmus_data", data=data)
+
    # Generate all visualizations
    viz.plot_all(
        quantization_errors=q_errors,
        topographic_errors=t_errors,
+       bmus_data_map=bmus_map,
        data=data,
        target=labels,
-       save_path="som_results"
+       save_path="som_results",
    )
 
-What's Next?
-------------
+Next steps
+----------
 
 Now that you've created your first SOM, explore:
 
-- :doc:`basic_concepts` - Understand how SOMs work
-- :doc:`../user_guide/visualization_help` - Comprehensive visualization guide
+- :doc:`basic_concepts` — Understand how SOMs work
+- :doc:`../user_guide/architecture` — How the package is organized
+- :doc:`../tutorials/index` — End-to-end worked examples
+- :doc:`../user_guide/visualization_help` — Visualization gallery

@@ -62,6 +62,18 @@ autosummary_generate = True
 templates_path = ["_templates"]
 exclude_patterns = []
 
+# -- MathJax configuration ---------------------------------------------------
+# Define LaTeX macros used in the math so the docs match the JMLR paper's
+# notation. MathJax v3 core does not provide \coloneqq (it comes from the
+# mathtools package in LaTeX), so it is declared here.
+mathjax3_config = {
+    "tex": {
+        "macros": {
+            "coloneqq": "\\mathrel{:=}",
+        },
+    },
+}
+
 # -- Intersphinx mapping -----------------------------------------------------
 
 intersphinx_mapping = {
@@ -69,6 +81,8 @@ intersphinx_mapping = {
     "torch": ("https://pytorch.org/docs/stable", None),
     "sklearn": ("https://scikit-learn.org/stable", None),
     "numpy": ("https://numpy.org/doc/stable", None),
+    "matplotlib": ("https://matplotlib.org/stable", None),
+    "pydantic": ("https://docs.pydantic.dev/latest", None),
 }
 
 # -- Options for HTML output -------------------------------------------------
@@ -94,5 +108,10 @@ html_static_path = ["_static"]
 html_logo = "_static/assets/logo.png"
 
 # -- Todo extension ----------------------------------------------------------
+# Author-facing only: keep ``.. todo::`` notes out of the published HTML.
+todo_include_todos = False
 
-todo_include_todos = True
+# -- Linkcheck ---------------------------------------------------------------
+# PyTorch's documentation renders anchors client-side, so linkcheck cannot verify
+# them from static HTML even though intersphinx resolves the targets at build time.
+linkcheck_anchors_ignore_for_url = [r"https://docs\.pytorch\.org/.*"]

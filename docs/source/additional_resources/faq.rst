@@ -17,7 +17,7 @@ TorchSOM offers several advantages:
 - **GPU acceleration** through PyTorch
 - **Modern Python practices** with type hints and Pydantic validation
 - **Comprehensive visualization suite** with matplotlib integration
-- **Flexible architecture** supporting multiple SOM variants
+- **Flexible topologies**: rectangular and hexagonal grids, optionally toroidal via periodic boundary conditions
 
 Installation and Setup
 ----------------------
@@ -25,7 +25,7 @@ Installation and Setup
 Which Python versions are supported?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We recommend using Python 3.9+.
+TorchSOM requires Python 3.10 or higher.
 
 Do I need a GPU to use TorchSOM?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -102,10 +102,10 @@ White neurons typically indicate:
 
 This is normal for sparse data or oversized maps.
 
-How do I interpret the distance map (D-Matrix)?
+How do I interpret the distance map (U-matrix)?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In the D-Matrix:
+In the U-matrix:
 
 - **Light areas**: High distances between neighboring neurons (cluster boundaries)
 - **Dark areas**: Low distances (within clusters)

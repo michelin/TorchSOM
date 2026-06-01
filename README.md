@@ -70,6 +70,8 @@ Benchmarked against [MiniSom](https://github.com/JustGlowing/minisom) on synthet
 | **Quantization Error** | Comparable fidelity across all configurations |
 
 > Hardware: Intel Xeon Platinum 8370C (CPU), NVIDIA Tesla T4 (GPU). See the [paper](https://arxiv.org/abs/2510.11147) for full benchmark tables.
+>
+> **Reproducing the JMLR benchmarks.** All scripts, configurations, and the exact MiniSom pin (`v2.3.5` / `65b6ba6`) used to produce these numbers are released under [`benchmark/`](benchmark/) — see [`benchmark/README.md`](benchmark/README.md) for a step-by-step walkthrough. Two annotated tags pin the version of record: `jmlr-submission-v1` (original October 2025 submission) and `jmlr-revision-v1` (accepted revised version). `git checkout <tag>` reproduces the corresponding Table 2.
 
 ---
 
@@ -176,11 +178,7 @@ This project uses [`uv`](https://docs.astral.sh/uv/) for fast, reproducible depe
 ### From PyPI
 
 ```bash
-# With uv (recommended)
 uv add torchsom
-
-# With pip
-pip install torchsom
 ```
 
 With optional [FAISS](https://github.com/facebookresearch/faiss) acceleration for BMU search:

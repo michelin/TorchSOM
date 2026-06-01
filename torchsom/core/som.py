@@ -666,13 +666,15 @@ class SOM(BaseSOM):
             dict[str, torch.Tensor]: Dictionary mapping map names to their results
 
         Example:
-            configs = [
-                {'type': 'hit'},
-                {'type': 'metric', 'kwargs': {'reduction_parameter': 'std'}},
-                {'type': 'rank'},
-                {'type': 'classification', 'kwargs': {'neighborhood_order': 2}}
-            ]
-            results = som.build_multiple_maps(configs, data, target)
+            .. code-block:: python
+
+                configs = [
+                    {"type": "hit"},
+                    {"type": "metric", "kwargs": {"reduction_parameter": "std"}},
+                    {"type": "rank"},
+                    {"type": "classification", "kwargs": {"neighborhood_order": 2}},
+                ]
+                results = som.build_multiple_maps(configs, data, target)
         """
         data_dependent_maps = {"hit", "bmus_data"}
         bmus_dependent_maps = {"metric", "score", "rank", "classification"}

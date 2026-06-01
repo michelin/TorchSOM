@@ -11,33 +11,25 @@ SOM Configuration
    :undoc-members:
    :show-inheritance:
 
-Saving Configuration
---------------------
+Loading and Saving
+------------------
 
-Loading Configuration
-~~~~~~~~~~~~~~~~~~~~~
+``SOMConfig`` is a Pydantic model, so it round-trips through dictionaries, JSON, and
+YAML for reproducible experiments.
 
 .. code-block:: python
 
    import yaml
    from torchsom.configs import SOMConfig
 
-   # Load from YAML file
-   with open("som_config.yaml", "r") as f:
-       config_dict = yaml.safe_load(f)
-   config = SOMConfig(**config_dict)
+   # Load from a YAML file
+   with open("som_config.yaml") as f:
+       config = SOMConfig(**yaml.safe_load(f))
 
-Exporting Configuration
-~~~~~~~~~~~~~~~~~~~~~~~
+   # Export to a dict or a JSON string
+   config_dict = config.model_dump()
+   config_json = config.model_dump_json(indent=2)
 
-.. code-block:: python
-
-   import yaml
-
-   # Export to dictionary and JSON
-   config_dict = config.dict()
-   config_json = config.json(indent=2)
-
-   # Save to YAML file
+   # Save back to YAML
    with open("exported_config.yaml", "w") as f:
-       yaml.dump(config.dict(), f, default_flow_style=False)
+       yaml.dump(config_dict, f, default_flow_style=False)

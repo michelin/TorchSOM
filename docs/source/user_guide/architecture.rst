@@ -2,11 +2,7 @@ Package Architecture
 ====================
 
 TorchSOM follows a modular design built around three core components that provide
-a comprehensive SOM implementation with seamless PyTorch integration.
-
-.. contents:: On this page
-   :local:
-   :depth: 2
+a complete SOM implementation with native PyTorch integration.
 
 
 Module Overview
@@ -59,7 +55,9 @@ The main ``SOM`` class inherits from ``BaseSOM`` and provides:
 
 - **``collect_samples(...)``** — Identify relevant historical samples for a given query
   using topology and latent-space distances, enabling Just-In-Time Learning (JITL)
-  applications.
+  applications. Three retrieval modes are available through ``retrieval_mode``
+  (``"bmu_only"``, ``"bmu_neighborhood"``, ``"bmu_neighborhood_knn"``), with the
+  neighborhood extent set by ``neighborhood_order``.
 
 - **``identify_bmus(data)``** — Find Best Matching Units for input data using the
   configured search backend (PyTorch or FAISS).
@@ -85,6 +83,13 @@ device placement). ``SOM`` implements the full training loop with batch learning
 where each epoch shuffles the data, processes it in batches, and updates weights
 using the neighborhood-weighted update rule.
 
+.. note::
+
+   The current release ships the classical ``SOM`` with rectangular and hexagonal
+   topologies, each optionally wrapped into a torus via :ref:`periodic boundary
+   conditions <topologies-pbc>`. Growing and Hierarchical SOM variants are on the
+   roadmap (see the paper's Conclusion) and are not part of the public API yet.
+
 
 Utilities Module (``torchsom.utils``)
 -------------------------------------
@@ -96,10 +101,10 @@ Distance Functions
 
 Four distance metrics are available for BMU selection in feature space:
 
-- **Euclidean** (default): :math:`d(x, w) = \sqrt{\sum_{l=1}^{k} (x_l - w_l)^2}`
-- **Cosine**: :math:`d(x, w) = 1 - \frac{x \cdot w}{\|x\| \|w\|}`
-- **Manhattan**: :math:`d(x, w) = \sum_{l=1}^{k} |x_l - w_l|`
-- **Chebyshev**: :math:`d(x, w) = \max_l |x_l - w_l|`
+- **Euclidean** (default): :math:`\delta(\mathbf{x}, \mathbf{w}) \coloneqq \sqrt{\sum_{a=1}^{d} (x_a - w_a)^2}`
+- **Manhattan**: :math:`\delta(\mathbf{x}, \mathbf{w}) \coloneqq \sum_{a=1}^{d} |x_a - w_a|`
+- **Cosine**: :math:`\delta(\mathbf{x}, \mathbf{w}) \coloneqq 1 - \frac{\mathbf{x} \cdot \mathbf{w}}{\lVert \mathbf{x} \rVert \lVert \mathbf{w} \rVert}`
+- **Chebyshev**: :math:`\delta(\mathbf{x}, \mathbf{w}) \coloneqq \max_{a \le d} |x_a - w_a|`
 
 Neighborhood Functions
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -116,61 +121,69 @@ Decay Schedulers
 
 Learning rate (:math:`\alpha`) and neighborhood width (:math:`\sigma`) decay over training:
 
-- **Asymptotic decay** (default): :math:`\theta(t+1) = \frac{\theta(t)}{1 + t / (T/2)}`
+- **Asymptotic decay** (default): :math:`\theta(t+1) \coloneqq \frac{\theta(t)}{1 + t / (T/2)}`
 - **Inverse decay**: Gradual asymptotic reduction to 0 (for :math:`\alpha`) or 1 (for :math:`\sigma`)
 - **Linear decay**: Uniform reduction to 0 (for :math:`\alpha`) or 1 (for :math:`\sigma`)
+
+
+Grid Topologies
+~~~~~~~~~~~~~~~
+
+Maps use either a ``"rectangular"`` or ``"hexagonal"`` grid. Setting ``pbc=True`` wraps the
+grid into a torus (periodic boundary conditions): grid-distance calculations then use the
+minimum-image convention, so neighborhoods wrap across opposite edges and corner neurons are
+no longer disadvantaged by the map boundary.
 
 BMU Search Backends
 ~~~~~~~~~~~~~~~~~~~
 
+The backend is chosen with the ``search_backend`` argument (``"auto"``, ``"torch"``, or
+``"faiss"``); ``"auto"`` uses FAISS when it is installed and falls back to PyTorch otherwise.
+
 - **PyTorch** (default): Full pairwise distance computation on GPU/CPU
 - **FAISS** (optional): Approximate nearest-neighbor search for large maps,
-  enabled with ``pip install torchsom[faiss]``
+  enabled with ``uv add torchsom[faiss]``
 
 
 Visualization Module (``torchsom.visualization``)
 --------------------------------------------------
 
-The visualization module provides nine visualization types for both rectangular
+The visualization module provides seven visualization types for both rectangular
 and hexagonal topologies:
 
 .. list-table::
    :header-rows: 1
-   :widths: 30 15 55
+   :widths: 32 15 53
 
    * - Visualization
      - Setting
      - Purpose
-   * - Learning Curves
+   * - U-matrix (distance map)
      - Unsupervised
-     - Track QE and TE convergence during training
-   * - Distance Map (U-Matrix)
+     - Inter-neuron distances and cluster boundaries
+   * - Hit map
      - Unsupervised
-     - Show inter-neuron distances and cluster boundaries
-   * - Hit Map
+     - BMU activation frequency and data density
+   * - Component planes
      - Unsupervised
-     - Reveal BMU activation frequency and data density
-   * - Component Planes
-     - Unsupervised
-     - Visualize per-feature weight distribution across the grid
-   * - Metric Map (mean/std)
+     - Per-feature weight distribution across the grid
+   * - Classification & metric maps
      - Supervised
-     - Neuron-level target value statistics for regression
-   * - Score Map
+     - Dominant class, or mean/std of a target, per neuron
+   * - Score & rank maps
      - Supervised
-     - Neuron reliability based on variance and sample density
-   * - Rank Map
-     - Supervised
-     - Relative ordering of predicted values across the topology
-   * - Classification Map
-     - Supervised
-     - Dominant class per neuron for classification tasks
-   * - Cluster Map + Diagnostics
+     - Per-neuron reliability for regression
+   * - Training curve
      - Unsupervised
-     - Cluster assignment, elbow plots, algorithm comparison
+     - QE and TE convergence during training
+   * - Clustering maps
+     - Unsupervised
+     - Cluster assignment plus elbow, silhouette, and comparison diagnostics
 
 The ``SOMVisualizer`` class acts as a factory that delegates to topology-specific
-implementations (``RectangularVisualizer`` or ``HexagonalVisualizer``).
+implementations (``RectangularVisualizer`` or ``HexagonalVisualizer``), and routes
+clustering plots to a ``ClusteringVisualizer``. See the :doc:`visualization_help`
+gallery for every plot with example figures.
 
 .. code-block:: text
 
@@ -247,10 +260,13 @@ The config can be serialized to/from YAML or JSON for reproducible experiments.
 See the :doc:`../api/configs` for full parameter documentation.
 
 
-Next Steps
+Next steps
 ----------
 
-- :doc:`benchmarks` — Performance comparison with MiniSom
-- :doc:`visualization_help` — Comprehensive visualization guide
+- :doc:`topologies` — Choosing a grid topology and using periodic boundary conditions
+- :doc:`training` — Initialization, decay schedules, and BMU search backends
+- :doc:`clustering` — Clustering SOM neurons and reading the diagnostics
+- :doc:`jitl` — Retrieving relevant samples for just-in-time learning
+- :doc:`visualization_help` — Visualization gallery
 - :doc:`../getting_started/basic_concepts` — Mathematical foundations
 - :doc:`../api/core` — Full API reference

@@ -10,8 +10,15 @@ TorchSOM Documentation
 
    <p align="center" style="margin-top: 0.5em; margin-bottom: 1.5em;">
      <em>GPU-accelerated Self-Organizing Maps in PyTorch with a scikit-learn API,
-     rich visualization, and clustering.</em>
+     advanced visualization, and clustering.</em>
    </p>
+
+TorchSOM is the PyTorch-native reference implementation of the Self-Organizing Map
+(SOM). It pairs a familiar scikit-learn-style API with GPU-accelerated batch
+training, a built-in clustering interface, just-in-time-learning support, and a
+visualization suite for both rectangular and hexagonal topologies. It accompanies the
+paper *torchsom: The Reference PyTorch Library for Self-Organizing Maps*
+(`Berthier et al., 2025 <https://arxiv.org/abs/2510.11147>`_).
 
 .. grid:: 2
    :gutter: 3
@@ -20,25 +27,25 @@ TorchSOM Documentation
       :link: getting_started/quickstart
       :link-type: doc
 
-      Install TorchSOM and train your first Self-Organizing Map in under 5 minutes.
+      Install TorchSOM and train your first Self-Organizing Map in a few minutes.
 
-   .. grid-item-card:: User Guide
-      :link: user_guide/visualization_help
+   .. grid-item-card:: Tutorials
+      :link: tutorials/index
       :link-type: doc
 
-      Comprehensive guides on visualization, architecture, and benchmarks.
+      End-to-end worked examples on real datasets: classification, regression, and clustering.
+
+   .. grid-item-card:: User Guide
+      :link: user_guide/architecture
+      :link-type: doc
+
+      Architecture, topologies, training, clustering, JITL, visualization, and benchmarks.
 
    .. grid-item-card:: API Reference
-      :link: api/core
+      :link: api/index
       :link-type: doc
 
       Full API documentation for ``torchsom.core``, ``torchsom.utils``, and ``torchsom.visualization``.
-
-   .. grid-item-card:: Paper
-      :link: https://arxiv.org/abs/2510.11147
-      :link-type: url
-
-      Read the accompanying paper: *torchsom: The Reference PyTorch Library for Self-Organizing Maps* (Berthier et al., 2025).
 
 
 Key Features
@@ -51,28 +58,28 @@ Key Features
 
       **Performance**
 
-      - GPU-accelerated training with PyTorch
-      - Up to 99% faster than MiniSom
-      - Efficient batch processing and memory management
-      - Optional FAISS backend for BMU search
+      - GPU-accelerated batch training with PyTorch
+      - 77–99% faster training than MiniSom (see :doc:`user_guide/benchmarks`)
+      - Quantization-error parity with lower topographic error
+      - Optional FAISS backend for BMU search on large maps
 
    .. grid-item::
 
       **Flexibility**
 
-      - Multiple SOM variants (classical, PBC, growing, hierarchical)
-      - Configurable topologies (rectangular, hexagonal)
-      - Four distance metrics, four neighborhood functions
-      - Multiple decay schedulers for learning rate and neighborhood width
+      - Rectangular and hexagonal topologies, optionally toroidal via periodic boundary conditions
+      - Four distance metrics and four neighborhood kernels
+      - Configurable learning-rate and neighborhood-width decay schedules
+      - Configurable BMU search backend (PyTorch or FAISS)
 
    .. grid-item::
 
       **Visualization**
 
-      - Nine visualization types for both rectangular and hexagonal topologies
-      - Distance maps, hit maps, component planes, classification maps
-      - Score, rank, and metric maps for supervised tasks
-      - Clustering diagnostics with elbow plots and quality comparisons
+      - Seven visualization types for both rectangular and hexagonal topologies
+      - Distance, hit, component-plane, classification, and metric maps
+      - Score and rank maps for per-neuron reliability in regression
+      - Clustering diagnostics: elbow, silhouette, and algorithm comparison
 
    .. grid-item::
 
@@ -80,8 +87,8 @@ Key Features
 
       - scikit-learn-style API (``fit``, ``build_map``, ``cluster``)
       - Pydantic-based configuration with validation
-      - Comprehensive type hints throughout
-      - 90%+ test coverage
+      - Full type hints throughout
+      - 90% test coverage, Apache 2.0 licensed
 
 
 Quick Start
@@ -91,15 +98,14 @@ Install TorchSOM:
 
 .. code-block:: bash
 
-   pip install torchsom
+   uv add torchsom
 
 Train and visualize a SOM:
 
 .. code-block:: python
 
    import torch
-   from torchsom import SOM
-   from torchsom.visualization import SOMVisualizer
+   from torchsom import SOM, SOMVisualizer
 
    som = SOM(x=10, y=10, num_features=3, epochs=50)
 
@@ -107,12 +113,12 @@ Train and visualize a SOM:
    som.initialize_weights(data=X, mode="pca")
    q_errors, t_errors = som.fit(data=X)
 
-   visualizer = SOMVisualizer(som=som)
-   visualizer.plot_training_errors(
+   viz = SOMVisualizer(som=som)
+   viz.plot_training_errors(
        quantization_errors=q_errors, topographic_errors=t_errors
    )
-   visualizer.plot_distance_map()
-   visualizer.plot_hit_map(data=X)
+   viz.plot_distance_map()
+   viz.plot_hit_map(data=X)
 
 
 Citation
@@ -134,12 +140,10 @@ If you use TorchSOM in your work, please cite:
    }
 
 
-Documentation Structure
------------------------
-
 .. toctree::
    :maxdepth: 2
    :caption: Getting Started
+   :hidden:
 
    getting_started/installation
    getting_started/quickstart
@@ -148,15 +152,35 @@ Documentation Structure
 .. toctree::
    :maxdepth: 2
    :caption: User Guide
+   :hidden:
 
    user_guide/architecture
-   user_guide/benchmarks
+   user_guide/topologies
+   user_guide/training
+   user_guide/clustering
+   user_guide/jitl
    user_guide/visualization_help
+   user_guide/benchmarks
+   user_guide/comparison
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorials
+   :hidden:
+
+   tutorials/index
+   tutorials/iris
+   tutorials/wine
+   tutorials/boston_housing
+   tutorials/energy_efficiency
+   tutorials/clustering_walkthrough
 
 .. toctree::
    :maxdepth: 2
    :caption: API Reference
+   :hidden:
 
+   api/index
    api/core
    api/utils
    api/visualization
@@ -165,6 +189,7 @@ Documentation Structure
 .. toctree::
    :maxdepth: 2
    :caption: Additional Resources
+   :hidden:
 
    additional_resources/changelog
    additional_resources/faq
@@ -186,7 +211,7 @@ TorchSOM is released under the `Apache License 2.0 <https://github.com/michelin/
 
 
 Indices and Tables
-==================
+===================
 
 * :ref:`genindex`
 * :ref:`modindex`

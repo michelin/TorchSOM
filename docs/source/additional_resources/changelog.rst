@@ -18,7 +18,7 @@ v1.1.1
 ------
 
 - Periodic Boundary Conditions (PBC) support for toroidal SOM topologies
-- FAISS backend for accelerated BMU search (``pip install torchsom[faiss]``)
+- FAISS backend for accelerated BMU search (``uv add torchsom[faiss]``)
 - Configurable search backend (``auto``, ``torch``, ``faiss``)
 - Additional quality-of-life improvements and bug fixes
 
@@ -38,11 +38,11 @@ Initial public release of TorchSOM, accompanying the
 - Four neighborhood functions: Gaussian, Mexican Hat, Bubble, Triangle
 - Multiple decay schedulers for learning rate and neighborhood width
 - PCA and random weight initialization
-- Comprehensive visualization suite (9 map types)
+- Comprehensive visualization suite (seven visualization types)
 - Clustering integration (K-Means, GMM, HDBSCAN)
 - Just-In-Time Learning (JITL) via ``collect_samples()``
 - Pydantic-based configuration with validation
-- 90%+ test coverage
+- 90% test coverage
 - Full documentation with tutorials and API reference
 
 

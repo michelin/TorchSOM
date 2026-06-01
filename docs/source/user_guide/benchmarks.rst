@@ -6,10 +6,6 @@ TorchSOM's computational performance and fidelity are evaluated against
 and actively maintained SOM library. These benchmarks are from
 `the paper <https://arxiv.org/abs/2510.11147>`_ (Section 4, Appendix D).
 
-.. contents:: On this page
-   :local:
-   :depth: 2
-
 
 Methodology
 -----------
@@ -160,7 +156,7 @@ Key Findings
 Training Speed
 ~~~~~~~~~~~~~~
 
-TorchSOM achieves dramatic speedups over MiniSom:
+TorchSOM trains substantially faster than MiniSom:
 
 - **CPU**: 77--98% faster across all configurations
 - **GPU**: Up to 99% faster for large, high-dimensional datasets
@@ -250,9 +246,20 @@ Together, these enable torchsom to scale to datasets and map sizes that are
 impractical with existing libraries, while maintaining or improving map quality.
 
 
-Further Reading
+Reproducibility
 ---------------
 
+All benchmark scripts and configuration files live in the
+`benchmark/ <https://github.com/michelin/TorchSOM/tree/main/benchmark>`_ directory.
+The exact paper states are pinned by two Git tags — ``jmlr-submission-v1`` (original
+submission) and ``jmlr-revision-v1`` (this revision) — and the comparison uses
+MiniSom v2.3.5 (commit ``65b6ba6``).
+
+
+Further reading
+---------------
+
+- :doc:`comparison` — Feature-by-feature comparison with other SOM libraries
 - Full benchmark tables (including hexagonal maps): `arXiv paper, Appendix D <https://arxiv.org/abs/2510.11147>`_
 - :doc:`architecture` — Package design and module overview
 - :doc:`../getting_started/basic_concepts` — SOM mathematical foundations

@@ -16,23 +16,20 @@ Example
 
 .. code-block:: python
 
-   from torchsom import SOM
-   from torchsom.visualization import SOMVisualizer
    import torch
+   from torchsom import SOM, SOMVisualizer
 
    data = torch.randn(500, 3)
    som = SOM(x=12, y=10, num_features=3, epochs=20)
-   som.initialize_weights(data, mode="pca")
-   q_errors, t_errors = som.fit(data)
+   som.initialize_weights(data=data, mode="pca")
+   q_errors, t_errors = som.fit(data=data)
 
-   viz = SOMVisualizer(som)
-   viz.plot_all(
-       quantization_errors=q_errors,
-       topographic_errors=t_errors,
-       data=data,
-       target=None,
-       save_path=None,
-   )
+   viz = SOMVisualizer(som=som)
+   viz.plot_distance_map()
+   viz.plot_hit_map(data=data)
+
+See the :doc:`../user_guide/visualization_help` gallery for every plot, including
+``plot_all`` and the supervised maps.
 
 Visualization Configuration
 ---------------------------
@@ -54,4 +51,6 @@ Notes
 -----
 
 - The visualizer is a factory that forwards to topology-specific implementations (hexagonal or rectangular).
-- For supervised maps (metric/score/rank/classification), you can either pass data and target directly or precompute ``bmus_data_map = som.build_map("bmus_data", data, return_indices=True)`` to speed up repeated plots.
+- The supervised maps (metric/score/rank/classification) and ``plot_all`` require a
+  pre-computed ``bmus_data_map = som.build_map("bmus_data", data=data)``; build it once
+  and reuse it across plots.

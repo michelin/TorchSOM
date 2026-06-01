@@ -106,3 +106,9 @@ Desktop.ini
 
 # Ruff
 .ruff_cache/
+
+# LaTeX
+*.aux
+*.log
+*.synctex.gz
+docs/figures/*.pdf
