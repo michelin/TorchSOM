@@ -43,6 +43,9 @@ jobs:
 
       - name: Analyze code with SonarQube
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        # Advisory only: a SonarCloud auth/infra failure (e.g. token 403) must not
+        # fail the test job or block the release pipeline (release.yml reuses this workflow).
+        continue-on-error: true
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
