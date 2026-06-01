@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## v1.2.0 (2026-06-01)
+
+### Feat
+
+- implement neighborhood order adjustment and retrieval modes in SOM class
+- add TODO list for future enhancements and features in the project
+- enhance Makefile and documentation for development workflow
+- enhance documentation and user experience
+- add periodic boundary conditions and search backend options to SOM
+- enhance SOM historical sample collection with optional index return
+- extract changelog notes for release creation
+
+### Fix
+
+- update documentation reference in README.
+- SOMVisualizer with BMU data mapping for plot_all method
+
+### Refactor
+
+- improve code readability and consistency in unit tests by restructuring parameters and assertions
+- reorganize imports and update type hints for improved clarity
+- improve code formatting and organization across notebooks and scripts
+- reorganize Makefile and introduce modular makefiles for improved structure
+- update citation and README for clarity and accuracy
+
 ## v1.1.1 (2025-09-01)
 
 ### Fix
