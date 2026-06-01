@@ -32,14 +32,14 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
 
-      - name: Install PyTorch (CPU)
-        run: uv pip install torch --index-url https://download.pytorch.org/whl/cpu
-
       - name: Sync dependencies
         run: uv sync --extra dev --extra tests
 
+      - name: Install PyTorch (CPU)
+        run: uv pip install torch --index-url https://download.pytorch.org/whl/cpu
+
       - name: Run tests
-        run: uv run pytest
+        run: uv run --no-sync pytest
 
       - name: Analyze code with SonarQube
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
