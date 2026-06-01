@@ -65,6 +65,10 @@ Citation = "https://github.com/michelin/TorchSOM/blob/main/CITATION.cff"
 
 [tool.setuptools-git-versioning]
 enabled = true
+# Only derive the build version from semver release tags (v1.2.3). Without this,
+# non-version tags such as jmlr-submission-v1 / jmlr-revision-v1 become the "latest"
+# tag and produce an invalid PEP 440 version (e.g. jmlr.submission.v1.dev20).
+tag_filter = '^v\d+\.\d+\.\d+'
 dev_template = "{tag}.dev{ccount}"
 dirty_template = "{tag}.post{ccount}+dirty"
 

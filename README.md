@@ -83,7 +83,7 @@ $$\mathbf{w}_{ij}(t+1) = \mathbf{w}_{ij}(t) + \alpha(t) \cdot h_{ij}(t) \cdot \b
 
 where $\alpha(t)$ is the learning rate, $h_{ij}(t)$ is a neighborhood function (e.g., Gaussian) centered on the BMU, and $\mathbf{x} \in \mathbb{R}^k$ is the input vector. The BMU is found by:
 
-$$\text{BMU} = \underset{i,j}{\operatorname{argmin}}\, \lVert \mathbf{x} - \mathbf{w}_{ij} \rVert_2$$
+$$\text{BMU} = \underset{i,j}{\arg\min}\, \lVert \mathbf{x} - \mathbf{w}_{ij} \rVert_2$$
 
 Training quality is assessed via **Quantization Error** (representation fidelity) and **Topographic Error** (topology preservation). See the [documentation](https://opensource.michelin.io/TorchSOM/) for the full mathematical background.
 

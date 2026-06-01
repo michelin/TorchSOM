@@ -54,21 +54,20 @@ jobs:
       - name: Check package
         run: uv run twine check dist/*
 
-      - name: Extract changelog
-        id: changelog
+      - name: Extract release notes
         run: |
-          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
-          sed -n '/## \['"$GITHUB_REF_NAME"'\]/,/^## \[/{/^## \[/b;p}' CHANGELOG.md >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          awk -v hdr="## ${GITHUB_REF_NAME} " '
+            /^## v/ { if (found) exit; if (index($0, hdr) == 1) { found=1; next } }
+            found { print }
+          ' CHANGELOG.md > release_notes.md
+          [ -s release_notes.md ] || echo "Release ${GITHUB_REF_NAME}" > release_notes.md
 
-      - name: Create Release
-        uses: actions/create-release@v1.1.4
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref }}
-          body: ${{ env.RELEASE_NOTES }}
+          name: ${{ github.ref_name }}
+          body_path: release_notes.md
           draft: false
           prerelease: false
 
