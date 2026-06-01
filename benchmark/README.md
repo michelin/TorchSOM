@@ -46,38 +46,3 @@ The full sweep (9 configurations × 3 backends × 10 repeats = 270 runs) is domi
 | MiniSom (CPU)          | ~2 s / repeat             | ~32 min / repeat              |
 | torchsom (CPU)         | <1 s / repeat             | ~30 s / repeat                |
 | torchsom (GPU, T4)     | <1 s / repeat             | ~12 s / repeat                |
-
-End-to-end full-sweep wall-clock: roughly **6–8 hours on CPU-only**, or **~1 hour with a T4 GPU**.
-
-## What success looks like
-
-`benchmark.py` writes per-configuration CSV files (means ± stds for QE, TE, wall-clock time) plus a summary table matching Table 2 of the paper. The notebook additionally renders publication-style figures. Acceptable variation between local runs and Table 2: ≤ 5 % on wall-clock time (hardware-dependent), exact agreement on QE / TE (deterministic given seed control).
-
-## Paper reference
-
-If you use these benchmarks, please cite the paper:
-
-> Berthier, L. *et al.* (2025). *torchsom: The Reference PyTorch Library for Self-Organizing Maps.* JMLR (MLOSS track). [arXiv:2510.11147](https://arxiv.org/abs/2510.11147)
-
-<!-- ## Azure ML setup
-
-```bash
-# Install Azure client
-curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-
-# Connect to AZML
-az login
-
-# Install azure module
-uv pip install azure-ai-ml azure-identity
-
-# Provide keys to the environment
-export AZUREML_SUBSCRIPTION="<key>"
-export AZUREML_RESOURCE_GROUP="<key>"
-export AZUREML_WORKSPACE_NAME="<key>"
-
-# Create env on AZML
-python environments/create_environment.py
-
-# Run the raw command from the run_benchmark.yaml to run the job
-``` -->
