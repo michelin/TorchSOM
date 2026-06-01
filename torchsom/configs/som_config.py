@@ -42,6 +42,19 @@ class SOMConfig(BaseModel):
         "random", description="Weight initialization method"
     )
 
+    # Boundary conditions
+    pbc: bool = Field(
+        False,
+        description="Enable periodic boundary conditions (toroidal topology)",
+    )
+
+    # Search backend
+    search_backend: Literal["auto", "torch", "faiss"] = Field(
+        "auto",
+        description="BMU search backend. 'auto' uses FAISS when available and the "
+        "distance metric is compatible, otherwise falls back to PyTorch.",
+    )
+
     # Other parameters
     neighborhood_order: int = Field(
         1, description="Neighborhood order for distance calculations", ge=1

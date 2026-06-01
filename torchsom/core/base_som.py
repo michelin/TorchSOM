@@ -1,7 +1,6 @@
 """Abstract base class for all SOM variants."""
 
 from abc import ABC, abstractmethod
-from typing import Optional
 
 import torch
 import torch.nn as nn
@@ -75,7 +74,7 @@ class BaseSOM(nn.Module, ABC):
     def initialize_weights(
         self,
         data: torch.Tensor,
-        mode: Optional[str] = None,
+        mode: str | None = None,
     ) -> None:
         """Initialize the SOM weights.
 

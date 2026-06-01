@@ -6,15 +6,12 @@ from torchsom.utils.distances import DISTANCE_FUNCTIONS
 from torchsom.utils.neighborhood import NEIGHBORHOOD_FUNCTIONS
 from torchsom.visualization import SOMVisualizer, VisualizationConfig
 
-# from .version import __version__
-
-# Define what should be imported when using 'from torchsom import *'
 __all__ = [
+    "DECAY_FUNCTIONS",
+    "DISTANCE_FUNCTIONS",
+    "NEIGHBORHOOD_FUNCTIONS",
     "SOM",
     "BaseSOM",
-    "DISTANCE_FUNCTIONS",
-    "DECAY_FUNCTIONS",
-    "NEIGHBORHOOD_FUNCTIONS",
     "SOMVisualizer",
     "VisualizationConfig",
 ]

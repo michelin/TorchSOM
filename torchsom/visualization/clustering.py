@@ -1,7 +1,7 @@
 """Clustering visualization methods for Self-Organizing Maps."""
 
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -22,7 +22,7 @@ class ClusteringVisualizer:
     def __init__(
         self,
         som: SOM,
-        config: Optional[VisualizationConfig] = None,
+        config: VisualizationConfig | None = None,
     ) -> None:
         """Initialize the clustering visualizer.
 
@@ -35,7 +35,7 @@ class ClusteringVisualizer:
 
     def _prepare_save_path(
         self,
-        save_path: Union[str, Path],
+        save_path: str | Path,
     ) -> Path:
         """Prepare directory for saving visualizations.
 
@@ -51,7 +51,7 @@ class ClusteringVisualizer:
 
     def _save_plot(
         self,
-        save_path: Union[str, Path],
+        save_path: str | Path,
         name: str,
     ) -> None:
         """Save plot with specified configuration.
@@ -103,8 +103,8 @@ class ClusteringVisualizer:
     def plot_cluster_map(
         self,
         cluster_result: dict[str, Any],
-        title: Optional[str] = None,
-        save_path: Optional[Union[str, Path]] = None,
+        title: str | None = None,
+        save_path: str | Path | None = None,
         show_values: bool = False,
         **kwargs: Any,
     ) -> None:
@@ -180,7 +180,7 @@ class ClusteringVisualizer:
     def plot_silhouette_analysis(
         self,
         cluster_result: dict[str, Any],
-        save_path: Optional[Union[str, Path]] = None,
+        save_path: str | Path | None = None,
     ) -> None:
         """Plot silhouette analysis for clustering results.
 
@@ -215,7 +215,7 @@ class ClusteringVisualizer:
         unique_labels = np.unique(labels_clean)
         sample_silhouette_values = silhouette_samples(data_clean, labels_clean)
 
-        fig, ax = plt.subplots(figsize=self.config.figsize)
+        _fig, ax = plt.subplots(figsize=self.config.figsize)
 
         y_lower = 10
         for label in sorted(unique_labels):
@@ -253,7 +253,7 @@ class ClusteringVisualizer:
         self,
         max_k: int = 10,
         feature_space: str = "weights",
-        save_path: Optional[Union[str, Path]] = None,
+        save_path: str | Path | None = None,
     ) -> None:
         """Plot elbow analysis for optimal K selection in K-means.
 
@@ -277,13 +277,14 @@ class ClusteringVisualizer:
             )
             inertias.append(result.get("inertia", 0))
 
-        fig, ax = plt.subplots(figsize=self.config.figsize)
+        _fig, ax = plt.subplots(figsize=self.config.figsize)
         ax.plot(k_range, inertias, "bo-", linewidth=2, markersize=8)
         ax.set_xlabel("Number of Clusters (k)")
         ax.set_ylabel("Within-Cluster Sum of Squares (WCSS)")
         ax.set_title(f"Elbow Analysis for K-means ({feature_space} space)")
         ax.grid(True, alpha=0.3)
         for k, inertia in zip(k_range, inertias):
+            # for k, inertia in zip(k_range, inertias, strict=False):
             ax.annotate(
                 f"k={k}\n{inertia:.2f}",
                 (k, inertia),
@@ -300,7 +301,7 @@ class ClusteringVisualizer:
     def plot_cluster_quality_comparison(
         self,
         results_list: list[dict[str, Any]],
-        save_path: Optional[Union[str, Path]] = None,
+        save_path: str | Path | None = None,
     ) -> None:
         """Compare clustering quality metrics across different methods.
 
@@ -329,7 +330,7 @@ class ClusteringVisualizer:
             calinski_harabasz_scores.append(metrics.get("calinski_harabasz_score", 0))
             n_clusters_list.append(result.get("n_clusters", 0))
 
-        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 10))
+        _fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 10))
         x_pos = np.arange(len(methods))
 
         # Silhouette Score (higher is better)
@@ -340,6 +341,7 @@ class ClusteringVisualizer:
         ax1.set_xticklabels(methods, rotation=45, ha="right")
         ax1.grid(True, alpha=0.3)
         for bar, score in zip(bars1, silhouette_scores):
+            # for bar, score in zip(bars1, silhouette_scores, strict=False):
             height = bar.get_height()
             ax1.text(
                 bar.get_x() + bar.get_width() / 2.0,
@@ -358,6 +360,7 @@ class ClusteringVisualizer:
         ax2.set_xticklabels(methods, rotation=45, ha="right")
         ax2.grid(True, alpha=0.3)
         for bar, score in zip(bars2, davies_bouldin_scores):
+            # for bar, score in zip(bars2, davies_bouldin_scores, strict=False):
             height = bar.get_height()
             ax2.text(
                 bar.get_x() + bar.get_width() / 2.0,
@@ -376,6 +379,7 @@ class ClusteringVisualizer:
         ax3.set_xticklabels(methods, rotation=45, ha="right")
         ax3.grid(True, alpha=0.3)
         for bar, score in zip(bars3, calinski_harabasz_scores):
+            # for bar, score in zip(bars3, calinski_harabasz_scores, strict=False):
             height = bar.get_height()
             ax3.text(
                 bar.get_x() + bar.get_width() / 2.0,
@@ -394,6 +398,7 @@ class ClusteringVisualizer:
         ax4.set_xticklabels(methods, rotation=45, ha="right")
         ax4.grid(True, alpha=0.3)
         for bar, count in zip(bars4, n_clusters_list):
+            # for bar, count in zip(bars4, n_clusters_list, strict=False):
             height = bar.get_height()
             ax4.text(
                 bar.get_x() + bar.get_width() / 2.0,

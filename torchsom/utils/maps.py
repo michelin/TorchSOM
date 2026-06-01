@@ -2,7 +2,7 @@
 
 import random
 from collections import Counter, defaultdict
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 import torch
 
@@ -88,8 +88,8 @@ def build_hit_map(
 
 def build_distance_map(
     som_instance: "BaseSOM",
-    distance_metric: Optional[str] = None,
-    neighborhood_order: Optional[int] = None,
+    distance_metric: str | None = None,
+    neighborhood_order: int | None = None,
     scaling: str = "sum",
 ) -> torch.Tensor:
     """Build distance map showing neuron-to-neighbor distances.
@@ -169,9 +169,9 @@ def build_distance_map(
                         ],
                         dim=1,
                     )
-                    distance_map[
-                        valid_positions[:, 0], valid_positions[:, 1]
-                    ] += distances
+                    distance_map[valid_positions[:, 0], valid_positions[:, 1]] += (
+                        distances
+                    )
                     counts[valid_positions[:, 0], valid_positions[:, 1]] += 1
 
     else:
@@ -279,7 +279,6 @@ def build_score_map(
 
     for bmu_pos, sample_indices in bmus_data_map.items():
         if len(sample_indices) > 0:
-
             # Multiple samples in neuron
             if len(sample_indices) > 1:
                 if isinstance(sample_indices, list):

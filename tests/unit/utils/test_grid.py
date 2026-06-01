@@ -20,6 +20,8 @@ pytestmark = [
 
 
 class TestHexagonalCoordinates:
+    """Tests for hexagonal coordinate conversion and distance utilities."""
+
     def test_offset_to_axial_coords_even_rows(self) -> None:
         """Test offset to axial coordinate conversion for even rows."""
         # Test even rows (0, 2, 4...)
@@ -86,7 +88,7 @@ class TestHexagonalCoordinates:
         test_axial_coords = [(0, 0), (1, 0), (0, 1), (-1, 0), (0, -1), (1, -1)]
 
         for q_orig, r_orig in test_axial_coords:
-            x, y, z = axial_to_cube_coords(q_orig, r_orig)
+            x, _y, z = axial_to_cube_coords(q_orig, r_orig)
             q_back, r_back = cube_to_axial_coords(x, z)
             assert (q_back, r_back) == (q_orig, r_orig)
 

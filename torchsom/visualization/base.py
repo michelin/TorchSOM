@@ -1,7 +1,7 @@
 """Base class for all visualization methods."""
 
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 import matplotlib.pyplot as plt
 import torch
@@ -23,7 +23,7 @@ class SOMVisualizer:
     def __init__(
         self,
         som: BaseSOM,
-        config: Optional[VisualizationConfig] = None,
+        config: VisualizationConfig | None = None,
     ) -> None:
         """Initialize the SOM visualizer factory.
 
@@ -151,8 +151,8 @@ class SOMVisualizer:
         bmus_data_map: dict[tuple[int, int], list[int]],
         data: torch.Tensor,
         target: torch.Tensor,
-        component_names: Optional[list[str]] = None,
-        save_path: Optional[Union[str, Path]] = None,
+        component_names: list[str] | None = None,
+        save_path: str | Path | None = None,
         training_errors: bool = True,
         distance_map: bool = True,
         hit_map: bool = True,

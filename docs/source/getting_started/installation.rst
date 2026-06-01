@@ -9,7 +9,7 @@ Systems
 
 TorchSOM requires:
 
-- **Python**: 3.9 or higher
+- **Python**: 3.10 or higher
 - **PyTorch**: 2.7 or higher
 - **Operating System**: Linux, macOS, or Windows
 
@@ -27,11 +27,11 @@ Installation Methods
 Install from PyPI (Recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The easiest way to install TorchSOM is using pip:
+The easiest way to install TorchSOM is using uv:
 
 .. code-block:: bash
 
-   pip install torchsom
+   uv add torchsom
 
 This will install TorchSOM with all required dependencies.
 
@@ -47,10 +47,10 @@ For the latest development version:
    cd TorchSOM
 
    # For standard users: install the main package
-   pip install -e .
+   uv sync
 
-   # For contributors and developers: install with development dependencies
-   pip install -e ".[all]"
+   # For contributors and developers: install with all optional dependencies
+   uv sync --all-extras
 
 Ensure GPU Support
 ~~~~~~~~~~~~~~~~~~
@@ -61,8 +61,8 @@ To ensure GPU acceleration, install a CUDA-enabled PyTorch per the official sele
 
    # Select the right command for your system at https://pytorch.org/get-started/locally/
    # Example (CUDA 11.8):
-   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-   pip install torchsom
+   uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+   uv add torchsom
 
 Verification
 ------------
@@ -98,14 +98,14 @@ Core Dependencies
 Optional Dependencies
 ~~~~~~~~~~~~~~~~~~~~~
 
-The following optional dependency groups can be installed via pip, e.g.:
+The following optional dependency groups can be installed via uv, e.g.:
 
-- ``pip install .[dev]``
-- ``pip install .[tests]``
-- ``pip install .[docs]``
-- ``pip install .[security]``
-- ``pip install .[linting]``
-- ``pip install .[all]``
+- ``uv sync --extra dev``
+- ``uv sync --extra tests``
+- ``uv sync --extra docs``
+- ``uv sync --extra security``
+- ``uv sync --extra linting``
+- ``uv sync --all-extras``
 
 These are useful for development, testing, documentation, security, and linting.
 
@@ -137,7 +137,7 @@ Documentation Dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - **sphinx**: Documentation building and formatting
-- **sphinx-rtd-theme**: ReadTheDocs theme for documentation
+- **furo**: Documentation theme
 - **sphinx-autodoc-typehints**: Type hints for documentation
 - **sphinx-copybutton**: Copy button for documentation
 - **pydocstyle**: Documentation style checking
@@ -163,14 +163,14 @@ Getting Help
 
 If you encounter installation issues:
 
-1. Check the `troubleshooting guide <../troubleshooting.html>`_
+1. Check the :doc:`../additional_resources/troubleshooting`
 2. Search existing `GitHub Issues <https://github.com/michelin/TorchSOM/issues>`_
 3. Create a new issue with your system details and error message
 
-Next Steps
+Next steps
 ----------
 
 Once installed, continue with:
 
-- :doc:`quickstart` - Your first SOM in 5 minutes
-- :doc:`basic_concepts` - Understanding SOM fundamentals
+- :doc:`quickstart` — Your first SOM in a few minutes
+- :doc:`basic_concepts` — Understanding SOM fundamentals

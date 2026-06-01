@@ -1,7 +1,8 @@
 """Utility functions for metrics."""
 
 import warnings
-from typing import TYPE_CHECKING, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 import torch
 from sklearn.metrics import (
@@ -52,6 +53,7 @@ def calculate_topographic_error(
     weights: torch.Tensor,
     distance_fn: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
     topology: str = "rectangular",
+    pbc: bool = False,
 ) -> float:
     """Calculate topographic error for a SOM.
 
@@ -60,6 +62,7 @@ def calculate_topographic_error(
         weights (torch.Tensor): SOM weights [x, y, num_features]
         distance_fn (Callable): Function to compute distances between data and weights
         topology (str, optional): Grid configuration. Defaults to "rectangular".
+        pbc (bool, optional): Whether periodic boundary conditions are enabled. Defaults to False.
 
     Returns:
         float: Topographic error ratio
@@ -78,14 +81,10 @@ def calculate_topographic_error(
         return float("nan")
 
     batch_size = data.shape[0]
-    # Calculate distances between each data point and all neurons: [batch_size, x, y]
     distances = distance_fn(data, weights)
-    # Flatten distances: [batch_size, x*y]
     distances_flat = distances.view(batch_size, -1)
-    # Get top 2 BMU indices efficiently: [batch_size, 2]
     _, indices = torch.topk(distances_flat, k=2, largest=False, dim=1)
 
-    # Convert flat indices to 2D coordinates
     bmu1_row, bmu1_col = (
         torch.div(indices[:, 0], y_dim, rounding_mode="floor"),
         indices[:, 0] % y_dim,
@@ -97,18 +96,56 @@ def calculate_topographic_error(
     if topology == "hexagonal":
         error_count = 0
         for i in range(batch_size):
-            q1, r1 = offset_to_axial_coords(bmu1_row[i].item(), bmu1_col[i].item())
-            q2, r2 = offset_to_axial_coords(bmu2_row[i].item(), bmu2_col[i].item())
-            hex_distance = hexagonal_distance_axial(q1, r1, q2, r2)
-            if hex_distance > 1:
+            r1_val, c1_val = int(bmu1_row[i].item()), int(bmu1_col[i].item())
+            r2_val, c2_val = int(bmu2_row[i].item()), int(bmu2_col[i].item())
+
+            if pbc:
+                min_dist = _pbc_hex_min_distance(
+                    r1_val, c1_val, r2_val, c2_val, x_dim, y_dim
+                )
+            else:
+                q1, r1 = offset_to_axial_coords(r1_val, c1_val)
+                q2, r2 = offset_to_axial_coords(r2_val, c2_val)
+                min_dist = hexagonal_distance_axial(q1, r1, q2, r2)
+
+            if min_dist > 1:
                 error_count += 1
         return error_count / batch_size
     else:
         dx = (bmu2_row - bmu1_row).float()
         dy = (bmu2_col - bmu1_col).float()
-        distances = torch.sqrt(dx**2 + dy**2)
+
+        if pbc:
+            dx = dx - x_dim * torch.round(dx / x_dim)
+            dy = dy - y_dim * torch.round(dy / y_dim)
+
+        grid_distances = torch.sqrt(dx**2 + dy**2)
         threshold = 1.0
-        return (distances > threshold).float().mean().item()
+        return (grid_distances > threshold).float().mean().item()
+
+
+def _pbc_hex_min_distance(
+    r1: int,
+    c1: int,
+    r2: int,
+    c2: int,
+    x_dim: int,
+    y_dim: int,
+) -> int:
+    """Compute the minimum hexagonal distance considering periodic images.
+
+    Checks the direct distance and all 8 periodic translations to find
+    the shortest path on the wrapped hex grid.
+    """
+    best = float("inf")
+    for dr in (-x_dim, 0, x_dim):
+        for dc in (-y_dim, 0, y_dim):
+            q1, rr1 = offset_to_axial_coords(r1, c1)
+            q2, rr2 = offset_to_axial_coords(r2 + dr, c2 + dc)
+            d = hexagonal_distance_axial(q1, rr1, q2, rr2)
+            if d < best:
+                best = d
+    return int(best)
 
 
 def calculate_silhouette_score(
@@ -315,7 +352,8 @@ def calculate_topological_clustering_quality(
             avg_distance = pairwise_distances[mask].mean().item()
 
             # Normalize by maximum possible distance on grid
-            max_distance = max(som.x, som.y)
+            # max_distance = max(som.x, som.y)
+            max_distance = max(int(som.x), int(som.y))
             normalized_distance = avg_distance / max_distance
 
             # Convert to coherence (inverse of distance)

@@ -1,12 +1,9 @@
-# This section defines how the package should be built when running `python -m build`
 [build-system]
-build-backend = "setuptools.build_meta"  # Use setuptools as the backend
-requires = [
-    "setuptools",                        # The core packaging tool
-    "setuptools-git-versioning",         # Automatically derive the version from Git tags
-]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools", "setuptools-git-versioning"]
 
-# Main project/package metadata
+# ==================== Project Metadata ====================
+
 [project]
 name = "torchsom"
 authors = [
@@ -15,15 +12,11 @@ authors = [
 maintainers = [
     {name = "Louis Berthier", email = "louis-desire-romeo.berthier@michelin.com"},
 ]
-dynamic = [
-    "version",                          # Version will be determined dynamically (via git)
-    "readme",                           # README will be dynamically loaded
-]
+dynamic = ["version", "readme"]
 description = "torchsom: The Reference PyTorch Library for Self-Organizing Maps"
-requires-python = ">=3.9"               # Minimum Python version required
-# https://pypi.org/classifiers/
+requires-python = ">=3.10"
 classifiers = [
-    "Development Status :: 4 - Beta", # 3 - Alpha, 4 - Beta, 5 - Production/Stable
+    "Development Status :: 4 - Beta",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Intended Audience :: Developers",
@@ -34,12 +27,10 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Information Analysis",
     "Topic :: Scientific/Engineering :: Visualization",
     "Topic :: Software Development :: Libraries",
-    "Topic :: Software Development :: Testing :: Unit",
-    "Topic :: Software Development :: Version Control :: Git",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: Apache Software License",
 ]
 dependencies = [
@@ -64,48 +55,40 @@ keywords = [
 ]
 
 [project.urls]
-"Source" = "https://github.com/michelin/torchsom"
-"Documentation" = "https://opensource.michelin.io/TorchSOM/"
-"Tracker" = "https://github.com/michelin/TorchSOM/issues"
-"License" = "https://github.com/michelin/TorchSOM/blob/main/LICENSE"
-"Contributing" = "https://github.com/michelin/TorchSOM/blob/main/CONTRIBUTING.md"
+Source = "https://github.com/michelin/torchsom"
+Documentation = "https://opensource.michelin.io/TorchSOM/"
+Tracker = "https://github.com/michelin/TorchSOM/issues"
+License = "https://github.com/michelin/TorchSOM/blob/main/LICENSE"
+Contributing = "https://github.com/michelin/TorchSOM/blob/main/CONTRIBUTING.md"
 "Code of Conduct" = "https://github.com/michelin/TorchSOM/blob/main/CODE_OF_CONDUCT.md"
-"Citation" = "https://github.com/michelin/TorchSOM/blob/main/CITATION.cff"
-# "Changelog" = "https://github.com/michelin/torchsom/releases"
-# "Author" = "https://github.com/michelin/TorchSOM/blob/main/AUTHORS.md"
+Citation = "https://github.com/michelin/TorchSOM/blob/main/CITATION.cff"
 
-# Configuration for setuptools-git-versioning plugin
 [tool.setuptools-git-versioning]
-enabled = true                                  # Enables git-based versioning
-# dev_template and dirty_template define version strings for development and dirty states
-dev_template = "{tag}.dev{ccount}"              # Format when there are commits after a tag
-dirty_template = "{tag}.post{ccount}+dirty"     # Format when the working tree is dirty
+enabled = true
+dev_template = "{tag}.dev{ccount}"
+dirty_template = "{tag}.post{ccount}+dirty"
 
-# Dynamically load the README from file
 [tool.setuptools.dynamic]
-readme = {file = "README.md", content-type = "text/markdown"}          # Long description for PyPI and docs
+readme = {file = "README.md", content-type = "text/markdown"}
 
-# Package discovery configuration
 [tool.setuptools.packages.find]
-where = ["."]                          # Search in current directory
-include = ["torchsom*"]                # Include packages matching this pattern (e.g., torchsom, torchsom.utils)
+where = ["."]
+include = ["torchsom*"]
 
-# Optional dependencies that can be installed with [dev] extra: `pip install .[dev]`
+# ==================== Optional Dependencies ====================
+
 [project.optional-dependencies]
 dev = [
     "pandas",
     "openpyxl",
-    "black",
-    "isort",
     "rich",
     "typing_extensions",
-    "build",
-    "twine",
-    "commitizen",
     "notebook",
     "pyyaml",
+    "pre-commit",
+    "typer",
+    "minisom>=2.3.6",
 ]
-
 tests = [
     "pytest",
     "pytest-cov",
@@ -113,91 +96,56 @@ tests = [
     "pytest-xdist",
     "pytest-timeout",
 ]
-
 docs = [
     "sphinx",
-    "sphinx-rtd-theme",
+    "furo",
     "sphinx-autodoc-typehints",
     "sphinx-copybutton",
-    "pydocstyle",
+    "sphinx-design",
+    "sphinx-autobuild",
     "interrogate",
 ]
-
-security = [
-    "bandit[toml]",
-    "safety",
-    "pip-audit",
-    "pip-tools",
+faiss = [
+    "faiss-cpu",
 ]
-
 linting = [
     "ruff",
     "mypy",
     "radon",
-    "certifi",
 ]
-
-all = [
-    "pandas",
-    "openpyxl",
-    "black",
-    "isort",
-    "rich",
-    "typing_extensions",
+release = [
     "build",
     "twine",
     "commitizen",
-    "notebook",
-    "pyyaml",
-    "pytest",
-    "pytest-cov",
-    "pytest-html",
-    "pytest-xdist",
-    "pytest-timeout",
-    "sphinx",
-    "sphinx-rtd-theme",
-    "sphinx-autodoc-typehints",
-    "sphinx-copybutton",
-    "pydocstyle",
-    "interrogate",
-    "bandit[toml]",
-    "safety",
+]
+security = [
     "pip-audit",
-    "pip-tools",
-    "ruff",
-    "mypy",
-    "radon",
-    "certifi",
+]
+all = [
+    "torchsom[dev,tests,docs,faiss,linting,release,security]",
 ]
 
-# ==================== Testing Configuration ====================
+# ==================== Testing ====================
 
 [tool.pytest.ini_options]
-# Directory containing test files
 testpaths = ["tests"]
-# File name patterns pytest will recognize as test files
 python_files = ["test_*.py", "*_test.py"]
-# Class name patterns pytest will recognize as test classes
 python_classes = ["Test*"]
-# Function name patterns pytest will recognize as test functions
 python_functions = ["test_*"]
-# Additional pytest CLI options:
 addopts = [
-    "-v",                               # Verbose output
-    # "--strict-markers",                 # Fail if unknown @pytest.mark is used
-    # "--strict-config",                  # Fail if unknown config option is found
-    "--tb=short",                       # Short traceback format
-    "--durations=10",                   # Report 10 slowest tests
-    "--cov=torchsom",                   # Coverage of torchsom
-    "--cov-report=term-missing",        # Show missing lines in the report
-    "--cov-report=xml",                 # Generate XML coverage report
-    "--cov-report=html",                # Generate HTML coverage report
-    "--cov-config=pyproject.toml",      # Use configuration from pyproject.toml
-    "--junit-xml=junit.xml",            # Create JUnit XML file for CI compatibility
-    "-m unit or gpu",                   # default marker selection
-    "--maxfail=0",                      # continue after failures: 0 means never stop on failure, 1 means stop after 1 failure and 10 means stop after 10 failures
+    "-v",
+    "--strict-markers",
+    "--tb=short",
+    "--durations=10",
+    "--cov=torchsom",
+    "--cov-report=term-missing",
+    "--cov-report=xml",
+    "--cov-report=html",
+    "--cov-config=pyproject.toml",
+    "--junit-xml=junit.xml",
+    "-m", "unit or gpu",
+    "--maxfail=0",
 ]
-# Custom pytest markers with descriptions
 markers = [
     "unit: Unit tests",
     "integration: Integration tests",
@@ -205,200 +153,134 @@ markers = [
     "slow: Slow running tests",
     "smoke: Smoke tests for basic functionality",
 ]
-# Configure pytest to handle and ignore specific warnings
 filterwarnings = [
     "error",
     "ignore::UserWarning",
     "ignore::DeprecationWarning",
     "ignore::PendingDeprecationWarning",
+    # hdbscan 0.8.41 ships invalid-escape docstrings: DeprecationWarning on Python <=3.11, SyntaxWarning on 3.12+
+    "ignore::SyntaxWarning",
 ]
-# Timeout for each test in seconds
 timeout = 300
 
 [tool.coverage.run]
-# Directories or modules to measure coverage for
 source = ["torchsom"]
-# Files to exclude from coverage stats
 omit = [
-    "tests/**",                            # Exclude all test files
-    "docs/**",                             # Exclude documentation
-    "notebooks/**",                        # Exclude Jupyter notebooks
-    "torchsom/core/base_som.py",           # Exclude base SOM implementation
-    "torchsom/core/growing/**",            # Exclude growing SOM implementation
-    "torchsom/core/hierarchical/**",       # Exclude hierarchical SOM implementation
-    "torchsom/visualization/**",           # Exclude visualization utilities
-    "torchsom/logger.py",                  # Exclude logging utilities
-    "torchsom/version.py",                 # Exclude version info file
-    "**/conftest.py",                      # Exclude pytest config
-    "**/__init__.py",                      # Exclude package init files
-    "**/setup.py",                         # Exclude setup scripts
+    "tests/**",
+    "docs/**",
+    "notebooks/**",
+    "torchsom/core/base_som.py",
+    "torchsom/core/growing/**",
+    "torchsom/core/hierarchical/**",
+    "torchsom/visualization/**",
+    "torchsom/logger.py",
+    "torchsom/version.py",
+    "**/conftest.py",
+    "**/__init__.py",
 ]
-# Measure branch coverage in addition to line coverage
 branch = true
-# Allow combining coverage results from parallel runs
 parallel = true
 
 [tool.coverage.report]
-# Lines to exclude from coverage measurement
 exclude_lines = [
-    "pragma: no cover",              # Explicit coverage skip marker
-    "def __repr__",                  # Representation methods
-    "raise AssertionError",          # Assertion errors not tested
-    "raise NotImplementedError",     # Abstract/unimplemented methods
-    "if __name__ == .__main__.:",    # Script entry points
-    "if TYPE_CHECKING:",             # Type hinting blocks
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
 ]
-# Show missing lines in the report
 show_missing = true
-# Report numbers with 2 decimal places
 precision = 2
-# Fail if coverage percentage is below 60%
-fail_under = 20
+fail_under = 80
 
 [tool.coverage.html]
-# Output directory for HTML coverage report
 directory = "htmlcov"
 
-# ==================== Code Quality Configuration ====================
-
-[tool.black]
-# Maximum line length for Black
-line-length = 88
-# Target Python versions for Black
-target-version = ["py39", "py310", "py311"]
-# Include files with .pyi extension
-include = "\\.pyi?$"
-# Exclude directories from Black formatting
-extend-exclude = """
-/(
-  # directories
-  \\.eggs
-  | \\.git
-  | \\.hg
-  | \\.mypy_cache
-  | \\.tox
-  | \\.venv
-  | build
-  | dist
-)/
-"""
-
-[tool.isort]
-# Use Black's configuration for isort
-profile = "black"
-# Maximum number of lines in a single import block
-multi_line_output = 3
-# Maximum line length for isort
-line_length = 88
-# Known first-party packages
-known_first_party = ["torchsom"]
-# Known third-party packages
-known_third_party = ["torch", "numpy", "matplotlib", "pytest", "pydantic"]
-# Force grid wrap for imports
-force_grid_wrap = 0
-# Use parentheses for grouped imports
-use_parentheses = true
-# Ensure newline before comments
-ensure_newline_before_comments = true
+# ==================== Ruff (lint + format) ====================
+# Ruff replaces black, isort, flake8, bandit, and pyupgrade in a single tool.
 
 [tool.ruff]
-# Allow Ruff to fix code automatically
 fix = true
-# Allow Ruff to fix code automatically even if it's unsafe
-unsafe-fixes = true
-# Maximum line length for Ruff
 line-length = 88
-# Target Python versions for Ruff
-target-version = "py39"
+target-version = "py310"
+
+[tool.ruff.format]
+docstring-code-format = true
+
 [tool.ruff.lint]
-# Select rules to apply
 select = [
-    "E",   # pycodestyle errors
-    "W",   # pycodestyle warnings
-    "F",   # pyflakes
-    "I",   # isort
-    "B",   # flake8-bugbear
-    "C4",  # flake8-comprehensions
-    "UP",  # pyupgrade
-    "ARG", # flake8-unused-arguments
-    "SIM", # flake8-simplify
-    "ICN", # flake8-import-conventions
-    "S",   # bandit
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort (import sorting)
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "UP",   # pyupgrade
+    "ARG",  # flake8-unused-arguments
+    "SIM",  # flake8-simplify
+    "ICN",  # flake8-import-conventions
+    "S",    # flake8-bandit (security)
+    "D",    # pydocstyle
+    "RUF",  # ruff-specific rules
 ]
-# Ignore specific rules
 ignore = [
-    "E501",  # line too long, handled by black
-    "B008",  # do not perform function calls in argument defaults
-    "C901",  # too complex
-    "S101",  # use of assert
-    "B904",  # exception re-raise
-    "S311",  # use of insecure random number generator
-    "SIM102", # use of nested if statements
+    "E501",   # line too long -- formatter handles this
+    "B008",   # function calls in defaults (common in pydantic)
+    "C901",   # too complex
+    "S101",   # assert usage -- needed in tests and fine in library
+    "B904",   # exception re-raise
+    "S311",   # pseudo-random generators -- acceptable for SOM init
+    "SIM102", # nested if statements
+    "D100",   # missing module docstring (handled by interrogate)
+    "D104",   # missing public package docstring
+    "B905",   # zip without an explicit 'strict=' parameter
 ]
-# Exclude directories from Ruff
-exclude = [
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".git-rewrite",
-    ".hg",
-    ".mypy_cache",
-    ".nox",
-    ".pants.d",
-    ".pytype",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "node_modules",
-    "venv",
-]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["torchsom"]
+
 [tool.ruff.lint.per-file-ignores]
-# Ignore specific rules for test files
-"tests/*" = ["S101", "ARG", "SIM"]
+"tests/*" = ["S101", "ARG", "SIM", "D"]
+
+# ==================== Mypy ====================
 
 [tool.mypy]
-# Target Python version for mypy
-python_version = "3.9"
-warn_return_any = true                  # If True, mypy warns when a function returns Any. False disables this warning.
-warn_unused_configs = true              # Warn if there are unused mypy configuration options in the config file.
-disallow_untyped_defs = true            # Disallow defining functions without type annotations for all arguments and the return type.
-disallow_incomplete_defs = true         # Disallow functions with some, but not all, arguments annotated.
-check_untyped_defs = true               # Type-check the body of functions without type annotations.
-disallow_untyped_decorators = true      # Disallow decorators without type annotations.
-no_implicit_optional = true             # Treat function arguments without explicit Optional[...] as required (not implicitly optional).
-warn_redundant_casts = true             # Warn about unnecessary type casts.
-warn_unused_ignores = true              # Warn about # type: ignore comments that are not needed.
-warn_no_return = true                   # Warn if a function declared to return a value implicitly returns None.
-warn_unreachable = true                 # Warn about code that cannot be reached.
-strict_equality = true                  # Require strict type equality for comparisons.
-show_error_codes = true                 # Display mypy error codes in the output for reference.
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+show_error_codes = true
 disable_error_code = [
-    "var-annotated",                    # Error code for variable annotated with Any
-    "operator",                         # Error code for operator module
-    "no-any-return",                    # Error code for function returning Any when it should return a more specific type
-    "index",                            # Error code for indexing with a non-integer type
-    "unreachable",                      # Error code for code that cannot be reached
-    "call-arg",                         # Error code for calling a function with the wrong arguments
-    "arg-type",                         # Error code for argument type mismatch
-    "assignment",                       # Error code for assigning a value to a variable with a different type
-    "misc",                             # Error code for miscellaneous type issues
-    "call-overload",                    # Error code for calling a function with the wrong number of arguments
-    "override",                         # Error code for overriding a method with a different signature (e.g. in a subclass)
-    # "return-value",                     # Error code for function returning a value with a different type than declared
-    "no-untyped-call",                  # Error code for calling a function without type annotations
-    "attr-defined",                     # Error code for attribute access on None
-    "union-attr",                       # Error code for union attribute access
+    "var-annotated",
+    "operator",
+    "no-any-return",
+    "index",
+    "unreachable",
+    "call-arg",
+    "arg-type",
+    "assignment",
+    "misc",
+    "call-overload",
+    "override",
+    "no-untyped-call",
+    "attr-defined",
+    "union-attr",
 ]
 
 [[tool.mypy.overrides]]
-# Module-level type overrides for mypy
 module = [
     "sklearn.*",
     "matplotlib.*",
@@ -408,24 +290,12 @@ module = [
     "pydantic.*",
     "pytest.*",
     "yaml.*",
+    "faiss.*",
+    "hdbscan.*",
 ]
-# Ignore missing imports
 ignore_missing_imports = true
 
-[tool.bandit]
-# Exclude directories from Bandit
-exclude_dirs = ["docs", "build", "dist"]
-# Skip assert_used and shell_injection tests
-skips = ["B101", "B311", "B601"]
-
-[tool.bandit.assert_used]
-# Skip assert_used for test files
-skips = ["*_test.py", "test_*.py"]
-[tool.pydocstyle]
-convention = "google"
-match-dir = "torchsom"
-# match = ".*\.py"  # optional; defaults to all .py
-# add-ignore = ["D104"] # example: ignore missing package docstring
+# ==================== Interrogate ====================
 
 [tool.interrogate]
 verbose = 1
@@ -433,8 +303,12 @@ ignore-init-method = true
 ignore-magic = true
 ignore-module = true
 fail-under = 80
+color = true
+omit-covered-files = true
 path = ["torchsom"]
-# exclude = ["tests", "docs"]
+
+# ==================== Commitizen ====================
+
 [tool.commitizen]
 name = "cz_conventional_commits"
 version = "1.1.1"
@@ -447,6 +321,8 @@ changelog_template = ".changelog_template.md"
 github_url = "https://github.com/michelin/TorchSOM"
 version_scheme = "semver"
 changelog_start_rev = "v1.0.0"
+
+# ==================== Sphinx ====================
 
 [tool.sphinx]
 suppress-warnings = ["misc.docutils"]

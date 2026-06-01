@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 import matplotlib.pyplot as plt
 import torch
@@ -17,8 +17,8 @@ class BaseVisualizer(ABC):
     def __init__(
         self,
         som: BaseSOM,
-        config: Optional[VisualizationConfig] = None,
-        expected_topology: str = None,
+        config: VisualizationConfig | None = None,
+        expected_topology: str | None = None,
     ) -> None:
         """Initialize the base visualizer.
 
@@ -36,7 +36,7 @@ class BaseVisualizer(ABC):
 
     def _prepare_save_path(
         self,
-        save_path: Union[str, Path],
+        save_path: str | Path,
     ) -> Path:
         """Prepare directory for saving visualizations.
 
@@ -52,7 +52,7 @@ class BaseVisualizer(ABC):
 
     def _save_plot(
         self,
-        save_path: Union[str, Path],
+        save_path: str | Path,
         name: str,
     ) -> None:
         """Save plot with specified configuration.
@@ -79,8 +79,8 @@ class BaseVisualizer(ABC):
         title: str,
         colorbar_label: str,
         filename: str,
-        save_path: Optional[Union[str, Path]] = None,
-        cmap: Optional[str] = None,
+        save_path: str | Path | None = None,
+        cmap: str | None = None,
         show_values: bool = False,
         value_format: str = ".2f",
         **kwargs: Any,
@@ -103,9 +103,9 @@ class BaseVisualizer(ABC):
     def plot_distance_map(
         self,
         fig_name: str = "distance_map",
-        save_path: Optional[Union[str, Path]] = None,
-        distance_metric: Optional[str] = None,
-        neighborhood_order: Optional[int] = None,
+        save_path: str | Path | None = None,
+        distance_metric: str | None = None,
+        neighborhood_order: int | None = None,
         scaling: str = "sum",
     ) -> None:
         """Plot the distance map (U-Matrix).
@@ -135,7 +135,7 @@ class BaseVisualizer(ABC):
         self,
         data: torch.Tensor,
         fig_name: str = "hit_map",
-        save_path: Optional[Union[str, Path]] = None,
+        save_path: str | Path | None = None,
         batch_size: int = 1024,
     ) -> None:
         """Plot hit map.
@@ -161,8 +161,8 @@ class BaseVisualizer(ABC):
         data: torch.Tensor,
         target: torch.Tensor,
         fig_name: str = "classification_map",
-        save_path: Optional[Union[str, Path]] = None,
-        neighborhood_order: Optional[int] = None,
+        save_path: str | Path | None = None,
+        neighborhood_order: int | None = None,
     ) -> None:
         """Plot classification map.
 
@@ -195,8 +195,8 @@ class BaseVisualizer(ABC):
         data: torch.Tensor,
         target: torch.Tensor,
         reduction_parameter: str = "mean",
-        fig_name: Optional[str] = None,
-        save_path: Optional[Union[str, Path]] = None,
+        fig_name: str | None = None,
+        save_path: str | Path | None = None,
     ) -> None:
         """Plot target metric map.
 
@@ -235,7 +235,7 @@ class BaseVisualizer(ABC):
         target: torch.Tensor,
         total_samples: int,
         fig_name: str = "score_map",
-        save_path: Optional[Union[str, Path]] = None,
+        save_path: str | Path | None = None,
     ) -> None:
         """Plot neuron representativeness score map.
 
@@ -265,7 +265,7 @@ class BaseVisualizer(ABC):
         bmus_data_map: dict[tuple[int, int], list[int]],
         target: torch.Tensor,
         fig_name: str = "rank_map",
-        save_path: Optional[Union[str, Path]] = None,
+        save_path: str | Path | None = None,
     ) -> None:
         """Plot ranked neurons map.
 
@@ -292,8 +292,8 @@ class BaseVisualizer(ABC):
 
     def plot_component_planes(
         self,
-        component_names: Optional[list[str]] = None,
-        save_path: Optional[Union[str, Path]] = None,
+        component_names: list[str] | None = None,
+        save_path: str | Path | None = None,
     ) -> None:
         """Plot component planes.
 
@@ -303,7 +303,7 @@ class BaseVisualizer(ABC):
         """
         n_components = self.som.weights.shape[-1]
         component_names = component_names or [
-            f"Component_{i+1}" for i in range(n_components)
+            f"Component_{i + 1}" for i in range(n_components)
         ]
         for i, name in enumerate(component_names):
             component_weights = self.som.weights[:, :, i].cpu()
@@ -321,7 +321,7 @@ class BaseVisualizer(ABC):
         quantization_errors: list[float],
         topographic_errors: list[float],
         fig_name: str = "training_errors",
-        save_path: Optional[Union[str, Path]] = None,
+        save_path: str | Path | None = None,
     ) -> None:
         """Plot training errors over epochs.
 
@@ -337,7 +337,7 @@ class BaseVisualizer(ABC):
         if isinstance(topographic_errors, torch.Tensor):
             topographic_errors = topographic_errors.cpu().numpy()
 
-        fig, (ax1, ax2) = plt.subplots(
+        _fig, (ax1, ax2) = plt.subplots(
             2, 1, figsize=self.config.figsize, gridspec_kw={"hspace": 0.3}
         )
 

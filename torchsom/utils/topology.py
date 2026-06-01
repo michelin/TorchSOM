@@ -1,7 +1,5 @@
 """Utility functions for topology."""
 
-from typing import Union
-
 
 def get_rectangular_offsets(
     neighborhood_order: int = 1,
@@ -109,7 +107,7 @@ def get_hexagonal_offsets(
 def get_all_neighbors_up_to_order(
     topology: str,
     max_order: int,
-) -> Union[list[tuple[int, int]], dict[str, list[tuple[int, int]]]]:
+) -> list[tuple[int, int]] | dict[str, list[tuple[int, int]]]:
     """Get all neighbors from order 1 up to max_order.
 
     Args:

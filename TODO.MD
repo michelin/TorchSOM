@@ -1,0 +1,12 @@
+
+- (DONE) Change pydoc to furo for online documentation
+- Refine online documentation to better match current package.
+- Implement FAISS for optimized search (BMU identification, sample collection, ...)
+- Further develop SOM mechanisms:
+    - PBC
+    - Growing
+    - HIerarchical
+- Enhance visualisation:
+    - Record at each training epoch the design of the maps (distance/U-matrix)
+    - Identify the BMU (black) + surroundings (purple) + neurons identified by KNN search (blue)
+- Handle issues for instance when training the SOM if the batch contains only one sample

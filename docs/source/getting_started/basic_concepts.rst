@@ -41,28 +41,46 @@ The SOM Algorithm
 Mathematical Foundation
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-**Distance Calculation**
-The similarity between an input vector :math:`\mathbf{x}` and a neuron's weight vector :math:`\mathbf{w}` is most commonly measured using the Euclidean distance.
-Alternative distance functions are also supported; see :ref:`distance_functions_section` for a comprehensive list.
+**Setup and notation**
+A SOM approximates a distribution over an input space :math:`\mathcal{X} \subseteq \mathbb{R}^d` by a two-dimensional lattice of :math:`I \times J` neurons.
+Each neuron at grid position :math:`(i, j)`, with :math:`i \in \{1, \dots, I\}` and :math:`j \in \{1, \dots, J\}`, carries a *codebook* (weight) vector :math:`\mathbf{w}_{ij} \in \mathbb{R}^l` with :math:`l = d`, and the full parameter set is the tensor
 
 .. math::
-   \text{BMU} = w_{\mathrm{bmu}} = \underset{i,j}{\operatorname{argmin}}\, \| \mathbf{x} - \mathbf{w}_{ij} \|_2 = \underset{i,j}{\operatorname{argmin}}\, \sqrt{\sum_{l=1}^{k} (x_l - w_{ij,l})^2}
+   \mathbf{W} \coloneqq [\mathbf{w}_{ij}]_{i \le I,\, j \le J} \in \mathbb{R}^{I \times J \times l}
 
-**Weight Update Rule**
-The weights of the neurons are updated according to the following rule:
+Training uses a data set :math:`\{\mathbf{x}_k\}_{k=1}^{N} \subset \mathbb{R}^d` over epochs :math:`t \in \{0, 1, \dots, T\}`.
+
+**Best matching unit and projection**
+Similarity in feature space is measured by a distance :math:`\delta` (see :ref:`distance_functions_section`).
+For an input :math:`\mathbf{x}`, the Best Matching Unit (BMU) is the neuron whose codebook minimizes :math:`\delta`:
 
 .. math::
-   \mathbf{w}_{ij}(t+1) = \mathbf{w}_{ij}(t) + \alpha(t) \cdot h_{ij}(t) \cdot (\mathbf{x} - \mathbf{w}_{ij}(t))
+   \mathrm{BMU}(\mathbf{x}) \coloneqq \operatorname*{arg\,min}_{(i,j)}\, \delta(\mathbf{x}, \mathbf{w}_{ij})
+
+which induces a projection onto grid coordinates and a latent codebook retrieval:
+
+.. math::
+   \psi : \mathbb{R}^d \rightarrow \{1, \dots, I\} \times \{1, \dots, J\}, \qquad \psi(\mathbf{x}) \coloneqq \mathrm{BMU}(\mathbf{x}), \qquad \mathbf{z} \coloneqq \mathbf{w}_{\psi(\mathbf{x})} \in \mathbb{R}^l
+
+The latent vector :math:`\mathbf{z}` is the representation used for clustering, visualization, and just-in-time learning (JITL) retrieval.
+
+**Competitive update**
+A SOM learns by a neighborhood-weighted competitive rule rather than gradient descent: at each step the BMU for the presented sample :math:`\mathbf{x}` is found, and each neuron is moved toward :math:`\mathbf{x}` by a step scaled by its grid proximity to the BMU:
+
+.. math::
+   \mathbf{w}_{ij}(t+1) \coloneqq \mathbf{w}_{ij}(t) + \alpha(t)\, h_{ij}(t)\, (\mathbf{x} - \mathbf{w}_{ij}(t))
 
 where:
 
-- :math:`\mathbf{w}_{ij}(t) \in \mathbb{R}^k`: weight vector of the neuron at row :math:`i`, column :math:`j` at iteration :math:`t`
-- :math:`\alpha(t) \in \mathbb{R}`: learning rate at iteration :math:`t`
-- :math:`h_{ij}(t) \in \mathbb{R}`: neighborhood function value for neuron :math:`(i, j)` at iteration :math:`t`
-- :math:`\mathbf{x} \in \mathbb{R}^k`: input feature vector
+- :math:`\mathbf{w}_{ij}(t) \in \mathbb{R}^l`: codebook vector of neuron :math:`(i, j)` at epoch :math:`t`
+- :math:`\alpha(t) \in \mathbb{R}^+`: learning rate at epoch :math:`t` (see the decay schedules below)
+- :math:`h_{ij}(t) \in \mathbb{R}`: neighborhood weight for neuron :math:`(i, j)` at epoch :math:`t`
+- :math:`\mathbf{x} \in \mathbb{R}^d`: input feature vector
 
 Core Components
 ---------------
+
+.. _grid_topology_section:
 
 1. Grid Topology
 ~~~~~~~~~~~~~~~~
@@ -77,6 +95,19 @@ SOMs arrange neurons in a regular grid structure, which determines the map's top
    - Uniform neighborhood distances
    - Reduces topology errors, often preferred for advanced analysis
 
+**Periodic Boundary Conditions (PBC)**
+   - Available for both rectangular and hexagonal grids
+   - Opposite edges of the map are identified, eliminating boundary artifacts at the borders
+   - Useful when the input space has no natural boundary (e.g., cyclic features, angular data)
+     or when uniform neuron utilization is required across the entire map
+
+Under periodic boundary conditions, grid distances follow the minimum-image convention:
+
+.. math::
+   d_{\mathrm{grid}}\big((i,j),(i',j')\big) \coloneqq \min_{\mathbf{s} \in \mathcal{S}} \big\lVert \gamma(i,j) - \gamma(i',j') + \mathbf{s} \big\rVert_2
+
+where :math:`\gamma(\cdot)` maps a grid index to its coordinates and :math:`\mathcal{S}` enumerates translations by the grid periods (:math:`\mathcal{S} = \{\mathbf{0}\}` without PBC), so neighborhoods wrap across boundaries and corner neurons are not penalized.
+
 .. image:: ../_static/som/topologies.png
    :alt: Topologies with neighborhood orders
    :width: 600px
@@ -85,36 +116,38 @@ SOMs arrange neurons in a regular grid structure, which determines the map's top
 2. Neighborhood Function
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-The neighborhood function determines how much each neuron is influenced by the BMU during weight updates:
+The neighborhood function determines how much each neuron is influenced by the BMU during weight updates.
+Let :math:`\rho \coloneqq d_{\mathrm{grid}}\big((i, j), \mathrm{BMU}\big)` denote the *grid-space* distance from neuron :math:`(i, j)` to the BMU, induced by the lattice geometry. TorchSOM provides four neighborhood kernels of width :math:`\sigma(t)`:
 
 **Gaussian** (most common):
    .. math::
-      h_{ij}^{\mathrm{Gaussian}}(t) = \exp\left(-\frac{d_{ij}^2}{2\,\sigma(t)^2}\right)
+      h_{ij}^{\mathrm{gaussian}}(t) \coloneqq \exp\left(-\frac{\rho^2}{2\,\sigma(t)^2}\right)
 
-**Mexican Hat**:
+**Mexican hat** (the Ricker wavelet rescaled to a unit peak; it dips below zero in an outer ring, so :math:`h_{ij}(t) \in \mathbb{R}`):
    .. math::
-      h_{ij}^{\mathrm{Mexican}}(t) = \frac{1}{\pi\,\sigma(t)^4} \left(1 - \frac{d_{ij}^2}{2\,\sigma(t)^2}\right) \exp\left(-\frac{d_{ij}^2}{2\,\sigma(t)^2}\right)
+      h_{ij}^{\mathrm{mexican}}(t) \coloneqq \left(1 - \frac{\rho^2}{4\,\sigma(t)^2}\right) \exp\left(-\frac{\rho^2}{2\,\sigma(t)^2}\right)
 
 **Bubble**:
    .. math::
-      h_{ij}^{\mathrm{Bubble}}(t) = \begin{cases}
-         1, & \text{if } d_{ij} \leq \sigma(t) \\
-         0, & \text{otherwise}
-      \end{cases}
+      h_{ij}^{\mathrm{bubble}}(t) \coloneqq \mathbb{I}\big(\rho \le \sigma(t)\big)
 
 **Triangle**:
    .. math::
-      h_{ij}^{\mathrm{Triangle}}(t) = \max\left(0,\, 1 - \frac{d_{ij}}{\sigma(t)}\right)
+      h_{ij}^{\mathrm{triangle}}(t) \coloneqq \max\left(0,\, 1 - \frac{\rho}{\sigma(t)}\right)
 
-When updating neuron weights, the distance :math:`d_{ij}` is computed in the grid (map) space, not in the input feature space:
+The grid distance is computed in the map space, not the input feature space. On a rectangular grid it is Euclidean in the neuron coordinates,
 
 .. math::
-   d_{ij} = \sqrt{(i - c_x)^2 + (j - c_y)^2}
+   \rho = \sqrt{(i - c_i)^2 + (j - c_j)^2}
 
-where:
+where :math:`(c_i, c_j)` are the BMU coordinates and :math:`(i, j)` those of neuron :math:`\mathbf{w}_{ij}` (periodic boundaries wrap this distance; see :ref:`grid_topology_section`).
 
-- :math:`(c_x, c_y)`: coordinates of the BMU in the grid
-- :math:`(i, j)`: coordinates of neuron :math:`w_{ij}`
+Discrete neighborhoods are controlled by an integer **order** :math:`o \in \mathbb{N}^+`. On a rectangular grid, the order-:math:`o` neighborhood of the BMU at :math:`(i, j)` is the Chebyshev ball
+
+.. math::
+   N_o(\mathrm{BMU}) \coloneqq \big\{ (i', j') : \max(|i' - i|,\, |j' - j|) \le o \big\}
+
+a :math:`(2o + 1) \times (2o + 1)` block of neurons; the hexagonal grid uses the analogous hop-distance rings. The order :math:`o` sets the support of the discrete weight update and the sample-retrieval neighborhoods used for JITL (the ``neighborhood_order`` parameter and the ``collect_samples`` retrieval modes).
 
 3. Schedule Learning Rate and Neighborhood Radius Decay
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -126,11 +159,11 @@ The learning rate :math:`\alpha(t)` controls the magnitude of weight vector upda
 
 **Inverse Decay**:
    .. math::
-      \alpha(t+1) = \alpha(t) \cdot \frac{\gamma}{\gamma + t} % , \quad \text{where } \gamma = \frac{T}{100}
+      \alpha(t+1) \coloneqq \alpha(t) \cdot \frac{\gamma}{\gamma + t}
 
 **Linear Decay**:
    .. math::
-      \alpha(t+1) = \alpha(t) \cdot \left( 1 - \frac{t}{T} \right)
+      \alpha(t+1) \coloneqq \alpha(t) \cdot \left( 1 - \frac{t}{T} \right)
 
 These schedulers guarantee convergence to :math:`\alpha(T) = 0`, corresponding to zero weight updates in the final training phase, which is essential for achieving precise local weight adjustments.
 
@@ -141,11 +174,11 @@ The neighborhood radius controls the size of the neighborhood of the BMU during 
 
 **Inverse Decay**:
    .. math::
-      \sigma(t+1) = \frac{\sigma(t)}{1 + t \cdot \frac{\sigma(t) - 1}{T}}
+      \sigma(t+1) \coloneqq \frac{\sigma(t)}{1 + t \cdot \frac{\sigma(t) - 1}{T}}
 
 **Linear Decay**:
    .. math::
-      \sigma(t+1) = \sigma(t) + t \cdot \frac{1 - \sigma(t)}{T}
+      \sigma(t+1) \coloneqq \sigma(t) + t \cdot \frac{1 - \sigma(t)}{T}
 
 These schedulers guarantee convergence to :math:`\sigma(T) = 1`, corresponding to single-neuron updates in the final training phase, which is essential for achieving precise local weight adjustments.
 
@@ -155,7 +188,7 @@ Asymptotic Decay
 For arbitrary dynamic parameters requiring exponential-like decay characteristics, TorchSOM implements a general asymptotic decay scheduler:
 
 .. math::
-   \theta(t+1) = \frac{\theta(t)}{1 + \frac{t}{T/2}}
+   \theta(t+1) \coloneqq \frac{\theta(t)}{1 + \frac{t}{T/2}}
 
 where:
 
@@ -171,63 +204,50 @@ where:
 4. Distance Functions
 ~~~~~~~~~~~~~~~~~~~~~
 
-Different ways to measure similarity:
+The feature-space distance :math:`\delta` used by the BMU search is configurable. Writing :math:`x_a` and :math:`w_a` for the :math:`a`-th components:
 
 **Euclidean**:
    .. math::
-      d_{\text{Euclidean}}(x, w_{ij}) = \sqrt{\sum_{l=1}^k {(x_l - w_{ij,l})}^2}
-
-**Cosine**:
-   .. math::
-      d_{\text{cosine}}(x, w_{ij}) = 1 - \frac{x \cdot w_{ij}}{\|x\| \|w_{ij}\|}
+      \delta_{\mathrm{euclidean}}(\mathbf{x}, \mathbf{w}) \coloneqq \sqrt{\sum_{a=1}^{d} (x_a - w_a)^2}
 
 **Manhattan**:
    .. math::
-      d_{\text{Manhattan}}(x, w_{ij}) = \sum_{l=1}^k |x_l - w_{ij,l}|
+      \delta_{\mathrm{manhattan}}(\mathbf{x}, \mathbf{w}) \coloneqq \sum_{a=1}^{d} |x_a - w_a|
+
+**Cosine**:
+   .. math::
+      \delta_{\mathrm{cosine}}(\mathbf{x}, \mathbf{w}) \coloneqq 1 - \frac{\mathbf{x} \cdot \mathbf{w}}{\lVert \mathbf{x} \rVert\, \lVert \mathbf{w} \rVert}
 
 **Chebyshev**:
    .. math::
-      d_{\text{Chebyshev}}(x, w_{ij}) = \max_{l} |x_l - w_{ij,l}|
+      \delta_{\mathrm{chebyshev}}(\mathbf{x}, \mathbf{w}) \coloneqq \max_{a \le d} |x_a - w_a|
 
-where:
-   - :math:`x \in \mathbb{R}^k`: input feature vector
-   - :math:`w_{ij} \in \mathbb{R}^k`: weight vector of the neuron at row :math:`i`, column :math:`j`
-   - :math:`k \in \mathbb{N}`: number of features
-   - :math:`l \in \{1, \ldots, k\}`: feature index
+where :math:`\mathbf{x}, \mathbf{w} \in \mathbb{R}^d` and :math:`d \in \mathbb{N}` is the number of features.
 
 5. Quality Metrics
 ~~~~~~~~~~~~~~~~~~
 
-**Quantization Error**
-Average distance between data points and their BMUs. Lower is better, measures how well the map represents the data.
+**Quantization Error (QE)**
 
-**Quantization Error**
-
-Average distance between data points and their BMUs. Lower is better; measures how well the map represents the data.
+Average distance between data points and their BMUs. Lower is better; it measures how well the map represents the data.
 
 .. math::
+   \mathrm{QE} \coloneqq \frac{1}{N} \sum_{k=1}^{N} \big\lVert \mathbf{x}_k - \mathbf{w}_{\mathrm{BMU}(\mathbf{x}_k)} \big\rVert_2
 
-   \mathrm{QE} = \frac{1}{N} \sum_{i=1}^{N} \left\| x_i - w_{\mathrm{BMU}}(x_i) \right\|_2
+**Topographic Error (TE)**
 
-**Topographic Error**
-
-Percentage of data points whose BMU and second-BMU are not neighbors. Lower is better; measures topology preservation.
+Fraction of data points whose BMU and second-BMU are not grid-adjacent. Lower is better; it measures topology preservation.
 
 .. math::
-
-   \mathrm{TE} = \frac{1}{N} \sum_{i=1}^{N} \mathbb{I} \left( d_{\mathrm{grid}} \left( w_{\mathrm{BMU}}(x_i),\ w_{\mathrm{2nd\text{-}BMU}}(x_i) \right) > d_{\mathrm{th}} \right )
-
+   \mathrm{TE} \coloneqq \frac{1}{N} \sum_{k=1}^{N} \mathbb{I}\big( d_{\mathrm{grid}}(\mathrm{BMU}(\mathbf{x}_k),\, \mathrm{BMU}_2(\mathbf{x}_k)) > d_{\mathrm{th}} \big)
 
 where:
 
-   - :math:`N \in \mathbb{N}`: Number of training samples
-   - :math:`x_i \in \mathbb{R}^k`: The :math:`i`-th input training sample
-   - :math:`w_{\text{BMU}}(x_i) \in \mathbb{R}^k`: Weight vector of the Best Matching Unit (BMU) for input :math:`x_i`
-   - :math:`w_{\text{2nd-BMU}}(x_i) \in \mathbb{R}^k`: Weight vector of the second BMU for input :math:`x_i`
-   - :math:`d_{\text{th}} \in \mathbb{R}^+`: Threshold distance for topological adjacency (typically :math:`d_{\text{th}} = 1`)
-   - :math:`\mathbb{I}(\cdot) \in \{0, 1\}`: Indicator function
-   - :math:`\| \cdot \|_2`: Euclidean norm in feature space
-   - :math:`d_{\text{grid}}(\cdot, \cdot)`: Grid space distance between BMUs of input :math:`x_i`
+   - :math:`N \in \mathbb{N}`: number of training samples
+   - :math:`\mathbf{x}_k \in \mathbb{R}^d`: the :math:`k`-th input sample
+   - :math:`\mathrm{BMU}_2(\mathbf{x}_k)`: the second-closest neuron in feature space
+   - :math:`d_{\mathrm{th}} \in \mathbb{R}^+`: grid-adjacency threshold (typically :math:`d_{\mathrm{th}} = 1`)
+   - :math:`\mathbb{I}(\cdot) \in \{0, 1\}`: indicator function
 
 
 Strengths and Weaknesses
@@ -273,9 +293,13 @@ Interpretation
 3. **Validate findings** with other analysis methods
 4. **Document parameter choices** for reproducibility
 
-Next Steps
+Next steps
 ----------
 
 Now that you understand the basics, explore:
 
-- :doc:`../user_guide/visualization_help` - Visualization techniques
+- :doc:`../user_guide/architecture` — How these concepts map to the package structure and APIs
+- :doc:`../user_guide/topologies` — Choosing a topology and periodic boundary conditions
+- :doc:`../user_guide/training` — Decay schedules and training configuration
+- :doc:`../user_guide/visualization_help` — Visualization gallery
+- :doc:`quickstart` — A minimal end-to-end example

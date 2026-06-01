@@ -7,15 +7,23 @@ from pathlib import Path
 from sphinx.application import Sphinx
 
 
+def _read_version() -> str:
+    """Read the package version from pyproject.toml."""
+    pyproject = Path(__file__).resolve().parents[2] / "pyproject.toml"
+    if pyproject.exists():
+        for line in pyproject.read_text().splitlines():
+            if line.strip().startswith('version = "'):
+                return line.split('"')[1]
+    return "0.0.0"
+
+
 def _copy_repo_assets_to_static() -> None:
     """Copy repo-level assets/ into docs/_static/assets for reliable access."""
-    print("Copying repo-level assets/ into docs/_static/assets for reliable access.")
     repo_root = Path(__file__).resolve().parents[2]
     src = repo_root / "assets"
     dst = Path(__file__).parent / "_static" / "assets"
     if src.exists():
         dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copytree(src, dst, dirs_exist_ok=True)
         with suppress(Exception):
             shutil.copytree(src, dst, dirs_exist_ok=True)
 
@@ -25,32 +33,28 @@ def setup(app: Sphinx) -> None:  # noqa: ARG001
     _copy_repo_assets_to_static()
 
 
-# Configuration file for the Sphinx documentation builder.
-#
-# For the full list of built-in configuration values, see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
-
 # -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "TorchSOM"
 copyright = "2025, Manufacture Française des Pneumatiques Michelin"
 author = "Louis Berthier"
-release = "0.0.1"
+release = _read_version()
 
 # -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    "sphinx.ext.duration",  # Reports build duration per step.
-    "sphinx.ext.doctest",  # Allows running doctests in code snippets embedded in the documentation.
-    "sphinx.ext.autodoc",  # Automatically includes documentation from Python docstrings.
-    "sphinx.ext.autosummary",  # Generates summary tables for modules/functions/classes with short descriptions.
-    "sphinx.ext.intersphinx",  # Links to objects in external documentation projects (e.g., Python, NumPy).
-    "sphinx.ext.viewcode",  # Adds links to highlighted source code.
-    "sphinx.ext.githubpages",  # Adds .nojekyll file needed for GitHub Pages deployment.
-    "sphinx_copybutton",  # Adds a "copy to clipboard" button on code blocks.
-    "sphinx.ext.napoleon",  # Enables parsing of NumPy/Google-style docstrings.
+    "sphinx.ext.duration",
+    "sphinx.ext.doctest",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.mathjax",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.githubpages",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.todo",
+    "sphinx_copybutton",
+    "sphinx_design",
 ]
 
 autodoc_typehints = "description"
@@ -58,36 +62,56 @@ autosummary_generate = True
 templates_path = ["_templates"]
 exclude_patterns = []
 
+# -- MathJax configuration ---------------------------------------------------
+# Define LaTeX macros used in the math so the docs match the JMLR paper's
+# notation. MathJax v3 core does not provide \coloneqq (it comes from the
+# mathtools package in LaTeX), so it is declared here.
+mathjax3_config = {
+    "tex": {
+        "macros": {
+            "coloneqq": "\\mathrel{:=}",
+        },
+    },
+}
+
+# -- Intersphinx mapping -----------------------------------------------------
+
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", None),
+    "torch": ("https://pytorch.org/docs/stable", None),
+    "sklearn": ("https://scikit-learn.org/stable", None),
+    "numpy": ("https://numpy.org/doc/stable", None),
+    "matplotlib": ("https://matplotlib.org/stable", None),
+    "pydantic": ("https://docs.pydantic.dev/latest", None),
+}
 
 # -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "sphinx_rtd_theme"  # "alabaster" "sphinx_rtd_theme"
+html_theme = "furo"
 html_theme_options = {
-    # "analytics_id": "G-XXXXXXXXXX",  # Google Analytics ID to enable pageview tracking, provided in the Google Analytics account.
-    "analytics_anonymize_ip": False,  # If True, anonymizes user IP addresses in analytics data.
-    "logo_only": False,  # If True, displays only the logo without project title text.
-    "prev_next_buttons_location": "both",  # Places "Previous" and "Next" navigation buttons at the bottom of the page. Options: 'top', 'bottom', 'both'.
-    "style_external_links": False,  # If True, adds an external link icon to all external hyperlinks.
-    "vcs_pageview_mode": "",  # Version control system mode (e.g., 'blob' for GitHub). Empty disables this.
-    "style_nav_header_background": "#B22222",  # Changes the hex color of the top left header containing the logo.
-    "flyout_display": "hidden",  # Controls behavior of sidebar flyouts. 'hidden' disables them.
-    "version_selector": True,  # Enables a UI component for selecting documentation versions (requires configuration).
-    "language_selector": True,  # Enables a UI component for selecting languages (requires localization setup).
-    "collapse_navigation": False,  # Collapses sub-sections in the sidebar for cleaner appearance. If False then expend.
-    "sticky_navigation": True,  # Keeps sidebar navigation fixed while scrolling.
-    "navigation_depth": 4,  # Enables deeper table-of-contents nesting in the sidebar.
-    "includehidden": True,  # Includes hidden TOC entries in the sidebar.
-    "titles_only": False,  # If True, shows only the page titles (no section titles) in the sidebar.
+    "source_repository": "https://github.com/michelin/TorchSOM",
+    "source_branch": "main",
+    "source_directory": "docs/source/",
+    "light_css_variables": {
+        "color-brand-primary": "#B22222",
+        "color-brand-content": "#B22222",
+    },
+    "dark_css_variables": {
+        "color-brand-primary": "#E05555",
+        "color-brand-content": "#E05555",
+    },
+    "sidebar_hide_name": False,
+    "navigation_with_keys": True,
 }
 
-html_context = {
-    "display_github": True,  # Enable GitHub link in the header
-    "github_user": "LouisTier",
-    "github_repo": "TorchSOM",
-    "github_version": "dev_org",
-    "conf_py_path": "/docs/source/",
-}
 html_static_path = ["_static"]
 html_logo = "_static/assets/logo.png"
-# html_favicon = "../../favicon.ico" # Icon shown in the browser tab
+
+# -- Todo extension ----------------------------------------------------------
+# Author-facing only: keep ``.. todo::`` notes out of the published HTML.
+todo_include_todos = False
+
+# -- Linkcheck ---------------------------------------------------------------
+# PyTorch's documentation renders anchors client-side, so linkcheck cannot verify
+# them from static HTML even though intersphinx resolves the targets at build time.
+linkcheck_anchors_ignore_for_url = [r"https://docs\.pytorch\.org/.*"]

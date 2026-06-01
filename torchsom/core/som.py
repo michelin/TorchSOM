@@ -1,7 +1,9 @@
 """PyTorch implementation of classic Self Organizing Maps using batch learning."""
 
+import math
 import warnings
-from typing import Any, Callable, Optional, Union
+from collections.abc import Callable
+from typing import Any
 
 import torch
 import torch.nn as nn
@@ -21,6 +23,7 @@ from torchsom.utils.metrics import (
     calculate_topographic_error,
 )
 from torchsom.utils.neighborhood import NEIGHBORHOOD_FUNCTIONS
+from torchsom.utils.search import create_search_strategy
 from torchsom.utils.topology import get_all_neighbors_up_to_order
 
 
@@ -47,6 +50,8 @@ class SOM(BaseSOM):
         neighborhood_function: str = "gaussian",
         distance_function: str = "euclidean",
         initialization_mode: str = "random",
+        pbc: bool = False,
+        search_backend: str = "auto",
         device: str = "cuda" if torch.cuda.is_available() else "cpu",
         random_seed: int = 42,
     ):
@@ -67,6 +72,8 @@ class SOM(BaseSOM):
             neighborhood_function (str, optional): Function to update the weights at each epoch (training). Defaults to "gaussian".
             distance_function (str, optional): Function to compute the distance between grid weights and input data. Defaults to "euclidean".
             initialization_mode (str, optional): Method to initialize SOM weights. Defaults to "random".
+            pbc (bool, optional): Enable periodic boundary conditions (toroidal topology). Defaults to False.
+            search_backend (str, optional): BMU search backend. ``"auto"`` uses FAISS when available, ``"torch"`` forces PyTorch brute-force, ``"faiss"`` forces FAISS. Defaults to "auto".
             device (str, optional): Allocate tensors on CPU or GPU. Defaults to "cuda" if available, else "cpu".
             random_seed (int, optional): Ensure reproducibility. Defaults to 42.
 
@@ -89,6 +96,8 @@ class SOM(BaseSOM):
             raise ValueError("Invalid distance function")
         if neighborhood_function not in NEIGHBORHOOD_FUNCTIONS:
             raise ValueError("Invalid neighborhood function")
+        if search_backend not in ("auto", "torch", "faiss"):
+            raise ValueError("search_backend must be 'auto', 'torch', or 'faiss'")
 
         self.x = x
         self.y = y
@@ -99,6 +108,7 @@ class SOM(BaseSOM):
         self.batch_size = batch_size
         self.device = device
         self.topology = topology
+        self.pbc = pbc
         self.random_seed = random_seed
         self.neighborhood_order = neighborhood_order
         self.distance_fn_name = distance_function
@@ -109,6 +119,13 @@ class SOM(BaseSOM):
         )
         self.lr_decay_fn = DECAY_FUNCTIONS[lr_decay_function]
         self.sigma_decay_fn = DECAY_FUNCTIONS[sigma_decay_function]
+        self._search_strategy = create_search_strategy(
+            backend=search_backend,
+            distance_fn=self.distance_fn,
+            distance_fn_name=distance_function,
+            n_neurons=x * y,
+            device=device,
+        )
 
         x_meshgrid, y_meshgrid = create_mesh_grid(x, y, device)
         self.xx, self.yy = adjust_meshgrid_topology(x_meshgrid, y_meshgrid, topology)
@@ -119,12 +136,6 @@ class SOM(BaseSOM):
         normalized_weights = weights / torch.norm(weights, dim=-1, keepdim=True)
         self.weights = nn.Parameter(normalized_weights, requires_grad=False)
 
-        """
-        Pre-compute:
-            1. Coordinate distance matrices for efficient distance calculations
-            2. Neighbor offsets for topology operations
-            3. Decay schedules for all epochs at once
-        """
         self._precompute_coordinate_distances()
         self._precompute_neighbor_offsets()
         self.lr_schedule, self.sigma_schedule = self._precompute_decay_schedules(
@@ -132,12 +143,22 @@ class SOM(BaseSOM):
         )
 
     def _precompute_coordinate_distances(self) -> None:
-        """Pre-compute coordinate distance matrices for all neuron pairs, used during neighborhood calculations."""
-        # Pre-compute coordinates for all neurons: [x*y, 2]
+        """Pre-compute coordinate distance matrices for all neuron pairs, used during neighborhood calculations.
+
+        When ``pbc=True``, applies the minimum-image convention so that
+        coordinate distances wrap around the grid boundaries (toroidal topology).
+        """
         coords = torch.stack([self.xx.flatten(), self.yy.flatten()], dim=1)
-        # Calculate pairwise coordinate distances between all neurons: [x*y, x*y, 2]
         coord_diff = coords.unsqueeze(1) - coords.unsqueeze(0)
-        # Squared distance between each pair of neurons: [x*y, x*y]
+
+        if self.pbc:
+            grid_size_x = float(self.x)
+            grid_size_y = float(self.y)
+            if self.topology == "hexagonal":
+                grid_size_y *= math.sqrt(3) / 2
+            grid_size = torch.tensor([grid_size_x, grid_size_y], device=coords.device)
+            coord_diff = coord_diff - grid_size * torch.round(coord_diff / grid_size)
+
         self.coord_distances_sq = torch.sum(coord_diff**2, dim=2)
 
     def _precompute_neighbor_offsets(self) -> None:
@@ -149,6 +170,28 @@ class SOM(BaseSOM):
         if self.topology == "hexagonal":
             self._even_row_offsets = self._neighbor_offsets["even"]
             self._odd_row_offsets = self._neighbor_offsets["odd"]
+
+    def set_neighborhood_order(
+        self,
+        neighborhood_order: int,
+    ) -> None:
+        """Update the neighborhood order and recompute neighbor offsets.
+
+        This only affects retrieval (``collect_samples``); trained weights
+        are untouched.
+
+        Args:
+            neighborhood_order (int): New neighborhood order (>= 1).
+
+        Raises:
+            ValueError: If neighborhood_order < 1.
+        """
+        if neighborhood_order < 1:
+            raise ValueError(
+                f"neighborhood_order must be >= 1, got {neighborhood_order}"
+            )
+        self.neighborhood_order = neighborhood_order
+        self._precompute_neighbor_offsets()
 
     def _precompute_decay_schedules(
         self,
@@ -223,8 +266,8 @@ class SOM(BaseSOM):
         updates = (weighted_data - neighborhood_sum.unsqueeze(-1) * self.weights) * (
             learning_rate / batch_size
         )
-        # Update weights: [x, y, features]
         self.weights.data += updates
+        self._search_strategy.rebuild_index(self.weights)
 
     def _calculate_distances_to_neurons(
         self,
@@ -254,33 +297,29 @@ class SOM(BaseSOM):
     ) -> torch.Tensor:
         """Find BMUs for input data.
 
+        Uses the configured search strategy (PyTorch brute-force or FAISS).
+
         Args:
-            data (torch.Tensor): Input tensor of shape [batch_size, features]
+            data (torch.Tensor): Input tensor of shape [batch_size, features] or [features]
 
         Returns:
-            torch.Tensor: BMU coordinates as tensor [batch_size, 2]
+            torch.Tensor: BMU coordinates as tensor [batch_size, 2] or [2]
         """
-        # Compute distances between data and all neurons: [batch_size, x, y]
-        distances = self._calculate_distances_to_neurons(data)
+        data = data.to(self.device)
+        single = data.dim() == 1
+        if single:
+            data = data.unsqueeze(0)
 
-        # Handle single sample case: [x, y]
-        if distances.dim() == 2:
-            # Find the index of the minimum distance: [1]
-            index = torch.argmin(distances.view(-1))
-            # Convert flat index to 2D coordinates: [1, 2]
-            row, col = torch.unravel_index(index, (self.x, self.y))
-            return torch.stack([row, col], dim=0).to(data.device)
-        # Batch samples: [batch_size, x, y]
-        else:
-            batch_size = distances.shape[0]
-            # Flatten distances: [batch_size, x*y]
-            distances_flat = distances.view(batch_size, -1)
-            # Find the index of the minimum distance for each sample: [batch_size]
-            indices = torch.argmin(distances_flat, dim=1)
-            # Convert flat indices to 2D coordinates: [batch_size, 2]
-            rows = torch.div(indices, self.y, rounding_mode="floor")
-            cols = indices % self.y
-            return torch.stack([rows, cols], dim=1)
+        _, indices = self._search_strategy.search(data, self.weights, k=1)
+        flat_indices = indices.squeeze(1)
+
+        rows = torch.div(flat_indices, self.y, rounding_mode="floor")
+        cols = flat_indices % self.y
+        result = torch.stack([rows, cols], dim=1)
+
+        if single:
+            return result.squeeze(0)
+        return result
 
     def quantization_error(
         self,
@@ -315,13 +354,13 @@ class SOM(BaseSOM):
         if data.dim() == 1:
             data = data.unsqueeze(0)
         return calculate_topographic_error(
-            data, self.weights, self.distance_fn, self.topology
+            data, self.weights, self.distance_fn, self.topology, pbc=self.pbc
         )
 
     def initialize_weights(
         self,
         data: torch.Tensor,
-        mode: Optional[str] = None,
+        mode: str | None = None,
     ) -> None:
         """Data should be normalized before initialization.
 
@@ -408,6 +447,8 @@ class SOM(BaseSOM):
 
         return epoch_q_errors, epoch_t_errors
 
+    _VALID_RETRIEVAL_MODES = ("bmu_only", "bmu_neighborhood", "bmu_neighborhood_knn")
+
     def collect_samples(
         self,
         query_sample: torch.Tensor,
@@ -416,24 +457,45 @@ class SOM(BaseSOM):
         bmus_idx_map: dict[tuple[int, int], list[int]],
         min_buffer_threshold: int = 50,
         return_indices: bool = False,
-    ) -> Union[
-        tuple[torch.Tensor, torch.Tensor],
-        tuple[torch.Tensor, torch.Tensor, torch.Tensor],
-    ]:
+        retrieval_mode: str = "bmu_neighborhood_knn",
+    ) -> (
+        tuple[torch.Tensor, torch.Tensor]
+        | tuple[torch.Tensor, torch.Tensor, torch.Tensor]
+    ):
         """Collect historical samples similar to the query sample using SOM projection.
 
+        Three retrieval modes control the collection strategy:
+
+        - ``"bmu_only"``: Collect samples mapped to the query's BMU cell only.
+        - ``"bmu_neighborhood"``: Collect from BMU + topological neighbors
+          (up to ``neighborhood_order`` hops). No KNN fallback.
+        - ``"bmu_neighborhood_knn"`` (default): Same as ``bmu_neighborhood``,
+          plus KNN fallback in weight space when the buffer is below
+          ``min_buffer_threshold``.
+
         Args:
-            query_sample (torch.Tensor): Query sample tensor [num_features]
-            historical_samples (torch.Tensor): Historical samples tensor [num_samples, num_features]
-            historical_outputs (torch.Tensor): Historical outputs tensor [num_samples]
-            bmus_idx_map (dict[tuple[int, int], list[int]]): BMU to data indices mapping
-            min_buffer_threshold (int): Minimum buffer threshold
-            return_indices (bool): If True, also return the indices of collected samples
+            query_sample (torch.Tensor): Query sample tensor [num_features].
+            historical_samples (torch.Tensor): Historical samples tensor [num_samples, num_features].
+            historical_outputs (torch.Tensor): Historical outputs tensor [num_samples].
+            bmus_idx_map (dict[tuple[int, int], list[int]]): BMU to data indices mapping.
+            min_buffer_threshold (int): Minimum buffer size before KNN fallback triggers.
+                Only used when ``retrieval_mode="bmu_neighborhood_knn"``.
+            return_indices (bool): If True, also return the indices of collected samples.
+            retrieval_mode (str): Retrieval strategy. One of ``"bmu_only"``,
+                ``"bmu_neighborhood"``, or ``"bmu_neighborhood_knn"`` (default).
 
         Returns:
             If return_indices is False: (historical_data_buffer, historical_output_buffer)
             If return_indices is True: (historical_data_buffer, historical_output_buffer, indices_tensor)
+
+        Raises:
+            ValueError: If ``retrieval_mode`` is not one of the valid modes.
         """
+        if retrieval_mode not in self._VALID_RETRIEVAL_MODES:
+            raise ValueError(
+                f"retrieval_mode must be one of {self._VALID_RETRIEVAL_MODES}, "
+                f"got '{retrieval_mode}'"
+            )
         query_sample = query_sample.to(self.device)
         bmu_pos = self.identify_bmus(query_sample)
         bmu_row, bmu_col = int(bmu_pos[0].item()), int(bmu_pos[1].item())
@@ -444,19 +506,28 @@ class SOM(BaseSOM):
             row_type = "even" if bmu_row % 2 == 0 else "odd"
             offsets = self._neighbor_offsets[row_type]
 
-        # Collect samples from BMU and its topological neighbors
+        # Tier 1: Always collect from BMU cell
         collected_sample_indices = list(bmus_idx_map.get(bmu_tuple, []))
         visited_neurons = {bmu_tuple}
-        for dx, dy in offsets:
-            nr, nc = bmu_row + dx, bmu_col + dy
-            if 0 <= nr < self.x and 0 <= nc < self.y:
+
+        # Tier 2: Neighborhood expansion (skip for bmu_only)
+        if retrieval_mode != "bmu_only":
+            for dx, dy in offsets:
+                nr, nc = bmu_row + dx, bmu_col + dy
+                if self.pbc:
+                    nr, nc = nr % self.x, nc % self.y
+                elif not (0 <= nr < self.x and 0 <= nc < self.y):
+                    continue
                 pos = (nr, nc)
                 if pos not in visited_neurons and pos in bmus_idx_map:
                     collected_sample_indices.extend(bmus_idx_map[pos])
                     visited_neurons.add(pos)
 
-        # If we need more samples, use distance-based collection
-        if len(collected_sample_indices) <= min_buffer_threshold:
+        # Tier 3: KNN fallback in weight space (only for bmu_neighborhood_knn)
+        if (
+            retrieval_mode == "bmu_neighborhood_knn"
+            and len(collected_sample_indices) <= min_buffer_threshold
+        ):
             bmu_weights = self.weights[bmu_row, bmu_col]
             distances = self._calculate_distances_to_neurons(bmu_weights)
 
@@ -468,7 +539,7 @@ class SOM(BaseSOM):
                     candidate_neurons.append((dist, r, c))
             candidate_neurons.sort(key=lambda x: x[0])
 
-            # Collect samples from candidate unvisitedneurons
+            # Collect from nearest unvisited neurons until threshold
             for _, r, c in candidate_neurons:
                 collected_sample_indices.extend(bmus_idx_map[(r, c)])
                 visited_neurons.add((r, c))
@@ -490,9 +561,9 @@ class SOM(BaseSOM):
     def build_map(
         self,
         map_type: str,
-        data: Optional[torch.Tensor] = None,
-        target: Optional[torch.Tensor] = None,
-        bmus_data_map: Optional[dict[tuple[int, int], list[int]]] = None,
+        data: torch.Tensor | None = None,
+        target: torch.Tensor | None = None,
+        bmus_data_map: dict[tuple[int, int], list[int]] | None = None,
         **kwargs: Any,
     ) -> torch.Tensor:
         """Unified method to build various types of maps.
@@ -580,7 +651,7 @@ class SOM(BaseSOM):
         self,
         map_configs: list[dict[str, Any]],
         data: torch.Tensor,
-        target: Optional[torch.Tensor] = None,
+        target: torch.Tensor | None = None,
         batch_size: int = 1024,
     ) -> dict[str, torch.Tensor]:
         """Efficiently build multiple maps by reusing BMUs computation.
@@ -595,13 +666,15 @@ class SOM(BaseSOM):
             dict[str, torch.Tensor]: Dictionary mapping map names to their results
 
         Example:
-            configs = [
-                {'type': 'hit'},
-                {'type': 'metric', 'kwargs': {'reduction_parameter': 'std'}},
-                {'type': 'rank'},
-                {'type': 'classification', 'kwargs': {'neighborhood_order': 2}}
-            ]
-            results = som.build_multiple_maps(configs, data, target)
+            .. code-block:: python
+
+                configs = [
+                    {"type": "hit"},
+                    {"type": "metric", "kwargs": {"reduction_parameter": "std"}},
+                    {"type": "rank"},
+                    {"type": "classification", "kwargs": {"neighborhood_order": 2}},
+                ]
+                results = som.build_multiple_maps(configs, data, target)
         """
         data_dependent_maps = {"hit", "bmus_data"}
         bmus_dependent_maps = {"metric", "score", "rank", "classification"}
@@ -639,7 +712,7 @@ class SOM(BaseSOM):
     def cluster(
         self,
         method: str = "kmeans",
-        n_clusters: Optional[int] = None,
+        n_clusters: int | None = None,
         feature_space: str = "weights",
         **kwargs: Any,
     ) -> dict[str, Any]:

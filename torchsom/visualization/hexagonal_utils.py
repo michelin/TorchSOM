@@ -1,7 +1,6 @@
 """Utility functions for hexagonal grid visualization."""
 
 import math
-from typing import Union
 
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
@@ -108,8 +107,8 @@ def create_hexagon_patch(
 def create_hexagonal_grid_patches(
     map_data: torch.Tensor,
     hex_radius: float = 0.4,
-    cmap: Union[Colormap, None] = None,
-    norm: Union[Normalize, None] = None,
+    cmap: Colormap | None = None,
+    norm: Normalize | None = None,
     edgecolor: str = "white",
     linewidth: float = 0.5,
 ) -> tuple[list[RegularPolygon], float, float, float, float]:
@@ -118,7 +117,8 @@ def create_hexagonal_grid_patches(
     Args:
         map_data (torch.Tensor): Data to visualize [rows, cols]
         hex_radius (float): Radius of hexagonal cells
-        cmap_name (str): Name of the colormap to use
+        cmap (Colormap): Colormap instance to use for coloring patches.
+        norm (Normalize): Normalization instance to map data values to colormap range.
         edgecolor (str): Color of hexagon borders
         linewidth (float): Width of hexagon borders
 

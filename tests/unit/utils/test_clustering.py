@@ -22,6 +22,8 @@ pytestmark = [
 
 
 class TestSOMClustering:
+    """Tests for clustering via the SOM.cluster() interface."""
+
     def test_som_cluster_basic(
         self,
         som_trained: SOM,
@@ -175,13 +177,15 @@ class TestSOMClustering:
 
 
 class TestClusteringUtilities:
+    """Tests for the standalone clustering utility functions."""
+
     def test_cluster_kmeans_basic(
         self,
         well_separated_clusters: tuple[torch.Tensor, torch.Tensor],
         device: str,
     ) -> None:
         """Test basic K-means clustering functionality."""
-        data, expected_labels = well_separated_clusters
+        data, _expected_labels = well_separated_clusters
         data = data.to(device)
 
         # Test with known number of clusters
@@ -258,8 +262,8 @@ class TestClusteringUtilities:
 
         assert isinstance(result, dict)
         assert result["n_clusters"] >= 1
-        assert isinstance(result["bic"], (float, np.floating))
-        assert isinstance(result["aic"], (float, np.floating))
+        assert isinstance(result["bic"], float | np.floating)
+        assert isinstance(result["aic"], float | np.floating)
 
     def test_cluster_data_dispatcher(
         self,
