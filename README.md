@@ -61,9 +61,12 @@ This library accompanies the paper: [*torchsom: The Reference PyTorch Library fo
 
 ### Key Results
 
-Benchmarked against [MiniSom](https://github.com/JustGlowing/minisom) on synthetic datasets (240–16,000 samples, 4–300 features) with identical hyperparameters:
+Benchmarked on synthetic datasets (240–16,000 samples, 4–300 features) with identical hyperparameters, comparing like with like on each device:
 
-| Metric | Improvement |
+- **CPU** — against [MiniSom](https://github.com/JustGlowing/minisom) (standard and Numba-JIT) and [somoclu](https://github.com/peterwittek/somoclu) (OpenMP).
+- **GPU** — against [somoclu](https://github.com/peterwittek/somoclu) (CUDA C++), a genuine GPU baseline.
+
+| Metric | Result (vs MiniSom, CPU) |
 | --- | --- |
 | **Training speed** | Up to **99% faster** (GPU) and **77–98% faster** (CPU) |
 | **Topographic Error** | **34–81% lower** — better topology preservation |
@@ -71,7 +74,7 @@ Benchmarked against [MiniSom](https://github.com/JustGlowing/minisom) on synthet
 
 > Hardware: Intel Xeon Platinum 8370C (CPU), NVIDIA Tesla T4 (GPU). See the [paper](https://arxiv.org/abs/2510.11147) for full benchmark tables.
 >
-> **Reproducing the JMLR benchmarks.** All scripts, configurations, and the exact MiniSom pin (`v2.3.5` / `65b6ba6`) used to produce these numbers are released under [`benchmark/`](benchmark/) — see [`benchmark/README.md`](benchmark/README.md) for a step-by-step walkthrough. Two annotated tags pin the version of record: `jmlr-submission-v1` (original October 2025 submission) and `jmlr-revision-v1` (accepted revised version). `git checkout <tag>` reproduces the corresponding Table 2.
+> **Reproducing the JMLR benchmarks.** All scripts and configurations are released under [`benchmark/`](benchmark/) — see [`benchmark/README.md`](benchmark/README.md) for a step-by-step walkthrough, including the exact MiniSom pins and somoclu setup. Three annotated tags pin the versions of record: `jmlr-submission-v1` (original October 2025 submission), `jmlr-revision-v1` (first revision), and `jmlr-revision-v2` (adds the somoclu and MiniSom-JIT baselines). `git checkout <tag>` reproduces the corresponding tables.
 
 ---
 
@@ -95,6 +98,7 @@ Training quality is assessed via **Quantization Error** (representation fidelity
 | --- | --- | --- | --- | --- | --- | --- |
 | Framework | **PyTorch** | NumPy | NumPy | NumPy | C++/CUDA | NumPy |
 | GPU Acceleration | ✅ CUDA | ❌ | ✅ CuPy/CUML | ❌ | ✅ CUDA | ❌ |
+| JIT Compilation | ✅ PyTorch | ✅ Numba (opt-in) | ❌ | ❌ | ❌ (AOT C++) | ❌ |
 | API Design | **scikit-learn** | Custom | Custom | MATLAB | Custom | Custom |
 | Maintenance | ✅ Active | ✅ Active | ⚠️ Minimal | ⚠️ Minimal | ⚠️ Minimal | ❌ |
 | Documentation | ✅ Rich | ❌ | ⚠️ Basic | ❌ | ⚠️ Basic | ⚠️ Basic |

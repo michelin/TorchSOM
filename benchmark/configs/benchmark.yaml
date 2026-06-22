@@ -4,9 +4,11 @@ general:
   n_iter: 10
   mode: azure # local or azure
   output_dir: results
-  device: cuda # cpu or cuda
+  device: cuda # cpu or cuda (drives torchsom device AND somoclu kerneltype: cuda->GPU)
   use_torchsom: true
-  use_minisom: true
+  use_minisom: true # standard online train(), no JIT -> the canonical CPU baseline
+  use_minisom_jit: true # numba batch-offline train_batch_offline_fast() (CPU); needs MiniSom dev branch + numba
+  use_somoclu: true # C++/CUDA baseline; CPU (kerneltype=0) or GPU (kerneltype=1) per device; needs compiled binary
   train_ratio: 0.8
   save_plots: true
   save_format: pdf

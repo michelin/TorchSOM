@@ -92,6 +92,12 @@ dev = [
     "pre-commit",
     "typer",
     "minisom>=2.3.6",
+    # Benchmark baselines (see benchmark/README.md for exact pins):
+    #   - numba enables MiniSom's JIT path (train_batch_offline_fast).
+    #   - somoclu is the C++/CUDA baseline; its GPU kernel needs a CUDA build, and on
+    #     macOS the default pip install lacks a compiled binary (run it on Linux/GPU).
+    "numba",
+    "somoclu",
 ]
 tests = [
     "pytest",

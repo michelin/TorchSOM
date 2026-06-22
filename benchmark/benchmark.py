@@ -20,6 +20,7 @@ import torch
 import typer
 import yaml
 from minisom import MiniSom
+from scipy.spatial.distance import cdist
 
 from torchsom.core import SOM
 from torchsom.visualization import SOMVisualizer, VisualizationConfig
@@ -75,6 +76,53 @@ def compute_errors(
     return full_train_qe, full_train_te, full_test_qe, full_test_te
 
 
+def compute_errors_somoclu(
+    codebook: np.ndarray,
+    n_rows: int,
+    n_columns: int,
+    train_features: np.ndarray,
+    test_features: np.ndarray,
+) -> tuple[float, float, float, float]:
+    """Compute QE and TE for a trained somoclu codebook.
+
+    Unlike MiniSom and torchsom, somoclu exposes neither ``quantization_error`` nor
+    ``topographic_error``. We therefore compute them here directly from the codebook,
+    replicating MiniSom's definitions so the somoclu column stays directly comparable
+    with the MiniSom column:
+
+    - **QE**: mean Euclidean distance from each sample to its best-matching unit (BMU).
+    - **TE**: fraction of samples whose first and second BMUs are not 8-neighbours on the
+      grid (grid-distance threshold ``1.42``), identical to
+      ``MiniSom._topographic_error_rectangular``.
+
+    Args:
+        codebook: somoclu codebook of shape ``(n_rows, n_columns, n_features)``.
+        n_rows: number of grid rows (somoclu ``n_rows`` == ``y_size``).
+        n_columns: number of grid columns (somoclu ``n_columns`` == ``x_size``).
+        train_features: training data of shape ``(n_train, n_features)``.
+        test_features: test data of shape ``(n_test, n_features)``.
+
+    Returns:
+        Tuple ``(train_qe, train_te, test_qe, test_te)``.
+    """
+    weights = codebook.reshape(n_rows * n_columns, codebook.shape[-1])
+
+    def _qe_te(data: np.ndarray) -> tuple[float, float]:
+        distances = cdist(data, weights)  # (n_samples, n_units)
+        b2mu = np.argsort(distances, axis=1)[:, :2]  # 2 closest units per sample
+        qe = float(distances[np.arange(len(data)), b2mu[:, 0]].mean())
+        rows, cols = np.unravel_index(b2mu, (n_rows, n_columns))
+        grid_dist = np.sqrt(
+            np.diff(rows, axis=1).ravel() ** 2 + np.diff(cols, axis=1).ravel() ** 2
+        )
+        te = float((grid_dist > 1.42).mean())
+        return qe, te
+
+    train_qe, train_te = _qe_te(train_features)
+    test_qe, test_te = _qe_te(test_features)
+    return train_qe, train_te, test_qe, test_te
+
+
 def dump_yaml(
     path: Path,
     payload: dict[str, Any],
@@ -122,6 +170,8 @@ def run_benchmark(
     save_format = general_params.get("save_format", "pdf")
     train_ratio = general_params.get("train_ratio", 0.8)
     use_minisom = general_params.get("use_minisom", False)
+    use_minisom_jit = general_params.get("use_minisom_jit", False)
+    use_somoclu = general_params.get("use_somoclu", False)
     use_torchsom = general_params.get("use_torchsom", True)
 
     # SOM params
@@ -389,6 +439,210 @@ def run_benchmark(
             }
         }
         dump_yaml(results_yaml, minisom_results)
+
+    if use_minisom_jit:
+        # MiniSom's numba JIT path is its batch-offline routine
+        # (train_batch_offline_fast). It therefore differs from the standard MiniSom
+        # column by BOTH numba compilation AND the online->batch algorithm; the batch
+        # form aligns it with torchsom's batch training. Requires MiniSom's development
+        # branch (the JIT method is not yet in a released version) and the numba package.
+        typer.echo(
+            "Running MiniSom JIT benchmark (numba batch-offline, necessarily on CPU)"
+        )
+        som_jit = MiniSom(
+            x=x_size,
+            y=y_size,
+            input_len=input_len,
+            sigma=sigma,
+            learning_rate=learning_rate,
+            decay_function="asymptotic_decay",
+            sigma_decay_function="asymptotic_decay",
+            neighborhood_function="gaussian",
+            topology="rectangular",
+            activation_distance="euclidean",
+            random_seed=random_seed,
+        )
+
+        # Measure Numba's one-time JIT compilation cost. The first ever call to
+        # train_batch_offline_fast compiles the module-level @njit kernel (keyed by argument
+        # type signature) and numba caches it for the rest of the process. We trigger that
+        # compilation with a minimal call on a tiny slice -- its actual compute is negligible,
+        # so the wall-time is essentially the compilation cost. This cost belongs to the JIT
+        # approach, so it is recorded (jit_compile_time) and folded into the headline times
+        # below, while the per-run loop measures steady-state (warm) execution separately.
+        warmup_som = MiniSom(
+            x=x_size,
+            y=y_size,
+            input_len=input_len,
+            sigma=sigma,
+            learning_rate=learning_rate,
+            neighborhood_function="gaussian",
+            topology="rectangular",
+            activation_distance="euclidean",
+            random_seed=random_seed,
+        )
+        start = time.perf_counter()
+        warmup_som.train_batch_offline_fast(
+            train_features_np[: min(8, len(train_features_np))], 1
+        )
+        jit_compile_time = time.perf_counter() - start
+
+        times_init_j, times_fit_j = [], []
+        train_qe_full_j, train_te_full_j = [], []
+        test_qe_full_j, test_te_full_j = [], []
+        for _ in range(n_iter):
+            start = time.perf_counter()
+            som_jit.pca_weights_init(data=train_features_np)
+            end = time.perf_counter()
+            times_init_j.append(end - start)
+
+            start = time.perf_counter()
+            som_jit.train_batch_offline_fast(train_features_np, epochs)
+            end = time.perf_counter()
+            times_fit_j.append(end - start)
+
+            train_qe_j, train_te_j, test_qe_j, test_te_j = compute_errors(
+                som=som_jit,
+                train_features=train_features_np,
+                test_features=test_features_np,
+            )
+            train_qe_full_j.append(train_qe_j)
+            train_te_full_j.append(train_te_j)
+            test_qe_full_j.append(test_qe_j)
+            test_te_full_j.append(test_te_j)
+
+        total_fit_j = [i + f for i, f in zip(times_init_j, times_fit_j)]
+        # Steady-state (warm) means, then headline times that fold in the one-time numba
+        # compilation so the paper reports the JIT approach's full first-use cost.
+        steadystate_train = float(np.mean(times_fit_j))
+        steadystate_total = float(np.mean(total_fit_j))
+        minisom_jit_results: dict[str, Any] = {
+            "minisom_jit": {
+                "avg_init_time": f"{np.mean(times_init_j):.2f}s",
+                "std_init_time": f"{np.std(times_init_j):.2f}s",
+                # Headline (paper): steady-state execution + one-time numba compilation.
+                "avg_train_time": f"{steadystate_train + jit_compile_time:.2f}s",
+                "std_train_time": f"{np.std(times_fit_j):.2f}s",
+                "avg_total_time": f"{steadystate_total + jit_compile_time:.2f}s",
+                "std_total_time": f"{np.std(total_fit_j):.2f}s",
+                # Breakdown (local analysis): compilation vs steady-state execution.
+                "jit_compile_time": f"{jit_compile_time:.2f}s",
+                "avg_steadystate_train_time": f"{steadystate_train:.2f}s",
+                "std_steadystate_train_time": f"{np.std(times_fit_j):.2f}s",
+                "avg_final_full_train_QE": f"{np.mean(train_qe_full_j):.2f}",
+                "std_final_full_train_QE": f"{np.std(train_qe_full_j):.2f}",
+                "avg_final_full_train_TE": f"{np.mean(train_te_full_j):.2f}",
+                "std_final_full_train_TE": f"{np.std(train_te_full_j):.2f}",
+                "avg_final_full_test_QE": f"{np.mean(test_qe_full_j):.2f}",
+                "std_final_full_test_QE": f"{np.std(test_qe_full_j):.2f}",
+                "avg_final_full_test_TE": f"{np.mean(test_te_full_j):.2f}",
+                "std_final_full_test_TE": f"{np.std(test_te_full_j):.2f}",
+                "times_init": times_init_j,
+                "times_fit": times_fit_j,
+                "total_fit": total_fit_j,
+                "train_qe_full": train_qe_full_j,
+                "train_te_full": train_te_full_j,
+                "test_qe_full": test_qe_full_j,
+                "test_te_full": test_te_full_j,
+            }
+        }
+        dump_yaml(results_yaml, minisom_jit_results)
+
+    if use_somoclu:
+        # somoclu is the fair GPU baseline (C++/CUDA). kerneltype 0 = dense CPU,
+        # 1 = dense GPU; we pick it from the requested device so a single config
+        # switches somoclu CPU<->GPU alongside torchsom. somoclu folds codebook
+        # initialization into train() and exposes no QE/TE, so we time construction
+        # as "init", train() as "fit", and compute QE/TE from the codebook (see
+        # compute_errors_somoclu). Its decay schedules (linear/exponential) only
+        # approximate the asymptotic_decay used by the other backends.
+        kerneltype = 1 if device.type == "cuda" else 0
+        kernel_name = "GPU" if kerneltype == 1 else "CPU"
+        typer.echo(
+            f"Running Somoclu benchmark (kerneltype={kerneltype}, {kernel_name})"
+        )
+        try:
+            import somoclu
+
+            times_init_s, times_fit_s = [], []
+            train_qe_full_s, train_te_full_s = [], []
+            test_qe_full_s, test_te_full_s = [], []
+            for _ in range(n_iter):
+                start = time.perf_counter()
+                som_somoclu = somoclu.Somoclu(
+                    n_columns=x_size,
+                    n_rows=y_size,
+                    gridtype="rectangular",
+                    maptype="planar",
+                    compactsupport=False,
+                    neighborhood="gaussian",
+                    initialization=initialization_mode,
+                    kerneltype=kerneltype,
+                    verbose=0,
+                )
+                end = time.perf_counter()
+                times_init_s.append(end - start)
+
+                start = time.perf_counter()
+                som_somoclu.train(
+                    data=train_features_np,
+                    epochs=epochs,
+                    radius0=float(sigma),
+                    radiusN=1.0,
+                    radiuscooling="linear",
+                    scale0=float(learning_rate),
+                    scaleN=0.01,
+                    scalecooling="linear",
+                )
+                end = time.perf_counter()
+                times_fit_s.append(end - start)
+
+                train_qe_s, train_te_s, test_qe_s, test_te_s = compute_errors_somoclu(
+                    codebook=som_somoclu.codebook,
+                    n_rows=y_size,
+                    n_columns=x_size,
+                    train_features=train_features_np,
+                    test_features=test_features_np,
+                )
+                train_qe_full_s.append(train_qe_s)
+                train_te_full_s.append(train_te_s)
+                test_qe_full_s.append(test_qe_s)
+                test_te_full_s.append(test_te_s)
+
+            total_fit_s = [i + f for i, f in zip(times_init_s, times_fit_s)]
+            somoclu_results: dict[str, Any] = {
+                f"somoclu_{device.type}": {
+                    "kerneltype": kerneltype,
+                    "avg_init_time": f"{np.mean(times_init_s):.2f}s",
+                    "std_init_time": f"{np.std(times_init_s):.2f}s",
+                    "avg_train_time": f"{np.mean(times_fit_s):.2f}s",
+                    "std_train_time": f"{np.std(times_fit_s):.2f}s",
+                    "avg_total_time": f"{np.mean(total_fit_s):.2f}s",
+                    "std_total_time": f"{np.std(total_fit_s):.2f}s",
+                    "avg_final_full_train_QE": f"{np.mean(train_qe_full_s):.2f}",
+                    "std_final_full_train_QE": f"{np.std(train_qe_full_s):.2f}",
+                    "avg_final_full_train_TE": f"{np.mean(train_te_full_s):.2f}",
+                    "std_final_full_train_TE": f"{np.std(train_te_full_s):.2f}",
+                    "avg_final_full_test_QE": f"{np.mean(test_qe_full_s):.2f}",
+                    "std_final_full_test_QE": f"{np.std(test_qe_full_s):.2f}",
+                    "avg_final_full_test_TE": f"{np.mean(test_te_full_s):.2f}",
+                    "std_final_full_test_TE": f"{np.std(test_te_full_s):.2f}",
+                    "times_init": times_init_s,
+                    "times_fit": times_fit_s,
+                    "total_fit": total_fit_s,
+                    "train_qe_full": train_qe_full_s,
+                    "train_te_full": train_te_full_s,
+                    "test_qe_full": test_qe_full_s,
+                    "test_te_full": test_te_full_s,
+                }
+            }
+            dump_yaml(results_yaml, somoclu_results)
+        except Exception as exc:
+            typer.echo(
+                f"Skipping Somoclu ({kernel_name}): {exc}. "
+                "somoclu needs a compiled OpenMP/CUDA binary; a default macOS pip "
+                "install ships without it. Run the somoclu sweep on the Linux/GPU machine."
+            )
 
 
 if __name__ == "__main__":
