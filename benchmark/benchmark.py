@@ -289,17 +289,36 @@ def run_benchmark(
             device=device,
         )
 
+        def _sync() -> None:
+            """Block until queued CUDA work completes for accurate timing (no-op on CPU)."""
+            if device.type == "cuda":
+                torch.cuda.synchronize()
+
+        # Exclude one-time CUDA + cuSOLVER initialization (triggered by the first SVD-based
+        # PCA init) from the per-run timings: do one untimed warm-up on GPU, record its cost
+        # separately, then re-seed so the measured runs stay deterministic.
+        device_warmup_time = 0.0
+        if device.type == "cuda":
+            start = time.perf_counter()
+            torchsom.initialize_weights(data=train_features, mode=initialization_mode)
+            torchsom.fit(data=train_features)
+            _sync()
+            device_warmup_time = time.perf_counter() - start
+            fix_reproducibility(random_seed)
+
         times_init, times_fit = [], []
         train_qe_full, train_te_full = [], []
         test_qe_full, test_te_full = [], []
         for _ in range(n_iter):
             start = time.perf_counter()
             torchsom.initialize_weights(data=train_features, mode=initialization_mode)
+            _sync()
             end = time.perf_counter()
             times_init.append(end - start)
 
             start = time.perf_counter()
             qe_curve, te_curve = torchsom.fit(data=train_features)
+            _sync()
             end = time.perf_counter()
             times_fit.append(end - start)
 
@@ -320,6 +339,7 @@ def run_benchmark(
                 "std_train_time": f"{np.std(times_fit):.2f}s",
                 "avg_total_time": f"{np.mean(total_fit):.2f}s",
                 "std_total_time": f"{np.std(total_fit):.2f}s",
+                "device_warmup_time": f"{device_warmup_time:.2f}s",
                 "avg_final_full_train_QE": f"{np.mean(train_qe_full):.2f}",
                 "std_final_full_train_QE": f"{np.std(train_qe_full):.2f}",
                 "avg_final_full_train_TE": f"{np.mean(train_te_full):.2f}",
@@ -522,23 +542,18 @@ def run_benchmark(
             test_te_full_j.append(test_te_j)
 
         total_fit_j = [i + f for i, f in zip(times_init_j, times_fit_j)]
-        # Steady-state (warm) means, then headline times that fold in the one-time numba
-        # compilation so the paper reports the JIT approach's full first-use cost.
-        steadystate_train = float(np.mean(times_fit_j))
-        steadystate_total = float(np.mean(total_fit_j))
         minisom_jit_results: dict[str, Any] = {
             "minisom_jit": {
                 "avg_init_time": f"{np.mean(times_init_j):.2f}s",
                 "std_init_time": f"{np.std(times_init_j):.2f}s",
-                # Headline (paper): steady-state execution + one-time numba compilation.
-                "avg_train_time": f"{steadystate_train + jit_compile_time:.2f}s",
+                # Headline times are steady-state (warm). The one-time numba compilation is
+                # measured separately below and excluded here, consistent with how GPU
+                # device init is handled for torchsom/somoclu.
+                "avg_train_time": f"{np.mean(times_fit_j):.2f}s",
                 "std_train_time": f"{np.std(times_fit_j):.2f}s",
-                "avg_total_time": f"{steadystate_total + jit_compile_time:.2f}s",
+                "avg_total_time": f"{np.mean(total_fit_j):.2f}s",
                 "std_total_time": f"{np.std(total_fit_j):.2f}s",
-                # Breakdown (local analysis): compilation vs steady-state execution.
                 "jit_compile_time": f"{jit_compile_time:.2f}s",
-                "avg_steadystate_train_time": f"{steadystate_train:.2f}s",
-                "std_steadystate_train_time": f"{np.std(times_fit_j):.2f}s",
                 "avg_final_full_train_QE": f"{np.mean(train_qe_full_j):.2f}",
                 "std_final_full_train_QE": f"{np.std(train_qe_full_j):.2f}",
                 "avg_final_full_train_TE": f"{np.mean(train_te_full_j):.2f}",
@@ -573,6 +588,34 @@ def run_benchmark(
         )
         try:
             import somoclu
+
+            # Exclude one-time CUDA initialization from the per-run timings: warm up once
+            # on GPU and record its cost separately (somoclu's train() is synchronous, so
+            # no extra device sync is needed). No warm-up on CPU (no lazy device init).
+            device_warmup_time_s = 0.0
+            if kerneltype == 1:
+                start = time.perf_counter()
+                somoclu.Somoclu(
+                    n_columns=x_size,
+                    n_rows=y_size,
+                    gridtype="rectangular",
+                    maptype="planar",
+                    compactsupport=False,
+                    neighborhood="gaussian",
+                    initialization=initialization_mode,
+                    kerneltype=kerneltype,
+                    verbose=0,
+                ).train(
+                    data=train_features_np,
+                    epochs=epochs,
+                    radius0=float(sigma),
+                    radiusN=1.0,
+                    radiuscooling="linear",
+                    scale0=float(learning_rate),
+                    scaleN=0.01,
+                    scalecooling="linear",
+                )
+                device_warmup_time_s = time.perf_counter() - start
 
             times_init_s, times_fit_s = [], []
             train_qe_full_s, train_te_full_s = [], []
@@ -629,6 +672,7 @@ def run_benchmark(
                     "std_train_time": f"{np.std(times_fit_s):.2f}s",
                     "avg_total_time": f"{np.mean(total_fit_s):.2f}s",
                     "std_total_time": f"{np.std(total_fit_s):.2f}s",
+                    "device_warmup_time": f"{device_warmup_time_s:.2f}s",
                     "avg_final_full_train_QE": f"{np.mean(train_qe_full_s):.2f}",
                     "std_final_full_train_QE": f"{np.std(train_qe_full_s):.2f}",
                     "avg_final_full_train_TE": f"{np.mean(train_te_full_s):.2f}",
