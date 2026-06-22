@@ -4360,19 +4360,6 @@ wheels = [
 ]
 
 [[package]]
-name = "somoclu"
-version = "1.7.6"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "matplotlib" },
-    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "numpy", version = "2.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "scipy", version = "1.17.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/74/b1/a49d8a78fa52cf99947998118fd7baac858e763cb43792e09571c9dc5986/somoclu-1.7.6.tar.gz", hash = "sha256:3c3a7e54c3659ba214c644a0de0a4cc3fe55126a57c9c19920fa5609f5c8f664", size = 1583562, upload-time = "2023-02-18T02:51:00.4Z" }
-
-[[package]]
 name = "sortedcontainers"
 version = "2.4.0"
 source = { registry = "https://pypi.org/simple" }
@@ -4989,7 +4976,6 @@ all = [
     { name = "radon" },
     { name = "rich" },
     { name = "ruff" },
-    { name = "somoclu" },
     { name = "sphinx", version = "8.1.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "sphinx", version = "9.0.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.11.*'" },
     { name = "sphinx", version = "9.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
@@ -5015,7 +5001,6 @@ dev = [
     { name = "pre-commit" },
     { name = "pyyaml" },
     { name = "rich" },
-    { name = "somoclu" },
     { name = "typer" },
     { name = "typing-extensions" },
 ]
@@ -5087,7 +5072,6 @@ requires-dist = [
     { name = "rich", marker = "extra == 'dev'" },
     { name = "ruff", marker = "extra == 'linting'" },
     { name = "scikit-learn" },
-    { name = "somoclu", marker = "extra == 'dev'" },
     { name = "sphinx", marker = "extra == 'docs'" },
     { name = "sphinx-autobuild", marker = "extra == 'docs'" },
     { name = "sphinx-autodoc-typehints", marker = "extra == 'docs'" },

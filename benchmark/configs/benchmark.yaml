@@ -2,7 +2,7 @@ general:
   random_seed: 42
   data_name: blobs_300_4 # 300 5000 20000 and 4 50 300
   n_iter: 10
-  mode: azure # local or azure
+  mode: local # local or azure
   output_dir: results
   device: cuda # cpu or cuda (drives torchsom device AND somoclu kerneltype: cuda->GPU)
   use_torchsom: true
@@ -22,5 +22,6 @@ som:
   topology: rectangular
   initialization_mode: pca
   neighborhood_order: 3
+  use_faiss: false # torchsom BMU search: false -> native PyTorch; true -> FAISS (needs faiss-cpu, or faiss-gpu for a CUDA index)
   # batch_size: 4000  # if omitted, uses full train set per epoch as in notebook
   verbose: true

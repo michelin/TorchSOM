@@ -184,6 +184,11 @@ def run_benchmark(
     initialization_mode = som_params.get("initialization_mode", "pca")
     neighborhood_order = som_params.get("neighborhood_order", 3)
     verbose = som_params.get("verbose", True)
+    # torchsom BMU-search backend: FAISS (requires faiss-cpu, or faiss-gpu for a CUDA
+    # index) vs the native PyTorch brute-force search. Default is native, matching the
+    # search backend used for the published benchmark numbers.
+    use_faiss = som_params.get("use_faiss", False)
+    search_backend = "faiss" if use_faiss else "torch"
 
     # Handle data and results paths
     if mode == "local":
@@ -253,13 +258,17 @@ def run_benchmark(
         "batch_size": batch_size,
         "topology": topology,
         "initialization_mode": initialization_mode,
+        "search_backend": search_backend,
         "results_path": str(results_path),
         "run_dir": str(run_dir),
     }
     dump_yaml(results_yaml, init_results)
 
     if use_torchsom:
-        typer.echo(f"Running TorchSOM benchmark with device: {device}")
+        typer.echo(
+            f"Running TorchSOM benchmark with device: {device} | "
+            f"search_backend: {search_backend}"
+        )
         torchsom = SOM(
             x=x_size,
             y=y_size,
@@ -276,6 +285,7 @@ def run_benchmark(
             initialization_mode=initialization_mode,
             batch_size=batch_size,
             neighborhood_order=neighborhood_order,
+            search_backend=search_backend,
             device=device,
         )
 

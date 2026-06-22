@@ -52,9 +52,18 @@ uv pip install "git+https://github.com/JustGlowing/minisom.git@65b6ba6776f63db45
 #    This pin is used for jmlr-revision-v2 (standard + JIT from one version):
 uv pip install "git+https://github.com/JustGlowing/minisom.git@2eb8bd75596c57dd6260d4f0feef839bc0d22d07" numba
 
-# 3) somoclu — the C++/CUDA baseline.
-#    Linux (CPU + GPU): pip provides a working build; for GPU it must be built with CUDA.
-uv pip install somoclu
+# 3) somoclu — the C++/CUDA baseline (NOT installed by `uv sync`; build it here).
+#    somoclu does not declare numpy as a build dependency, so it must be built with
+#    --no-build-isolation (numpy is already present from `uv sync`); a plain
+#    `uv pip install somoclu` fails with "No module named 'numpy'".
+#    CPU only:
+uv pip install --no-build-isolation somoclu
+#    GPU (CUDA): force a source build with `nvcc` on PATH so the CUDA kernel is compiled:
+#      which nvcc   # must resolve (e.g. run `module load cuda` first)
+uv pip install --reinstall --no-binary somoclu --no-build-isolation somoclu
+#    Verify the GPU kernel works:
+#      python -c "import somoclu,numpy as np; s=somoclu.Somoclu(8,6,kerneltype=1); \
+#                 s.train(np.random.rand(64,4).astype('float32'),epochs=2); print('GPU OK')"
 #    macOS note: the default pip install ships WITHOUT a compiled binary
 #    ("the binary library cannot be imported"), so somoclu cannot train locally;
 #    run the somoclu sweep on the Linux/GPU machine instead.
@@ -71,6 +80,15 @@ A single `device` switch in the config drives both `torchsom`'s device and somoc
 - `device: cuda` → `torchsom` (GPU) and `somoclu` (`kerneltype=1`, CUDA GPU). MiniSom is CPU-only by design and is skipped under `cuda`-only runs.
 
 Enable backends per run via the `use_torchsom` / `use_minisom` / `use_minisom_jit` / `use_somoclu` flags. If somoclu's compiled binary is unavailable, its block is skipped with a clear message and the other backends still run.
+
+### torchsom search backend (FAISS vs native)
+
+`torchsom` can locate Best Matching Units with its native PyTorch brute-force search or with a FAISS index. Choose per run via the `use_faiss` flag in the config's `som` section:
+
+- `use_faiss: false` (default) → native PyTorch search; works on CPU and CUDA with no extra dependency. These are the published benchmark numbers.
+- `use_faiss: true` → FAISS index; needs `faiss-cpu` (CPU) or `faiss-gpu` (a CUDA index). It honours the same `device` switch: a CUDA `device` builds a GPU index when `faiss-gpu` is installed, otherwise a CPU index is used transparently.
+
+All four combinations of `device` (`cpu`/`cuda`) and `use_faiss` (`false`/`true`) are supported. The selected backend is echoed at run start and recorded as `search_backend` in `results.yml`. FAISS on macOS/arm64 can segfault — run FAISS benchmarks on the Linux machine.
 
 ## Expected runtime
 
