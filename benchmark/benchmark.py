@@ -82,6 +82,7 @@ def compute_errors_somoclu(
     n_columns: int,
     train_features: np.ndarray,
     test_features: np.ndarray,
+    topology: str = "rectangular",
 ) -> tuple[float, float, float, float]:
     """Compute QE and TE for a trained somoclu codebook.
 
@@ -90,10 +91,15 @@ def compute_errors_somoclu(
     replicating MiniSom's definitions so the somoclu column stays directly comparable
     with the MiniSom column:
 
-    - **QE**: mean Euclidean distance from each sample to its best-matching unit (BMU).
-    - **TE**: fraction of samples whose first and second BMUs are not 8-neighbours on the
-      grid (grid-distance threshold ``1.42``), identical to
-      ``MiniSom._topographic_error_rectangular``.
+    - **QE**: mean Euclidean distance from each sample to its best-matching unit (BMU);
+      topology-independent.
+    - **TE**: fraction of samples whose first and second BMUs are not grid neighbours,
+      replicating MiniSom per topology:
+      - ``rectangular``: 8-neighbour grid-distance threshold ``1.42``, identical to
+        ``MiniSom._topographic_error_rectangular``.
+      - ``hexagonal``: map each unit's ``(row, col)`` to MiniSom's hexagonal euclidean
+        coordinates and count a sample as an error unless its two BMUs are at euclidean
+        distance ~1, identical to ``MiniSom._topographic_error_hexagonal``.
 
     Args:
         codebook: somoclu codebook of shape ``(n_rows, n_columns, n_features)``.
@@ -101,6 +107,7 @@ def compute_errors_somoclu(
         n_columns: number of grid columns (somoclu ``n_columns`` == ``x_size``).
         train_features: training data of shape ``(n_train, n_features)``.
         test_features: test data of shape ``(n_test, n_features)``.
+        topology: grid topology, ``"rectangular"`` or ``"hexagonal"``.
 
     Returns:
         Tuple ``(train_qe, train_te, test_qe, test_te)``.
@@ -112,10 +119,26 @@ def compute_errors_somoclu(
         b2mu = np.argsort(distances, axis=1)[:, :2]  # 2 closest units per sample
         qe = float(distances[np.arange(len(data)), b2mu[:, 0]].mean())
         rows, cols = np.unravel_index(b2mu, (n_rows, n_columns))
-        grid_dist = np.sqrt(
-            np.diff(rows, axis=1).ravel() ** 2 + np.diff(cols, axis=1).ravel() ** 2
-        )
-        te = float((grid_dist > 1.42).mean())
+        if topology == "hexagonal":
+            # Replicate MiniSom._topographic_error_hexagonal on the codebook grid.
+            # MiniSom places neuron (a, b) at euclidean (a - 0.5*shift(b), b*factor),
+            # where factor == (3/2)/sqrt(3) and the -0.5 x-shift hits every other grid
+            # line via numpy's ``_xx[::-2]`` (rows n_rows-1, n_rows-3, ...). Here somoclu's
+            # ``col`` is MiniSom's x-axis and ``row`` its y-axis. Two BMUs are neighbours
+            # iff their euclidean distance is ~1 (isclose), so a non-neighbour is an error.
+            y_hex = (3.0 / 2.0) / np.sqrt(3.0)
+            shifted = ((n_rows - 1 - rows) % 2 == 0)
+            ex = cols - 0.5 * shifted
+            ey = rows * y_hex
+            bmu_dist = np.sqrt(
+                np.diff(ex, axis=1).ravel() ** 2 + np.diff(ey, axis=1).ravel() ** 2
+            )
+            te = float((~np.isclose(1.0, bmu_dist)).mean())
+        else:
+            grid_dist = np.sqrt(
+                np.diff(rows, axis=1).ravel() ** 2 + np.diff(cols, axis=1).ravel() ** 2
+            )
+            te = float((grid_dist > 1.42).mean())
         return qe, te
 
     train_qe, train_te = _qe_te(train_features)
@@ -407,7 +430,7 @@ def run_benchmark(
             decay_function="asymptotic_decay",
             sigma_decay_function="asymptotic_decay",
             neighborhood_function="gaussian",
-            topology="rectangular",
+            topology=topology,
             activation_distance="euclidean",
             random_seed=random_seed,
         )
@@ -488,7 +511,7 @@ def run_benchmark(
             decay_function="asymptotic_decay",
             sigma_decay_function="asymptotic_decay",
             neighborhood_function="gaussian",
-            topology="rectangular",
+            topology=topology,
             activation_distance="euclidean",
             random_seed=random_seed,
         )
@@ -507,7 +530,7 @@ def run_benchmark(
             sigma=sigma,
             learning_rate=learning_rate,
             neighborhood_function="gaussian",
-            topology="rectangular",
+            topology=topology,
             activation_distance="euclidean",
             random_seed=random_seed,
         )
@@ -573,49 +596,43 @@ def run_benchmark(
         }
         dump_yaml(results_yaml, minisom_jit_results)
 
-    if use_somoclu:
-        # somoclu is the fair GPU baseline (C++/CUDA). kerneltype 0 = dense CPU,
-        # 1 = dense GPU; we pick it from the requested device so a single config
-        # switches somoclu CPU<->GPU alongside torchsom. somoclu folds codebook
-        # initialization into train() and exposes no QE/TE, so we time construction
-        # as "init", train() as "fit", and compute QE/TE from the codebook (see
-        # compute_errors_somoclu). Its decay schedules (linear/exponential) only
-        # approximate the asymptotic_decay used by the other backends.
-        kerneltype = 1 if device.type == "cuda" else 0
-        kernel_name = "GPU" if kerneltype == 1 else "CPU"
-        typer.echo(
-            f"Running Somoclu benchmark (kerneltype={kerneltype}, {kernel_name})"
-        )
+    if use_somoclu and device.type == "cuda":
+        # somoclu is the GPU-only baseline (C++/CUDA, kerneltype=1). somoclu folds
+        # codebook initialization into train() and exposes no QE/TE, so we time
+        # construction as "init", train() as "fit", and compute QE/TE from the
+        # codebook (see compute_errors_somoclu). Its decay schedules
+        # (linear/exponential) only approximate the asymptotic_decay used by the
+        # other backends.
+        kerneltype = 1
+        typer.echo("Running Somoclu benchmark (GPU, kerneltype=1)")
         try:
             import somoclu
 
             # Exclude one-time CUDA initialization from the per-run timings: warm up once
             # on GPU and record its cost separately (somoclu's train() is synchronous, so
-            # no extra device sync is needed). No warm-up on CPU (no lazy device init).
-            device_warmup_time_s = 0.0
-            if kerneltype == 1:
-                start = time.perf_counter()
-                somoclu.Somoclu(
-                    n_columns=x_size,
-                    n_rows=y_size,
-                    gridtype="rectangular",
-                    maptype="planar",
-                    compactsupport=False,
-                    neighborhood="gaussian",
-                    initialization=initialization_mode,
-                    kerneltype=kerneltype,
-                    verbose=0,
-                ).train(
-                    data=train_features_np,
-                    epochs=epochs,
-                    radius0=float(sigma),
-                    radiusN=1.0,
-                    radiuscooling="linear",
-                    scale0=float(learning_rate),
-                    scaleN=0.01,
-                    scalecooling="linear",
-                )
-                device_warmup_time_s = time.perf_counter() - start
+            # no extra device sync is needed).
+            start = time.perf_counter()
+            somoclu.Somoclu(
+                n_columns=x_size,
+                n_rows=y_size,
+                gridtype=topology,
+                maptype="planar",
+                compactsupport=False,
+                neighborhood="gaussian",
+                initialization=initialization_mode,
+                kerneltype=kerneltype,
+                verbose=0,
+            ).train(
+                data=train_features_np,
+                epochs=epochs,
+                radius0=float(sigma),
+                radiusN=1.0,
+                radiuscooling="linear",
+                scale0=float(learning_rate),
+                scaleN=0.01,
+                scalecooling="linear",
+            )
+            device_warmup_time_s = time.perf_counter() - start
 
             times_init_s, times_fit_s = [], []
             train_qe_full_s, train_te_full_s = [], []
@@ -625,7 +642,7 @@ def run_benchmark(
                 som_somoclu = somoclu.Somoclu(
                     n_columns=x_size,
                     n_rows=y_size,
-                    gridtype="rectangular",
+                    gridtype=topology,
                     maptype="planar",
                     compactsupport=False,
                     neighborhood="gaussian",
@@ -656,6 +673,7 @@ def run_benchmark(
                     n_columns=x_size,
                     train_features=train_features_np,
                     test_features=test_features_np,
+                    topology=topology,
                 )
                 train_qe_full_s.append(train_qe_s)
                 train_te_full_s.append(train_te_s)
@@ -664,7 +682,7 @@ def run_benchmark(
 
             total_fit_s = [i + f for i, f in zip(times_init_s, times_fit_s)]
             somoclu_results: dict[str, Any] = {
-                f"somoclu_{device.type}": {
+                "somoclu_cuda": {
                     "kerneltype": kerneltype,
                     "avg_init_time": f"{np.mean(times_init_s):.2f}s",
                     "std_init_time": f"{np.std(times_init_s):.2f}s",
@@ -693,10 +711,14 @@ def run_benchmark(
             dump_yaml(results_yaml, somoclu_results)
         except Exception as exc:
             typer.echo(
-                f"Skipping Somoclu ({kernel_name}): {exc}. "
-                "somoclu needs a compiled OpenMP/CUDA binary; a default macOS pip "
+                f"Skipping Somoclu (GPU): {exc}. "
+                "somoclu needs a compiled CUDA binary; a default macOS pip "
                 "install ships without it. Run the somoclu sweep on the Linux/GPU machine."
             )
+    elif use_somoclu:
+        typer.echo(
+            "Skipping Somoclu: GPU-only baseline (kerneltype=1); requested device is not cuda."
+        )
 
 
 if __name__ == "__main__":

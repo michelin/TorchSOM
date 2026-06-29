@@ -12,6 +12,7 @@ benchmark/blobfuse/
 benchmark/environments/
 benchmark/jobs/
 benchmark/.amlignore
+benchmark/logs/
 
 arXiv-2510.11147v1/
 

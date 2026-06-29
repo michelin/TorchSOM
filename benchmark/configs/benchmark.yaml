@@ -1,16 +1,16 @@
 general:
   random_seed: 42
-  data_name: blobs_300_4 # 300 5000 20000 and 4 50 300
+  data_name: blobs_300_300 # 300 5000 20000 and 4 50 300
   n_iter: 10
   mode: local # local or azure
   output_dir: results
-  device: cuda # cpu or cuda (drives torchsom device AND somoclu kerneltype: cuda->GPU)
+  device: cpu # cpu or cuda (drives torchsom device; somoclu is GPU-only, so set cuda to include it)
   use_torchsom: true
   use_minisom: true # standard online train(), no JIT -> the canonical CPU baseline
   use_minisom_jit: true # numba batch-offline train_batch_offline_fast() (CPU); needs MiniSom dev branch + numba
-  use_somoclu: true # C++/CUDA baseline; CPU (kerneltype=0) or GPU (kerneltype=1) per device; needs compiled binary
+  use_somoclu: true # GPU-only baseline (C++/CUDA, kerneltype=1); only runs when device=cuda; needs a CUDA-compiled binary
   train_ratio: 0.8
-  save_plots: true
+  save_plots: false
   save_format: pdf
 
 som:
