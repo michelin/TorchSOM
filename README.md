@@ -63,7 +63,7 @@ This library accompanies the paper: [*torchsom: The Reference PyTorch Library fo
 
 Benchmarked on synthetic datasets (240–16,000 samples, 4–300 features) with identical hyperparameters, comparing like with like on each device:
 
-- **CPU** — against [MiniSom](https://github.com/JustGlowing/minisom) (standard and Numba-JIT) and [somoclu](https://github.com/peterwittek/somoclu) (OpenMP).
+- **CPU** — against [MiniSom](https://github.com/JustGlowing/minisom) (standard and Numba-JIT).
 - **GPU** — against [somoclu](https://github.com/peterwittek/somoclu) (CUDA C++), a genuine GPU baseline.
 
 | Metric | Result (vs MiniSom, CPU) |
