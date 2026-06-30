@@ -47,7 +47,7 @@ new_code?id=michelin_TorchSOM) -->
 
 [Self-Organizing Maps (SOMs)](https://en.wikipedia.org/wiki/Self-organizing_map) remain highly relevant in modern machine learning due to their **interpretability**, **topology preservation**, and **computational efficiency**. They are widely used in energy systems, biology, IoT, environmental science, and industrial applications.
 
-Despite their utility, the Python SOM ecosystem is fragmented - existing implementations are often **outdated**, **unmaintained**, and **lack GPU acceleration** or integration with modern deep learning frameworks.
+Despite their utility, the Python SOM ecosystem is fragmented: existing implementations are often **outdated**, **unmaintained**, and **lack GPU acceleration** or integration with modern deep learning frameworks.
 
 **`torchsom`** addresses these gaps as a **reference PyTorch library** for SOMs, providing:
 
@@ -61,20 +61,21 @@ This library accompanies the paper: [*torchsom: The Reference PyTorch Library fo
 
 ### Key Results
 
-Benchmarked on synthetic datasets (240–16,000 samples, 4–300 features) with identical hyperparameters, comparing like with like on each device:
+  Benchmarked on synthetic datasets (240–16,000 samples, 4–300 features) with identical hyperparameters, comparing like with like on each device: on CPU against [MiniSom](https://github.com/JustGlowing/minisom) (standard online + Numba-JIT), and on GPU against [somoclu](https://github.com/peterwittek/somoclu) (CUDA C++), a massively parallel HPC library:
 
-- **CPU** — against [MiniSom](https://github.com/JustGlowing/minisom) (standard and Numba-JIT).
-- **GPU** — against [somoclu](https://github.com/peterwittek/somoclu) (CUDA C++), a genuine GPU baseline.
-
-| Metric | Result (vs MiniSom, CPU) |
+<!-- TODO: Update table and results from new simulations -->
+| Aspect | Result |
 | --- | --- |
-| **Training speed** | Up to **99% faster** (GPU) and **77–98% faster** (CPU) |
-| **Topographic Error** | **34–81% lower** — better topology preservation |
-| **Quantization Error** | Comparable fidelity across all configurations |
+| **Topology preservation** | **Lowest Topographic Error in every configuration**, 34–81% below standard MiniSom, and below MiniSom-JIT and somoclu throughout. This is torchsom's most consistent edge. |
+| **CPU speed** | **74–98% faster than standard MiniSom**; and, with MiniSom-JIT's one-time compilation counted, matches or beats it in nearly all configurations (up to ~17×). |
+| **GPU speed** | Up to **~8× faster than somoclu (CUDA)** on high-dimensional data. |
+| **Quantization Error** | Comparable across backends (marginally higher only on the 4-feature sets). |
 
-> Hardware: Intel Xeon Platinum 8370C (CPU), NVIDIA Tesla T4 (GPU). See the [paper](https://arxiv.org/abs/2510.11147) for full benchmark tables.
+> torchsom is the only library combining this topology preservation and scaling with a scikit-learn API, GPU acceleration, clustering, JITL, and rich visualization. On small/low-dimensional workloads MiniSom-JIT (CPU) and somoclu (GPU) can be faster, reported transparently in the paper's Tables 2a (CPU) and 2b (GPU).
 >
-> **Reproducing the JMLR benchmarks.** All scripts and configurations are released under [`benchmark/`](benchmark/) — see [`benchmark/README.md`](benchmark/README.md) for a step-by-step walkthrough, including the exact MiniSom pins and somoclu setup. Three annotated tags pin the versions of record: `jmlr-submission-v1` (original October 2025 submission), `jmlr-revision-v1` (first revision), and `jmlr-revision-v2` (adds the somoclu and MiniSom-JIT baselines). `git checkout <tag>` reproduces the corresponding tables.
+> Hardware: Intel Xeon Gold 6134 (CPU), NVIDIA Tesla V100-32GB (GPU). See the [paper](https://arxiv.org/abs/2510.11147) for full benchmark tables.
+>
+> **Reproducing the JMLR benchmarks.** All scripts and configurations are released under [`benchmark/`](benchmark/); see [`benchmark/README.md`](benchmark/README.md) for a step-by-step walkthrough, including the exact MiniSom pins and somoclu setup. Three annotated tags pin the versions of record: `jmlr-submission-v1` (original October 2025 submission), `jmlr-revision-v1` (first revision), and `jmlr-revision-v2` (adds the somoclu and MiniSom-JIT baselines). `git checkout <tag>` reproduces the corresponding tables.
 
 ---
 

@@ -17,9 +17,13 @@ Topographic error (TE) counts a sample as an error when its 1st and 2nd BMUs are
 | `MiniSom`-JIT     | CPU      | numba batch-offline `train_batch_offline_fast()` (`use_minisom_jit`)                       |
 | `somoclu`         | GPU      | C++/CUDA (`kerneltype=1`) — **GPU-only baseline**, runs only under `device: cuda`         |
 
-Why these baselines: the GPU column needs a genuine GPU peer, so `somoclu` (C++/CUDA) is benchmarked on GPU against `torchsom` (GPU) — `somoclu` is used **only** as the GPU baseline. On CPU, `MiniSom` is reported both in its standard form and with its optional numba JIT, alongside `torchsom` (CPU). MiniSom's JIT path is its **batch-offline** routine, so it differs from standard MiniSom by both numba compilation and the online→batch algorithm; the batch form aligns it with `torchsom`'s batch training.
+Why these baselines: the GPU column needs a genuine GPU peer, so `somoclu` (C++/CUDA), a massively parallel HPC library, is benchmarked on GPU against `torchsom` (GPU), as requested by the reviewer. On CPU, `torchsom` is compared against `MiniSom` in both its standard form and its optional numba JIT.
 
-The reported MiniSom-JIT time **includes** the one-time numba compilation, which is intrinsic to the JIT approach (standard MiniSom incurs no such cost). For finer analysis, `results.yml` also records the per-operation breakdown: `jit_compile_time` (one-time) and `avg_steadystate_train_time` (warm execution), in addition to the headline `avg_train_time` / `avg_total_time` that fold the two together.
+`results.yml` reports the steady-state (warm) per-training means, plus each backend's cold-start cost measured separately:
+
+- `avg_total_time`: steady-state train time, averaged over the `n_iter` warm runs (one-time cost excluded).
+- `jit_compile_time`: MiniSom-JIT's one-time numba compilation only, not a training run (CPU).
+- `device_warmup_time`: GPU only. A full cold first training run, so it includes the one-time CUDA + cuSOLVER setup on top of one train and is larger than `avg_total_time`.
 
 ## Reproducibility tags
 
@@ -27,7 +31,7 @@ The reported MiniSom-JIT time **includes** the one-time numba compilation, which
 | -------------------- | ---------------------------------------------------------------------------------------------- |
 | `jmlr-submission-v1` | Exact code as submitted to JMLR-MLOSS in October 2025 — reproduces the original Table 2.       |
 | `jmlr-revision-v1`   | Code accompanying the first revision — same benchmark scripts, same MiniSom pin.                |
-| `jmlr-revision-v2`   | Second revision — adds the GPU-only `somoclu` and MiniSom-JIT baselines plus the 90×70 and hexagonal sweeps; reproduces Tables 2a (CPU) and 2b (GPU). |
+| `jmlr-revision-v2`   | Second revision — adds the GPU-only `somoclu` and MiniSom-JIT baselines plus the TE fix; reproduces Tables 2a (CPU) and 2b (GPU). |
 
 ```bash
 # Reproduce the original submission's Table 2
@@ -68,6 +72,12 @@ uv pip install --reinstall --no-binary somoclu --no-build-isolation somoclu
 #    ("the binary library cannot be imported"), so somoclu cannot train locally;
 #    run the somoclu sweep on the Linux/GPU machine instead.
 
+# (optional) FAISS BMU-search backend for torchsom (enable with `use_faiss: true` in the config)
+#   CPU index:  uv pip install faiss-cpu
+#   GPU index:  uv pip install faiss-gpu   # CUDA; provides index_cpu_to_gpu
+#   NOTE: faiss-cpu wheels are unstable on macOS/arm64 (segfault on small indices);
+#   use FAISS on the Linux/GPU machine and keep the native backend on macOS.
+
 # 4) Run a sweep (CLI) or open the notebook
 uv run python benchmark.py --config-path configs/benchmark.yaml
 ```
@@ -76,19 +86,10 @@ uv run python benchmark.py --config-path configs/benchmark.yaml
 
 A single `device` switch in the config drives `torchsom`'s device and whether the GPU-only `somoclu` baseline runs:
 
-- `device: cpu` → `torchsom` (CPU), `MiniSom`, `MiniSom`-JIT. `somoclu` is the GPU-only baseline and is **skipped on CPU** — `use_somoclu: true` under `device: cpu` just prints `Skipping Somoclu: GPU-only baseline …` and runs nothing.
-- `device: cuda` → `torchsom` (GPU) and `somoclu` (`kerneltype=1`, CUDA GPU). `MiniSom` / `MiniSom`-JIT are CPU-only by design and are skipped under `cuda` runs.
+- `device: cpu` → `torchsom` (CPU), `MiniSom`, `MiniSom`-JIT.
+- `device: cuda` → `torchsom` (GPU) and `somoclu` (`kerneltype=1`, CUDA GPU).
 
-Enable backends per run via the `use_torchsom` / `use_minisom` / `use_minisom_jit` / `use_somoclu` flags. If somoclu's compiled binary is unavailable, its block is skipped with a clear message and the other backends still run.
-
-### torchsom search backend (FAISS vs native)
-
-`torchsom` can locate Best Matching Units with its native PyTorch brute-force search or with a FAISS index. Choose per run via the `use_faiss` flag in the config's `som` section:
-
-- `use_faiss: false` (default) → native PyTorch search; works on CPU and CUDA with no extra dependency. These are the published benchmark numbers.
-- `use_faiss: true` → FAISS index; needs `faiss-cpu` (CPU) or `faiss-gpu` (a CUDA index). It honours the same `device` switch: a CUDA `device` builds a GPU index when `faiss-gpu` is installed, otherwise a CPU index is used transparently.
-
-All four combinations of `device` (`cpu`/`cuda`) and `use_faiss` (`false`/`true`) are supported. The selected backend is echoed at run start and recorded as `search_backend` in `results.yml`. FAISS on macOS/arm64 can segfault — run FAISS benchmarks on the Linux machine.
+Enable backends per run via the `use_torchsom` / `use_minisom` / `use_minisom_jit` / `use_somoclu` flags.
 
 ## Reproducing the full paper sweeps
 
@@ -105,9 +106,7 @@ Two driver scripts cover every cell reported in the paper. Each repeats every co
 - [`run_hexagonal.sh`](run_hexagonal.sh) — hexagonal: 25×15 (9 datasets) + 90×70 (3)
 
 Each script runs a `cpu` pass (`torchsom`, `MiniSom`, `MiniSom`-JIT) **and** a `cuda` pass
-(`torchsom`, `somoclu`) per config; the `cuda` half is skipped automatically when no GPU is
-visible. (`run_all.sh` is the original single-size full sweep and is **superseded** by
-`run_rectangular.sh` — do not also run it, or rectangular-25×15 would be duplicated.)
+(`torchsom`, `somoclu`) per config.
 
 The full sweep is multi-day — the 90×70 CPU `MiniSom` runs dominate (see *Expected runtime*)
 — so run it inside **tmux** so it survives SSH disconnects and can be detached/reattached.
@@ -149,10 +148,14 @@ Existing result folders are never overwritten; every launch creates new timestam
 
 ## Expected runtime
 
-The sweep is dominated by the `MiniSom` CPU runs on large data. The table below is for the **25×15** map; the **90×70** map has ~17× the neurons, so its CPU times scale up roughly proportionally — the largest cell (`blobs_20000_300` @ 90×70 CPU) can take ~2–3 days per launch, making the full rectangular + hexagonal sweep a week-plus of wall-clock. Indicative 25×15 wall-clock times on the hardware reported in the paper (Intel Xeon Platinum 8370C, 8 cores, 16 GB RAM; NVIDIA Tesla T4 GPU):
+<!-- TODO: Update this section with decend expected runtime -->
 
-| Backend                | Smallest config (240 × 4) | Largest config (16 000 × 300) |
-| ---------------------- | ------------------------- | ----------------------------- |
-| MiniSom (CPU)          | ~2 s / repeat             | ~32 min / repeat              |
-| torchsom (CPU)         | <1 s / repeat             | ~30 s / repeat                |
-| torchsom (GPU, T4)     | <1 s / repeat             | ~12 s / repeat                |
+The sweep is dominated by the `MiniSom` CPU runs on large data. The table below is for the **25×15** map; the **90×70** map has ~17× the neurons, so its CPU times scale up roughly proportionally, and the largest cell (`blobs_20000_300` @ 90×70 CPU) can take ~2–3 days per launch, making the full rectangular + hexagonal sweep a week-plus of wall-clock. Indicative steady-state 25×15 wall-clock per run on the revision hardware (Intel Xeon Gold 6134, 16 cores, 187 GB RAM; NVIDIA Tesla V100-32GB):
+
+| Backend             | Smallest config (240 × 4) | Largest config (16 000 × 300) |
+| ------------------- | ------------------------- | ----------------------------- |
+| MiniSom (CPU)       | ~1.5 s                    | ~15 min                       |
+| MiniSom-JIT (CPU)   | ~0.3 s                    | ~4.7 min                      |
+| torchsom (CPU)      | ~0.4 s                    | ~22 s                         |
+| somoclu (GPU, V100) | ~3 s                      | ~104 s                        |
+| torchsom (GPU, V100)| ~0.5 s                    | ~10 s                         |
