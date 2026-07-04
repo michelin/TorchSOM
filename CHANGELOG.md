@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## v1.3.0 (2026-07-04)
+
+### Feat
+
+- enhance SOM error computation and add benchmark scripts
+- add topographic error calculation and tests
+- improve benchmark timing accuracy with CUDA warm-up synchronization
+- enhance benchmarking capabilities by adding somoclu and MiniSom-JIT support
+
+### Refactor
+
+- update benchmarking configuration and dependencies
+
 ## v1.2.0 (2026-06-01)
 
 ### Feat
