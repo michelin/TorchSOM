@@ -29,7 +29,7 @@ new_code?id=michelin_TorchSOM) -->
     <img src="assets/logo.png" alt="TorchSOM_logo" width="350"/>
 </p>
 
-*GPU-accelerated Self-Organizing Maps in PyTorch with a scikit-learn API, rich visualization, and clustering --- from dimensionality reduction to Just-In-Time Learning.*
+*GPU-accelerated Self-Organizing Maps in PyTorch with a scikit-learn API, rich visualization, and clustering: from dimensionality reduction to Just-In-Time Learning.*
 
 [Paper](https://arxiv.org/abs/2510.11147)
 | [Documentation](https://opensource.michelin.io/TorchSOM/)
@@ -63,15 +63,15 @@ This library accompanies the paper: [*torchsom: The Reference PyTorch Library fo
 
   Benchmarked on synthetic datasets (240–16,000 samples, 4–300 features) with identical hyperparameters, comparing like with like on each device: on CPU against [MiniSom](https://github.com/JustGlowing/minisom) (standard online + Numba-JIT), and on GPU against [somoclu](https://github.com/peterwittek/somoclu) (CUDA C++), a massively parallel HPC library:
 
-<!-- TODO: Update table and results from new simulations -->
 | Aspect | Result |
 | --- | --- |
-| **Topology preservation** | **Lowest Topographic Error in every configuration**, 34–81% below standard MiniSom, and below MiniSom-JIT and somoclu throughout. This is torchsom's most consistent edge. |
-| **CPU speed** | **74–98% faster than standard MiniSom**; and, with MiniSom-JIT's one-time compilation counted, matches or beats it in nearly all configurations (up to ~17×). |
-| **GPU speed** | Up to **~8× faster than somoclu (CUDA)** on high-dimensional data. |
-| **Quantization Error** | Comparable across backends (marginally higher only on the 4-feature sets). |
+| **Topology preservation** | **Lowest Topographic Error in every rectangular configuration and nearly all hexagonal ones**, 62–100% below standard MiniSom, and below MiniSom-JIT and somoclu on rectangular maps. This is torchsom's most consistent edge. |
+| **CPU speed** | **81–98% faster than standard MiniSom**; and, with MiniSom-JIT's one-time compilation counted, matches or beats it in nearly all configurations (up to ~16×). |
+| **GPU speed** | Up to **~12× faster than somoclu (CUDA)** on high-dimensional data. |
+| **Scaling** | Advantage grows with map size: on the larger 90×70 grid, up to **~200× faster than standard MiniSom (CPU)** and **~66× faster than somoclu (GPU)**. |
+| **Quantization Error** | Comparable across backends (torchsom marginally higher). |
 
-> torchsom is the only library combining this topology preservation and scaling with a scikit-learn API, GPU acceleration, clustering, JITL, and rich visualization. On small/low-dimensional workloads MiniSom-JIT (CPU) and somoclu (GPU) can be faster, reported transparently in the paper's Tables 2a (CPU) and 2b (GPU).
+> torchsom is the only library combining this topology preservation and scaling with a scikit-learn API, GPU acceleration, clustering, JITL, and rich visualization. On small/low-dimensional workloads MiniSom-JIT (CPU) and somoclu (GPU) can be faster, reported transparently in the paper's Tables 2 (CPU) and 3 (GPU).
 >
 > Hardware: Intel Xeon Gold 6134 (CPU), NVIDIA Tesla V100-32GB (GPU). See the [paper](https://arxiv.org/abs/2510.11147) for full benchmark tables.
 >
@@ -81,7 +81,7 @@ This library accompanies the paper: [*torchsom: The Reference PyTorch Library fo
 
 ## How It Works
 
-A SOM is an unsupervised neural network that maps high-dimensional data onto a low-dimensional grid (typically 2D) while preserving topological relationships. At each training step, the **Best Matching Unit (BMU)** — the neuron closest to the input — is identified, and its weights along with its neighbors are updated:
+A SOM is an unsupervised neural network that maps high-dimensional data onto a low-dimensional grid (typically 2D) while preserving topological relationships. At each training step, the **Best Matching Unit (BMU)** (the neuron closest to the input) is identified, and its weights along with its neighbors are updated:
 
 $$\mathbf{w}_{ij}(t+1) = \mathbf{w}_{ij}(t) + \alpha(t) \cdot h_{ij}(t) \cdot \bigl(\mathbf{x} - \mathbf{w}_{ij}(t)\bigr)$$
 
@@ -103,7 +103,7 @@ Training quality is assessed via **Quantization Error** (representation fidelity
 | API Design | **scikit-learn** | Custom | Custom | MATLAB | Custom | Custom |
 | Maintenance | ✅ Active | ✅ Active | ⚠️ Minimal | ⚠️ Minimal | ⚠️ Minimal | ❌ |
 | Documentation | ✅ Rich | ❌ | ⚠️ Basic | ❌ | ⚠️ Basic | ⚠️ Basic |
-| Test Coverage | ✅ 90% | ❌ | ~53% | ❌ | Minimal | ❌ |
+| Test Coverage | ✅ 90% | ✅ 98% | ~53% | ❌ | Minimal | ❌ |
 | Visualization | ✅ Advanced | ❌ | Moderate | Moderate | Basic | Basic |
 | Clustering | ✅ Advanced | ❌ | ❌ | ❌ | ❌ | ❌ |
 | JITL Support | ✅ Built-in | ❌ | ❌ | ❌ | ❌ | ❌ |
@@ -244,7 +244,7 @@ If you use `torchsom` in your academic, research, or industrial work, please cit
     author={Berthier, Louis},
     title={torchsom: The Reference PyTorch Library for Self-Organizing Maps},
     year={2025},
-    version={1.1.1},
+    version={1.3.0},
     url={https://github.com/michelin/TorchSOM},
     note={Documentation available at \url{https://opensource.michelin.io/TorchSOM/}}
 }

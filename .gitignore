@@ -13,6 +13,9 @@ benchmark/environments/
 benchmark/jobs/
 benchmark/.amlignore
 benchmark/logs/
+benchmark/sweep_*
+
+collate_results.py
 
 arXiv-2510.11147v1/
 
