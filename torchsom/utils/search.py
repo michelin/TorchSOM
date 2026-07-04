@@ -120,7 +120,7 @@ class FAISSSearch(BMUSearchStrategy):
         self,
         distance_fn: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
         distance_fn_name: str,
-        device: str = "cpu",
+        device: str | torch.device = "cpu",
         index_type: Literal["flat", "ivf"] = "flat",
         nprobe: int = 8,
     ) -> None:
@@ -132,7 +132,9 @@ class FAISSSearch(BMUSearchStrategy):
             )
 
         self._distance_fn_name = distance_fn_name
-        self._device = device
+        # Normalize to a string so the GPU-transfer check below works whether the
+        # caller passes "cuda:0" or a torch.device(...) object.
+        self._device = str(device)
         self._index_type = index_type
         self._nprobe = nprobe
         self._index: faiss.Index | None = None
@@ -231,7 +233,7 @@ def create_search_strategy(
     distance_fn: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
     distance_fn_name: str,
     n_neurons: int,
-    device: str = "cpu",
+    device: str | torch.device = "cpu",
     faiss_index_type: Literal["flat", "ivf"] = "flat",
     faiss_nprobe: int = 8,
 ) -> BMUSearchStrategy:

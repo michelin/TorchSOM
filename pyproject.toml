@@ -92,6 +92,12 @@ dev = [
     "pre-commit",
     "typer",
     "minisom>=2.3.6",
+    # numba enables MiniSom's JIT path (train_batch_offline_fast); harmless pure wheels.
+    "numba",
+    # NOTE: somoclu is intentionally NOT listed here. It is a C++/CUDA benchmark baseline
+    # that needs a source build (numpy at build time + `--no-build-isolation`, and `nvcc`
+    # for the GPU kernel), so a plain `uv sync` cannot build it under build isolation.
+    # Install it manually per benchmark/README.md.
 ]
 tests = [
     "pytest",

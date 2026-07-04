@@ -4,11 +4,13 @@ import pytest
 import torch
 
 from torchsom.core.som import SOM
+from torchsom.utils.distances import DISTANCE_FUNCTIONS
 from torchsom.utils.metrics import (
     calculate_calinski_harabasz_score,
     calculate_clustering_metrics,
     calculate_davies_bouldin_score,
     calculate_silhouette_score,
+    calculate_topographic_error,
     calculate_topological_clustering_quality,
 )
 
@@ -221,3 +223,36 @@ class TestErrorCalculations:
         te2 = som_trained.topographic_error(data)
         assert qe1 == qe2
         assert te1 == te2
+
+
+class TestTopographicErrorAdjacency:
+    """Rectangular TE uses 8-neighborhood adjacency (grid-distance threshold 1.42)."""
+
+    @staticmethod
+    def _weights_with_second_bmu_at(
+        second_rc: tuple[int, int], device: str
+    ) -> torch.Tensor:
+        """3x3, 2-feature weights where neuron (0,0) is the BMU for x=[0,0] and the
+        neuron at ``second_rc`` is the second BMU; all other neurons are far away."""
+        weights = torch.full((3, 3, 2), 10.0)
+        weights[0, 0] = torch.tensor([0.0, 0.0])
+        weights[second_rc] = torch.tensor([0.0, 0.5])
+        return weights.to(device)
+
+    def test_diagonal_second_bmu_is_not_error(self, device: str) -> None:
+        """A diagonal 2nd BMU (grid distance sqrt(2)) is adjacent -> not an error."""
+        weights = self._weights_with_second_bmu_at((1, 1), device)
+        data = torch.tensor([[0.0, 0.0]], device=device)
+        te = calculate_topographic_error(
+            data, weights, DISTANCE_FUNCTIONS["euclidean"], topology="rectangular"
+        )
+        assert te == 0.0
+
+    def test_two_cells_second_bmu_is_error(self, device: str) -> None:
+        """A 2nd BMU two cells away (grid distance 2.0) is non-adjacent -> an error."""
+        weights = self._weights_with_second_bmu_at((2, 0), device)
+        data = torch.tensor([[0.0, 0.0]], device=device)
+        te = calculate_topographic_error(
+            data, weights, DISTANCE_FUNCTIONS["euclidean"], topology="rectangular"
+        )
+        assert te == 1.0

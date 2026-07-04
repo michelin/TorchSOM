@@ -57,6 +57,11 @@ def calculate_topographic_error(
 ) -> float:
     """Calculate topographic error for a SOM.
 
+    A sample is a topographic error when its first and second best matching units are not
+    grid-adjacent. Adjacency uses the 8-neighborhood on rectangular grids (orthogonal or
+    diagonal neighbors; grid-distance threshold 1.42) and immediate neighbors on hexagonal
+    grids, matching the common convention so the metric is comparable across SOM libraries.
+
     Args:
         data (torch.Tensor): Input data tensor [batch_size, num_features] or [num_features]
         weights (torch.Tensor): SOM weights [x, y, num_features]
@@ -120,7 +125,11 @@ def calculate_topographic_error(
             dy = dy - y_dim * torch.round(dy / y_dim)
 
         grid_distances = torch.sqrt(dx**2 + dy**2)
-        threshold = 1.0
+        # 8-neighborhood adjacency: the 1st and 2nd BMU are considered neighbors when they
+        # are orthogonally (distance 1) or diagonally (distance sqrt(2) ~ 1.414) adjacent.
+        # The 1.42 threshold forgives the diagonal while flagging any unit >= 2 cells away,
+        # matching the common convention (e.g. MiniSom) so TE is comparable across libraries.
+        threshold = 1.42
         return (grid_distances > threshold).float().mean().item()
 
 
