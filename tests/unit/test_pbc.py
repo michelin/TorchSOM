@@ -249,6 +249,24 @@ class TestPBCTopographicError:
 class TestPBCCollectSamples:
     """Verify collect_samples wraps neighbours with PBC."""
 
+    def test_fixed_retrieval_deduplicates_wrapped_neighbors(self) -> None:
+        """Small periodic maps contain each wrapped cell exactly once."""
+        som = SOM(
+            x=2,
+            y=2,
+            num_features=1,
+            neighborhood_order=1,
+            pbc=True,
+            device="cpu",
+            search_backend="torch",
+            random_seed=0,
+        )
+        som.weights.data = torch.arange(4, dtype=torch.float32).reshape(2, 2, 1)
+
+        cells = som.get_retrieval_cells((0, 0), n_extra_cells=10)
+
+        assert cells == ((0, 0), (0, 1), (1, 0), (1, 1))
+
     def test_collect_samples_wraps_with_pbc(self) -> None:
         """collect_samples should return a non-empty buffer when PBC is active."""
         torch.manual_seed(42)

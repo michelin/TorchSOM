@@ -56,7 +56,7 @@ the query's BMU cell; they differ in how far they expand:
 
 .. list-table::
    :header-rows: 1
-   :widths: 26 16 58
+   :widths: 30 18 52
 
    * - ``retrieval_mode``
      - Expands?
@@ -71,6 +71,10 @@ the query's BMU cell; they differ in how far they expand:
      - Topological + KNN
      - Same as above, then a nearest-neighbor fallback in weight space when the
        buffer is still below ``min_buffer_threshold``.
+   * - ``"bmu_neighborhood_fixed"``
+     - Topological + fixed cells
+     - Same base neighborhood, followed by ``n_extra_cells`` cells ordered by
+       distance from their prototypes to the BMU prototype.
 
 The KNN fallback in the default mode guarantees a usable buffer size even in sparse
 regions of the map: if the BMU and its neighbors hold too few samples, the nearest
@@ -78,6 +82,25 @@ remaining neurons (by codebook distance) are pulled in until
 ``min_buffer_threshold`` is exceeded. The neighborhood extent is the SOM's
 ``neighborhood_order``, and under :ref:`periodic boundary conditions <topologies-pbc>`
 the neighborhood wraps across edges.
+
+The fixed mode provides occupancy-independent support instead of a target sample
+count. Empty cells consume the same budget as occupied cells, so the chosen geometry
+does not change when historical samples move between map cells:
+
+.. code-block:: python
+
+   X_local, y_local = som.collect_samples(
+       query_sample=query,
+       historical_samples=historical_samples,
+       historical_outputs=historical_outputs,
+       bmus_idx_map=bmus_idx_map,
+       retrieval_mode="bmu_neighborhood_fixed",
+       n_extra_cells=4,
+   )
+
+Use :meth:`~torchsom.core.SOM.get_retrieval_cells` to inspect the corresponding cell
+coordinates directly. It returns the complete topological neighborhood first and then
+the prototype-nearest extra cells, with deterministic flattened-index tie-breaking.
 
 
 Typical workflow
@@ -114,6 +137,8 @@ Choosing a mode
   local data density.
 - Use ``"bmu_neighborhood"`` when you want strictly local samples and accept a
   variable, possibly small, buffer.
+- Use ``"bmu_neighborhood_fixed"`` when the retrieval geometry must be fixed
+  independently of sample occupancy; choose ``n_extra_cells`` before retrieval.
 - Use ``"bmu_only"`` for the most local model, or to inspect exactly which samples a
   single neuron represents.
 - Tune ``min_buffer_threshold`` to the minimum sample count your local model needs.

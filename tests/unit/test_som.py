@@ -445,6 +445,174 @@ class TestBMUIdentification:
 class TestCollectSamples:
     """Tests for SOM.collect_samples method."""
 
+    @staticmethod
+    def _fixed_retrieval_som() -> SOM:
+        """Build a deterministic map whose prototype order is easy to inspect."""
+        som = SOM(
+            x=4,
+            y=4,
+            num_features=1,
+            neighborhood_order=1,
+            device="cpu",
+            search_backend="torch",
+            random_seed=0,
+        )
+        som.weights.data = torch.arange(16, dtype=torch.float32).reshape(4, 4, 1)
+        return som
+
+    def test_get_retrieval_cells_adds_nearest_prototypes_after_neighborhood(
+        self,
+    ) -> None:
+        """Extra cells follow the complete fixed neighborhood in prototype order."""
+        som = self._fixed_retrieval_som()
+
+        base = som.get_retrieval_cells((0, 0))
+        expanded = som.get_retrieval_cells((0, 0), n_extra_cells=2)
+
+        assert base == ((0, 0), (0, 1), (1, 0), (1, 1))
+        assert expanded == ((0, 0), (0, 1), (1, 0), (1, 1), (0, 2), (0, 3))
+
+    def test_get_retrieval_cells_breaks_distance_ties_by_flat_index(
+        self,
+    ) -> None:
+        """Equal prototype distances have a stable row-major tie break."""
+        som = self._fixed_retrieval_som()
+        som.weights.data.zero_()
+
+        cells = som.get_retrieval_cells((0, 0), n_extra_cells=3)
+
+        assert cells[-3:] == ((0, 2), (0, 3), (1, 2))
+
+    def test_get_retrieval_cells_uses_complete_interior_neighborhood(self) -> None:
+        """An interior rectangular BMU includes every configured neighbor."""
+        som = self._fixed_retrieval_som()
+
+        cells = som.get_retrieval_cells((2, 2))
+
+        assert cells == (
+            (1, 1),
+            (1, 2),
+            (1, 3),
+            (2, 1),
+            (2, 2),
+            (2, 3),
+            (3, 1),
+            (3, 2),
+            (3, 3),
+        )
+
+    def test_get_retrieval_cells_supports_hexagonal_neighborhood(self) -> None:
+        """Hexagonal retrieval uses the configured six-neighbor ring."""
+        som = SOM(
+            x=5,
+            y=5,
+            num_features=1,
+            neighborhood_order=1,
+            topology="hexagonal",
+            device="cpu",
+            search_backend="torch",
+            random_seed=0,
+        )
+
+        cells = som.get_retrieval_cells((2, 2))
+
+        assert cells == (
+            (1, 2),
+            (1, 3),
+            (2, 1),
+            (2, 2),
+            (2, 3),
+            (3, 2),
+            (3, 3),
+        )
+
+    def test_get_retrieval_cells_caps_budget_at_every_cell_once(self) -> None:
+        """An oversized budget saturates at the finite map without duplicates."""
+        som = self._fixed_retrieval_som()
+
+        cells = som.get_retrieval_cells((0, 0), n_extra_cells=100)
+
+        assert len(cells) == som.x * som.y
+        assert len(set(cells)) == som.x * som.y
+        assert set(cells) == {
+            (row, column) for row in range(som.x) for column in range(som.y)
+        }
+
+    @pytest.mark.parametrize("bmu_position", [(-1, 0), (4, 0), (0, -1), (0, 4)])
+    def test_get_retrieval_cells_rejects_out_of_grid_bmu(
+        self,
+        bmu_position: tuple[int, int],
+    ) -> None:
+        """The public geometry API rejects invalid BMU coordinates."""
+        som = self._fixed_retrieval_som()
+
+        with pytest.raises(ValueError, match="bmu_position"):
+            som.get_retrieval_cells(bmu_position)
+
+    def test_get_retrieval_cells_rejects_negative_budget(self) -> None:
+        """A fixed cell budget cannot be negative."""
+        som = self._fixed_retrieval_som()
+
+        with pytest.raises(ValueError, match="n_extra_cells"):
+            som.get_retrieval_cells((0, 0), n_extra_cells=-1)
+
+    def test_fixed_collection_counts_empty_cells_in_extra_budget(self) -> None:
+        """An empty nearest cell prevents a fixed budget from skipping ahead."""
+        som = self._fixed_retrieval_som()
+        historical_samples = torch.tensor([[10.0], [20.0]])
+        historical_outputs = torch.tensor([100.0, 200.0])
+        bmus_idx_map = {(0, 0): [0], (0, 2): [], (0, 3): [1]}
+        query = torch.tensor([0.0])
+
+        _, _, one_extra_indices = som.collect_samples(
+            query_sample=query,
+            historical_samples=historical_samples,
+            historical_outputs=historical_outputs,
+            bmus_idx_map=bmus_idx_map,
+            retrieval_mode="bmu_neighborhood_fixed",
+            n_extra_cells=1,
+            return_indices=True,
+        )
+        _, _, two_extra_indices = som.collect_samples(
+            query_sample=query,
+            historical_samples=historical_samples,
+            historical_outputs=historical_outputs,
+            bmus_idx_map=bmus_idx_map,
+            retrieval_mode="bmu_neighborhood_fixed",
+            n_extra_cells=2,
+            return_indices=True,
+        )
+
+        assert one_extra_indices.tolist() == [0]
+        assert two_extra_indices.tolist() == [0, 1]
+
+    def test_fixed_collection_requires_extra_cell_budget(self) -> None:
+        """The fixed retrieval mode cannot silently infer a sample-count budget."""
+        som = self._fixed_retrieval_som()
+
+        with pytest.raises(ValueError, match="requires n_extra_cells"):
+            som.collect_samples(
+                query_sample=torch.tensor([0.0]),
+                historical_samples=torch.tensor([[10.0]]),
+                historical_outputs=torch.tensor([100.0]),
+                bmus_idx_map={(0, 0): [0]},
+                retrieval_mode="bmu_neighborhood_fixed",
+            )
+
+    def test_legacy_collection_rejects_extra_cell_budget(self) -> None:
+        """Legacy retrieval cannot silently ignore a fixed-cell argument."""
+        som = self._fixed_retrieval_som()
+
+        with pytest.raises(ValueError, match="only valid"):
+            som.collect_samples(
+                query_sample=torch.tensor([0.0]),
+                historical_samples=torch.tensor([[10.0]]),
+                historical_outputs=torch.tensor([100.0]),
+                bmus_idx_map={(0, 0): [0]},
+                retrieval_mode="bmu_only",
+                n_extra_cells=1,
+            )
+
     def test_collect_samples_basic_thresholding(
         self,
     ) -> None:

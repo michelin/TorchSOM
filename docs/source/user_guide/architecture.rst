@@ -55,9 +55,15 @@ The main ``SOM`` class inherits from ``BaseSOM`` and provides:
 
 - **``collect_samples(...)``** — Identify relevant historical samples for a given query
   using topology and latent-space distances, enabling Just-In-Time Learning (JITL)
-  applications. Three retrieval modes are available through ``retrieval_mode``
-  (``"bmu_only"``, ``"bmu_neighborhood"``, ``"bmu_neighborhood_knn"``), with the
-  neighborhood extent set by ``neighborhood_order``.
+  applications. Four retrieval modes are available through ``retrieval_mode``
+  (``"bmu_only"``, ``"bmu_neighborhood"``, ``"bmu_neighborhood_knn"``, and
+  ``"bmu_neighborhood_fixed"``). The last mode adds a fixed number of
+  prototype-nearest cells independently of occupancy. The neighborhood extent is set
+  by ``neighborhood_order``.
+
+- **``get_retrieval_cells(...)``** — Return the deterministic BMU-neighborhood block
+  and a requested number of prototype-nearest cells without inspecting sample
+  occupancy.
 
 - **``identify_bmus(data)``** — Find Best Matching Units for input data using the
   configured search backend (PyTorch or FAISS).
@@ -73,6 +79,7 @@ Class Hierarchy
        ├── build_map()
        ├── build_multiple_maps()
        ├── cluster()
+       ├── get_retrieval_cells()
        ├── collect_samples()
        ├── identify_bmus()
        ├── quantization_error()
