@@ -114,6 +114,7 @@ docs = [
     "sphinx-autodoc-typehints",
     "sphinx-copybutton",
     "sphinx-design",
+    "sphinxext-opengraph",
     "sphinx-autobuild",
     "interrogate",
 ]

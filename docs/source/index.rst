@@ -1,3 +1,5 @@
+:og:description: The reference PyTorch library for Self-Organizing Maps, published in JMLR: GPU training, a scikit-learn-style API, clustering, and visualization.
+
 TorchSOM Documentation
 ======================
 
