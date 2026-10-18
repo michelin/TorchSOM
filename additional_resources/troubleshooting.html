@@ -3,10 +3,18 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Troubleshooting" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://opensource.michelin.io/TorchSOM/additional_resources/troubleshooting.html" />
+<meta property="og:site_name" content="TorchSOM" />
+<meta property="og:description" content="This guide helps you resolve common issues when using TorchSOM. Installation Issues: Package Issues: Problem: TorchSOM is not installed or not in Python path. Solutions: Install TorchSOM: In a uv p..." />
+<meta property="og:image" content="https://opensource.michelin.io/TorchSOM/_static/assets/social_preview.png" />
+<meta property="og:image:alt" content="TorchSOM: The Reference PyTorch Library for Self-Organizing Maps" />
+<meta name="description" content="This guide helps you resolve common issues when using TorchSOM. Installation Issues: Package Issues: Problem: TorchSOM is not installed or not in Python path. Solutions: Install TorchSOM: In a uv p..." />
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="prev" title="Frequently Asked Questions" href="faq.html">
         <link rel="prefetch" href="../_static/logo.png" as="image">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/favicon.png"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>Troubleshooting - TorchSOM 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
@@ -297,9 +305,10 @@
 <p><strong>Solutions</strong>:</p>
 <ol class="arabic">
 <li><p>Install TorchSOM:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>torchsom
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>torchsom
 </pre></div>
 </div>
+<p>In a uv project, use <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">add</span> <span class="pre">torchsom</span></code> instead.</p>
 </li>
 <li><p>If you use a virtual environment, make sure it is active. With uv, prefix commands with <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span></code> so the project environment is always used:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import torchsom&quot;</span>
@@ -358,8 +367,9 @@
 <p><strong>Solutions</strong>:</p>
 <ol class="arabic">
 <li><p><strong>Install CUDA-enabled PyTorch</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># For CUDA 11.8</span>
-uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>torchvision<span class="w"> </span>torchaudio<span class="w"> </span>--index-url<span class="w"> </span>https://download.pytorch.org/whl/cu118
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example for CUDA 12.8; get the command for your system from</span>
+<span class="c1"># https://pytorch.org/get-started/locally/</span>
+pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>--index-url<span class="w"> </span>https://download.pytorch.org/whl/cu128
 </pre></div>
 </div>
 </li>

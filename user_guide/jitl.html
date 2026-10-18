@@ -3,10 +3,18 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Just-in-Time Learning" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://opensource.michelin.io/TorchSOM/user_guide/jitl.html" />
+<meta property="og:site_name" content="TorchSOM" />
+<meta property="og:description" content="Just-in-time learning (JITL) builds a small, local model on demand: for each new query, it retrieves the most relevant historical samples and trains (or predicts) on just those. A SOM is a natural ..." />
+<meta property="og:image" content="https://opensource.michelin.io/TorchSOM/_static/assets/social_preview.png" />
+<meta property="og:image:alt" content="TorchSOM: The Reference PyTorch Library for Self-Organizing Maps" />
+<meta name="description" content="Just-in-time learning (JITL) builds a small, local model on demand: for each new query, it retrieves the most relevant historical samples and trains (or predicts) on just those. A SOM is a natural ..." />
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Visualization Gallery" href="visualization_help.html"><link rel="prev" title="Clustering" href="clustering.html">
         <link rel="prefetch" href="../_static/logo.png" as="image">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/favicon.png"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>Just-in-Time Learning - TorchSOM 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
@@ -300,7 +308,7 @@ process drifts and a single global model goes stale.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">som</span><span class="o">.</span><span class="n">initialize_weights</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">historical_samples</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;pca&quot;</span><span class="p">)</span>
 <span class="n">som</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">historical_samples</span><span class="p">)</span>
 
-<span class="n">bmus_idx_map</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="s2">&quot;bmus_data&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">historical_samples</span><span class="p">)</span>
+<span class="n">bmus_idx_map</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="s2">&quot;bmus_data&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">historical_samples</span><span class="p">,</span> <span class="n">return_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">bmus_idx_map</span></code> maps each grid cell <code class="docutils literal notranslate"><span class="pre">(i,</span> <span class="pre">j)</span></code> to the list of historical-sample
@@ -370,7 +378,7 @@ the neighborhood wraps across edges.</p>
 <span class="c1"># 1. Train the SOM once on the historical buffer and index it</span>
 <span class="n">som</span><span class="o">.</span><span class="n">initialize_weights</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">historical_samples</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;pca&quot;</span><span class="p">)</span>
 <span class="n">som</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">historical_samples</span><span class="p">)</span>
-<span class="n">bmus_idx_map</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="s2">&quot;bmus_data&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">historical_samples</span><span class="p">)</span>
+<span class="n">bmus_idx_map</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="s2">&quot;bmus_data&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">historical_samples</span><span class="p">,</span> <span class="n">return_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># 2. For each incoming query, retrieve a local set and fit a local model</span>
 <span class="k">for</span> <span class="n">query</span> <span class="ow">in</span> <span class="n">stream</span><span class="p">:</span>

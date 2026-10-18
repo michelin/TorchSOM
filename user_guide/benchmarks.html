@@ -3,10 +3,18 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Benchmarks" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://opensource.michelin.io/TorchSOM/user_guide/benchmarks.html" />
+<meta property="og:site_name" content="TorchSOM" />
+<meta property="og:description" content="TorchSOM is benchmarked against MiniSom, the most widely adopted SOM library, and somoclu, a massively parallel C++/CUDA implementation. The results below are the ones published in the paper(Sectio..." />
+<meta property="og:image" content="https://opensource.michelin.io/TorchSOM/_static/assets/social_preview.png" />
+<meta property="og:image:alt" content="TorchSOM: The Reference PyTorch Library for Self-Organizing Maps" />
+<meta name="description" content="TorchSOM is benchmarked against MiniSom, the most widely adopted SOM library, and somoclu, a massively parallel C++/CUDA implementation. The results below are the ones published in the paper(Sectio..." />
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Comparison with Other Libraries" href="comparison.html"><link rel="prev" title="Visualization Gallery" href="visualization_help.html">
         <link rel="prefetch" href="../_static/logo.png" as="image">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/favicon.png"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>Benchmarks - TorchSOM 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
@@ -285,291 +293,322 @@
         <article role="main" id="furo-main-content">
           <section id="benchmarks">
 <h1>Benchmarks<a class="headerlink" href="#benchmarks" title="Link to this heading">¶</a></h1>
-<p>TorchSOM’s computational performance and fidelity are evaluated against
-<a class="reference external" href="https://github.com/JustGlowing/minisom">MiniSom</a>, the most widely adopted
-and actively maintained SOM library. These benchmarks are from
-<a class="reference external" href="https://arxiv.org/abs/2510.11147">the paper</a> (Section 4, Appendix D).</p>
+<p>TorchSOM is benchmarked against <a class="reference external" href="https://github.com/JustGlowing/minisom">MiniSom</a>,
+the most widely adopted SOM library, and <a class="reference external" href="https://github.com/peterwittek/somoclu">somoclu</a>,
+a massively parallel C++/CUDA implementation. The results below are the ones published
+in <a class="reference external" href="https://www.jmlr.org/papers/v27/25-2467.html">the paper</a> (Section 4, Appendix D).</p>
 <section id="methodology">
 <h2>Methodology<a class="headerlink" href="#methodology" title="Link to this heading">¶</a></h2>
-<p>Synthetic datasets are generated using scikit-learn’s <code class="docutils literal notranslate"><span class="pre">make_blobs()</span></code>, varying
-both sample size and feature dimensionality. Both implementations use identical
-hyperparameters:</p>
+<p>Backends are only compared on the same device:</p>
 <ul class="simple">
-<li><p><strong>Grid size</strong>: 25 x 15 (rectangular)</p></li>
-<li><p><strong>Initialization</strong>: PCA</p></li>
-<li><p><strong>Training iterations</strong>: 100 epochs</p></li>
-<li><p><strong>Neighborhood function</strong>: Gaussian</p></li>
-<li><p><strong>Distance function</strong>: Euclidean</p></li>
-<li><p><strong>Seed</strong>: Fixed for reproducibility</p></li>
+<li><p><strong>CPU</strong>: MiniSom (standard online training), MiniSom-JIT (its optional Numba-compiled
+batch-offline routine), and TorchSOM.</p></li>
+<li><p><strong>GPU</strong>: somoclu (CUDA C++) and TorchSOM (CUDA PyTorch).</p></li>
 </ul>
-<p>Hardware:</p>
-<ul class="simple">
-<li><p><strong>CPU</strong>: Intel Xeon Platinum 8370C (Ice Lake) &#64; 3.4 GHz, 8 cores, 16 GB RAM</p></li>
-<li><p><strong>GPU</strong>: NVIDIA Tesla T4, 2560 CUDA cores, 16 GB RAM</p></li>
-</ul>
-<p>Each configuration is averaged over <strong>10 independent runs</strong>.</p>
+<p>Data sets come from scikit-learn’s <code class="docutils literal notranslate"><span class="pre">make_blobs()</span></code>, with 240, 4000, or 16000 samples and
+4, 50, or 300 features. Every backend uses the same hyperparameters: a 25 × 15
+rectangular grid, PCA initialization, 100 training iterations, a Gaussian neighborhood,
+and Euclidean distance.</p>
+<p>Both tables report the test quantization error (QE), the test topographic error (TE),
+and the wall-clock time, averaged over 10 runs. The time covers initialization, training,
+and any one-time cost (Numba compilation, GPU setup), so it is the full cost of a first
+use. Lower is better for all three. <strong>Bold</strong> marks the best value per metric and row, and
+standard deviations are shown only when non-zero.</p>
+<p>Hardware: Intel Xeon Gold 6134 CPU (16 cores at 3.20 GHz, 187 GB RAM) and NVIDIA Tesla
+V100-PCIE GPU (5120 CUDA cores, 32 GB RAM).</p>
 </section>
-<section id="small-rectangular-map-25-x-15">
-<h2>Small Rectangular Map (25 x 15)<a class="headerlink" href="#small-rectangular-map-25-x-15" title="Link to this heading">¶</a></h2>
-<div class="table-wrapper colwidths-given docutils container">
+<section id="cpu-results">
+<h2>CPU results<a class="headerlink" href="#cpu-results" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper docutils container">
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 7.5%" />
-<col style="width: 7.5%" />
-<col style="width: 9.4%" />
-<col style="width: 9.4%" />
-<col style="width: 9.4%" />
-<col style="width: 9.4%" />
-<col style="width: 9.4%" />
-<col style="width: 9.4%" />
-<col style="width: 9.4%" />
-<col style="width: 9.4%" />
-<col style="width: 9.4%" />
-</colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>Samples</p></th>
+<tr class="row-odd"><th class="head" colspan="2"><p>Data set</p></th>
+<th class="head" colspan="3"><p>MiniSom (CPU)</p></th>
+<th class="head" colspan="3"><p>MiniSom-JIT (CPU)</p></th>
+<th class="head" colspan="3"><p>TorchSOM (CPU)</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Samples</p></th>
 <th class="head"><p>Features</p></th>
-<th class="head"><p>QE (MiniSom)</p></th>
-<th class="head"><p>TE% (MiniSom)</p></th>
-<th class="head"><p>Time (MiniSom)</p></th>
-<th class="head"><p>QE (CPU)</p></th>
-<th class="head"><p>TE% (CPU)</p></th>
-<th class="head"><p>Time (CPU)</p></th>
-<th class="head"><p>QE (GPU)</p></th>
-<th class="head"><p>TE% (GPU)</p></th>
-<th class="head"><p>Time (GPU)</p></th>
+<th class="head"><p>QE</p></th>
+<th class="head"><p>TE (%)</p></th>
+<th class="head"><p>Time (s)</p></th>
+<th class="head"><p>QE</p></th>
+<th class="head"><p>TE (%)</p></th>
+<th class="head"><p>Time (s)</p></th>
+<th class="head"><p>QE</p></th>
+<th class="head"><p>TE (%)</p></th>
+<th class="head"><p>Time (s)</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>240</p></td>
+<tr class="row-odd"><td><p>240</p></td>
 <td><p>4</p></td>
-<td><p>0.17</p></td>
-<td><p>26</p></td>
-<td><p>1.82 s</p></td>
+<td><p><strong>0.17</strong></p></td>
+<td><p>26 ± 4</p></td>
+<td><p>1.45 ± 0.03</p></td>
+<td><p>0.18</p></td>
+<td><p>23</p></td>
+<td><p>4.31 ± 0.01</p></td>
 <td><p>0.24</p></td>
-<td><p>12</p></td>
-<td><p>0.41 s</p></td>
-<td><p>0.24</p></td>
-<td><p>10</p></td>
-<td><p>0.24 s</p></td>
+<td><p><strong>2</strong></p></td>
+<td><p><strong>0.27 ± 0.04</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>240</p></td>
+<td><p>50</p></td>
+<td><p>1.80</p></td>
+<td><p>48 ± 7</p></td>
+<td><p>2.74 ± 0.05</p></td>
+<td><p><strong>1.78</strong></p></td>
+<td><p>40</p></td>
+<td><p>2.38 ± 0.01</p></td>
+<td><p>1.79</p></td>
+<td><p><strong>5</strong></p></td>
+<td><p><strong>0.34 ± 0.07</strong></p></td>
 </tr>
 <tr class="row-odd"><td><p>240</p></td>
-<td><p>50</p></td>
-<td><p>1.79</p></td>
-<td><p>49</p></td>
-<td><p>3.84 s</p></td>
-<td><p>1.79</p></td>
-<td><p>12</p></td>
-<td><p>0.50 s</p></td>
-<td><p>1.83</p></td>
-<td><p>15</p></td>
-<td><p>0.25 s</p></td>
-</tr>
-<tr class="row-even"><td><p>240</p></td>
 <td><p>300</p></td>
-<td><p>5.43</p></td>
-<td><p>71</p></td>
-<td><p>15.4 s</p></td>
-<td><p>5.21</p></td>
-<td><p>47</p></td>
-<td><p>0.72 s</p></td>
-<td><p>5.21</p></td>
-<td><p>30</p></td>
-<td><p>0.28 s</p></td>
+<td><p>5.44</p></td>
+<td><p>71 ± 10</p></td>
+<td><p>13.84 ± 0.19</p></td>
+<td><p>5.34</p></td>
+<td><p>52</p></td>
+<td><p>5.87 ± 0.01</p></td>
+<td><p><strong>5.21</strong></p></td>
+<td><p><strong>27</strong></p></td>
+<td><p><strong>0.52 ± 0.04</strong></p></td>
 </tr>
-<tr class="row-odd"><td><p>4,000</p></td>
+<tr class="row-even"><td><p>4000</p></td>
 <td><p>4</p></td>
-<td><p>0.16</p></td>
-<td><p>31</p></td>
-<td><p>54.6 s</p></td>
+<td><p><strong>0.16</strong></p></td>
+<td><p>32 ± 1</p></td>
+<td><p>25.08 ± 0.35</p></td>
+<td><p><strong>0.16</strong></p></td>
+<td><p>20</p></td>
+<td><p>5.91 ± 0.03</p></td>
 <td><p>0.23</p></td>
-<td><p>6</p></td>
-<td><p>4.87 s</p></td>
-<td><p>0.23</p></td>
-<td><p>7</p></td>
-<td><p>2.61 s</p></td>
+<td><p><strong>0</strong></p></td>
+<td><p><strong>3.26 ± 0.05</strong></p></td>
 </tr>
-<tr class="row-even"><td><p>4,000</p></td>
+<tr class="row-odd"><td><p>4000</p></td>
 <td><p>50</p></td>
 <td><p>1.66</p></td>
-<td><p>56</p></td>
-<td><p>89.2 s</p></td>
+<td><p>55 ± 2</p></td>
+<td><p>49.03 ± 1.10</p></td>
+<td><p><strong>1.64</strong></p></td>
+<td><p>28</p></td>
+<td><p>16.33 ± 0.58</p></td>
 <td><p>1.77</p></td>
-<td><p>14</p></td>
-<td><p>5.33 s</p></td>
-<td><p>1.74</p></td>
-<td><p>16</p></td>
-<td><p>2.62 s</p></td>
+<td><p><strong>4</strong></p></td>
+<td><p><strong>3.50 ± 0.09</strong></p></td>
 </tr>
-<tr class="row-odd"><td><p>4,000</p></td>
+<tr class="row-even"><td><p>4000</p></td>
 <td><p>300</p></td>
 <td><p>5.14</p></td>
-<td><p>74</p></td>
-<td><p>261 s</p></td>
+<td><p>74 ± 2</p></td>
+<td><p>226 ± 2</p></td>
+<td><p><strong>5.02</strong></p></td>
+<td><p>37</p></td>
+<td><p>69.47 ± 0.35</p></td>
 <td><p>5.13</p></td>
-<td><p>19</p></td>
-<td><p>8.32 s</p></td>
-<td><p>5.13</p></td>
-<td><p>20</p></td>
-<td><p>2.77 s</p></td>
+<td><p><strong>6</strong></p></td>
+<td><p><strong>5.25 ± 0.10</strong></p></td>
 </tr>
-<tr class="row-even"><td><p>16,000</p></td>
+<tr class="row-odd"><td><p>16000</p></td>
 <td><p>4</p></td>
-<td><p>0.15</p></td>
-<td><p>32</p></td>
-<td><p>1,054 s</p></td>
+<td><p><strong>0.15</strong></p></td>
+<td><p>32 ± 1</p></td>
+<td><p>99.35 ± 1.53</p></td>
+<td><p><strong>0.15</strong></p></td>
+<td><p>19</p></td>
+<td><p>17.58 ± 0.05</p></td>
 <td><p>0.23</p></td>
-<td><p>6</p></td>
-<td><p>20.2 s</p></td>
-<td><p>0.23</p></td>
-<td><p>6</p></td>
-<td><p>10.9 s</p></td>
+<td><p><strong>1</strong></p></td>
+<td><p><strong>14.55 ± 0.20</strong></p></td>
 </tr>
-<tr class="row-odd"><td><p>16,000</p></td>
+<tr class="row-even"><td><p>16000</p></td>
 <td><p>50</p></td>
 <td><p>1.64</p></td>
-<td><p>57</p></td>
-<td><p>1,220 s</p></td>
+<td><p>56 ± 1</p></td>
+<td><p>186 ± 2</p></td>
+<td><p><strong>1.60</strong></p></td>
+<td><p>25</p></td>
+<td><p>51.35 ± 0.20</p></td>
 <td><p>1.75</p></td>
-<td><p>13</p></td>
-<td><p>21.9 s</p></td>
-<td><p>1.75</p></td>
-<td><p>14</p></td>
-<td><p>10.8 s</p></td>
+<td><p><strong>3</strong></p></td>
+<td><p><strong>15.63 ± 0.20</strong></p></td>
 </tr>
-<tr class="row-even"><td><p>16,000</p></td>
+<tr class="row-odd"><td><p>16000</p></td>
 <td><p>300</p></td>
 <td><p>5.15</p></td>
-<td><p>75</p></td>
-<td><p>1,939 s</p></td>
+<td><p>76 ± 1</p></td>
+<td><p>900 ± 10</p></td>
+<td><p><strong>4.98</strong></p></td>
+<td><p>31</p></td>
+<td><p>276 ± 1</p></td>
 <td><p>5.14</p></td>
-<td><p>18</p></td>
-<td><p>30.4 s</p></td>
-<td><p>5.14</p></td>
-<td><p>17</p></td>
-<td><p>11.6 s</p></td>
+<td><p><strong>6</strong></p></td>
+<td><p><strong>22.68 ± 0.08</strong></p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p><em>QE = Quantization Error (lower is better). TE% = Topographic Error as percentage (lower is better).</em></p>
 </section>
-<section id="key-findings">
-<h2>Key Findings<a class="headerlink" href="#key-findings" title="Link to this heading">¶</a></h2>
-<section id="training-speed">
-<h3>Training Speed<a class="headerlink" href="#training-speed" title="Link to this heading">¶</a></h3>
-<p>TorchSOM trains substantially faster than MiniSom:</p>
-<ul class="simple">
-<li><p><strong>CPU</strong>: 77–98% faster across all configurations</p></li>
-<li><p><strong>GPU</strong>: Up to 99% faster for large, high-dimensional datasets</p></li>
-<li><p>The 16,000-sample / 300-feature case: MiniSom takes <strong>32 minutes</strong>,
-torchsom (GPU) takes <strong>12 seconds</strong> — a <strong>167x speedup</strong></p></li>
-</ul>
-<p>These improvements hold even though torchsom computes both QE and TE at every
-epoch (an <span class="math notranslate nohighlight">\(\mathcal{O}(2 \times \text{batch} \times \text{epochs})\)</span>
-overhead that MiniSom does not incur).</p>
-</section>
-<section id="topographic-error">
-<h3>Topographic Error<a class="headerlink" href="#topographic-error" title="Link to this heading">¶</a></h3>
-<p>TorchSOM consistently produces maps with <strong>34–81% lower Topographic Error</strong>,
-indicating significantly better topology preservation. This means the spatial
-relationships in the input data are more faithfully represented on the SOM grid.</p>
-</section>
-<section id="quantization-error">
-<h3>Quantization Error<a class="headerlink" href="#quantization-error" title="Link to this heading">¶</a></h3>
-<p>Both libraries achieve comparable Quantization Error across all configurations,
-confirming that torchsom’s batch learning approach maintains representation
-fidelity equivalent to MiniSom’s online learning.</p>
-</section>
-</section>
-<section id="large-map-results-90-x-70">
-<h2>Large Map Results (90 x 70)<a class="headerlink" href="#large-map-results-90-x-70" title="Link to this heading">¶</a></h2>
-<p>For large maps, torchsom is the only viable option. MiniSom fails to complete
-within reasonable time for the largest configurations:</p>
-<div class="table-wrapper colwidths-given docutils container">
+<section id="gpu-results">
+<h2>GPU results<a class="headerlink" href="#gpu-results" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper docutils container">
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 9.1%" />
-<col style="width: 9.1%" />
-<col style="width: 13.6%" />
-<col style="width: 13.6%" />
-<col style="width: 13.6%" />
-<col style="width: 13.6%" />
-<col style="width: 13.6%" />
-<col style="width: 13.6%" />
-</colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>Samples</p></th>
+<tr class="row-odd"><th class="head" colspan="2"><p>Data set</p></th>
+<th class="head" colspan="3"><p>somoclu (GPU)</p></th>
+<th class="head" colspan="3"><p>TorchSOM (GPU)</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Samples</p></th>
 <th class="head"><p>Features</p></th>
-<th class="head"><p>QE (MiniSom)</p></th>
-<th class="head"><p>Time (MiniSom)</p></th>
-<th class="head"><p>QE (CPU)</p></th>
-<th class="head"><p>Time (CPU)</p></th>
-<th class="head"><p>QE (GPU)</p></th>
-<th class="head"><p>Time (GPU)</p></th>
+<th class="head"><p>QE</p></th>
+<th class="head"><p>TE (%)</p></th>
+<th class="head"><p>Time (s)</p></th>
+<th class="head"><p>QE</p></th>
+<th class="head"><p>TE (%)</p></th>
+<th class="head"><p>Time (s)</p></th>
 </tr>
 </thead>
 <tbody>
+<tr class="row-odd"><td><p>240</p></td>
+<td><p>4</p></td>
+<td><p><strong>0.19</strong></p></td>
+<td><p>23</p></td>
+<td><p><strong>0.15 ± 0.01</strong></p></td>
+<td><p>0.24</p></td>
+<td><p><strong>2</strong></p></td>
+<td><p>1.29 ± 0.04</p></td>
+</tr>
 <tr class="row-even"><td><p>240</p></td>
-<td><p>300</p></td>
-<td><p>5.45</p></td>
-<td><p>364 s</p></td>
-<td><p>5.17</p></td>
-<td><p>7.07 s</p></td>
-<td><p>5.18</p></td>
-<td><p>0.40 s</p></td>
+<td><p>50</p></td>
+<td><p><strong>1.80</strong></p></td>
+<td><p>57</p></td>
+<td><p><strong>0.51 ± 0.01</strong></p></td>
+<td><p>1.83</p></td>
+<td><p><strong>3</strong></p></td>
+<td><p>1.37 ± 0.04</p></td>
 </tr>
-<tr class="row-odd"><td><p>4,000</p></td>
+<tr class="row-odd"><td><p>240</p></td>
 <td><p>300</p></td>
-<td><p>5.0</p></td>
-<td><p>6,149 s</p></td>
-<td><p>5.11</p></td>
-<td><p>77.8 s</p></td>
-<td><p>5.10</p></td>
-<td><p>4.57 s</p></td>
+<td><p>5.34</p></td>
+<td><p>53</p></td>
+<td><p>2.37 ± 0.01</p></td>
+<td><p><strong>5.21</strong></p></td>
+<td><p><strong>14 ± 2</strong></p></td>
+<td><p><strong>1.34 ± 0.03</strong></p></td>
 </tr>
-<tr class="row-even"><td><p>16,000</p></td>
+<tr class="row-even"><td><p>4000</p></td>
+<td><p>4</p></td>
+<td><p><strong>0.16</strong></p></td>
+<td><p>24</p></td>
+<td><p><strong>1.77 ± 0.02</strong></p></td>
+<td><p>0.23</p></td>
+<td><p><strong>1</strong></p></td>
+<td><p>3.32 ± 0.01</p></td>
+</tr>
+<tr class="row-odd"><td><p>4000</p></td>
+<td><p>50</p></td>
+<td><p><strong>1.61</strong></p></td>
+<td><p>37</p></td>
+<td><p>8.05 ± 0.05</p></td>
+<td><p>1.74</p></td>
+<td><p><strong>4</strong></p></td>
+<td><p><strong>3.44 ± 0.04</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>4000</p></td>
 <td><p>300</p></td>
-<td><p>N/A</p></td>
-<td><p>N/A</p></td>
-<td><p>5.11</p></td>
-<td><p>321 s</p></td>
-<td><p>5.12</p></td>
-<td><p>19.5 s</p></td>
+<td><p><strong>5.02</strong></p></td>
+<td><p>47</p></td>
+<td><p>40.92 ± 1.30</p></td>
+<td><p>5.13</p></td>
+<td><p><strong>7</strong></p></td>
+<td><p><strong>3.33 ± 0.03</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>16000</p></td>
+<td><p>4</p></td>
+<td><p><strong>0.15</strong></p></td>
+<td><p>22</p></td>
+<td><p><strong>10.48 ± 0.27</strong></p></td>
+<td><p>0.23</p></td>
+<td><p><strong>0</strong></p></td>
+<td><p>12.71 ± 0.03</p></td>
+</tr>
+<tr class="row-even"><td><p>16000</p></td>
+<td><p>50</p></td>
+<td><p><strong>1.60</strong></p></td>
+<td><p>30</p></td>
+<td><p>31.82 ± 0.16</p></td>
+<td><p>1.75</p></td>
+<td><p><strong>4</strong></p></td>
+<td><p><strong>13.29 ± 0.10</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>16000</p></td>
+<td><p>300</p></td>
+<td><p><strong>4.98</strong></p></td>
+<td><p>37</p></td>
+<td><p>161</p></td>
+<td><p>5.14</p></td>
+<td><p><strong>5</strong></p></td>
+<td><p><strong>13.08 ± 0.04</strong></p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p><em>MiniSom is unable to process the 16,000 x 300 configuration on a 90 x 70 grid
-within a reasonable time.</em></p>
 </section>
-<section id="interpretation">
-<h2>Interpretation<a class="headerlink" href="#interpretation" title="Link to this heading">¶</a></h2>
-<p>TorchSOM’s advantages stem from two design decisions:</p>
-<ol class="arabic simple">
-<li><p><strong>Batch learning</strong>: Instead of updating weights sample-by-sample (online),
-torchsom processes entire batches, enabling vectorized operations and
-efficient GPU utilization.</p></li>
-<li><p><strong>PyTorch backend</strong>: Leverages optimized BLAS routines and CUDA kernels for
-distance computation, BMU search, and weight updates, all operating on
-contiguous tensor memory.</p></li>
-</ol>
-<p>Together, these enable torchsom to scale to datasets and map sizes that are
-impractical with existing libraries, while maintaining or improving map quality.</p>
+<section id="key-findings">
+<h2>Key findings<a class="headerlink" href="#key-findings" title="Link to this heading">¶</a></h2>
+<p><strong>Topology preservation.</strong> TorchSOM has the lowest TE in every rectangular
+configuration, on both CPU and GPU: 62% to 100% below standard MiniSom, and below
+MiniSom-JIT and somoclu throughout (at 16000 × 300, 6% versus 76%, 31%, and 37%). On
+hexagonal maps it leads in nearly all configurations; the exceptions are the 4-feature
+sets (Appendix D).</p>
+<p><strong>Quantization error.</strong> QE is comparable across backends, with TorchSOM marginally
+higher.</p>
+<p><strong>CPU speed.</strong> TorchSOM is 81% to 98% faster than standard MiniSom. MiniSom updates one
+sample at a time, while TorchSOM processes the whole batch with vectorized tensor
+operations, so the gap grows with sample size and feature count. TorchSOM also matches or
+beats MiniSom-JIT in every rectangular configuration (up to ~16×). The gap is smallest on
+the 4-feature sets, where there is little batched work to amortize.</p>
+<p><strong>GPU speed.</strong> TorchSOM’s GPU time includes a one-time initialization. On the smallest
+and 4-feature sets, that overhead dominates and somoclu’s compiled kernels are faster. As
+the data grows, the overhead is amortized and TorchSOM is up to ~12× faster than somoclu
+on high-dimensional data.</p>
+<p><strong>Device choice.</strong> The GPU helps most on large, high-dimensional data: at 16000 × 300 it
+cuts the time by about 40% relative to the CPU. For small or low-dimensional data, the
+multi-core CPU is competitive or faster.</p>
+<p><strong>Larger maps.</strong> On a 90 × 70 grid (about 17× the neurons), TorchSOM’s CPU speedup grows
+to ~200× over standard MiniSom and ~50× over MiniSom-JIT, and its GPU speedup over
+somoclu reaches ~66×. At that size, TorchSOM’s GPU run is ~8× faster than its CPU run. TE
+stays well below every baseline and QE remains on par. These tables, and the hexagonal
+results, are in Appendix D of the paper.</p>
+<p>All TorchSOM times are conservative: TorchSOM also evaluates QE and TE over the full
+batch at every epoch, an <span class="math notranslate nohighlight">\(\mathcal{O}(2 \times \text{batch} \times \text{epochs})\)</span>
+cost that MiniSom and somoclu avoid by measuring once at the end.</p>
 </section>
 <section id="reproducibility">
 <h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading">¶</a></h2>
 <p>All benchmark scripts and configuration files live in the
-<a class="reference external" href="https://github.com/michelin/TorchSOM/tree/main/benchmark">benchmark/</a> directory.
-The exact paper states are pinned by two Git tags — <code class="docutils literal notranslate"><span class="pre">jmlr-submission-v1</span></code> (original
-submission) and <code class="docutils literal notranslate"><span class="pre">jmlr-revision-v1</span></code> (this revision) — and the comparison uses
-MiniSom v2.3.5 (commit <code class="docutils literal notranslate"><span class="pre">65b6ba6</span></code>).</p>
+<a class="reference external" href="https://github.com/michelin/TorchSOM/tree/main/benchmark">benchmark/</a> directory, and
+its README walks through the setup step by step. Three Git tags pin the paper states:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">jmlr-submission-v1</span></code>: the original submission (October 2025).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jmlr-revision-v1</span></code>: the first revision, with the same benchmark code.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jmlr-revision-v2</span></code>: the published version, which adds the somoclu and MiniSom-JIT
+baselines and reproduces the tables above.</p></li>
+</ul>
+<p>The first two tags use MiniSom v2.3.5 (commit <code class="docutils literal notranslate"><span class="pre">65b6ba6</span></code>). <code class="docutils literal notranslate"><span class="pre">jmlr-revision-v2</span></code> uses
+commit <code class="docutils literal notranslate"><span class="pre">2eb8bd7</span></code> from MiniSom’s development branch for both MiniSom and MiniSom-JIT,
+because the JIT routine was only available there at the time.</p>
 </section>
 <section id="further-reading">
 <h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="comparison.html"><span class="doc">Comparison with Other Libraries</span></a> — Feature-by-feature comparison with other SOM libraries</p></li>
-<li><p>Full benchmark tables (including hexagonal maps): <a class="reference external" href="https://arxiv.org/abs/2510.11147">arXiv paper, Appendix D</a></p></li>
+<li><p>Full benchmark tables, including 90 × 70 and hexagonal maps:
+<a class="reference external" href="https://www.jmlr.org/papers/v27/25-2467.html">paper, Appendix D</a></p></li>
 <li><p><a class="reference internal" href="architecture.html"><span class="doc">Package Architecture</span></a> — Package design and module overview</p></li>
 <li><p><a class="reference internal" href="../getting_started/basic_concepts.html"><span class="doc">Basic Concepts</span></a> — SOM mathematical foundations</p></li>
 </ul>
@@ -633,15 +672,9 @@ MiniSom v2.3.5 (commit <code class="docutils literal notranslate"><span class="p
             <ul>
 <li><a class="reference internal" href="#">Benchmarks</a><ul>
 <li><a class="reference internal" href="#methodology">Methodology</a></li>
-<li><a class="reference internal" href="#small-rectangular-map-25-x-15">Small Rectangular Map (25 x 15)</a></li>
-<li><a class="reference internal" href="#key-findings">Key Findings</a><ul>
-<li><a class="reference internal" href="#training-speed">Training Speed</a></li>
-<li><a class="reference internal" href="#topographic-error">Topographic Error</a></li>
-<li><a class="reference internal" href="#quantization-error">Quantization Error</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#large-map-results-90-x-70">Large Map Results (90 x 70)</a></li>
-<li><a class="reference internal" href="#interpretation">Interpretation</a></li>
+<li><a class="reference internal" href="#cpu-results">CPU results</a></li>
+<li><a class="reference internal" href="#gpu-results">GPU results</a></li>
+<li><a class="reference internal" href="#key-findings">Key findings</a></li>
 <li><a class="reference internal" href="#reproducibility">Reproducibility</a></li>
 <li><a class="reference internal" href="#further-reading">Further reading</a></li>
 </ul>

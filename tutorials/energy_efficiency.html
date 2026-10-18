@@ -3,10 +3,18 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Energy Efficiency — Multi-target Regression" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://opensource.michelin.io/TorchSOM/tutorials/energy_efficiency.html" />
+<meta property="og:site_name" content="TorchSOM" />
+<meta property="og:description" content="The Energy Efficiency dataset (768 samples, 8 building-design features, 2 continuous targets) is a multi-target regression problem: each building has a Heating Load and a Cooling Load. This tutoria..." />
+<meta property="og:image" content="https://opensource.michelin.io/TorchSOM/_static/assets/social_preview.png" />
+<meta property="og:image:alt" content="TorchSOM: The Reference PyTorch Library for Self-Organizing Maps" />
+<meta name="description" content="The Energy Efficiency dataset (768 samples, 8 building-design features, 2 continuous targets) is a multi-target regression problem: each building has a Heating Load and a Cooling Load. This tutoria..." />
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Clustering — Synthetic Blobs" href="clustering_walkthrough.html"><link rel="prev" title="Boston Housing — Regression" href="boston_housing.html">
         <link rel="prefetch" href="../_static/logo.png" as="image">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/favicon.png"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>Energy Efficiency — Multi-target Regression - TorchSOM 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
@@ -384,7 +392,7 @@ distances, so standardizing the features is essential.</p>
 <h2>5. Heating load landscape<a class="headerlink" href="#heating-load-landscape" title="Link to this heading">¶</a></h2>
 <p>Build the BMU→sample map once, then reuse it for every target. Here it colors each
 neuron by the mean heating load of its samples, and by the standard deviation.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bmus_map</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="s2">&quot;bmus_data&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bmus_map</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="s2">&quot;bmus_data&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">features</span><span class="p">,</span> <span class="n">return_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">viz</span><span class="o">.</span><span class="n">plot_metric_map</span><span class="p">(</span>
     <span class="n">bmus_data_map</span><span class="o">=</span><span class="n">bmus_map</span><span class="p">,</span>
     <span class="n">data</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>

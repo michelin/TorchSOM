@@ -113,7 +113,7 @@ neuron by the mean heating load of its samples, and by the standard deviation.
 
 .. code-block:: python
 
-   bmus_map = som.build_map("bmus_data", data=features)
+   bmus_map = som.build_map("bmus_data", data=features, return_indices=True)
    viz.plot_metric_map(
        bmus_data_map=bmus_map,
        data=features,

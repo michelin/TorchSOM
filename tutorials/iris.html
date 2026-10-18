@@ -3,10 +3,18 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Iris — Classification" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://opensource.michelin.io/TorchSOM/tutorials/iris.html" />
+<meta property="og:site_name" content="TorchSOM" />
+<meta property="og:description" content="The Iris dataset (150 samples, 4 features, 3 species) is the classic first SOM. This tutorial trains a map, checks convergence, and reads the structure through the U-matrix, hit map, classification..." />
+<meta property="og:image" content="https://opensource.michelin.io/TorchSOM/_static/assets/social_preview.png" />
+<meta property="og:image:alt" content="TorchSOM: The Reference PyTorch Library for Self-Organizing Maps" />
+<meta name="description" content="The Iris dataset (150 samples, 4 features, 3 species) is the classic first SOM. This tutorial trains a map, checks convergence, and reads the structure through the U-matrix, hit map, classification..." />
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Wine — Classification" href="wine.html"><link rel="prev" title="Tutorials" href="index.html">
         <link rel="prefetch" href="../_static/logo.png" as="image">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/favicon.png"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>Iris — Classification - TorchSOM 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
@@ -377,7 +385,7 @@ The figures below are its outputs.</p>
 <section id="classification-map">
 <h2>5. Classification map<a class="headerlink" href="#classification-map" title="Link to this heading">¶</a></h2>
 <p>Build the BMU→sample map once, then color each neuron by its dominant class.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bmus_map</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="s2">&quot;bmus_data&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bmus_map</span> <span class="o">=</span> <span class="n">som</span><span class="o">.</span><span class="n">build_map</span><span class="p">(</span><span class="s2">&quot;bmus_data&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">features</span><span class="p">,</span> <span class="n">return_indices</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">viz</span><span class="o">.</span><span class="n">plot_classification_map</span><span class="p">(</span>
     <span class="n">bmus_data_map</span><span class="o">=</span><span class="n">bmus_map</span><span class="p">,</span>
     <span class="n">data</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>

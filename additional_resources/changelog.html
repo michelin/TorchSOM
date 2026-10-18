@@ -3,10 +3,18 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Changelog" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://opensource.michelin.io/TorchSOM/additional_resources/changelog.html" />
+<meta property="og:site_name" content="TorchSOM" />
+<meta property="og:description" content="All notable changes to TorchSOM are documented in this file. The format is based on Keep a Changelog, and this project adheres to Semantic Versioning. For the full commit history, see the GitHub re..." />
+<meta property="og:image" content="https://opensource.michelin.io/TorchSOM/_static/assets/social_preview.png" />
+<meta property="og:image:alt" content="TorchSOM: The Reference PyTorch Library for Self-Organizing Maps" />
+<meta name="description" content="All notable changes to TorchSOM are documented in this file. The format is based on Keep a Changelog, and this project adheres to Semantic Versioning. For the full commit history, see the GitHub re..." />
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Frequently Asked Questions" href="faq.html"><link rel="prev" title="Configuration API" href="../api/configs.html">
         <link rel="prefetch" href="../_static/logo.png" as="image">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/favicon.png"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>Changelog - TorchSOM 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
@@ -293,13 +301,53 @@ and this project adheres to <a class="reference external" href="https://semver.o
 <p>The auto-generated <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> in the repository root is maintained by
 <a class="reference external" href="https://commitizen-tools.github.io/commitizen/">Commitizen</a> and provides
 a detailed, commit-level changelog.</p>
+<section id="v1-3-1">
+<h2>v1.3.1<a class="headerlink" href="#v1-3-1" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>The paper is published in the <em>Journal of Machine Learning Research</em>
+(<a class="reference external" href="https://www.jmlr.org/papers/v27/25-2467.html">JMLR 27(190)</a>). Citations,
+<code class="docutils literal notranslate"><span class="pre">CITATION.cff</span></code>, and the benchmarks and comparison pages now match the published
+version.</p></li>
+<li><p>Fix: map plots work again on matplotlib 3.11, which removed <code class="docutils literal notranslate"><span class="pre">matplotlib.cm.get_cmap</span></code>
+(<a class="reference external" href="https://github.com/michelin/TorchSOM/issues/10">#10</a>).</p></li>
+<li><p>Fix: passing a BMU map built without <code class="docutils literal notranslate"><span class="pre">return_indices=True</span></code> to the supervised maps or
+<code class="docutils literal notranslate"><span class="pre">collect_samples</span></code> now raises a clear error, and the documentation examples build the
+map correctly (<a class="reference external" href="https://github.com/michelin/TorchSOM/issues/11">#11</a>).</p></li>
+</ul>
+</section>
+<section id="v1-3-0">
+<h2>v1.3.0<a class="headerlink" href="#v1-3-0" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Rectangular topographic error now counts diagonal neighbors as adjacent
+(8-neighborhood, threshold 1.0 → 1.42), as MiniSom and somoclu do. TE values on
+rectangular maps are lower than in v1.2.0 and earlier.</p></li>
+<li><p>Benchmark scripts add the somoclu (GPU) and MiniSom-JIT (CPU) baselines used in the
+published paper.</p></li>
+<li><p>Benchmark GPU timings synchronize CUDA and account for device warm-up.</p></li>
+</ul>
+</section>
+<section id="v1-2-0">
+<h2>v1.2.0<a class="headerlink" href="#v1-2-0" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Periodic boundary conditions (PBC) for toroidal SOM topologies</p></li>
+<li><p>FAISS backend for BMU search (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;torchsom[faiss]&quot;</span></code>) and a configurable
+search backend (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">torch</span></code>, <code class="docutils literal notranslate"><span class="pre">faiss</span></code>)</p></li>
+<li><p>Retrieval modes for <code class="docutils literal notranslate"><span class="pre">collect_samples</span></code> (<code class="docutils literal notranslate"><span class="pre">bmu_only</span></code>, <code class="docutils literal notranslate"><span class="pre">bmu_neighborhood</span></code>,
+<code class="docutils literal notranslate"><span class="pre">bmu_neighborhood_knn</span></code>), which can also return the collected sample indices</p></li>
+</ul>
+</section>
 <section id="v1-1-1">
 <h2>v1.1.1<a class="headerlink" href="#v1-1-1" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>Periodic Boundary Conditions (PBC) support for toroidal SOM topologies</p></li>
-<li><p>FAISS backend for accelerated BMU search (<code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">add</span> <span class="pre">torchsom[faiss]</span></code>)</p></li>
-<li><p>Configurable search backend (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">torch</span></code>, <code class="docutils literal notranslate"><span class="pre">faiss</span></code>)</p></li>
-<li><p>Additional quality-of-life improvements and bug fixes</p></li>
+<li><p>Release workflow fix; no library changes</p></li>
+</ul>
+</section>
+<section id="v1-1-0">
+<h2>v1.1.0<a class="headerlink" href="#v1-1-0" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Faster map building, weight initialization, weight updates, and distance computations</p></li>
+<li><p>Benchmark scripts comparing TorchSOM with MiniSom</p></li>
+<li><p>Expanded documentation</p></li>
 </ul>
 </section>
 <section id="v1-0-0">
@@ -396,7 +444,11 @@ a detailed, commit-level changelog.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Changelog</a><ul>
+<li><a class="reference internal" href="#v1-3-1">v1.3.1</a></li>
+<li><a class="reference internal" href="#v1-3-0">v1.3.0</a></li>
+<li><a class="reference internal" href="#v1-2-0">v1.2.0</a></li>
 <li><a class="reference internal" href="#v1-1-1">v1.1.1</a></li>
+<li><a class="reference internal" href="#v1-1-0">v1.1.0</a></li>
 <li><a class="reference internal" href="#v1-0-0">v1.0.0</a></li>
 <li><a class="reference internal" href="#how-to-contribute">How to Contribute</a><ul>
 <li><a class="reference internal" href="#report-issues">Report Issues</a></li>

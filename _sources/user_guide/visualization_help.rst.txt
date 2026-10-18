@@ -93,7 +93,7 @@ All examples reuse the SOM and the BMU map built here. Train once, then build th
    q_errors, t_errors = som.fit(data=features)
 
    # 3. Pre-compute the BMU -> sample-indices map ONCE and reuse it
-   bmus_map = som.build_map("bmus_data", data=features)
+   bmus_map = som.build_map("bmus_data", data=features, return_indices=True)
 
    # 4. Create a visualizer (the topology is inferred from the SOM)
    viz = SOMVisualizer(som=som)

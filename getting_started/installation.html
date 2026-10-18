@@ -3,10 +3,18 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Installation" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://opensource.michelin.io/TorchSOM/getting_started/installation.html" />
+<meta property="og:site_name" content="TorchSOM" />
+<meta property="og:description" content="Requirements: Systems: TorchSOM requires: Python: 3.10 or higher, PyTorch: installed automatically as a dependency (see below for a GPU build), Operating System: Linux, macOS, or Windows. GPU: Torc..." />
+<meta property="og:image" content="https://opensource.michelin.io/TorchSOM/_static/assets/social_preview.png" />
+<meta property="og:image:alt" content="TorchSOM: The Reference PyTorch Library for Self-Organizing Maps" />
+<meta name="description" content="Requirements: Systems: TorchSOM requires: Python: 3.10 or higher, PyTorch: installed automatically as a dependency (see below for a GPU build), Operating System: Linux, macOS, or Windows. GPU: Torc..." />
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Quick Start" href="quickstart.html"><link rel="prev" title="TorchSOM Documentation" href="../index.html">
         <link rel="prefetch" href="../_static/logo.png" as="image">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/favicon.png"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>Installation - TorchSOM 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
@@ -292,28 +300,33 @@
 <p>TorchSOM requires:</p>
 <ul class="simple">
 <li><p><strong>Python</strong>: 3.10 or higher</p></li>
-<li><p><strong>PyTorch</strong>: 2.7 or higher</p></li>
+<li><p><strong>PyTorch</strong>: installed automatically as a dependency (see below for a GPU build)</p></li>
 <li><p><strong>Operating System</strong>: Linux, macOS, or Windows</p></li>
 </ul>
 </section>
 <section id="gpu">
 <h3>GPU<a class="headerlink" href="#gpu" title="Link to this heading">¶</a></h3>
-<p>For optimal performance, we recommend using a CUDA-compatible GPU with:</p>
-<ul class="simple">
-<li><p><strong>CUDA</strong>: 11.0 or higher</p></li>
-<li><p><strong>GPU Memory</strong>: 4GB or more recommended for large SOMs</p></li>
-</ul>
+<p>TorchSOM runs on any device PyTorch supports. GPU acceleration needs a CUDA build of
+PyTorch that matches your driver (see <a class="reference internal" href="#ensure-gpu-support">Ensure GPU Support</a>). For large maps, 4 GB or
+more of GPU memory is recommended.</p>
 </section>
 </section>
 <section id="installation-methods">
 <h2>Installation Methods<a class="headerlink" href="#installation-methods" title="Link to this heading">¶</a></h2>
 <section id="install-from-pypi-recommended">
 <h3>Install from PyPI (Recommended)<a class="headerlink" href="#install-from-pypi-recommended" title="Link to this heading">¶</a></h3>
-<p>The easiest way to install TorchSOM is using uv:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>torchsom
+</pre></div>
+</div>
+<p>Or, in a <a class="reference external" href="https://docs.astral.sh/uv/">uv</a> project:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>add<span class="w"> </span>torchsom
 </pre></div>
 </div>
-<p>This will install TorchSOM with all required dependencies.</p>
+<p>This installs TorchSOM with all required dependencies. For the optional FAISS backend
+for BMU search, quote the extra so your shell doesn’t expand the brackets:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;torchsom[faiss]&quot;</span>
+</pre></div>
+</div>
 </section>
 <section id="install-from-source">
 <h3>Install from Source<a class="headerlink" href="#install-from-source" title="Link to this heading">¶</a></h3>
@@ -332,13 +345,19 @@ uv<span class="w"> </span>sync<span class="w"> </span>--all-extras
 </section>
 <section id="ensure-gpu-support">
 <h3>Ensure GPU Support<a class="headerlink" href="#ensure-gpu-support" title="Link to this heading">¶</a></h3>
-<p>To ensure GPU acceleration, install a CUDA-enabled PyTorch per the official selector, then install TorchSOM:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Select the right command for your system at https://pytorch.org/get-started/locally/</span>
-<span class="c1"># Example (CUDA 11.8):</span>
-uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>torchvision<span class="w"> </span>torchaudio<span class="w"> </span>--index-url<span class="w"> </span>https://download.pytorch.org/whl/cu118
-uv<span class="w"> </span>add<span class="w"> </span>torchsom
+<p>On Linux, the default PyTorch wheels from PyPI already include CUDA support. On Windows,
+or to target a specific CUDA version, install PyTorch first with the command that the
+<a class="reference external" href="https://pytorch.org/get-started/locally/">official selector</a> gives for your system,
+then install TorchSOM:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example for CUDA 12.8; use the command the selector gives for your system.</span>
+pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>--index-url<span class="w"> </span>https://download.pytorch.org/whl/cu128
+pip<span class="w"> </span>install<span class="w"> </span>torchsom
 </pre></div>
 </div>
+<p>TorchSOM only needs <code class="docutils literal notranslate"><span class="pre">torch</span></code>; <code class="docutils literal notranslate"><span class="pre">torchvision</span></code> and <code class="docutils literal notranslate"><span class="pre">torchaudio</span></code> are not required. In a
+uv project, configure the PyTorch index in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> as described in
+<a class="reference external" href="https://docs.astral.sh/uv/guides/integration/pytorch/">uv’s PyTorch guide</a>, so that
+<code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">sync</span></code> keeps the CUDA build.</p>
 </section>
 </section>
 <section id="verification">
@@ -372,71 +391,48 @@ uv<span class="w"> </span>add<span class="w"> </span>torchsom
 </section>
 <section id="optional-dependencies">
 <h3>Optional Dependencies<a class="headerlink" href="#optional-dependencies" title="Link to this heading">¶</a></h3>
-<p>The following optional dependency groups can be installed via uv, e.g.:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">sync</span> <span class="pre">--extra</span> <span class="pre">dev</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">sync</span> <span class="pre">--extra</span> <span class="pre">tests</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">sync</span> <span class="pre">--extra</span> <span class="pre">docs</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">sync</span> <span class="pre">--extra</span> <span class="pre">security</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">sync</span> <span class="pre">--extra</span> <span class="pre">linting</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">sync</span> <span class="pre">--all-extras</span></code></p></li>
-</ul>
-<p>These are useful for development, testing, documentation, security, and linting.</p>
-<section id="development-dependencies">
-<h4>Development Dependencies<a class="headerlink" href="#development-dependencies" title="Link to this heading">¶</a></h4>
-<ul class="simple">
-<li><p><strong>pandas</strong>: Advanced data manipulation and analysis (used in some tutorials)</p></li>
-<li><p><strong>openpyxl</strong>: Excel file support for data import/export in some examples</p></li>
-<li><p><strong>black</strong>: Code formatting (for contributors)</p></li>
-<li><p><strong>isort</strong>: Import sorting (for contributors)</p></li>
-<li><p><strong>rich</strong>: Enhanced and colored console output (progress bars, tracebacks)</p></li>
-<li><p><strong>typing_extensions</strong>: Backport of Python typing features for compatibility</p></li>
-<li><p><strong>build</strong>: Build system for packaging</p></li>
-<li><p><strong>twine</strong>: Package distribution</p></li>
-<li><p><strong>commitizen</strong>: Commit message management</p></li>
-<li><p><strong>notebook</strong>: Jupyter Notebook support for interactive examples and tutorials</p></li>
-<li><p><strong>pyyaml</strong>: YAML file support</p></li>
-</ul>
-</section>
-<section id="testing-dependencies">
-<h4>Testing Dependencies<a class="headerlink" href="#testing-dependencies" title="Link to this heading">¶</a></h4>
-<ul class="simple">
-<li><p><strong>pytest</strong>: Testing framework</p></li>
-<li><p><strong>pytest-cov</strong>: Coverage reporting</p></li>
-<li><p><strong>pytest-html</strong>: HTML reporting</p></li>
-<li><p><strong>pytest-xdist</strong>: Parallel/distributed testing</p></li>
-<li><p><strong>pytest-timeout</strong>: Test timeout</p></li>
-</ul>
-</section>
-<section id="documentation-dependencies">
-<h4>Documentation Dependencies<a class="headerlink" href="#documentation-dependencies" title="Link to this heading">¶</a></h4>
-<ul class="simple">
-<li><p><strong>sphinx</strong>: Documentation building and formatting</p></li>
-<li><p><strong>furo</strong>: Documentation theme</p></li>
-<li><p><strong>sphinx-autodoc-typehints</strong>: Type hints for documentation</p></li>
-<li><p><strong>sphinx-copybutton</strong>: Copy button for documentation</p></li>
-<li><p><strong>pydocstyle</strong>: Documentation style checking</p></li>
-<li><p><strong>interrogate</strong>: Documentation coverage checking</p></li>
-</ul>
-</section>
-<section id="security-dependencies">
-<h4>Security Dependencies<a class="headerlink" href="#security-dependencies" title="Link to this heading">¶</a></h4>
-<ul class="simple">
-<li><p><strong>bandit[toml]</strong>: Security vulnerability scanning</p></li>
-<li><p><strong>safety</strong>: Dependency vulnerability scanning</p></li>
-<li><p><strong>pip-audit</strong>: Dependency audit</p></li>
-<li><p><strong>pip-tools</strong>: Dependency management</p></li>
-</ul>
-</section>
-<section id="linting-dependencies">
-<h4>Linting Dependencies<a class="headerlink" href="#linting-dependencies" title="Link to this heading">¶</a></h4>
-<ul class="simple">
-<li><p><strong>ruff</strong>: Code formatting</p></li>
-<li><p><strong>mypy</strong>: Type checking</p></li>
-<li><p><strong>radon</strong>: Code complexity checking</p></li>
-<li><p><strong>certifi</strong>: Certificate management (dependency for some environments)</p></li>
-</ul>
-</section>
+<p>Optional dependencies are grouped into extras. Install one with
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;torchsom[faiss]&quot;</span></code>, or all of them in a source checkout with
+<code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">sync</span> <span class="pre">--all-extras</span></code>. The exact package lists live in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>.</p>
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 85.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Extra</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">faiss</span></code></p></td>
+<td><p>FAISS backend for BMU search (<code class="docutils literal notranslate"><span class="pre">faiss-cpu</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dev</span></code></p></td>
+<td><p>Notebooks and tutorials, plus the MiniSom and Numba benchmark baselines</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tests</span></code></p></td>
+<td><p>pytest and its plugins (coverage, HTML reports, parallel runs, timeouts)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">docs</span></code></p></td>
+<td><p>Sphinx, the Furo theme, and the documentation extensions</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">linting</span></code></p></td>
+<td><p>ruff (linting and formatting), mypy, and radon</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">release</span></code></p></td>
+<td><p>build, twine, and commitizen</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">security</span></code></p></td>
+<td><p>pip-audit</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">all</span></code></p></td>
+<td><p>Every extra above</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 </section>
 <section id="getting-help">
@@ -528,14 +524,7 @@ uv<span class="w"> </span>add<span class="w"> </span>torchsom
 <li><a class="reference internal" href="#verification">Verification</a></li>
 <li><a class="reference internal" href="#dependencies">Dependencies</a><ul>
 <li><a class="reference internal" href="#core-dependencies">Core Dependencies</a></li>
-<li><a class="reference internal" href="#optional-dependencies">Optional Dependencies</a><ul>
-<li><a class="reference internal" href="#development-dependencies">Development Dependencies</a></li>
-<li><a class="reference internal" href="#testing-dependencies">Testing Dependencies</a></li>
-<li><a class="reference internal" href="#documentation-dependencies">Documentation Dependencies</a></li>
-<li><a class="reference internal" href="#security-dependencies">Security Dependencies</a></li>
-<li><a class="reference internal" href="#linting-dependencies">Linting Dependencies</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#optional-dependencies">Optional Dependencies</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#getting-help">Getting Help</a></li>

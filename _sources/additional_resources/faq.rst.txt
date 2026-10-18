@@ -177,29 +177,22 @@ Integration Questions
 How do I cite TorchSOM in my research?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Please cite both the paper and the software:
+Please cite the paper:
 
 .. code-block:: bibtex
 
-    @misc{berthier2025torchsom,
-        title={torchsom: The Reference PyTorch Library for Self-Organizing Maps},
-        author={Berthier, Louis and Shokry, Ahmed and Moreaud, Maxime
-                and Ramelet, Guillaume and Moulines, Eric},
-        year={2025},
-        eprint={2510.11147},
-        archivePrefix={arXiv},
-        primaryClass={stat.ML},
-        url={https://arxiv.org/abs/2510.11147}
+    @article{berthierTorchsom2026,
+      author  = {Louis Berthier and Ahmed Shokry and Maxime Moreaud and Guillaume Ramelet and Eric Moulines},
+      title   = {torchsom: The Reference PyTorch Library for Self-Organizing Maps},
+      journal = {Journal of Machine Learning Research},
+      year    = {2026},
+      volume  = {27},
+      number  = {190},
+      pages   = {1--17},
+      url     = {http://jmlr.org/papers/v27/25-2467.html}
     }
 
-    @software{berthier2025torchsom_software,
-        author={Berthier, Louis},
-        title={torchsom: The Reference PyTorch Library for Self-Organizing Maps},
-        year={2025},
-        version={1.1.1},
-        url={https://github.com/michelin/TorchSOM},
-        note={Documentation available at \url{https://opensource.michelin.io/TorchSOM/}}
-    }
+An earlier preprint is available on `arXiv (2510.11147) <https://arxiv.org/abs/2510.11147>`_.
 
 Getting Help
 ------------

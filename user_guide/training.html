@@ -3,10 +3,18 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Training" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://opensource.michelin.io/TorchSOM/user_guide/training.html" />
+<meta property="og:site_name" content="TorchSOM" />
+<meta property="og:description" content="This guide covers how to configure and monitor SOM training: initialization, the decay schedules for the learning rate and neighborhood width, the key hyperparameters, and the BMU search backend. T..." />
+<meta property="og:image" content="https://opensource.michelin.io/TorchSOM/_static/assets/social_preview.png" />
+<meta property="og:image:alt" content="TorchSOM: The Reference PyTorch Library for Self-Organizing Maps" />
+<meta name="description" content="This guide covers how to configure and monitor SOM training: initialization, the decay schedules for the learning rate and neighborhood width, the key hyperparameters, and the BMU search backend. T..." />
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Clustering" href="clustering.html"><link rel="prev" title="Topologies &amp; Boundary Conditions" href="topologies.html">
         <link rel="prefetch" href="../_static/logo.png" as="image">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <link rel="shortcut icon" href="../_static/favicon.png"><!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>Training - TorchSOM 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
@@ -468,7 +476,7 @@ argument selects the implementation:</p>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;faiss&quot;</span></code></p></td>
 <td><p>Approximate nearest-neighbor search, faster for large maps and
-high-dimensional inputs. Install with <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">add</span> <span class="pre">torchsom[faiss]</span></code>.</p></td>
+high-dimensional inputs. Install with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;torchsom[faiss]&quot;</span></code>.</p></td>
 </tr>
 </tbody>
 </table>

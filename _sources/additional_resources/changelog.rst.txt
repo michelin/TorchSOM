@@ -14,13 +14,49 @@ The auto-generated ``CHANGELOG.md`` in the repository root is maintained by
 a detailed, commit-level changelog.
 
 
+v1.3.1
+------
+
+- The paper is published in the *Journal of Machine Learning Research*
+  (`JMLR 27(190) <https://www.jmlr.org/papers/v27/25-2467.html>`_). Citations,
+  ``CITATION.cff``, and the benchmarks and comparison pages now match the published
+  version.
+- Fix: map plots work again on matplotlib 3.11, which removed ``matplotlib.cm.get_cmap``
+  (`#10 <https://github.com/michelin/TorchSOM/issues/10>`_).
+- Fix: passing a BMU map built without ``return_indices=True`` to the supervised maps or
+  ``collect_samples`` now raises a clear error, and the documentation examples build the
+  map correctly (`#11 <https://github.com/michelin/TorchSOM/issues/11>`_).
+
+v1.3.0
+------
+
+- Rectangular topographic error now counts diagonal neighbors as adjacent
+  (8-neighborhood, threshold 1.0 → 1.42), as MiniSom and somoclu do. TE values on
+  rectangular maps are lower than in v1.2.0 and earlier.
+- Benchmark scripts add the somoclu (GPU) and MiniSom-JIT (CPU) baselines used in the
+  published paper.
+- Benchmark GPU timings synchronize CUDA and account for device warm-up.
+
+v1.2.0
+------
+
+- Periodic boundary conditions (PBC) for toroidal SOM topologies
+- FAISS backend for BMU search (``pip install "torchsom[faiss]"``) and a configurable
+  search backend (``auto``, ``torch``, ``faiss``)
+- Retrieval modes for ``collect_samples`` (``bmu_only``, ``bmu_neighborhood``,
+  ``bmu_neighborhood_knn``), which can also return the collected sample indices
+
 v1.1.1
 ------
 
-- Periodic Boundary Conditions (PBC) support for toroidal SOM topologies
-- FAISS backend for accelerated BMU search (``uv add torchsom[faiss]``)
-- Configurable search backend (``auto``, ``torch``, ``faiss``)
-- Additional quality-of-life improvements and bug fixes
+- Release workflow fix; no library changes
+
+v1.1.0
+------
+
+- Faster map building, weight initialization, weight updates, and distance computations
+- Benchmark scripts comparing TorchSOM with MiniSom
+- Expanded documentation
 
 v1.0.0
 ------
