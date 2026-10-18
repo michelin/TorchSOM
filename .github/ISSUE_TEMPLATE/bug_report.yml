@@ -1,0 +1,35 @@
+name: Bug report
+description: Report something that doesn't work as documented.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Thanks for reporting a problem. Please check the
+        [FAQ](https://opensource.michelin.io/TorchSOM/additional_resources/faq.html)
+        and the existing issues first.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Minimal example
+      description: The smallest code that reproduces the problem, followed by the full traceback.
+      render: python
+    validations:
+      required: true
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions
+      description: >-
+        The Name and Version lines from `python -m pip show torchsom torch matplotlib`,
+        plus your OS, Python version, and device (CPU or GPU).
+      render: text
+    validations:
+      required: true
