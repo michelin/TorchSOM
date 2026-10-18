@@ -10,16 +10,15 @@ Systems
 TorchSOM requires:
 
 - **Python**: 3.10 or higher
-- **PyTorch**: 2.7 or higher
+- **PyTorch**: installed automatically as a dependency (see below for a GPU build)
 - **Operating System**: Linux, macOS, or Windows
 
 GPU
 ~~~
 
-For optimal performance, we recommend using a CUDA-compatible GPU with:
-
-- **CUDA**: 11.0 or higher
-- **GPU Memory**: 4GB or more recommended for large SOMs
+TorchSOM runs on any device PyTorch supports. GPU acceleration needs a CUDA build of
+PyTorch that matches your driver (see `Ensure GPU Support`_). For large maps, 4 GB or
+more of GPU memory is recommended.
 
 Installation Methods
 --------------------
@@ -27,13 +26,22 @@ Installation Methods
 Install from PyPI (Recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The easiest way to install TorchSOM is using uv:
+.. code-block:: bash
+
+   pip install torchsom
+
+Or, in a `uv <https://docs.astral.sh/uv/>`_ project:
 
 .. code-block:: bash
 
    uv add torchsom
 
-This will install TorchSOM with all required dependencies.
+This installs TorchSOM with all required dependencies. For the optional FAISS backend
+for BMU search, quote the extra so your shell doesn't expand the brackets:
+
+.. code-block:: bash
+
+   pip install "torchsom[faiss]"
 
 Install from Source
 ~~~~~~~~~~~~~~~~~~~
@@ -55,14 +63,21 @@ For the latest development version:
 Ensure GPU Support
 ~~~~~~~~~~~~~~~~~~
 
-To ensure GPU acceleration, install a CUDA-enabled PyTorch per the official selector, then install TorchSOM:
+On Linux, the default PyTorch wheels from PyPI already include CUDA support. On Windows,
+or to target a specific CUDA version, install PyTorch first with the command that the
+`official selector <https://pytorch.org/get-started/locally/>`_ gives for your system,
+then install TorchSOM:
 
 .. code-block:: bash
 
-   # Select the right command for your system at https://pytorch.org/get-started/locally/
-   # Example (CUDA 11.8):
-   uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-   uv add torchsom
+   # Example for CUDA 12.8; use the command the selector gives for your system.
+   pip install torch --index-url https://download.pytorch.org/whl/cu128
+   pip install torchsom
+
+TorchSOM only needs ``torch``; ``torchvision`` and ``torchaudio`` are not required. In a
+uv project, configure the PyTorch index in ``pyproject.toml`` as described in
+`uv's PyTorch guide <https://docs.astral.sh/uv/guides/integration/pytorch/>`_, so that
+``uv sync`` keeps the CUDA build.
 
 Verification
 ------------
@@ -98,65 +113,32 @@ Core Dependencies
 Optional Dependencies
 ~~~~~~~~~~~~~~~~~~~~~
 
-The following optional dependency groups can be installed via uv, e.g.:
+Optional dependencies are grouped into extras. Install one with
+``pip install "torchsom[faiss]"``, or all of them in a source checkout with
+``uv sync --all-extras``. The exact package lists live in ``pyproject.toml``.
 
-- ``uv sync --extra dev``
-- ``uv sync --extra tests``
-- ``uv sync --extra docs``
-- ``uv sync --extra security``
-- ``uv sync --extra linting``
-- ``uv sync --all-extras``
+.. list-table::
+   :header-rows: 1
+   :widths: 15 85
 
-These are useful for development, testing, documentation, security, and linting.
-
-Development Dependencies
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-- **pandas**: Advanced data manipulation and analysis (used in some tutorials)
-- **openpyxl**: Excel file support for data import/export in some examples
-- **black**: Code formatting (for contributors)
-- **isort**: Import sorting (for contributors)
-- **rich**: Enhanced and colored console output (progress bars, tracebacks)
-- **typing_extensions**: Backport of Python typing features for compatibility
-- **build**: Build system for packaging
-- **twine**: Package distribution
-- **commitizen**: Commit message management
-- **notebook**: Jupyter Notebook support for interactive examples and tutorials
-- **pyyaml**: YAML file support
-
-Testing Dependencies
-^^^^^^^^^^^^^^^^^^^^
-
-- **pytest**: Testing framework
-- **pytest-cov**: Coverage reporting
-- **pytest-html**: HTML reporting
-- **pytest-xdist**: Parallel/distributed testing
-- **pytest-timeout**: Test timeout
-
-Documentation Dependencies
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-- **sphinx**: Documentation building and formatting
-- **furo**: Documentation theme
-- **sphinx-autodoc-typehints**: Type hints for documentation
-- **sphinx-copybutton**: Copy button for documentation
-- **pydocstyle**: Documentation style checking
-- **interrogate**: Documentation coverage checking
-
-Security Dependencies
-^^^^^^^^^^^^^^^^^^^^^
-- **bandit[toml]**: Security vulnerability scanning
-- **safety**: Dependency vulnerability scanning
-- **pip-audit**: Dependency audit
-- **pip-tools**: Dependency management
-
-Linting Dependencies
-^^^^^^^^^^^^^^^^^^^^
-
-- **ruff**: Code formatting
-- **mypy**: Type checking
-- **radon**: Code complexity checking
-- **certifi**: Certificate management (dependency for some environments)
+   * - Extra
+     - Purpose
+   * - ``faiss``
+     - FAISS backend for BMU search (``faiss-cpu``)
+   * - ``dev``
+     - Notebooks and tutorials, plus the MiniSom and Numba benchmark baselines
+   * - ``tests``
+     - pytest and its plugins (coverage, HTML reports, parallel runs, timeouts)
+   * - ``docs``
+     - Sphinx, the Furo theme, and the documentation extensions
+   * - ``linting``
+     - ruff (linting and formatting), mypy, and radon
+   * - ``release``
+     - build, twine, and commitizen
+   * - ``security``
+     - pip-audit
+   * - ``all``
+     - Every extra above
 
 Getting Help
 ------------

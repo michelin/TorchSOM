@@ -4,38 +4,25 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/torchsom.svg?color=blue)](https://pypi.org/project/torchsom/)
 [![Python versions](https://img.shields.io/pypi/pyversions/torchsom.svg?color=blue)](https://pypi.org/project/torchsom/)
-[![PyTorch versions](https://img.shields.io/badge/PyTorch-2.7-EE4C2C.svg)](https://pytorch.org/)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/license/apache-2-0)
-[![arXiv](https://img.shields.io/badge/arXiv-2510.11147-b31b1b.svg)](https://arxiv.org/abs/2510.11147)
+[![JMLR](https://img.shields.io/badge/JMLR-2026-b31b1b.svg)](https://www.jmlr.org/papers/v27/25-2467.html)
 
-<!-- [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=alert_status)](https://sonarcloud.
-io/summary/new_code?id=michelin_TorchSOM)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=reliability_rating)](https://
-sonarcloud.io/summary/new_code?id=michelin_TorchSOM)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=security_rating)](https://sonarcloud.io/
-summary/new_code?id=michelin_TorchSOM)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=sqale_rating)](https://
-sonarcloud.io/summary/new_code?id=michelin_TorchSOM)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=coverage)](https://sonarcloud.io/summary/
-new_code?id=michelin_TorchSOM) -->
-
-[![Tests](https://github.com/michelin/TorchSOM/workflows/Tests/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/test.yml)
-[![Code Quality](https://github.com/michelin/TorchSOM/workflows/Code%20Quality/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/code-quality.yml)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=michelin_TorchSOM&metric=coverage)](https://sonarcloud.io/summary/new_code?id=michelin_TorchSOM)
+[![Tests](https://github.com/michelin/TorchSOM/actions/workflows/test.yml/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/test.yml)
+[![Code Quality](https://github.com/michelin/TorchSOM/actions/workflows/code-quality.yml/badge.svg)](https://github.com/michelin/TorchSOM/actions/workflows/code-quality.yml)
 [![Downloads](https://static.pepy.tech/badge/torchsom)](https://pepy.tech/project/torchsom)
 [![GitHub stars](https://img.shields.io/github/stars/michelin/TorchSOM.svg?style=social&label=Star)](https://github.com/michelin/TorchSOM)
 
 <p align="center">
-    <img src="assets/logo.png" alt="TorchSOM_logo" width="350"/>
+    <img src="https://raw.githubusercontent.com/michelin/TorchSOM/main/assets/logo.png" alt="TorchSOM_logo" width="350"/>
 </p>
 
 *GPU-accelerated Self-Organizing Maps in PyTorch with a scikit-learn API, rich visualization, and clustering: from dimensionality reduction to Just-In-Time Learning.*
 
-[Paper](https://arxiv.org/abs/2510.11147)
+[Paper](https://www.jmlr.org/papers/v27/25-2467.html)
 | [Documentation](https://opensource.michelin.io/TorchSOM/)
 | [Quick Start](#quick-start)
-| [Examples](notebooks/)
-| [Contributing](CONTRIBUTING.md)
+| [Examples](https://github.com/michelin/TorchSOM/tree/main/notebooks)
+| [Contributing](https://github.com/michelin/TorchSOM/blob/main/CONTRIBUTING.md)
 
 **⭐ If you find [`torchsom`](https://github.com/michelin/TorchSOM) valuable, please consider starring this repository ⭐**
 
@@ -57,7 +44,7 @@ Despite their utility, the Python SOM ecosystem is fragmented: existing implemen
 - **Rich visualization tools** for both rectangular and hexagonal topologies
 - **Just-In-Time Learning (JITL)** for supervised regression and classification
 
-This library accompanies the paper: [*torchsom: The Reference PyTorch Library for Self-Organizing Maps*](https://arxiv.org/abs/2510.11147) (Berthier et al., 2025). If you use `torchsom` in academic or industrial work, please cite both the paper and the software (see [Citation](#citation)).
+This library accompanies the paper [*torchsom: The Reference PyTorch Library for Self-Organizing Maps*](https://www.jmlr.org/papers/v27/25-2467.html) (Berthier et al., 2026), published in the *Journal of Machine Learning Research*. If you use `torchsom` in academic or industrial work, please cite the paper (see [Citation](#citation)).
 
 ### Key Results
 
@@ -73,9 +60,9 @@ This library accompanies the paper: [*torchsom: The Reference PyTorch Library fo
 
 > torchsom is the only library combining this topology preservation and scaling with a scikit-learn API, GPU acceleration, clustering, JITL, and rich visualization. On small/low-dimensional workloads MiniSom-JIT (CPU) and somoclu (GPU) can be faster, reported transparently in the paper's Tables 2 (CPU) and 3 (GPU).
 >
-> Hardware: Intel Xeon Gold 6134 (CPU), NVIDIA Tesla V100-32GB (GPU). See the [paper](https://arxiv.org/abs/2510.11147) for full benchmark tables.
+> Hardware: Intel Xeon Gold 6134 (CPU), NVIDIA Tesla V100-32GB (GPU). See the [paper](https://www.jmlr.org/papers/v27/25-2467.html) for full benchmark tables.
 >
-> **Reproducing the JMLR benchmarks.** All scripts and configurations are released under [`benchmark/`](benchmark/); see [`benchmark/README.md`](benchmark/README.md) for a step-by-step walkthrough, including the exact MiniSom pins and somoclu setup. Three annotated tags pin the versions of record: `jmlr-submission-v1` (original October 2025 submission), `jmlr-revision-v1` (first revision), and `jmlr-revision-v2` (adds the somoclu and MiniSom-JIT baselines). `git checkout <tag>` reproduces the corresponding tables.
+> **Reproducing the JMLR benchmarks.** All scripts and configurations are released under [`benchmark/`](https://github.com/michelin/TorchSOM/tree/main/benchmark); see [`benchmark/README.md`](https://github.com/michelin/TorchSOM/blob/main/benchmark/README.md) for a step-by-step walkthrough, including the exact MiniSom pins and somoclu setup. Three annotated tags pin the versions of record: `jmlr-submission-v1` (original October 2025 submission), `jmlr-revision-v1` (first revision), and `jmlr-revision-v2` (the published version, which adds the somoclu and MiniSom-JIT baselines). `git checkout <tag>` reproduces the corresponding tables.
 
 ---
 
@@ -148,29 +135,29 @@ Explore our collection of Jupyter notebooks:
 
 | Notebook | Task | Dataset |
 | --- | --- | --- |
-| [`iris.ipynb`](notebooks/iris.ipynb) | Multiclass classification | Iris |
-| [`wine.ipynb`](notebooks/wine.ipynb) | Multiclass classification | Wine |
-| [`boston_housing.ipynb`](notebooks/boston_housing.ipynb) | Regression | Boston Housing |
-| [`energy_efficiency.ipynb`](notebooks/energy_efficiency.ipynb) | Multi-output regression | Energy Efficiency |
-| [`clustering.ipynb`](notebooks/clustering.ipynb) | Clustering analysis | Synthetic blobs |
+| [`iris.ipynb`](https://github.com/michelin/TorchSOM/blob/main/notebooks/iris.ipynb) | Multiclass classification | Iris |
+| [`wine.ipynb`](https://github.com/michelin/TorchSOM/blob/main/notebooks/wine.ipynb) | Multiclass classification | Wine |
+| [`boston_housing.ipynb`](https://github.com/michelin/TorchSOM/blob/main/notebooks/boston_housing.ipynb) | Regression | Boston Housing |
+| [`energy_efficiency.ipynb`](https://github.com/michelin/TorchSOM/blob/main/notebooks/energy_efficiency.ipynb) | Multi-output regression | Energy Efficiency |
+| [`clustering.ipynb`](https://github.com/michelin/TorchSOM/blob/main/notebooks/clustering.ipynb) | Clustering analysis | Synthetic blobs |
 
 ### Visualization Gallery
 
 <table>
   <tr>
-    <td align="center"><b>D-Matrix (U-Matrix)</b><br><sub>Inter-neuron distances</sub><br><img src="assets/michelin_dmatrix.png" alt="D-Matrix" width="240"/></td>
-    <td align="center"><b>Hit Map</b><br><sub>BMU activation frequency</sub><br><img src="assets/michelin_hitmap.png" alt="Hit Map" width="240"/></td>
-    <td align="center"><b>Mean Map</b><br><sub>Target value distribution</sub><br><img src="assets/michelin_meanmap.png" alt="Mean Map" width="240"/></td>
+    <td align="center"><b>D-Matrix (U-Matrix)</b><br><sub>Inter-neuron distances</sub><br><img src="https://raw.githubusercontent.com/michelin/TorchSOM/main/assets/michelin_dmatrix.png" alt="D-Matrix" width="240"/></td>
+    <td align="center"><b>Hit Map</b><br><sub>BMU activation frequency</sub><br><img src="https://raw.githubusercontent.com/michelin/TorchSOM/main/assets/michelin_hitmap.png" alt="Hit Map" width="240"/></td>
+    <td align="center"><b>Mean Map</b><br><sub>Target value distribution</sub><br><img src="https://raw.githubusercontent.com/michelin/TorchSOM/main/assets/michelin_meanmap.png" alt="Mean Map" width="240"/></td>
   </tr>
   <tr>
-    <td align="center"><b>Component Planes</b><br><sub>Feature-wise weight distribution</sub><br><img src="assets/michelin_cp12.png" alt="Component Plane 1" width="240"/></td>
-    <td align="center"><b>Classification Map</b><br><sub>Dominant class per neuron</sub><br><img src="assets/wine_classificationmap.png" alt="Classification Map" width="240"/></td>
-    <td align="center"><b>HDBSCAN Cluster Map</b><br><sub>Cluster assignment</sub><br><img src="assets/hdbscan_cluster_map.png" alt="HDBSCAN Cluster Map" width="240"/></td>
+    <td align="center"><b>Component Planes</b><br><sub>Feature-wise weight distribution</sub><br><img src="https://raw.githubusercontent.com/michelin/TorchSOM/main/assets/michelin_cp12.png" alt="Component Plane 1" width="240"/></td>
+    <td align="center"><b>Classification Map</b><br><sub>Dominant class per neuron</sub><br><img src="https://raw.githubusercontent.com/michelin/TorchSOM/main/assets/wine_classificationmap.png" alt="Classification Map" width="240"/></td>
+    <td align="center"><b>HDBSCAN Cluster Map</b><br><sub>Cluster assignment</sub><br><img src="https://raw.githubusercontent.com/michelin/TorchSOM/main/assets/hdbscan_cluster_map.png" alt="HDBSCAN Cluster Map" width="240"/></td>
   </tr>
   <tr>
-    <td align="center"><b>Component Planes</b><br><sub>Another feature dimension</sub><br><img src="assets/michelin_cp21.png" alt="Component Plane 2" width="240"/></td>
-    <td align="center"><b>K-Means Elbow</b><br><sub>Optimal cluster selection</sub><br><img src="assets/kmeans_elbow.png" alt="K-Means Elbow" width="240"/></td>
-    <td align="center"><b>Cluster Quality Metrics</b><br><sub>Algorithm comparison</sub><br><img src="assets/cluster_metrics.png" alt="Cluster Metrics" width="240"/></td>
+    <td align="center"><b>Component Planes</b><br><sub>Another feature dimension</sub><br><img src="https://raw.githubusercontent.com/michelin/TorchSOM/main/assets/michelin_cp21.png" alt="Component Plane 2" width="240"/></td>
+    <td align="center"><b>K-Means Elbow</b><br><sub>Optimal cluster selection</sub><br><img src="https://raw.githubusercontent.com/michelin/TorchSOM/main/assets/kmeans_elbow.png" alt="K-Means Elbow" width="240"/></td>
+    <td align="center"><b>Cluster Quality Metrics</b><br><sub>Algorithm comparison</sub><br><img src="https://raw.githubusercontent.com/michelin/TorchSOM/main/assets/cluster_metrics.png" alt="Cluster Metrics" width="240"/></td>
   </tr>
 </table>
 
@@ -178,9 +165,13 @@ Explore our collection of Jupyter notebooks:
 
 ## Installation
 
-This project uses [`uv`](https://docs.astral.sh/uv/) for fast, reproducible dependency management.
-
 ### From PyPI
+
+```bash
+pip install torchsom
+```
+
+Or, in a [`uv`](https://docs.astral.sh/uv/) project:
 
 ```bash
 uv add torchsom
@@ -189,10 +180,12 @@ uv add torchsom
 With optional [FAISS](https://github.com/facebookresearch/faiss) acceleration for BMU search:
 
 ```bash
-uv add torchsom[faiss]
+pip install "torchsom[faiss]"
 ```
 
 ### Development Setup
+
+Development uses [`uv`](https://docs.astral.sh/uv/) for reproducible environments:
 
 ```bash
 git clone https://github.com/michelin/TorchSOM.git
@@ -225,38 +218,28 @@ Comprehensive documentation is available at **[opensource.michelin.io/TorchSOM](
 
 ## Citation
 
-If you use `torchsom` in your academic, research, or industrial work, please cite both the paper and the software:
+If you use `torchsom` in your academic, research, or industrial work, please cite the paper:
 
 ```bibtex
-@misc{berthier2025torchsom,
-    title={torchsom: The Reference PyTorch Library for Self-Organizing Maps},
-    author={Berthier, Louis and Shokry, Ahmed and Moreaud, Maxime
-            and Ramelet, Guillaume and Moulines, Eric},
-    year={2025},
-    eprint={2510.11147},
-    archivePrefix={arXiv},
-    primaryClass={stat.ML},
-    note={Preprint submitted to Journal of Machine Learning Research},
-    url={https://arxiv.org/abs/2510.11147}
-}
-
-@software{berthier2025torchsom_software,
-    author={Berthier, Louis},
-    title={torchsom: The Reference PyTorch Library for Self-Organizing Maps},
-    year={2025},
-    version={1.3.0},
-    url={https://github.com/michelin/TorchSOM},
-    note={Documentation available at \url{https://opensource.michelin.io/TorchSOM/}}
+@article{berthierTorchsom2026,
+  author  = {Louis Berthier and Ahmed Shokry and Maxime Moreaud and Guillaume Ramelet and Eric Moulines},
+  title   = {torchsom: The Reference PyTorch Library for Self-Organizing Maps},
+  journal = {Journal of Machine Learning Research},
+  year    = {2026},
+  volume  = {27},
+  number  = {190},
+  pages   = {1--17},
+  url     = {http://jmlr.org/papers/v27/25-2467.html}
 }
 ```
 
-For more details, see the [CITATION](CITATION.cff) file.
+An earlier preprint is available on arXiv ([2510.11147](https://arxiv.org/abs/2510.11147)). For more details, see the [CITATION](https://github.com/michelin/TorchSOM/blob/main/CITATION.cff) file.
 
 ---
 
 ## Contributing
 
-We welcome contributions from the community! See our [Contributing Guide](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) for details.
+We welcome contributions from the community! See our [Contributing Guide](https://github.com/michelin/TorchSOM/blob/main/CONTRIBUTING.md) and [Code of Conduct](https://github.com/michelin/TorchSOM/blob/main/CODE_OF_CONDUCT.md) for details.
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/michelin/TorchSOM/issues)
 
@@ -273,7 +256,7 @@ We welcome contributions from the community! See our [Contributing Guide](CONTRI
 
 ## License
 
-`torchsom` is licensed under the [Apache License 2.0](LICENSE). See the [LICENSE](LICENSE) file for details.
+`torchsom` is licensed under the [Apache License 2.0](https://github.com/michelin/TorchSOM/blob/main/LICENSE). See the [LICENSE](https://github.com/michelin/TorchSOM/blob/main/LICENSE) file for details.
 
 ---
 

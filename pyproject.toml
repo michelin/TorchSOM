@@ -55,8 +55,10 @@ keywords = [
 ]
 
 [project.urls]
-Source = "https://github.com/michelin/torchsom"
+Source = "https://github.com/michelin/TorchSOM"
 Documentation = "https://opensource.michelin.io/TorchSOM/"
+Paper = "https://www.jmlr.org/papers/v27/25-2467.html"
+Changelog = "https://github.com/michelin/TorchSOM/blob/main/CHANGELOG.md"
 Tracker = "https://github.com/michelin/TorchSOM/issues"
 License = "https://github.com/michelin/TorchSOM/blob/main/LICENSE"
 Contributing = "https://github.com/michelin/TorchSOM/blob/main/CONTRIBUTING.md"
