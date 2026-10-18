@@ -55,6 +55,27 @@ def build_bmus_data_map(
     return bmus_data_map
 
 
+def validate_bmus_index_map(bmus_data_map: dict[tuple[int, int], Any]) -> None:
+    """Check that a BMU map holds sample indices rather than data vectors.
+
+    Supervised maps and sample collection index the target and the historical
+    samples with the map's values, so the map must be built with
+    ``return_indices=True``.
+
+    Args:
+        bmus_data_map (dict[tuple[int, int], Any]): BMU to sample indices mapping
+
+    Raises:
+        ValueError: If the map holds data vectors instead of sample indices
+    """
+    entry = next((value for value in bmus_data_map.values() if len(value) > 0), None)
+    if isinstance(entry, torch.Tensor) and entry.is_floating_point():
+        raise ValueError(
+            "bmus_data_map holds data vectors, but sample indices are expected. "
+            "Build it with som.build_map('bmus_data', data=..., return_indices=True)."
+        )
+
+
 def build_hit_map(
     som_instance: "BaseSOM",
     data: torch.Tensor,
@@ -224,6 +245,7 @@ def build_metric_map(
     Returns:
         torch.Tensor: Metric map tensor [x, y]
     """
+    validate_bmus_index_map(bmus_data_map)
     device = som_instance.device
     target = target.to(device)
     epsilon = torch.tensor(1e-8, device=device)
@@ -267,6 +289,7 @@ def build_score_map(
     Returns:
         torch.Tensor: Score map tensor [x, y]
     """
+    validate_bmus_index_map(bmus_data_map)
     device = som_instance.device
     target = target.to(device)
     epsilon = torch.tensor(1e-8, device=device)
@@ -317,6 +340,7 @@ def build_rank_map(
     Returns:
         torch.Tensor: Rank map tensor [x, y]
     """
+    validate_bmus_index_map(bmus_data_map)
     device = som_instance.device
     target = target.to(device)
     active_positions = []
@@ -368,6 +392,7 @@ def build_classification_map(
     Returns:
         torch.Tensor: Classification map tensor [x, y]
     """
+    validate_bmus_index_map(bmus_data_map)
     device = som_instance.device
     target = target.to(device)
     classification_map = torch.full(

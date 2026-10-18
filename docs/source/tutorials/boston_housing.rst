@@ -118,7 +118,7 @@ target, marking regions where a single prediction is less trustworthy.
 
 .. code-block:: python
 
-   bmus_map = som.build_map("bmus_data", data=features)
+   bmus_map = som.build_map("bmus_data", data=features, return_indices=True)
    viz.plot_metric_map(
        bmus_data_map=bmus_map,
        data=features,

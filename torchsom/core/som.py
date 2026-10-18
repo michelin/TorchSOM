@@ -16,7 +16,7 @@ from torchsom.utils.decay import DECAY_FUNCTIONS
 from torchsom.utils.distances import DISTANCE_FUNCTIONS
 from torchsom.utils.grid import adjust_meshgrid_topology, create_mesh_grid
 from torchsom.utils.initialization import initialize_weights
-from torchsom.utils.maps import MAP_FUNCTIONS
+from torchsom.utils.maps import MAP_FUNCTIONS, validate_bmus_index_map
 from torchsom.utils.metrics import (
     calculate_clustering_metrics,
     calculate_quantization_error,
@@ -489,13 +489,15 @@ class SOM(BaseSOM):
             If return_indices is True: (historical_data_buffer, historical_output_buffer, indices_tensor)
 
         Raises:
-            ValueError: If ``retrieval_mode`` is not one of the valid modes.
+            ValueError: If ``retrieval_mode`` is not one of the valid modes, or if
+                ``bmus_idx_map`` holds data vectors instead of sample indices.
         """
         if retrieval_mode not in self._VALID_RETRIEVAL_MODES:
             raise ValueError(
                 f"retrieval_mode must be one of {self._VALID_RETRIEVAL_MODES}, "
                 f"got '{retrieval_mode}'"
             )
+        validate_bmus_index_map(bmus_idx_map)
         query_sample = query_sample.to(self.device)
         bmu_pos = self.identify_bmus(query_sample)
         bmu_row, bmu_col = int(bmu_pos[0].item()), int(bmu_pos[1].item())

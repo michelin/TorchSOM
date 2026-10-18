@@ -1,5 +1,7 @@
 """Unit tests for unified map APIs using SOM.build_map and SOM.build_multiple_maps."""
 
+from typing import Any
+
 import pytest
 import torch
 
@@ -175,3 +177,30 @@ class TestMapInputValidation:
         target = target.to(som_trained.device)
         with pytest.raises(ValueError, match="requires either data or bmus_data_map"):
             som_trained.build_map("metric", target=target)
+
+    @pytest.mark.parametrize(
+        ("map_type", "kwargs"),
+        [
+            ("metric", {"reduction_parameter": "mean"}),
+            ("score", {}),
+            ("rank", {}),
+            ("classification", {"neighborhood_order": 1}),
+        ],
+    )
+    def test_bmus_map_of_data_vectors_raises(
+        self,
+        som_trained: SOM,
+        clustered_data: tuple[torch.Tensor, torch.Tensor],
+        map_type: str,
+        kwargs: dict[str, Any],
+    ) -> None:
+        """A BMU map built without return_indices=True is rejected with a hint (issue #11)."""
+        data, labels = clustered_data
+        data = data.to(som_trained.device)
+        labels = labels.to(som_trained.device)
+        vectors_map = som_trained.build_map("bmus_data", data=data)
+
+        with pytest.raises(ValueError, match="return_indices=True"):
+            som_trained.build_map(
+                map_type, target=labels, bmus_data_map=vectors_map, **kwargs
+            )

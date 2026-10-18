@@ -152,32 +152,33 @@ Here's a complete example with data preprocessing and multiple visualizations:
 
    # Create and configure SOM
    som = SOM(
-      x=25,
-      y=15,
-      num_features=data.shape[1],
-      sigma=1.75,
-      learning_rate=0.95,
-      neighborhood_order=3,
-      epochs=100,
-      batch_size=16,
-      topology="rectangular",
-      distance_function="euclidean",
-      neighborhood_function="gaussian",
-      lr_decay_function="asymptotic_decay",
-      sigma_decay_function="asymptotic_decay",
-      initialization_mode="pca",
-      device=device,
-      random_seed=42,
-  )
+       x=25,
+       y=15,
+       num_features=data.shape[1],
+       sigma=1.75,
+       learning_rate=0.95,
+       neighborhood_order=3,
+       epochs=100,
+       batch_size=16,
+       topology="rectangular",
+       distance_function="euclidean",
+       neighborhood_function="gaussian",
+       lr_decay_function="asymptotic_decay",
+       sigma_decay_function="asymptotic_decay",
+       initialization_mode="pca",
+       device=device,
+       random_seed=42,
+   )
 
-   # Train the SOM
+   # Initialize the weights, then train the SOM
+   som.initialize_weights(data=data, mode="pca")
    q_errors, t_errors = som.fit(data)
 
    # Create visualizer
    viz = SOMVisualizer(som)
 
    # Pre-compute the BMU -> sample-indices map (required by plot_all)
-   bmus_map = som.build_map("bmus_data", data=data)
+   bmus_map = som.build_map("bmus_data", data=data, return_indices=True)
 
    # Generate all visualizations
    viz.plot_all(
