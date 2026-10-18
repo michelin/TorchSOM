@@ -170,6 +170,8 @@ filterwarnings = [
     "ignore::PendingDeprecationWarning",
     # hdbscan 0.8.41 ships invalid-escape docstrings: DeprecationWarning on Python <=3.11, SyntaxWarning on 3.12+
     "ignore::SyntaxWarning",
+    # matplotlib removes deprecated APIs (e.g. cm.get_cmap in 3.11): fail on them while they still warn
+    "error::matplotlib.MatplotlibDeprecationWarning",
 ]
 timeout = 300
 

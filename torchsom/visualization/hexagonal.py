@@ -69,16 +69,8 @@ class HexagonalVisualizer(BaseVisualizer):
         # Create figure and axis
         fig, ax = plt.subplots(figsize=self.config.figsize)
 
-        # Set up colormap
-        cmap_name_or_obj = cmap or self.config.cmap
-        if isinstance(cmap_name_or_obj, str):
-            cmap_obj = plt.cm.get_cmap(cmap_name_or_obj)
-        else:
-            cmap_obj = cmap_name_or_obj
-
-        # Handle NaN values by setting them to white in colormap
-        cmap_copy = cmap_obj.copy()
-        cmap_copy.set_bad(color="white")
+        # Set up colormap, handling NaN values by setting them to white (returns a copy)
+        cmap_copy = plt.get_cmap(cmap or self.config.cmap).with_extremes(bad="white")
 
         # Create hexagonal patches
         patches, x_min, x_max, y_min, y_max = create_hexagonal_grid_patches(

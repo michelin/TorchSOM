@@ -137,14 +137,8 @@ class RectangularVisualizer(BaseVisualizer):
                 masked_map[zero_mask] = float("nan")
             masked_map = masked_map.cpu().numpy()
 
-        # Adjust the color map by setting NaN values to white
-        cmap_to_use = cmap or self.config.cmap
-        cmap_obj = (
-            plt.cm.get_cmap(cmap_to_use).copy()
-            if isinstance(cmap_to_use, str)
-            else cmap_to_use.copy()
-        )
-        cmap_obj.set_bad(color="white")
+        # Adjust the color map by setting NaN values to white (returns a copy)
+        cmap_obj = plt.get_cmap(cmap or self.config.cmap).with_extremes(bad="white")
 
         # Flip the data along y-axis for component planes
         if is_component_plane:
