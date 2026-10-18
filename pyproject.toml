@@ -1,6 +1,7 @@
 [build-system]
 build-backend = "setuptools.build_meta"
-requires = ["setuptools", "setuptools-git-versioning"]
+# setuptools 77 is the first release with PEP 639 license expressions.
+requires = ["setuptools>=77", "setuptools-git-versioning>=3,<4"]
 
 # ==================== Project Metadata ====================
 
@@ -15,8 +16,10 @@ maintainers = [
 dynamic = ["version", "readme"]
 description = "torchsom: The Reference PyTorch Library for Self-Organizing Maps"
 requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Intended Audience :: Developers",
@@ -31,7 +34,6 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "License :: OSI Approved :: Apache Software License",
 ]
 dependencies = [
     "torch",
@@ -55,8 +57,10 @@ keywords = [
 ]
 
 [project.urls]
-Source = "https://github.com/michelin/torchsom"
+Source = "https://github.com/michelin/TorchSOM"
 Documentation = "https://opensource.michelin.io/TorchSOM/"
+Paper = "https://www.jmlr.org/papers/v27/25-2467.html"
+Changelog = "https://github.com/michelin/TorchSOM/blob/main/CHANGELOG.md"
 Tracker = "https://github.com/michelin/TorchSOM/issues"
 License = "https://github.com/michelin/TorchSOM/blob/main/LICENSE"
 Contributing = "https://github.com/michelin/TorchSOM/blob/main/CONTRIBUTING.md"
@@ -112,6 +116,7 @@ docs = [
     "sphinx-autodoc-typehints",
     "sphinx-copybutton",
     "sphinx-design",
+    "sphinxext-opengraph",
     "sphinx-autobuild",
     "interrogate",
 ]
@@ -170,6 +175,8 @@ filterwarnings = [
     "ignore::PendingDeprecationWarning",
     # hdbscan 0.8.41 ships invalid-escape docstrings: DeprecationWarning on Python <=3.11, SyntaxWarning on 3.12+
     "ignore::SyntaxWarning",
+    # matplotlib removes deprecated APIs (e.g. cm.get_cmap in 3.11): fail on them while they still warn
+    "error::matplotlib.MatplotlibDeprecationWarning",
 ]
 timeout = 300
 
@@ -327,10 +334,15 @@ bump_map = { "feat" = "minor", "fix" = "patch", "chore" = "patch", "refactor" = 
 update_changelog_on_bump = true
 changelog_file = "CHANGELOG.md"
 changelog_incremental = true
-changelog_template = ".changelog_template.md"
 github_url = "https://github.com/michelin/TorchSOM"
 version_scheme = "semver"
 changelog_start_rev = "v1.0.0"
+# Annotated tags are pushed by `git push --follow-tags` and win in `git describe`.
+annotated_tag = true
+# Keep CITATION.cff's software version in sync on every bump.
+version_files = ["CITATION.cff:^version:"]
+# Paper tags are not releases; skip them instead of warning on every bump.
+ignored_tag_formats = ["jmlr-*", "socp-*"]
 
 # ==================== Sphinx ====================
 

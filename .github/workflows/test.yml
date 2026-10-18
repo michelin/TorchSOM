@@ -13,15 +13,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.10", "3.11", "3.12"]
-        exclude:
-          - os: macos-latest
-            python-version: "3.10"
-          - os: macos-latest
-            python-version: "3.11"
-          - os: macos-latest
-            python-version: "3.12"
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
 
     steps:
       - uses: actions/checkout@v4
@@ -40,15 +33,6 @@ jobs:
 
       - name: Run tests
         run: uv run --no-sync pytest
-
-      - name: Analyze code with SonarQube
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
-        # Advisory only: a SonarCloud auth/infra failure (e.g. token 403) must not
-        # fail the test job or block the release pipeline (release.yml reuses this workflow).
-        continue-on-error: true
-        uses: SonarSource/sonarqube-scan-action@v5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Upload test results
         uses: actions/upload-artifact@v4

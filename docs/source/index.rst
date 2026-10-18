@@ -1,3 +1,5 @@
+:og:description: The reference PyTorch library for Self-Organizing Maps, published in JMLR: GPU training, a scikit-learn-style API, clustering, and visualization.
+
 TorchSOM Documentation
 ======================
 
@@ -18,7 +20,8 @@ TorchSOM is the PyTorch-native reference implementation of the Self-Organizing M
 training, a built-in clustering interface, just-in-time-learning support, and a
 visualization suite for both rectangular and hexagonal topologies. It accompanies the
 paper *torchsom: The Reference PyTorch Library for Self-Organizing Maps*
-(`Berthier et al., 2025 <https://arxiv.org/abs/2510.11147>`_).
+(`Berthier et al., 2026 <https://www.jmlr.org/papers/v27/25-2467.html>`_), published
+in the *Journal of Machine Learning Research*.
 
 .. grid:: 2
    :gutter: 3
@@ -128,16 +131,18 @@ If you use TorchSOM in your work, please cite:
 
 .. code-block:: bibtex
 
-   @misc{berthier2025torchsom,
-       title={torchsom: The Reference PyTorch Library for Self-Organizing Maps},
-       author={Berthier, Louis and Shokry, Ahmed and Moreaud, Maxime
-               and Ramelet, Guillaume and Moulines, Eric},
-       year={2025},
-       eprint={2510.11147},
-       archivePrefix={arXiv},
-       primaryClass={stat.ML},
-       url={https://arxiv.org/abs/2510.11147}
+   @article{berthierTorchsom2026,
+     author  = {Louis Berthier and Ahmed Shokry and Maxime Moreaud and Guillaume Ramelet and Eric Moulines},
+     title   = {torchsom: The Reference PyTorch Library for Self-Organizing Maps},
+     journal = {Journal of Machine Learning Research},
+     year    = {2026},
+     volume  = {27},
+     number  = {190},
+     pages   = {1--17},
+     url     = {http://jmlr.org/papers/v27/25-2467.html}
    }
+
+An earlier preprint is available on `arXiv (2510.11147) <https://arxiv.org/abs/2510.11147>`_.
 
 
 .. toctree::

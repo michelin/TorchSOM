@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://opensource.michelin.io/TorchSOM/
+    about: Guides, tutorials, and the API reference.
+  - name: FAQ
+    url: https://opensource.michelin.io/TorchSOM/additional_resources/faq.html
+    about: Answers to common questions, including how to cite torchsom.
+  - name: Security vulnerability
+    url: https://github.com/michelin/TorchSOM/security/advisories/new
+    about: Report security problems privately, never as a public issue.

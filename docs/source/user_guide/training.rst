@@ -154,7 +154,7 @@ argument selects the implementation:
      - Full pairwise distance computation on GPU/CPU. No extra dependency.
    * - ``"faiss"``
      - Approximate nearest-neighbor search, faster for large maps and
-       high-dimensional inputs. Install with ``uv add torchsom[faiss]``.
+       high-dimensional inputs. Install with ``pip install "torchsom[faiss]"``.
 
 .. code-block:: python
 

@@ -39,9 +39,16 @@ Feature matrix
    * - **GPU acceleration**
      - CUDA (PyTorch)
      - ✗
-     - CuPy / CUML
+     - CuPy / cuML
      - ✗
      - CUDA C++
+     - ✗
+   * - **JIT compilation**
+     - via PyTorch
+     - Numba [#minisom-jit]_
+     - ✗
+     - ✗
+     - ✗ (AOT) [#somoclu-aot]_
      - ✗
    * - **API design**
      - scikit-learn
@@ -114,6 +121,10 @@ Feature matrix
      - Low
      - Low
 
+.. [#minisom-jit] Opt-in Numba JIT (``train_batch_offline_fast``). This is a compilation
+   technique, unrelated to Just-In-Time Learning (JITL, below).
+.. [#somoclu-aot] somoclu's CUDA kernels are compiled ahead of time with ``nvcc`` when the
+   package is built.
 .. [#minisom-docs] MiniSom ships example notebooks and partial in-code docstrings,
    but no narrative documentation site comparable to this one.
 .. [#minisom-clust] Clustering is not a built-in MiniSom feature; it requires
@@ -141,14 +152,14 @@ comparison that combines, in a single modular codebase:
 
 It is further supported by this narrative documentation site and a community-oriented
 development process, making it a complete and scalable reference for both research and
-production. The performance side of this comparison — quantization-error parity with
-substantially lower topographic error and training time — is documented in
+production. The performance side of this comparison — comparable quantization error,
+lower topographic error, and faster training on most workloads — is documented in
 :doc:`benchmarks`.
 
 
 Next steps
 ----------
 
-- :doc:`benchmarks` — Quantitative speed and quality comparison with MiniSom
+- :doc:`benchmarks` — Quantitative speed and quality comparison with MiniSom and somoclu
 - :doc:`architecture` — How TorchSOM is organized
 - :doc:`../getting_started/quickstart` — Try it yourself

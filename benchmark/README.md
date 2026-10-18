@@ -1,6 +1,6 @@
 # Benchmark — JMLR-MLOSS reproducibility
 
-This folder contains the **complete, runnable artefacts** used to generate every benchmark number reported in the *torchsom* JMLR-MLOSS paper:
+This folder contains the **complete, runnable artefacts** used to generate every benchmark number reported in the *torchsom* [JMLR-MLOSS paper](https://www.jmlr.org/papers/v27/25-2467.html):
 
 - [`benchmark.py`](benchmark.py) — non-interactive comparison script (CLI)
 - [`benchmark.ipynb`](benchmark.ipynb) — interactive notebook with plots

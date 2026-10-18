@@ -89,6 +89,8 @@ dmypy.json
 # Documentation
 docs/build/
 docs/_build/
+# Copied from assets/ by docs/source/conf.py at build time
+docs/source/_static/assets/
 .readthedocs.yml
 
 # Distribution / packaging

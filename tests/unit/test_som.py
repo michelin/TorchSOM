@@ -552,3 +552,20 @@ class TestCollectSamples:
 
         assert data_buf.numel() == 0
         assert out_buf.numel() == 0
+
+    def test_collect_samples_rejects_map_of_data_vectors(
+        self,
+    ) -> None:
+        """A BMU map built without return_indices=True is rejected with a hint (issue #11)."""
+        som = SOM(x=3, y=3, num_features=2, device="cpu", random_seed=0)
+        historical_samples = torch.randn(12, 2)
+        historical_outputs = torch.randn(12)
+        vectors_map = som.build_map("bmus_data", data=historical_samples)
+
+        with pytest.raises(ValueError, match="return_indices=True"):
+            som.collect_samples(
+                query_sample=historical_samples[0],
+                historical_samples=historical_samples,
+                historical_outputs=historical_outputs,
+                bmus_idx_map=vectors_map,
+            )

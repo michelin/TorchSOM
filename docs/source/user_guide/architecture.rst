@@ -142,7 +142,7 @@ The backend is chosen with the ``search_backend`` argument (``"auto"``, ``"torch
 
 - **PyTorch** (default): Full pairwise distance computation on GPU/CPU
 - **FAISS** (optional): Approximate nearest-neighbor search for large maps,
-  enabled with ``uv add torchsom[faiss]``
+  enabled with ``pip install "torchsom[faiss]"``
 
 
 Visualization Module (``torchsom.visualization``)

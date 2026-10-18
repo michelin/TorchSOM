@@ -110,7 +110,7 @@ Build the BMU→sample map once, then color each neuron by its dominant blob id.
 
 .. code-block:: python
 
-   bmus_map = som.build_map("bmus_data", data=features)
+   bmus_map = som.build_map("bmus_data", data=features, return_indices=True)
    viz.plot_classification_map(
        bmus_data_map=bmus_map,
        data=features,

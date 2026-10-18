@@ -4,7 +4,7 @@
 cff-version: 1.2.0
 title: >-
   torchsom: The Reference PyTorch Library for Self-Organizing Maps
-message: 'If you use this software, please cite both the article and the software itself.'
+message: 'If you use this software, please cite the JMLR article below.'
 type: software
 authors:
   - given-names: Louis
@@ -16,10 +16,9 @@ authors:
 repository-code: 'https://github.com/michelin/TorchSOM'
 url: 'https://opensource.michelin.io/TorchSOM'
 abstract: >-
-  TorchSOM is a PyTorch-based library for training Self-Organizing Maps (SOMs),
-  a model trained in an unsupervised manner, that can be used for clustering,
-  dimensionality reduction and data visualization.
-  It is designed to be scalable and user-friendly.
+  torchsom is a PyTorch library for training Self-Organizing Maps (SOMs), with
+  GPU acceleration, a scikit-learn-style API, clustering, Just-In-Time Learning,
+  and visualization for rectangular and hexagonal maps.
 keywords:
   - Self-Organizing Maps
   - PyTorch
@@ -30,4 +29,25 @@ keywords:
   - Data Visualization
 license: Apache-2.0
 version: 1.3.0
-date-released: '2026-07-04'
+preferred-citation:
+  type: article
+  title: 'torchsom: The Reference PyTorch Library for Self-Organizing Maps'
+  authors:
+    - given-names: Louis
+      family-names: Berthier
+      orcid: 'https://orcid.org/0009-0009-9654-2448'
+    - given-names: Ahmed
+      family-names: Shokry
+    - given-names: Maxime
+      family-names: Moreaud
+    - given-names: Guillaume
+      family-names: Ramelet
+    - given-names: Eric
+      family-names: Moulines
+  journal: Journal of Machine Learning Research
+  volume: 27
+  issue: 190
+  start: 1
+  end: 17
+  year: 2026
+  url: 'http://jmlr.org/papers/v27/25-2467.html'

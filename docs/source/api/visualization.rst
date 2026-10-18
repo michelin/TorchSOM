@@ -52,5 +52,5 @@ Notes
 
 - The visualizer is a factory that forwards to topology-specific implementations (hexagonal or rectangular).
 - The supervised maps (metric/score/rank/classification) and ``plot_all`` require a
-  pre-computed ``bmus_data_map = som.build_map("bmus_data", data=data)``; build it once
+  pre-computed ``bmus_data_map = som.build_map("bmus_data", data=data, return_indices=True)``; build it once
   and reuse it across plots.

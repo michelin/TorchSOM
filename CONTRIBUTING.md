@@ -37,7 +37,7 @@ Before [creating an issue](https://help.github.com/en/github/managing-your-work-
 
 ### Reporting Security Issues
 
-**Do not** file a public issue for security vulnerabilities. Instead, send your report privately to `TODO: Insert CERT email address`. This will help ensure that any vulnerabilities that are found can be disclosed responsibly to any affected parties.
+**Do not** file a public issue for security vulnerabilities. Instead, report them privately through GitHub's [private vulnerability reporting](https://github.com/michelin/TorchSOM/security/advisories/new), as described in our [security policy](.github/SECURITY.md). This will help ensure that any vulnerabilities that are found can be disclosed responsibly to any affected parties.
 We take [responsible disclosure](https://en.wikipedia.org/wiki/Responsible_disclosure) seriously, as they can affect confidence/trust in our project. The person who notified us of the vulnerability will be informed promptly that the problem is being addressed. Wherever possible, and depending on its criticality, the vulnerability should be corrected within the allotted time (generally between 90 and 120 days).
 
 ### Bug Reports and Other Issues
@@ -49,7 +49,7 @@ In short, since you are most likely a developer, **provide a ticket that you wou
 - **Review the documentation** before opening a new issue.
 - **Do not open a duplicate issue**. Search through existing issues to see if your issue has previously been reported. If your issue exists, comment with any additional information you have. You may simply note "_I have this problem too_", which helps prioritize the most common problems and requests.
 - **Prefer using [reactions](https://github.blog/2016-03-10-add-reactions-to-pull-requests-issues-and-comments/)**, not comments, if you simply want to "+1" an existing issue.
-- **Fully complete the provided issue template.** The bug report template requests all the information we need to quickly and efficiently address your issue. Be clear, concise, and descriptive. Provide as much information as you can, including steps to reproduce, stack traces, compiler errors, library versions, OS versions, and screenshots (if applicable).
+- **Fully complete the provided issue template.** The bug report template requests all the information we need to quickly and efficiently address your issue. Be clear, concise, and descriptive. Provide as much information as you can, including a minimal example, the full traceback, your `torchsom`, PyTorch, and matplotlib versions, your OS, and screenshots (if applicable).
 - **Use [GitHub-flavored Markdown](https://help.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax).** Especially put code blocks and console outputs in backticks (```). This improves readability.
 
 ## Feature Requests
@@ -77,53 +77,28 @@ _Note: All contributions will be licensed under the project's license._
 - **Prioritize understanding over cleverness.** Write code clearly and concisely. Remember that source code usually gets written once and read often. Ensure the code is clear to the reader. The purpose and logic should be obvious to a reasonably skilled developer, otherwise you should add a comment that explains it.
 - **Include test coverage.** Add unit tests or UI tests when possible. Follow existing patterns for implementing tests.
 - **Add documentation.** Document your changes with code comments or in existing guides.
-- **Update the CHANGELOG** for all enhancements and bug fixes. Include the corresponding issue number if one exists, and your GitHub username. (example: "- Fixed crash in profile view. #123 @jessesquires")
+- **Don't edit `CHANGELOG.md` by hand.** It is generated from commit messages at release time, so write a clear [Conventional Commit](#writing-commit-messages) message instead.
 - **Use the repo's default branch.** Branch from and [submit your pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork) to the repo's default branch. Usually this is `main`, but it could be `dev`, `develop`, or `master`.
 - **[Resolve any merge conflicts](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/resolving-a-merge-conflict-on-github)** that occur.
 - **Promptly address any CI failures**. If your pull request fails to build or pass tests, please push another commit to fix it.
 
 ## Writing Commit Messages
 
-Please [write a great commit message](https://chris.beams.io/posts/git-commit/).
+We use [Conventional Commits](https://www.conventionalcommits.org/). Releases and `CHANGELOG.md` are generated from commit messages by [Commitizen](https://commitizen-tools.github.io/commitizen/), so the format matters.
 
-1. Separate subject from body with a blank line
-1. Limit the subject line to 50 characters
-1. Use the imperative mood in the subject line (example: "Fix networking issue")
-1. Wrap the body at about 72 characters
-1. Use the body to explain **why**, _not what and how_ (the code shows that!)
-1. If applicable, prefix the title with the relevant component name. (examples: "[Docs] Fix typo", "[Profile] Fix missing avatar")
+1. Start the subject with a type: `feat:` (new feature), `fix:` (bug fix), `docs:`, `test:`, `refactor:`, `perf:`, `build:`, `ci:`, or `chore:`. Add a scope when it helps, e.g. `fix(visualization):`.
+1. Use the imperative mood and keep the subject to about 72 characters.
+1. Separate the subject from the body with a blank line, and use the body to explain **why**, _not what and how_ (the code shows that!).
+1. End with the related issues (`Refs #123`, or `Closes #123` to close the issue on merge). Credit co-authors with `Co-authored-by:` and disclose material AI assistance with `Assisted-by:` (see [AI-Assisted Contributions](#ai-assisted-contributions)).
 
 ```text
-[TAG] Short summary of changes in 50 chars or less
+fix(visualization): resolve colormaps with plt.get_cmap for matplotlib 3.11
 
-Add a more detailed explanation here, if necessary. Possibly give
-some background about the issue being fixed, etc. The body of the
-commit message can be several paragraphs. Further paragraphs come
-after blank lines and please do proper word-wrap.
+matplotlib 3.11 removed matplotlib.cm.get_cmap, which crashed every
+map plot. plt.get_cmap accepts a colormap name or object and works on
+every supported matplotlib version.
 
-Wrap it to about 72 characters or so. In some contexts,
-the first line is treated as the subject of the commit and the
-rest of the text as the body. The blank line separating the summary
-from the body is critical (unless you omit the body entirely);
-various tools like `log`, `shortlog` and `rebase` can get confused
-if you run the two together.
-
-Explain the problem that this commit is solving. Focus on why you
-are making this change as opposed to how or what. The code explains
-how or what. Reviewers and your future self can read the patch,
-but might not understand why a particular solution was implemented.
-Are there side effects or other unintuitive consequences of this
-change? Here's the place to explain them.
-
- - Bullet points are okay, too
-
- - A hyphen or asterisk should be used for the bullet, preceded
-   by a single space, with blank lines in between
-
-Note the fixed or relevant GitHub issues at the end:
-
-Resolves: #123
-See also: #456, #789
+Refs #10
 ```
 
 ## Code Review
@@ -135,11 +110,11 @@ See also: #456, #789
 
 ## Coding Style
 
-Consistency is the most important. Follow the[existing coding style, formatting, and naming conventions of the file you are modifying and of the overall project. When possible, these will be enforced with a linter. Failure to do so will result in a prolonged review process that has to focus on updating the superficial aspects of your code, rather than improving its functionality and performance.
+Consistency is the most important. Follow the existing coding style, formatting, and naming conventions of the file you are modifying and of the overall project. Linting and formatting are enforced with [ruff](https://docs.astral.sh/ruff/): run `make check` before submitting, and `make fix` to apply the formatter. Failure to do so will result in a prolonged review process that has to focus on updating the superficial aspects of your code, rather than improving its functionality and performance.
 
 Adhering to this code style ensures consistency and helps maintain code quality throughout the project.
 
-## AI-Assisted contributions
+## AI-Assisted Contributions
 
 AI tools may be used to assist with contributions, including code, tests, documentation, images, issue reports, commit messages, etc. Their use does not change the contribution process or lower the standards applied during review. The human contributor remains the author and is fully responsible for everything they submit.
 
@@ -152,7 +127,7 @@ If you use an AI tool when preparing a contribution:
 - **Certify the contribution yourself.** An AI tool must not add a `Signed-off-by` line or otherwise certify the Developer Certificate of Origin. Only the human contributor may do so, after reviewing the complete contribution and confirming that they have the right to submit it.
 - **Disclose material assistance.** When an AI tool materially generates or modifies submitted content, add an `Assisted-by` trailer to the commit message. Routine spelling correction, formatting, search, or completion that does not materially shape the contribution does not require a trailer.
 
-Use the following format, naming the tool or agent and the specific model version when known. Specialised analysis tools may be listed after the model; ordinary development tools such as editors, compilers, and Git should not be listed.
+Use the following format, naming the tool or agent and the specific model version when known. Specialized analysis tools may be listed after the model; ordinary development tools such as editors, compilers, and Git should not be listed.
 
 ```text
 Assisted-by: TOOL_OR_AGENT

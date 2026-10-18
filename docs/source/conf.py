@@ -55,6 +55,7 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx_copybutton",
     "sphinx_design",
+    "sphinxext.opengraph",
 ]
 
 autodoc_typehints = "description"
@@ -106,6 +107,15 @@ html_theme_options = {
 
 html_static_path = ["_static"]
 html_logo = "_static/assets/logo.png"
+html_favicon = "_static/assets/favicon.png"
+
+# -- Open Graph (link previews) -----------------------------------------------
+# Every page shares the repository's social preview card. Setting ogp_image also
+# turns off the extension's generated per-page cards.
+ogp_site_url = "https://opensource.michelin.io/TorchSOM/"
+ogp_site_name = "TorchSOM"
+ogp_image = "_static/assets/social_preview.png"
+ogp_image_alt = "TorchSOM: The Reference PyTorch Library for Self-Organizing Maps"
 
 # -- Todo extension ----------------------------------------------------------
 # Author-facing only: keep ``.. todo::`` notes out of the published HTML.

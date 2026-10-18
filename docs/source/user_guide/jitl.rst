@@ -23,7 +23,7 @@ The retrieval index
    som.initialize_weights(data=historical_samples, mode="pca")
    som.fit(data=historical_samples)
 
-   bmus_idx_map = som.build_map("bmus_data", data=historical_samples)
+   bmus_idx_map = som.build_map("bmus_data", data=historical_samples, return_indices=True)
 
 ``bmus_idx_map`` maps each grid cell ``(i, j)`` to the list of historical-sample
 indices whose BMU is that cell.
@@ -90,7 +90,7 @@ Typical workflow
    # 1. Train the SOM once on the historical buffer and index it
    som.initialize_weights(data=historical_samples, mode="pca")
    som.fit(data=historical_samples)
-   bmus_idx_map = som.build_map("bmus_data", data=historical_samples)
+   bmus_idx_map = som.build_map("bmus_data", data=historical_samples, return_indices=True)
 
    # 2. For each incoming query, retrieve a local set and fit a local model
    for query in stream:

@@ -133,7 +133,7 @@ def create_hexagonal_grid_patches(
     patches = []
 
     # Get colormap
-    cmap = cmap or plt.cm.get_cmap("viridis")
+    cmap = cmap or plt.get_cmap("viridis")
 
     # Normalize data for colormap (handle NaN values)
     valid_mask = ~np.isnan(map_data)
